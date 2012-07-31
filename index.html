@@ -2,6 +2,16 @@
 <html>
     <head>
         <title>KaroBackbone</title>
+        <style type="text/css">
+            .GameAppNavigation {
+                position: absolute;
+                right: 0;
+                bottom: 0;
+            }
+            .clickable:hover {
+                cursor: pointer;
+            }
+        </style>
     </head>
     <body>
         <div id="container">
@@ -16,39 +26,89 @@
         <script type="text/javascript" src="js/backbone-min.js"></script>
 
         <script type="text/javascript">
+            var app;
+            var GameAppView;
             $(document).ready(function() {
-                var gr= new GameRouter();
-                var g=new GameApp();
+                app=new AppView();
+                app.router= new AppRouter();
+                var g= new Game();
+                app.gameAppView=new GameAppView({model: g});
+                $("#content").append(app.gameAppView.$el);
                 console.log("Here I am");
 
                 //Backbone.history.start({pushState: true});
                 Backbone.history.start();
             });
 
-            var GameApp = Backbone.View.extend({
+            var AppView = Backbone.View.extend({
+            });
+
+            var Game = Backbone.Model.extend({
+
+
+            });
+
+            var GameAppView = Backbone.View.extend({
+                model: Game,
                 tagName: "div",
                 className: "GameApp",
-                events: {
-                    "click": "tuwas"
-                },
 
-                "tuwas": function() {
-                    alert("Klick");
+                initialize: function() {
+                    //Hol Game Navigation
+                    this.navigation=new GameAppNavigationView();
+                    this.navigation.render();
+                    this.$el.append(this.navigation.$el);
+
+                    console.log(this.model);
+                    this.model.on('change:gameId',function(a,b) {
+                        console.log("CHANGE OF GAME ID");
+                        console.log(a);
+                        console.log(b);
+                    })
                 },
 
                 render: function() {
-                    console.log("Render");
+                },
+
+                setGameId: function(gameId) {
+                    if (gameId!=0) {
+                        this.model.set({ "gameId": gameId });
+                        console.log("set to " + gameId);
+                    }
                 }
 
             })
 
-            var GameRouter = Backbone.Router.extend({
+            var GameAppNavigationView = Backbone.View.extend({
+                tagName: "div",
+                className: "GameAppNavigation",
+                events: {
+                    'click .next': "nextGame"
+                },
+
+                render: function() {
+                    console.log("Rendering nav");
+                    this.$el.html('<span class="clickable next">Next</a>');
+                },
+
+                "nextGame": function() {
+                    console.log("Next Game");
+                    var oldId=parseInt(app.gameAppView.model.get("gameId"));
+                    app.router.navigate('game/'+(oldId+1),{trigger: true});
+                }
+            })
+
+            var AppRouter = Backbone.Router.extend({
                 routes: {
-                    "game/:gameId": "showGame"
+                    "game/:gameId": "showGame",
+                    "game": "showGame",
+                    "": "showGame"
                 },
 
                 showGame: function(gameId) {
-                    console.log(gameId);
+                    console.log("Routing to "+gameId);
+                    gameId = gameId || 0;
+                    app.gameAppView.setGameId(gameId);
                 }
             });
 
