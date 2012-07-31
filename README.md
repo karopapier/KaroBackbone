@@ -1,4 +1,4 @@
 KaroBackbone
 ============
 
-Bare, from scratch, and simple - backbone.js rendering a Game
+Bare, from scratch, and simple - backbone.js rendering a Karopapier Game

@@ -1,0 +1,35 @@
+<!doctype html>
+<head>
+<title>KaroBackbone</title>
+</head>
+<body>
+    <div id="container">
+        <div id="content">
+        </div>
+    </div>
+    <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+    <script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            console.log("Here I am");
+        });
+
+
+        var GameRouter = Backbone.Router.extend({
+            routes: {
+                "game/:gameId": "showGame"
+            },
+
+            showGame: function(gameId) {
+                console.log(gameId);
+            }
+        });
+
+        Backbone.history.start({pushState: true});
+
+    </script>
+</body>
+
+</html>
