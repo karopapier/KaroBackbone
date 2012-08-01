@@ -1,7 +1,11 @@
 <!doctype html>
 <html>
     <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>KaroBackbone</title>
+        <link rel="shortcut icon" href="http://reloaded.karopapier.de/favicon.ico" />
+        <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/css/karo.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/themes/black/css/theme.css" />
         <style type="text/css">
             .GameAppNavigation {
                 position: absolute;
@@ -13,12 +17,39 @@
             }
         </style>
     </head>
+
     <body>
-        <div id="container">
-            <div id="sidebar" style="float: left; height: 600px; width: 140px; border: 1px solid blue;">Menu</div>
-            <div id="content" style="float: left; border: 1px solid black">
+        <div id="header">
+            <div id="infoBar">
+            <span class="userLabel" name="userLabel1">Didi</span> Spiele: <a href="/dran"><span id="dranCount">5</span></a>/<span id="gamesCount">105</span> [5/105]
+            <a href="/logout">Logout</a>                <div id="NotifierContainer"></div>
             </div>
         </div>
+        <div class="clearer"></div>
+
+        <div id="container">
+            <div id="sidebar">
+                <ul id="navi">
+                    <li><a href="http://reloaded.karopapier.de/chat">Chat</a></li>
+                    <li><a href="http://reloaded.karopapier.de/dran">Dran</a></li>
+                    <li><a href="http://reloaded.karopapier.de/user/settings">Einstellungen</a></li>
+                    <li><a href="http://reloaded.karopapier.de/blocker">Live-Block</a></li>
+                    <li><a href="http://reloaded.karopapier.de/faqs">Karo2.0 FAQs</a></li>
+                    <li><a href="http://reloaded.karopapier.de/lobby/createGame">Teaser</a></li>
+                </ul>
+            </div>
+        <div id="content">
+            <div class="boxtr"> <div class="boxtl"> <div class="boxbr"> <div class="boxbl"> <div class="boxcontent">
+                                <h1>KaroBackbone</h1>
+            </div> </div> </div> </div> </div>
+
+            
+
+        </div>
+
+        <center><a href="http://www.karopapier.de">Karopapier.de</a> is brought to you by
+        <script type="text/javascript">document.write(String.fromCharCode(0x44,0x69,0x64,0x69).link(String.fromCharCode(0x6d,0x61,0x69,0x6c,0x74,0x6f,0x3a,0x64,0x69,0x64,0x69,0x40,0x6b,0x61,0x72,0x6f,0x70,0x61,0x70,0x69,0x65,0x72,0x2e,0x64,0x65)));</script></center>
+
         <!-- <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
         <script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
         <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
@@ -213,5 +244,7 @@
 
 
         </script>
+
+
     </body>
 </html>
