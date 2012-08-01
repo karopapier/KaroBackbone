@@ -15,7 +15,8 @@
     </head>
     <body>
         <div id="container">
-            <div id="content">
+            <div id="sidebar" style="float: left; height: 600px; width: 140px; border: 1px solid blue;">Menu</div>
+            <div id="content" style="float: left; border: 1px solid black">
             </div>
         </div>
         <!-- <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
@@ -81,6 +82,19 @@
                 }
             });
 
+            var MapView=Backbone.View.extend({
+                className: "mapView",
+                initialize: function() {
+                    _.bindAll(this);
+                    this.model.bind("change:id",this.getImage);
+                },
+                getImage: function() {
+                    this.$el.html('<img src="http://reloaded.karopapier.de/map/'+this.model.get("id")+'.png?size=12&border=1&cps=0" />');
+                }
+
+
+            });
+
             var Player = Backbone.Model.extend({
                 defaults: {
                     id: 0
@@ -105,6 +119,10 @@
                 }
             });
 
+            var PlayerCollectionView = Backbone.View.extend({
+                className: "playerCollection"
+            });
+
             var Move = Backbone.Model.extend({
                 defaults: {
                     x: 0,
@@ -118,16 +136,35 @@
                 model: Move
             });
 
+            //container for rendered map and players
+            var GameView = Backbone.View.extend({
+                className: "gameView"
+            });
+
             var GameAppView = Backbone.View.extend({
-                model: Game,
                 tagName: "div",
                 className: "GameApp",
 
                 initialize: function() {
-                    //Hol Game Navigation
+                    this.gameView=new GameView({model:this.model});
+                    this.mapView=new MapView({model: this.model.map});
+                    this.mapView.render();
+                    this.$el.append(this.mapView.$el);
+                    this.playerCollectionView=new PlayerCollectionView({model:this.model.players});
+
+                    //init game navigation
                     this.navigation=new GameAppNavigationView();
                     this.navigation.render();
                     this.$el.append(this.navigation.$el);
+                },
+
+                close: function() {
+                    //remove child views
+                    this.mapView.close();
+                    this.playerCollectionView.close();
+                    this.navigation.close();
+                    alert("Remove myself");
+                    this.$el.remove();
                 },
 
                 render: function() {
@@ -169,7 +206,7 @@
 
                 showGame: function(gameId) {
                     console.log("Routing to "+gameId);
-                    gameId = gameId || 0;
+                    gameId = gameId || 70000;
                     app.gameAppView.setGameId(gameId);
                 }
             });
