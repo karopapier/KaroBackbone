@@ -30,7 +30,7 @@
         <div id="container">
             <div id="sidebar">
                 <ul id="navi">
-                    <li><a href="http://reloaded.karopapier.de/chat">Chat</a></li>
+                    <li><a href="#game/70321">Spiel</a></li>
                     <li><a href="http://reloaded.karopapier.de/dran">Dran</a></li>
                     <li><a href="http://reloaded.karopapier.de/user/settings">Einstellungen</a></li>
                     <li><a href="http://reloaded.karopapier.de/blocker">Live-Block</a></li>
@@ -85,7 +85,7 @@
                 },
 
                 parse: function(data) {
-                    console.log(data);
+                    this.set(data.game);
                     this.map.set(data.map);
                     this.players.reset(data.players);
                 },
@@ -177,9 +177,11 @@
                 className: "GameApp",
 
                 initialize: function() {
+                    _.bindAll(this);
                     this.gameView=new GameView({model:this.model});
                     this.mapView=new MapView({model: this.model.map});
                     this.mapView.render();
+                    this.render();
                     this.$el.append(this.mapView.$el);
                     this.playerCollectionView=new PlayerCollectionView({model:this.model.players});
 
@@ -187,6 +189,7 @@
                     this.navigation=new GameAppNavigationView();
                     this.navigation.render();
                     this.$el.append(this.navigation.$el);
+                    this.model.bind("change",this.refresh);
                 },
 
                 close: function() {
@@ -199,6 +202,17 @@
                 },
 
                 render: function() {
+                    this.title=$(document.createElement('h1'));
+                    this.$title=$(this.title);
+                    this.$title.attr("id","gameName");
+                    this.$el.append(this.title);
+                },
+
+                refresh: function() {
+                    console.log("TRIGGGER");
+                    console.log(this.model);
+                    console.log(this.model.get("name"));
+                    this.$title.text(this.model.get("name"))
                 },
 
                 setGameId: function(gameId) {
