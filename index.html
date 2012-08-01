@@ -44,8 +44,78 @@
             });
 
             var Game = Backbone.Model.extend({
+                defaults: {
+                    id: 0
+                },
 
+                url: function() {
+                    return "http://reloaded.karopapier.de/api/game/"+this.get("id")+"/details.json?callback=?";
+                },
 
+                parse: function(data) {
+                    console.log(data);
+                    this.map.set(data.map);
+                    this.players.reset(data.players);
+                },
+
+                initialize: function() {
+                    this.map = new Map();
+                    this.players = new PlayerCollection();
+                    this.bind("change:id", function (o,id,c,d) {
+                        //neu holen
+                        console.log(id);
+                        this.fetch();
+                    });
+                }
+            });
+
+            var Map = Backbone.Model.extend({
+                defaults: {
+                    id: 0
+                },
+
+                initialize: function() {
+                    this.bind("change:id",function(o,id) {
+                        console.log(" New Map id: "+id);
+                    });
+                }
+            });
+
+            var Player = Backbone.Model.extend({
+                defaults: {
+                    id: 0
+                },
+
+                initialize: function() {
+                    this.moves=new MoveCollection();
+                    this.lastmove=new Move();
+                    this.bind("change:id",function(o,id) {
+                        console.log(" New Player id: "+id);
+                    });
+                }
+            });
+
+            var PlayerCollection = Backbone.Collection.extend({
+                model: Player,
+
+                initialize: function() {
+                    this.bind("reset",function(o,id) {
+                        console.log(o);
+                    });
+                }
+            });
+
+            var Move = Backbone.Model.extend({
+                defaults: {
+                    x: 0,
+                    y: 0,
+                    xv: 0,
+                    yv: 0
+                }
+            });
+
+            var MoveCollection = Backbone.Collection.extend({
+                model: Move
             });
 
             var GameAppView = Backbone.View.extend({
@@ -58,13 +128,6 @@
                     this.navigation=new GameAppNavigationView();
                     this.navigation.render();
                     this.$el.append(this.navigation.$el);
-
-                    console.log(this.model);
-                    this.model.on('change:gameId',function(a,b) {
-                        console.log("CHANGE OF GAME ID");
-                        console.log(a);
-                        console.log(b);
-                    })
                 },
 
                 render: function() {
@@ -72,8 +135,7 @@
 
                 setGameId: function(gameId) {
                     if (gameId!=0) {
-                        this.model.set({ "gameId": gameId });
-                        console.log("set to " + gameId);
+                        this.model.set({ "id": gameId });
                     }
                 }
 
@@ -93,7 +155,7 @@
 
                 "nextGame": function() {
                     console.log("Next Game");
-                    var oldId=parseInt(app.gameAppView.model.get("gameId"));
+                    var oldId=parseInt(app.gameAppView.model.get("id"));
                     app.router.navigate('game/'+(oldId+1),{trigger: true});
                 }
             })
