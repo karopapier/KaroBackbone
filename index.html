@@ -85,9 +85,14 @@
                 },
 
                 parse: function(data) {
-                    this.set(data.game);
-                    this.map.set(data.map);
-                    this.players.reset(data.players);
+                    //make sure data is matching current gameId (delayed reposens get dropped)
+                    if (data.game.id==this.id) {
+                        this.map.set(data.map);
+                        this.players.reset(data.players);
+                        return data.game;
+                    } else {
+                        //drop it
+                    }
                 },
 
                 initialize: function() {
