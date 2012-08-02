@@ -15,6 +15,21 @@
             .clickable:hover {
                 cursor: pointer;
             }
+
+            #gameInfo {
+                font-family: Arial;
+                font-size: 70%;
+                width: 300px;
+                float: right;
+                margin-bottom: 10px;
+                z-index: 500;
+            }
+
+            #gameInfo li
+            {
+                font-family: Arial;
+                font-size: 70%;
+            }
         </style>
     </head>
 
@@ -31,16 +46,13 @@
             <div id="sidebar">
                 <ul id="navi">
                     <li><a href="#game/70321">Spiel</a></li>
-                    <li><a href="http://reloaded.karopapier.de/dran">Dran</a></li>
-                    <li><a href="http://reloaded.karopapier.de/user/settings">Einstellungen</a></li>
-                    <li><a href="http://reloaded.karopapier.de/blocker">Live-Block</a></li>
-                    <li><a href="http://reloaded.karopapier.de/faqs">Karo2.0 FAQs</a></li>
-                    <li><a href="http://reloaded.karopapier.de/lobby/createGame">Teaser</a></li>
+                    <li><a href="#game/70178">Nacht</a></li>
+                    <li><a href="#game/70179">Nacht2</a></li>
                 </ul>
             </div>
         <div id="content">
             <div class="boxtr"> <div class="boxtl"> <div class="boxbr"> <div class="boxbl"> <div class="boxcontent">
-                                <h1>KaroBackbone</h1>
+                                <h1 id="title">KaroBackbone</h1>
             </div> </div> </div> </div> </div>
 
             
@@ -73,6 +85,10 @@
             });
 
             var AppView = Backbone.View.extend({
+                setTitle: function (title) {
+                    $(document).attr("title",title);
+                    $('#title').text(title);
+                }
             });
 
             var Game = Backbone.Model.extend({
@@ -91,7 +107,7 @@
                         this.players.reset(data.players);
                         return data.game;
                     } else {
-                        //drop it
+                        console.info("Dropped response for "+data.game.id);
                     }
                 },
 
@@ -123,9 +139,14 @@
                 initialize: function() {
                     _.bindAll(this);
                     this.model.bind("change:id",this.getImage);
+                    this.img=$(document.createElement("img"));
+                    this.$img=$(this.img);
+                    this.$img.attr("src", "http://reloaded.karopapier.de/images/loading.gif");
+                    this.$el.append(this.img);
                 },
                 getImage: function() {
-                    this.$el.html('<img src="http://reloaded.karopapier.de/map/'+this.model.get("id")+'.png?size=12&border=1&cps=0" />');
+                    this.$img.attr("src",'http://reloaded.karopapier.de/map/'+this.model.get("id")+'.png?size=12&border=1&cps=0');
+                    console.log(this);
                 }
 
 
@@ -150,7 +171,7 @@
 
                 initialize: function() {
                     this.bind("reset",function(o,id) {
-                        console.log(o);
+                        console.log("Init Players",o);
                     });
                 }
             });
@@ -189,6 +210,7 @@
                     this.render();
                     this.$el.append(this.mapView.$el);
                     this.playerCollectionView=new PlayerCollectionView({model:this.model.players});
+                    this.game=this.model;
 
                     //init game navigation
                     this.navigation=new GameAppNavigationView();
@@ -207,17 +229,20 @@
                 },
 
                 render: function() {
-                    this.title=$(document.createElement('h1'));
-                    this.$title=$(this.title);
-                    this.$title.attr("id","gameName");
+                    //title area
                     this.$el.append(this.title);
+
+                    this.gameInfo=$(document.createElement('div'));
+                    this.$gameInfo=$(this.gameInfo);
+                    this.$gameInfo.attr("id","gameInfo");
+                    this.$el.append(this.gameInfo);
                 },
 
                 refresh: function() {
-                    console.log("TRIGGGER");
-                    console.log(this.model);
-                    console.log(this.model.get("name"));
-                    this.$title.text(this.model.get("name"))
+                    app.setTitle(this.model.get("name"));
+                    //need to create a template
+                    this.$gameInfo.html(
+'<div id="gameInfo"> <b>Spielinfos:</b> <ul> <li>Karte: '+this.game.map.id+' - "'+this.game.map.get("name")+'" von '+this.game.map.get("author")+'</li><li>Richtungsmodus <b>klassisch</b>, erst weg vom Ziel</li><li>ZZZ steht auf 2.  </li><li>Checkpoints sind <b>deaktiviert</b> oder nicht da</li><li>Taktisches Crashen ist <b>nicht erlaubt</b></li></ul>Übrigens wurde das Spiel am 11.07.2012 um 13:57 von Stickerle gestartet.</div>');
                 },
 
                 setGameId: function(gameId) {
