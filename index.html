@@ -286,7 +286,7 @@
             var GameInfoView = Backbone.View.extend({
                 id: "gameInfo",
                 initialize: function() {
-                    this.template= _.template('<b>Spielinfos:</b> <ul> <li>Karte: <%= mapId %> - <%= mapName %> von <%= mapAuthor %></li><li>Richtungsmodus <b><%= gameDir %></b>, MEANING</li><li>ZZZ steht auf 2.  </li><li>Checkpoints sind <b><%= gameCps %></b> CHECK MAP</li><li>Taktisches Crashen ist <b><%= gameTc %></b></li></ul>übrigens wurde das Spiel am <%= gameCreated %> von <%= gameCreator %> gestartet.');
+                    this.template= _.template('<b>Spielinfos:</b> <ul> <li>Karte: <%= mapId %> - <%= mapName %> von <%= mapAuthor %></li><li>Richtungsmodus <b><%= gameDir %></b>, MEANING</li><li>ZZZ steht auf <%= gameZzz %></li><li>Checkpoints sind <b><%= gameCps %></b> CHECK MAP</li><li>Taktisches Crashen ist <b><%= gameTc %></b></li></ul>übrigens wurde das Spiel am <%= gameCreated %> von <%= gameCreator %> gestartet.');
                 },
                 redraw: function(){
                     console.log("Redraw GameInfoView");
