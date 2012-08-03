@@ -81,7 +81,6 @@
                 var g= new Game();
                 app.gameAppView=new GameAppView({model: g});
                 $("#content").append(app.gameAppView.$el);
-                console.log("Here I am");
 
                 //Backbone.history.start({pushState: true});
                 Backbone.history.start();
@@ -109,6 +108,8 @@
                 parse: function(data) {
                     //make sure data is matching current gameId (delayed reposens get dropped)
                     if (data.game.id==this.id) {
+                        //pass checkpoint info to map as "cpsActive" // map has cps attr as well, array of avail cps
+                        this.map.set({"cpsActive":data.game.cps},{silent:true});
                         this.map.set(data.map);
                         this.players.reset(data.players);
                         return data.game;
@@ -132,13 +133,8 @@
 
             var Map = Backbone.Model.extend({
                 defaults: {
-                    id: 0
-                },
-
-                initialize: function() {
-                    this.bind("change:id",function(o,id) {
-                        //console.log("New Map id: "+id);
-                    });
+                    id: 0,
+                    cps: false
                 }
             });
 
@@ -153,7 +149,9 @@
                     this.$el.append(this.img);
                 },
                 getImage: function() {
-                    this.$img.attr("src",'http://reloaded.karopapier.de/map/'+this.model.get("id")+'.png?size=12&border=1&cps=0');
+                    console.log("Getting image");
+                    var cps=(this.model.get("cpsActive")===true) ? 1 : 0;
+                    this.$img.attr("src",'http://reloaded.karopapier.de/map/'+this.model.get("id")+'.png?size=12&border=1&cps='+cps);
                 }
 
 
@@ -275,8 +273,6 @@
                     app.setTitle(this.model.get("name"));
                     this.gameInfo.redraw();
                     //need to create a template
-                    console.log("Mapinfo");
-                    console.log(this.game.map.attributes);
                 },
 
                 setGameId: function(gameId) {
@@ -290,18 +286,23 @@
             var GameInfoView = Backbone.View.extend({
                 id: "gameInfo",
                 initialize: function() {
-                    this.template= _.template('<b>Spielinfos:</b> <ul> <li>Karte: <%= mapId %> - <%= mapName %> von <%= mapAuthor %></li><li>Richtungsmodus <b>klassisch</b>, erst weg vom Ziel</li><li>ZZZ steht auf 2.  </li><li>Checkpoints sind <b>deaktiviert</b> oder nicht da</li><li>Taktisches Crashen ist <b>nicht erlaubt</b></li></ul>übrigens wurde das Spiel am 11.07.2012 um 13:57 von Stickerle gestartet.');
+                    this.template= _.template('<b>Spielinfos:</b> <ul> <li>Karte: <%= mapId %> - <%= mapName %> von <%= mapAuthor %></li><li>Richtungsmodus <b><%= gameDir %></b>, MEANING</li><li>ZZZ steht auf 2.  </li><li>Checkpoints sind <b><%= gameCps %></b> CHECK MAP</li><li>Taktisches Crashen ist <b><%= gameTc %></b></li></ul>übrigens wurde das Spiel am <%= gameCreated %> von <%= gameCreator %> gestartet.');
                 },
                 redraw: function(){
                     console.log("Redraw GameInfoView");
-                    console.log(this.el);
-                    console.log(this.$el);
+                    console.log(this.model.attributes);
                     this.$el.html(this.template({
                         mapId: this.model.map.get("id"),
                         mapName: this.model.map.get("name"),
-                        mapAuthor: this.model.map.get("author")
+                        mapAuthor: this.model.map.get("author"),
+                        gameCreator: this.model.get("creator"),
+                        gameCreated: this.model.get("created"),
+                        gameDir: this.model.get("dir"),
+                        gameCps: this.model.get("cps"),
+                        gameTc: this.model.get("tcrash"),
+                        gameZzz: this.model.get("zzz")
+
                     }));
-                    console.log(this.$el);
                 }
             });
 
@@ -316,7 +317,6 @@
                 },
 
                 "nextGame": function() {
-                    console.log("Next Game");
                     var oldId=parseInt(app.gameAppView.model.get("id"));
                     app.router.navigate('game/'+(oldId+1),{trigger: true});
                 }
