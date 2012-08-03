@@ -7,7 +7,10 @@
         <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/css/karo.css" />
         <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/themes/black/css/theme.css" />
         <style type="text/css">
-            .GameAppNavigation {
+            #title {
+                float: left;
+            }
+            #gameAppNavigation {
                 position: absolute;
                 right: 0;
                 bottom: 0;
@@ -20,6 +23,9 @@
                 font-family: Arial;
                 font-size: 70%;
                 width: 300px;
+                /*position: absolute;
+                right: 0;
+                top: 0;*/
                 float: right;
                 margin-bottom: 10px;
                 z-index: 500;
@@ -51,9 +57,6 @@
                 </ul>
             </div>
         <div id="content">
-            <div class="boxtr"> <div class="boxtl"> <div class="boxbr"> <div class="boxbl"> <div class="boxcontent">
-                                <h1 id="title">KaroBackbone</h1>
-            </div> </div> </div> </div> </div>
 
             
 
@@ -85,6 +88,9 @@
             });
 
             var AppView = Backbone.View.extend({
+                initialize: function() {
+                    this.content=$('#content')
+                },
                 setTitle: function (title) {
                     $(document).attr("title",title);
                     $('#title').text(title);
@@ -114,11 +120,13 @@
                 initialize: function() {
                     this.map = new Map();
                     this.players = new PlayerCollection();
-                    this.bind("change:id", function (o,id,c,d) {
-                        //neu holen
-                        console.log(id);
-                        this.fetch();
-                    });
+                },
+
+                load: function (id) {
+                    //silently set the id, events trigger after data is here
+                    this.set({"id": id},{silent:true});
+                    console.log("Fetching for "+id);
+                    this.fetch();
                 }
             });
 
@@ -129,7 +137,7 @@
 
                 initialize: function() {
                     this.bind("change:id",function(o,id) {
-                        console.log(" New Map id: "+id);
+                        //console.log("New Map id: "+id);
                     });
                 }
             });
@@ -146,7 +154,6 @@
                 },
                 getImage: function() {
                     this.$img.attr("src",'http://reloaded.karopapier.de/map/'+this.model.get("id")+'.png?size=12&border=1&cps=0');
-                    console.log(this);
                 }
 
 
@@ -195,73 +202,116 @@
 
             //container for rendered map and players
             var GameView = Backbone.View.extend({
-                className: "gameView"
+                initialize: function() {
+                    this.game=this.model;
+                    this.template= _.template('<div id="mapView"></div><div id="playersView"></div>');
+                    this.$el.html(this.template);
+                    this.mapView=new MapView({
+                        model: this.model.map,
+                        el: $('#mapView',this.$el)
+                    });
+                    this.playersView=new PlayerCollectionView({
+                        model:this.model.players,
+                        el: $('#playersView',this.$el)
+                    });
+                },
+                render: function() {
+                    this.$el.html(this.template());
+                    this.mapView.render();
+                    this.$el.append(this.mapView.$el);
+
+                }
             });
 
             var GameAppView = Backbone.View.extend({
                 tagName: "div",
-                className: "GameApp",
+                id: "GameApp",
+
 
                 initialize: function() {
-                    _.bindAll(this);
-                    this.gameView=new GameView({model:this.model});
-                    this.mapView=new MapView({model: this.model.map});
-                    this.mapView.render();
-                    this.render();
-                    this.$el.append(this.mapView.$el);
-                    this.playerCollectionView=new PlayerCollectionView({model:this.model.players});
+                    this.template = _.template('<h1 id="title">KaroBackbone</h1><div id="gameInfo"></div><div class="clearer"></div></div><div id="GameView"></div><div id="GameDetails"></div><div id="gameAppNavigation"></div>');
+                    this.$el.html(this.template);
+
                     this.game=this.model;
 
+                    _.bindAll(this);
+
+                    this.gameView=new GameView({
+                        model:this.model,
+                        el: $('#GameView',this.$el)
+                    });
+
                     //init game navigation
-                    this.navigation=new GameAppNavigationView();
+                    this.navigation=new GameAppNavigationView({
+                        el: $('#gameAppNavigation',this.$el)
+                    });
                     this.navigation.render();
-                    this.$el.append(this.navigation.$el);
-                    this.model.bind("change",this.refresh);
+
+                    //init game info
+                    this.gameInfo=new GameInfoView({
+                        model: this.game,
+                        el: $('#gameInfo',this.$el)
+                    });
+                    this.gameInfo.render();
+
+                    //events
+                    this.model.bind("change",this.redraw);
                 },
 
                 close: function() {
                     //remove child views
-                    this.mapView.close();
-                    this.playerCollectionView.close();
+                    this.gameView.close();
+                    this.gameInfo.close();
                     this.navigation.close();
                     alert("Remove myself");
                     this.$el.remove();
                 },
 
                 render: function() {
-                    //title area
-                    this.$el.append(this.title);
-
-                    this.gameInfo=$(document.createElement('div'));
-                    this.$gameInfo=$(this.gameInfo);
-                    this.$gameInfo.attr("id","gameInfo");
-                    this.$el.append(this.gameInfo);
+                    app.content.append(this.el);
                 },
 
-                refresh: function() {
+                redraw: function() {
                     app.setTitle(this.model.get("name"));
+                    this.gameInfo.redraw();
                     //need to create a template
-                    this.$gameInfo.html(
-'<div id="gameInfo"> <b>Spielinfos:</b> <ul> <li>Karte: '+this.game.map.id+' - "'+this.game.map.get("name")+'" von '+this.game.map.get("author")+'</li><li>Richtungsmodus <b>klassisch</b>, erst weg vom Ziel</li><li>ZZZ steht auf 2.  </li><li>Checkpoints sind <b>deaktiviert</b> oder nicht da</li><li>Taktisches Crashen ist <b>nicht erlaubt</b></li></ul>Übrigens wurde das Spiel am 11.07.2012 um 13:57 von Stickerle gestartet.</div>');
+                    console.log("Mapinfo");
+                    console.log(this.game.map.attributes);
                 },
 
                 setGameId: function(gameId) {
                     if (gameId!=0) {
-                        this.model.set({ "id": gameId });
+                        this.model.load(gameId);
                     }
                 }
 
             })
 
+            var GameInfoView = Backbone.View.extend({
+                id: "gameInfo",
+                initialize: function() {
+                    this.template= _.template('<b>Spielinfos:</b> <ul> <li>Karte: <%= mapId %> - <%= mapName %> von <%= mapAuthor %></li><li>Richtungsmodus <b>klassisch</b>, erst weg vom Ziel</li><li>ZZZ steht auf 2.  </li><li>Checkpoints sind <b>deaktiviert</b> oder nicht da</li><li>Taktisches Crashen ist <b>nicht erlaubt</b></li></ul>Ã¼brigens wurde das Spiel am 11.07.2012 um 13:57 von Stickerle gestartet.');
+                },
+                redraw: function(){
+                    console.log("Redraw GameInfoView");
+                    console.log(this.el);
+                    console.log(this.$el);
+                    this.$el.html(this.template({
+                        mapId: this.model.map.get("id"),
+                        mapName: this.model.map.get("name"),
+                        mapAuthor: this.model.map.get("author")
+                    }));
+                    console.log(this.$el);
+                }
+            });
+
             var GameAppNavigationView = Backbone.View.extend({
-                tagName: "div",
-                className: "GameAppNavigation",
                 events: {
                     'click .next': "nextGame"
                 },
 
                 render: function() {
-                    console.log("Rendering nav");
+                    console.log("Rendering GameAppNav");
                     this.$el.html('<span class="clickable next">Next</a>');
                 },
 
