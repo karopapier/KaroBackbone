@@ -143,15 +143,18 @@
                 initialize: function() {
                     _.bindAll(this);
                     this.model.bind("change:id",this.getImage);
+					this.options.settings.bind("change",this.getImage);
                     this.img=$(document.createElement("img"));
                     this.$img=$(this.img);
                     this.$img.attr("src", "http://reloaded.karopapier.de/images/loading.gif");
                     this.$el.append(this.img);
+					console.log("Bin jetzt hier");
+					console.log(this.options.settings);
                 },
                 getImage: function() {
                     console.log("Getting image");
                     var cps=(this.model.get("cpsActive")===true) ? 1 : 0;
-                    this.$img.attr("src",'http://reloaded.karopapier.de/map/'+this.model.get("id")+'.png?size=12&border=1&cps='+cps);
+                    this.$img.attr("src",'http://reloaded.karopapier.de/map/'+this.model.get("id")+'.png?size='+this.options.settings.get("size")+'&border='+this.options.settings.get("border")+'&cps='+cps);
                 }
 
 
@@ -198,18 +201,31 @@
                 model: Move
             });
 
+			var ViewSettings= Backbone.Model.extend({
+				defaults: {
+					size: 12,
+					border: 1,
+					specles: false
+				}
+			});
+
             //container for rendered map and players
             var GameView = Backbone.View.extend({
                 initialize: function() {
                     this.game=this.model;
                     this.template= _.template('<div id="mapView"></div><div id="playersView"></div>');
                     this.$el.html(this.template);
+
+					this.settings=new ViewSettings();
                     this.mapView=new MapView({
                         model: this.model.map,
+						settings: this.settings,
                         el: $('#mapView',this.$el)
                     });
+
                     this.playersView=new PlayerCollectionView({
                         model:this.model.players,
+						settings: this.settings,
                         el: $('#playersView',this.$el)
                     });
                 },
@@ -308,14 +324,36 @@
 
             var GameAppNavigationView = Backbone.View.extend({
                 events: {
-                    'click .next': "nextGame"
+                    'click .back': "backGame",
+                    'click .next': "nextGame",
+                    'click .smaller': "smallerView",
+                    'click .bigger': "biggerView"
                 },
 
                 render: function() {
                     console.log("Rendering GameAppNav");
-                    this.$el.html('<span class="clickable next">Next</a>');
+					var html='';
+					html+= '<span class="clickable back">Back</span> ';
+					html+= '<span class="clickable smaller"> - </span> ';
+					html+= '<span class="clickable bigger"> + </span> ';
+					html+= '<span class="clickable next">Next</span> ';
+                    this.$el.html(html);
                 },
 
+				"smallerView": function () {
+					var size=app.gameAppView.gameView.settings.get("size");
+					app.gameAppView.gameView.settings.set({"size":size-1});
+				},
+
+				"biggerView": function () {
+					var size=app.gameAppView.gameView.settings.get("size");
+					app.gameAppView.gameView.settings.set({"size":size+1});
+				},
+
+                "backGame": function() {
+                    var oldId=parseInt(app.gameAppView.model.get("id"));
+                    app.router.navigate('game/'+(oldId-1),{trigger: true});
+                },
                 "nextGame": function() {
                     var oldId=parseInt(app.gameAppView.model.get("id"));
                     app.router.navigate('game/'+(oldId+1),{trigger: true});
