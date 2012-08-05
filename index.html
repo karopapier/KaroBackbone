@@ -111,6 +111,14 @@
                         //pass checkpoint info to map as "cpsActive" // map has cps attr as well, array of avail cps
                         this.map.set({"cpsActive":data.game.cps},{silent:true});
                         this.map.set(data.map);
+						playersData=data.players;
+						console.log("Im parse");
+						_.each(playersData,function(playerData) {
+							lastmove=new Move(playerData.lastmove);
+							playerData.lastmove=lastmove;
+							moves=new MoveCollection(playerData.moves);
+							playerData.moves=moves;
+						});
                         this.players.reset(data.players);
                         return data.game;
                     } else {
@@ -120,7 +128,8 @@
 
                 initialize: function() {
                     this.map = new Map();
-                    this.players = new PlayerCollection();
+					this.moveMessages =new MoveMessageCollection();
+                    this.players = new PlayerCollection([{id:0}],{"moveMessages": this.moveMessages});
                 },
 
                 load: function (id) {
@@ -148,8 +157,6 @@
                     this.$img=$(this.img);
                     this.$img.attr("src", "http://reloaded.karopapier.de/images/loading.gif");
                     this.$el.append(this.img);
-					console.log("Bin jetzt hier");
-					console.log(this.options.settings);
                 },
                 getImage: function() {
                     console.log("Getting image");
@@ -174,18 +181,51 @@
                 }
             });
 
+			var MoveMessage = Backbone.Model.extend({
+			});
+
+			var MoveMessageCollection = Backbone.Collection.extend({
+				model: MoveMessage
+			});
+
             var PlayerCollection = Backbone.Collection.extend({
                 model: Player,
 
-                initialize: function() {
+                initialize: function(models, options) {
+					_.bindAll(this);
+					console.log("Haeh???");
+					this.moveMessages=options.moveMessages;
                     this.bind("reset",function(o,id) {
-                        console.log("Init Players",o);
+                        console.log("Init Players");
+						//Look for messages
+
+						this.each(function(player) {
+							//parse player moves for messages
+							player.get("moves").each(function(move){
+								if (move.get("msg")) {
+									mm=new MoveMessage({
+										"move": move,
+										"player": player
+									});
+									this.moveMessages.add(mm);
+								}
+							},this);
+						},this)
                     });
                 }
             });
 
             var PlayerCollectionView = Backbone.View.extend({
-                className: "playerCollection"
+                className: "playerCollection",
+				initialize: function() {
+					_.bindAll(this);
+					this.model.bind("reset",function() {
+						console.log("NEUE SPIELER");
+						this.moveMessages.each(function(mm) {
+							console.log(mm.get("player").get("name")+": "+mm.get("move").get("msg"));
+						});
+					});
+				}
             });
 
             var Move = Backbone.Model.extend({
@@ -305,8 +345,6 @@
                     this.template= _.template('<b>Spielinfos:</b> <ul> <li>Karte: <%= mapId %> - <%= mapName %> von <%= mapAuthor %></li><li>Richtungsmodus <b><%= gameDir %></b>, MEANING</li><li>ZZZ steht auf <%= gameZzz %></li><li>Checkpoints sind <b><%= gameCps %></b> CHECK MAP</li><li>Taktisches Crashen ist <b><%= gameTc %></b></li></ul>übrigens wurde das Spiel am <%= gameCreated %> von <%= gameCreator %> gestartet.');
                 },
                 redraw: function(){
-                    console.log("Redraw GameInfoView");
-                    console.log(this.model.attributes);
                     this.$el.html(this.template({
                         mapId: this.model.map.get("id"),
                         mapName: this.model.map.get("name"),
