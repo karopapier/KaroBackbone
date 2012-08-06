@@ -7,9 +7,6 @@
         <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/css/karo.css" />
         <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/themes/black/css/theme.css" />
         <style type="text/css">
-            #title {
-                float: left;
-            }
             #gameAppNavigation {
                 position: absolute;
                 right: 0;
@@ -185,20 +182,44 @@
 			});
 
 			var MoveMessageCollection = Backbone.Collection.extend({
-				model: MoveMessage
+				model: MoveMessage,
+                comparator: function(mm) {
+                    return mm.get("move").get("t");
+                }
 			});
+
+            var MoveMessageView = Backbone.View.extend({
+                initialize: function() {
+                    _.bindAll(this);
+                    this.model.bind("change", this.redraw);
+                    this.template= _.template('<%= name %>: <%= text %><br />\n');
+                },
+                redraw: function() {
+                    console.log("REDRAW MESSAGES");
+                    var html='';
+                    this.model.each(function(e) {
+                        html+=this.template({
+                            name: e.get("player").get("name"),
+                            text: e.get("move").get("msg")
+                        });
+                    },this);
+                    console.log(html);
+                    this.$el.html(html);
+                }
+            });
 
             var PlayerCollection = Backbone.Collection.extend({
                 model: Player,
 
                 initialize: function(models, options) {
 					_.bindAll(this);
-					console.log("Haeh???");
 					this.moveMessages=options.moveMessages;
                     this.bind("reset",function(o,id) {
                         console.log("Init Players");
 						//Look for messages
 
+                        //clear messages first
+                        this.moveMessages.reset();
 						this.each(function(player) {
 							//parse player moves for messages
 							player.get("moves").each(function(move){
@@ -207,10 +228,11 @@
 										"move": move,
 										"player": player
 									});
-									this.moveMessages.add(mm);
+									this.moveMessages.add(mm,{silent:true});
 								}
 							},this);
 						},this)
+                        this.moveMessages.trigger("change");
                     });
                 }
             });
@@ -222,7 +244,7 @@
 					this.model.bind("reset",function() {
 						console.log("NEUE SPIELER");
 						this.moveMessages.each(function(mm) {
-							console.log(mm.get("player").get("name")+": "+mm.get("move").get("msg"));
+							console.log(mm.get("move").get("t") + " - " + mm.get("player").get("name")+": "+mm.get("move").get("msg"));
 						});
 					});
 				}
@@ -283,7 +305,7 @@
 
 
                 initialize: function() {
-                    this.template = _.template('<h1 id="title">KaroBackbone</h1><div id="gameInfo"></div><div class="clearer"></div></div><div id="GameView"></div><div id="GameDetails"></div><div id="gameAppNavigation"></div>');
+                    this.template = _.template('<div style="float: left"><h1 id="title">KaroBackbone</h1><div id="latestMessages"></div></div><div id="gameInfo"></div><div class="clearer"></div></div><div id="GameView"></div><div id="GameDetails"></div><div id="gameAppNavigation"></div>');
                     this.$el.html(this.template);
 
                     this.game=this.model;
@@ -307,6 +329,12 @@
                         el: $('#gameInfo',this.$el)
                     });
                     this.gameInfo.render();
+
+                    //init latestMessages
+                    this.latestMessages=new MoveMessageView({
+                        model: this.game.moveMessages,
+                        el: $('#latestMessages',this.$el)
+                    })
 
                     //events
                     this.model.bind("change",this.redraw);
