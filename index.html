@@ -109,7 +109,6 @@
                         this.map.set({"cpsActive":data.game.cps},{silent:true});
                         this.map.set(data.map);
 						playersData=data.players;
-						console.log("Im parse");
 						_.each(playersData,function(playerData) {
 							lastmove=new Move(playerData.lastmove);
 							playerData.lastmove=lastmove;
@@ -132,7 +131,7 @@
                 load: function (id) {
                     //silently set the id, events trigger after data is here
                     this.set({"id": id},{silent:true});
-                    console.log("Fetching for "+id);
+                    console.info("Fetching for "+id);
                     this.fetch();
                 }
             });
@@ -156,7 +155,7 @@
                     this.$el.append(this.img);
                 },
                 getImage: function() {
-                    console.log("Getting image");
+                    console.info("Getting image");
                     var cps=(this.model.get("cpsActive")===true) ? 1 : 0;
                     this.$img.attr("src",'http://reloaded.karopapier.de/map/'+this.model.get("id")+'.png?size='+this.options.settings.get("size")+'&border='+this.options.settings.get("border")+'&cps='+cps);
                 }
@@ -173,7 +172,7 @@
                     this.moves=new MoveCollection();
                     this.lastmove=new Move();
                     this.bind("change:id",function(o,id) {
-                        console.log(" New Player id: "+id);
+                        console.info(" New Player id: "+id);
                     });
                 }
             });
@@ -193,17 +192,23 @@
                     _.bindAll(this);
                     this.model.bind("change", this.redraw);
                     this.template= _.template('<%= name %>: <%= text %><br />\n');
+                    //apply given filter function or preset with returning all
+                    if (this.options.filter) {
+                        this.filter=this.options.filter;
+                    } else {
+                        this.filter=function() { return true };
+                    }
                 },
                 redraw: function() {
-                    console.log("REDRAW MESSAGES");
                     var html='';
-                    this.model.each(function(e) {
+                    filtered=this.model.filter(this.filter);
+
+                    _.each(filtered,function(e) {
                         html+=this.template({
                             name: e.get("player").get("name"),
                             text: e.get("move").get("msg")
                         });
                     },this);
-                    console.log(html);
                     this.$el.html(html);
                 }
             });
@@ -215,7 +220,7 @@
 					_.bindAll(this);
 					this.moveMessages=options.moveMessages;
                     this.bind("reset",function(o,id) {
-                        console.log("Init Players");
+                        console.info("Init Players");
 						//Look for messages
 
                         //clear messages first
@@ -242,10 +247,7 @@
 				initialize: function() {
 					_.bindAll(this);
 					this.model.bind("reset",function() {
-						console.log("NEUE SPIELER");
-						this.moveMessages.each(function(mm) {
-							console.log(mm.get("move").get("t") + " - " + mm.get("player").get("name")+": "+mm.get("move").get("msg"));
-						});
+						console.info("NEUE SPIELER");
 					});
 				}
             });
@@ -305,7 +307,7 @@
 
 
                 initialize: function() {
-                    this.template = _.template('<div style="float: left"><h1 id="title">KaroBackbone</h1><div id="latestMessages"></div></div><div id="gameInfo"></div><div class="clearer"></div></div><div id="GameView"></div><div id="GameDetails"></div><div id="gameAppNavigation"></div>');
+                    this.template = _.template('<div style="float: left"><h1 id="title">KaroBackbone</h1><div id="latestMessages"></div></div><div id="gameInfo"></div><div class="clearer"></div></div><div id="GameView"></div><div id="moveMessages"></div><div id="GameDetails"></div><div id="gameAppNavigation"></div>');
                     this.$el.html(this.template);
 
                     this.game=this.model;
@@ -333,8 +335,19 @@
                     //init latestMessages
                     this.latestMessages=new MoveMessageView({
                         model: this.game.moveMessages,
-                        el: $('#latestMessages',this.$el)
+                        el: $('#latestMessages',this.$el),
+                        filter: function(mm) {
+                            return (mm.get("player").get("name")=="Kinvarra");
+                        },
+                        max: 5
                     })
+                    //init moveMessages
+                    this.moveMessages=new MoveMessageView({
+                        model: this.game.moveMessages,
+                        el: $('#moveMessages',this.$el),
+                        filter: false,
+                        max:10
+                    });
 
                     //events
                     this.model.bind("change",this.redraw);
@@ -397,7 +410,7 @@
                 },
 
                 render: function() {
-                    console.log("Rendering GameAppNav");
+                    console.info("Rendering GameAppNav");
 					var html='';
 					html+= '<span class="clickable back">Back</span> ';
 					html+= '<span class="clickable smaller"> - </span> ';
@@ -434,7 +447,7 @@
                 },
 
                 showGame: function(gameId) {
-                    console.log("Routing to "+gameId);
+                    console.info("Routing to "+gameId);
                     gameId = gameId || 70000;
                     app.gameAppView.setGameId(gameId);
                 }
