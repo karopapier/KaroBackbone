@@ -65,11 +65,13 @@
         <!-- <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
         <script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
         <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
-        <script type="text/javascript" src="js/underscore-min.js"></script>
-        <script type="text/javascript" src="js/jquery-latest.min.js"></script>
-        <script type="text/javascript" src="js/backbone-min.js"></script>
-        <script type="text/javascript" src="js/moment.min.js"></script>
-        <script type="text/javascript" src="js/de.js"></script>
+        <script type="text/javascript" src="js/libs/underscore-min.js"></script>
+        <script type="text/javascript" src="js/libs/jquery-latest.min.js"></script>
+        <script type="text/javascript" src="js/libs/backbone-min.js"></script>
+        <script type="text/javascript" src="js/libs/moment.min.js"></script>
+        <script type="text/javascript" src="js/libs/moment-de.js"></script>
+
+        <script type="text/javascript" src="js/model/Map.js"></script>
 
         <script type="text/javascript">
             moment().lang("de");
@@ -136,13 +138,6 @@
                     this.set({"id": id},{silent:true});
                     console.info("Fetching for "+id);
                     this.fetch();
-                }
-            });
-
-            var Map = Backbone.Model.extend({
-                defaults: {
-                    id: 0,
-                    cps: false
                 }
             });
 
@@ -266,7 +261,6 @@
                     html+='</td>';
                     var lm=moment(player.lastmove.get("t"),"YYYY-MM-DD HH:mm:ss").toDate();
                     html+='<td><span title="' + moment(lm).format("DD.MM.YY H:mm") + '">';
-                    console.debug(moment(lm).diff(new Date(),"days"));
                     if (moment(lm).diff(new Date(),"days")<-1) {
                         html+="vor "+Math.abs(moment(lm).diff(new Date(),"days"))+" Tagen";
                     } else {

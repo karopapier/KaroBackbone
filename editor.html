@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Karo Map Editor</title>
+        <link rel="shortcut icon" href="http://reloaded.karopapier.de/favicon.ico" />
+        <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/css/karo.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/themes/black/css/theme.css" />
+
+        <style type="text/css">
+#area51 {
+    width: 1000px;
+    height: 600px;
+    background-color: lightblue;
+    float: left;
+}
+        </style>
+
+    </head>
+
+    <body>
+        <div id="header">
+            <div id="infoBar">
+            <span class="userLabel" name="userLabel1">Didi</span> Spiele: <a href="/dran"><span id="dranCount">5</span></a>/<span id="gamesCount">105</span> [5/105]
+            <a href="/logout">Logout</a>                <div id="NotifierContainer"></div>
+            </div>
+        </div>
+        <div class="clearer"></div>
+
+        <div id="container">
+            <div id="sidebar">
+                <ul id="navi">
+                    <li><a href="#game/70321">Spiel</a></li>
+                    <li><a href="#game/70178">Nacht</a></li>
+                    <li><a href="#game/70179">Nacht2</a></li>
+                </ul>
+            </div>
+        <div id="content">
+
+            <canvas id="area51"></canvas>
+            <div id="show" style="float:left; background-color: lightyellow">
+                Mouse Left: <span id="button1"> Button </span> <span id="drag1"> Drag </span><br />
+                Mouse Middle: <span id="button2"> Button </span> <span id="drag2"> Drag </span><br />
+                Mouse Right: <span id="button3"> Button </span> <span id="drag3"> Drag </span>
+            </div>
+            
+
+        </div>
+
+        <center><a href="http://www.karopapier.de">Karopapier.de</a> is brought to you by
+        <script type="text/javascript">document.write(String.fromCharCode(0x44,0x69,0x64,0x69).link(String.fromCharCode(0x6d,0x61,0x69,0x6c,0x74,0x6f,0x3a,0x64,0x69,0x64,0x69,0x40,0x6b,0x61,0x72,0x6f,0x70,0x61,0x70,0x69,0x65,0x72,0x2e,0x64,0x65)));</script></center>
+
+        <!-- <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+        <script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
+        <script type="text/javascript" src="js/libs/underscore-min.js"></script>
+        <script type="text/javascript" src="js/libs/jquery-latest.min.js"></script>
+        <script type="text/javascript" src="js/libs/backbone-min.js"></script>
+        <script type="text/javascript" src="js/model/Map.js"></script>
+
+        <script type="text/javascript">
+            var buttonDown=[false, false, false, false] //null, left, middle, right
+
+            function render() {
+                for (var i=1;i<=3;i++) {
+                    $('#button'+i).css({backgroundColor: buttonDown[i] ? 'red' : 'white'});
+                }
+            }
+
+            $(document).ready(function() {
+                var area=$('#area51');
+                var offset=area.offset();
+                var offsetX=offset.left;
+                var offsetY=offset.top;
+                area.mousedown(function(e) {
+                    buttonDown[e.which]=true;
+                    e.preventDefault();
+                    render();
+                    return false;
+                });
+                area.mousemove(function(e) {
+                    for (var i=1;i<=3;i++) {
+                        if (buttonDown[i]) {
+                            $('#drag'+i).text("("+(e.pageX-offsetX)+"|"+(e.pageY-offsetY)+")");
+                        }
+                    }
+                });
+                area.mouseup(function(e) {
+                    buttonDown[e.which]=false;
+                    render();
+                });
+                area.mouseleave(function(e) {
+                    for (var i=1;i<=3;i++) {
+                        buttonDown[e.which]=false;
+                    }
+                    render();
+                });
+
+                area.bind("contextmenu", function() {
+                    return false;
+                });
+            });
+
+        </script>
+
+
+    </body>
+</html>

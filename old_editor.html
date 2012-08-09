@@ -1,0 +1,62 @@
+<head>
+<style type="text/css">
+#area51 {
+    width: 1000px;
+    height: 600px;
+    background-color: lightblue;
+    float: left;
+}
+</style>
+</head>
+<body>
+<canvas id="area51"></canvas>
+<div id="show" style="float:left; background-color: lightyellow">
+Mouse Left: <span id="button1"> Button </span> <span id="drag1"> Drag </span><br />
+Mouse Middle: <span id="button2"> Button </span> <span id="drag2"> Drag </span><br />
+Mouse Right: <span id="button3"> Button </span> <span id="drag3"> Drag </span>
+</div>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+    var buttonDown=[false, false, false, false] //null, left, middle, right
+
+    function render() {
+        for (var i=1;i<=3;i++) {
+            $('#button'+i).css({backgroundColor: buttonDown[i] ? 'red' : 'white'});
+        }
+    }
+
+    $(document).ready(function() {
+        var area=$('#area51');
+        var offset=area.offset();
+        var offsetX=offset.left;
+        var offsetY=offset.top;
+        area.mousedown(function(e) {
+            buttonDown[e.which]=true;
+            e.preventDefault();
+            render();
+            return false;
+        });
+        area.mousemove(function(e) {
+            for (var i=1;i<=3;i++) {
+                if (buttonDown[i]) {
+                    $('#drag'+i).text("("+(e.pageX-offsetX)+"|"+(e.pageY-offsetY)+")");
+                }
+            }
+        });
+        area.mouseup(function(e) {
+            buttonDown[e.which]=false;
+            render();
+        });
+        area.mouseleave(function(e) {
+            for (var i=1;i<=3;i++) {
+                buttonDown[e.which]=false;
+            }
+            render();
+        });
+
+        area.bind("contextmenu", function() {
+            return false;
+        });
+    });
+
+</script>
