@@ -1,19 +1,20 @@
 <!doctype html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Karo Map Editor</title>
         <link rel="shortcut icon" href="http://reloaded.karopapier.de/favicon.ico" />
         <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/css/karo.css" />
         <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/themes/black/css/theme.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="css/smoothness/jquery-ui-1.8.22.custom.css" />
 
         <style type="text/css">
-#area51 {
-    width: 1000px;
-    height: 600px;
-    background-color: lightblue;
-    float: left;
-}
+            .mapRenderView {
+                width: 1000px;
+                height: 600px;
+                background-color: lightblue;
+                float: left;
+            }
         </style>
 
     </head>
@@ -21,8 +22,8 @@
     <body>
         <div id="header">
             <div id="infoBar">
-            <span class="userLabel" name="userLabel1">Didi</span> Spiele: <a href="/dran"><span id="dranCount">5</span></a>/<span id="gamesCount">105</span> [5/105]
-            <a href="/logout">Logout</a>                <div id="NotifierContainer"></div>
+                <span class="userLabel" name="userLabel1">Didi</span> Spiele: <a href="/dran"><span id="dranCount">5</span></a>/<span id="gamesCount">105</span> [5/105]
+                <a href="/logout">Logout</a>                <div id="NotifierContainer"></div>
             </div>
         </div>
         <div class="clearer"></div>
@@ -35,74 +36,136 @@
                     <li><a href="#game/70179">Nacht2</a></li>
                 </ul>
             </div>
-        <div id="content">
+            <div id="content">
 
-            <canvas id="area51"></canvas>
-            <div id="show" style="float:left; background-color: lightyellow">
-                Mouse Left: <span id="button1"> Button </span> <span id="drag1"> Drag </span><br />
-                Mouse Middle: <span id="button2"> Button </span> <span id="drag2"> Drag </span><br />
-                Mouse Right: <span id="button3"> Button </span> <span id="drag3"> Drag </span>
+                <div id="editor"></div>
+                <div id="show" style="float:left; background-color: lightyellow; width: 250px">
+                    Mouse Left: <span id="button1"> Button </span> <span id="drag1"> Drag </span><br />
+                    Mouse Middle: <span id="button2"> Button </span> <span id="drag2"> Drag </span><br />
+                    Mouse Right: <span id="button3"> Button </span> <span id="drag3"> Drag </span>
+                    <div id="size-slider" style="margin: 5px"></div>
+                </div>
+
             </div>
-            
 
-        </div>
+            <center><a href="http://www.karopapier.de">Karopapier.de</a> is brought to you by
+                <script type="text/javascript">document.write(String.fromCharCode(0x44,0x69,0x64,0x69).link(String.fromCharCode(0x6d,0x61,0x69,0x6c,0x74,0x6f,0x3a,0x64,0x69,0x64,0x69,0x40,0x6b,0x61,0x72,0x6f,0x70,0x61,0x70,0x69,0x65,0x72,0x2e,0x64,0x65)));</script></a>
+            </center>
 
-        <center><a href="http://www.karopapier.de">Karopapier.de</a> is brought to you by
-        <script type="text/javascript">document.write(String.fromCharCode(0x44,0x69,0x64,0x69).link(String.fromCharCode(0x6d,0x61,0x69,0x6c,0x74,0x6f,0x3a,0x64,0x69,0x64,0x69,0x40,0x6b,0x61,0x72,0x6f,0x70,0x61,0x70,0x69,0x65,0x72,0x2e,0x64,0x65)));</script></center>
+            <!-- <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+            <script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+            <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
+            <script type="text/javascript" src="js/libs/underscore-min.js"></script>
+            <script type="text/javascript" src="js/libs/jquery-1.7.2.min.js"></script>
+            <script type="text/javascript" src="js/libs/jquery-ui-1.8.22.custom.min.js"></script>
+            <script type="text/javascript" src="js/libs/backbone-min.js"></script>
 
-        <!-- <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
-        <script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
-        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
-        <script type="text/javascript" src="js/libs/underscore-min.js"></script>
-        <script type="text/javascript" src="js/libs/jquery-latest.min.js"></script>
-        <script type="text/javascript" src="js/libs/backbone-min.js"></script>
-        <script type="text/javascript" src="js/model/Map.js"></script>
+            <script type="text/javascript" src="js/model/Map.js"></script>
+            <script type="text/javascript" src="js/model/ViewSettings.js"></script>
 
-        <script type="text/javascript">
-            var buttonDown=[false, false, false, false] //null, left, middle, right
+            <script type="text/javascript">
+                var buttonDown=[false, false, false, false] //null, left, middle, right
 
-            function render() {
-                for (var i=1;i<=3;i++) {
-                    $('#button'+i).css({backgroundColor: buttonDown[i] ? 'red' : 'white'});
+                function render() {
+                    for (var i=1;i<=3;i++) {
+                        $('#button'+i).css({backgroundColor: buttonDown[i] ? 'red' : 'transparent'});
+                    }
                 }
-            }
 
-            $(document).ready(function() {
-                var area=$('#area51');
-                var offset=area.offset();
-                var offsetX=offset.left;
-                var offsetY=offset.top;
-                area.mousedown(function(e) {
-                    buttonDown[e.which]=true;
-                    e.preventDefault();
-                    render();
-                    return false;
-                });
-                area.mousemove(function(e) {
-                    for (var i=1;i<=3;i++) {
-                        if (buttonDown[i]) {
-                            $('#drag'+i).text("("+(e.pageX-offsetX)+"|"+(e.pageY-offsetY)+")");
+                $(document).ready(function() {
+
+
+                    var MapRenderView=Backbone.View.extend({
+                        className: "mapImageView",
+                        tagName: "canvas",
+                        initialize: function() {
+                            _.bindAll(this);
+                            //this.model.bind("change:id",this.getImage);
+                            //this.options.settings.bind("change",this.getImage);
+                            this.$el.bind("contextmenu",function() { return false; });
+                            this.settings=this.options.settings;
+
+                            this.settings.bind("change:size", function (e,v) {
+                                this.render();
+                            },this)
+                        },
+                        render: function () {
+
+                            var size=this.settings.get("size");
+                            this.el.width=size*20;
+                            this.el.height=size*10;
+
+                            var offset=this.$el.offset();
+                            this.offsetX=offset.left;
+                            this.offsetY=offset.top;
+                            this.ctx=this.el.getContext("2d");
+
+                            this.ctx.fillStyle   = '#00f'; // blue
+                            this.ctx.strokeStyle = '#f00'; // red
+                            this.ctx.lineWidth   = 4;
+
+                            // Draw some rectangles.
+                            this.ctx.fillRect  (0,   0, 150, 50);
+                            this.ctx.strokeRect(0,  60, 150, 50);
+                            this.ctx.clearRect (30, 25,  90, 60);
+                            this.ctx.strokeRect(30, 25,  90, 60);
+                        },
+                        events: {
+                            'mousedown': 'mousedown',
+                            'mouseup': 'mouseup',
+                            'mouseleave': 'mouseleave',
+                            "contextmenu": function() {
+                                return false;
+                            }
+                        },
+
+                        mousedown: function(e) {
+                            buttonDown[e.which]=true;
+                            e.preventDefault();
+                            render();
+                            this.$el.bind("mousemove",this.mousemove);
+                            return false;
+                        },
+
+                        mouseup:function(e) {
+                            buttonDown[e.which]=false;
+                            render();
+                            this.$el.unbind("mousemove");
+                        },
+
+                        mousemove: function(e) {
+                            for (var i=1;i<=3;i++) {
+                                if (buttonDown[i]) {
+                                    $('#drag'+i).text("("+(e.pageX-this.offsetX)+"|"+(e.pageY-this.offsetY)+")");
+                                }
+                            };
+                        },
+
+                        mouseleave:function(e) {
+                            for (var i=1;i<=3;i++) {
+                                buttonDown[e.which]=false;
+                            }
+                            render();
                         }
-                    }
-                });
-                area.mouseup(function(e) {
-                    buttonDown[e.which]=false;
-                    render();
-                });
-                area.mouseleave(function(e) {
-                    for (var i=1;i<=3;i++) {
-                        buttonDown[e.which]=false;
-                    }
-                    render();
+                    });
+
+                    var settings = new ViewSettings();
+                    var mrv= new MapRenderView({"settings": settings});
+                    $('#editor').append(mrv.el);
+                    mrv.render();
+
+                    $('#size-slider').slider({
+                        value: 8,
+                        min: 1,
+                        max: 20,
+                        slide: function(event, ui) {
+                            //console.debug(ui.value);
+                            settings.set({"size":ui.value});
+                        }
+                    });
                 });
 
-                area.bind("contextmenu", function() {
-                    return false;
-                });
-            });
-
-        </script>
-
-
+            </script>
+        </div>
     </body>
 </html>

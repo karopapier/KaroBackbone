@@ -66,12 +66,13 @@
         <script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
         <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
         <script type="text/javascript" src="js/libs/underscore-min.js"></script>
-        <script type="text/javascript" src="js/libs/jquery-latest.min.js"></script>
+        <script type="text/javascript" src="js/libs/jquery-1.7.2.min.js"></script>
         <script type="text/javascript" src="js/libs/backbone-min.js"></script>
         <script type="text/javascript" src="js/libs/moment.min.js"></script>
         <script type="text/javascript" src="js/libs/moment-de.js"></script>
 
         <script type="text/javascript" src="js/model/Map.js"></script>
+        <script type="text/javascript" src="js/model/ViewSettings.js"></script>
 
         <script type="text/javascript">
             moment().lang("de");
@@ -141,8 +142,8 @@
                 }
             });
 
-            var MapView=Backbone.View.extend({
-                className: "mapView",
+            var MapImageView=Backbone.View.extend({
+                className: "mapImageView",
                 initialize: function() {
                     _.bindAll(this);
                     this.model.bind("change:id",this.getImage);
@@ -325,26 +326,18 @@
                 model: Move
             });
 
-			var ViewSettings= Backbone.Model.extend({
-				defaults: {
-					size: 8,
-					border: 1,
-					specles: false
-				}
-			});
-
             //container for rendered map and players
             var GameView = Backbone.View.extend({
                 initialize: function() {
                     this.game=this.model;
-                    this.template= _.template('<div id="mapView"></div><div id="playersView"></div>');
+                    this.template= _.template('<div id="mapImageView"></div><div id="playersView"></div>');
                     this.$el.html(this.template);
 
 					this.settings=new ViewSettings();
-                    this.mapView=new MapView({
+                    this.mapImageView=new MapImageView({
                         model: this.model.map,
 						settings: this.settings,
-                        el: $('#mapView',this.$el)
+                        el: $('#mapImageView',this.$el)
                     });
 
                     this.playersView=new PlayerCollectionView({
@@ -355,8 +348,8 @@
                 },
                 render: function() {
                     this.$el.html(this.template());
-                    this.mapView.render();
-                    this.$el.append(this.mapView.$el);
+                    this.mapImageView.render();
+                    this.$el.append(this.mapImageView.$el);
 
                 }
             });
