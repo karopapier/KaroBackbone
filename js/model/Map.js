@@ -2,8 +2,8 @@ var Map = Backbone.Model.extend({
     defaults: {
         id: 0,
         cps: false,
-        rowCount: 0,
-        colCount: 0,
+        rows: 0,
+        cols: 0
     },
     initialize: function() {
         _.bindAll(this);
@@ -14,16 +14,17 @@ var Map = Backbone.Model.extend({
 
     setMatrixFromCode: function () {
         var lines=this.get("mapcode").split('\n');
-        this.rowCount=lines.length;
-        this.matrix= [];
-        for (var l=0;l<this.rowCount;l++) {
+        this.set({"rows":lines.length});
+        var matrix= [];
+        for (var l=0;l<this.get("rows");l++) {
             var line=lines[l];
-            this.matrix[l]=[];
+            matrix[l]=[];
             var chars=line.split('');
-            this.colCount=chars.length;
-            for (var c=0;c<this.colCount;c++) {
-                this.matrix[l][c]=line[c];
+            this.set({"cols":chars.length});
+            for (var c=0;c<this.get("cols");c++) {
+                matrix[l][c]=line[c];
             }
         }
+	    this.set({"matrix":matrix});
     }
 });

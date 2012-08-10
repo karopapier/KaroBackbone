@@ -26,6 +26,11 @@
                 height: 20px;
                 background-image: url('images/mapfields.png');
                 float:left;
+                margin: 2px;
+                border: 1px solid #333;
+            }
+            .activeFieldSelector {
+                border: 3px solid blue;
             }
         </style>
 
@@ -65,6 +70,8 @@
             <script type="text/javascript" src="js/libs/backbone-min.js"></script>
 
             <script type="text/javascript" src="js/model/Map.js"></script>
+            <script type="text/javascript" src="js/model/MapRenderView.js"></script>
+            <script type="text/javascript" src="js/model/MapRenderPalette.js"></script>
             <script type="text/javascript" src="js/model/ViewSettings.js"></script>
 
             <script type="text/javascript" src="js/templates/jst.js"></script>
@@ -119,7 +126,11 @@
                         initialize: function() {
                             _.bindAll(this);
                             this.settings=this.options.settings;
-                            this.mapRenderView=new MapRenderView({"settings": this.settings});
+                            this.map =new Map({
+                                mapcode: "XXXXXXXXXXOOOOOOOOOOOOOOOOOOOOO66OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOXXXXX\nXXXXXXXXXOOOOOOOOOOOOOOOOOOOOOO66OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOXXXXXXX\nXXXXXXXXOOOOOOOOOOOOOOOOOOOOOOO66OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOXXXXXXXXXX\nXXXXXXXOOOOOOOOOXXXXXXXXXXXXXXXXXXXXXXXXXXXOOOOOXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXOOOOOOOOXXXXXXXXXXXXXXXXXXXXXXXXXXXXXOOOOOXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXOOOOOOOOXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXOOOOOXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXOOOOOOOOXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXOOOOOXXXXXXXXXXXXXXXXXXXXXXXXX\nXXX55555555XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXOOOOOOXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                            });
+                            this.map.setMatrixFromCode();
+                            this.mapRenderView=new MapRenderView({"settings": this.settings, model: this.map});
                             this.$el.bind("contextmenu",function() { return false; });
                             this.$el.append(this.mapRenderView.el);
 
@@ -167,44 +178,17 @@
                         }
                     });
 
-                    var MapRenderView=Backbone.View.extend({
-                        id: "mapRenderView",
-                        className: "mapRenderView",
-                        tagName: "canvas",
-                        initialize: function() {
-                            _.bindAll(this);
-                            //this.model.bind("change:id",this.getImage);
-                            //this.options.settings.bind("change",this.getImage);
-                            this.settings=this.options.settings;
-
-                            this.settings.bind("change:size", function (e,v) {
-                                this.render();
-                            },this)
-                        },
-                        render: function () {
-                            var size=this.settings.get("size");
-                            this.el.width=size*80;
-                            this.el.height=size*60;
-
-                            var offset=this.$el.offset();
-                            this.offsetX=offset.left;
-                            this.offsetY=offset.top;
-                            this.ctx=this.el.getContext("2d");
-
-                            this.ctx.fillStyle   = '#0c0';
-                            this.ctx.strokeStyle = '#ccc';
-                            this.ctx.lineWidth   = this.settings.get("size");
-
-                            this.ctx.fillRect  (0,   0, this.el.width, this.el.height);
-                            this.ctx.strokeRect(0,  0,this.el.width/2, this.el.height/2);
-                        }
-                    });
-
                     var settings = new ViewSettings();
                     var editor= new EditorView();
                     $('#content').append(editor.el);
                     editor.editorMapView.render();
 
+                    $.getJSON("http://reloaded.karopapier.de/api/map/list.json?callback=?",function(data) {
+                        var mapcode=data[0].mapcode;
+                        editor.editorMapView.map.set({"mapcode":mapcode});
+                        editor.editorMapView.map.setMatrixFromCode();
+                        editor.editorMapView.render();
+                    });
                     //here comes the ugly part
                     $(window).resize(function() {
                         recalcWidth();
