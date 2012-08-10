@@ -48,9 +48,9 @@
         <div id="container">
             <div id="sidebar">
                 <ul id="navi">
-                    <li><a href="#game/70321">Spiel</a></li>
-                    <li><a href="#game/70178">Nacht</a></li>
-                    <li><a href="#game/70179">Nacht2</a></li>
+                    <li><a href="#editor/65">Map 65</a></li>
+                    <li><a href="#editor/123">Map 123</a></li>
+                    <li><a href="#editor/75">Map 75</a></li>
                 </ul>
             </div>
             <div id="content">
@@ -185,7 +185,7 @@
 
                     $.getJSON("http://reloaded.karopapier.de/api/map/list.json?callback=?",function(data) {
                         var mapcode=data[0].mapcode;
-                        editor.editorMapView.map.set({"mapcode":mapcode});
+                        editor.editorMapView.map.set("mapcode",mapcode);
                         editor.editorMapView.map.setMatrixFromCode();
                         editor.editorMapView.render();
                     });

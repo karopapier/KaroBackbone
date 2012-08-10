@@ -32,14 +32,10 @@ var MapRenderView=Backbone.View.extend({
 
 		this.ctx=this.el.getContext("2d");
 
-		this.ctx.fillStyle   = '#0c0';
-		this.ctx.strokeStyle = '#ccc';
+		this.ctx.fillStyle   = this.palette.getRGB("offroad");
 		this.ctx.lineWidth   = this.settings.get("size");
 
 		this.ctx.fillRect  (0,   0, this.el.width, this.el.height);
-		this.ctx.strokeRect(0,  0,this.el.width/2, this.el.height/2);
-
-
 		for (var r=0;r<map.get("rows");r++) {
 			for (var c=0;c<map.get("cols");c++) {
 				this.drawField(r,c,map.get("matrix")[r][c]);
