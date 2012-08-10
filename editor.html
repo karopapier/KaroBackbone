@@ -27,10 +27,12 @@
                 background-image: url('images/mapfields.png');
                 float:left;
                 margin: 2px;
-                border: 1px solid #333;
+                border: 2px solid #333;
+                opacity: 0.7;
             }
             .activeFieldSelector {
-                border: 3px solid blue;
+                border: 2px solid white;
+                opacity: 1;
             }
         </style>
 
@@ -92,8 +94,8 @@
                         id: 'editor',
                         initialize: function() {
                             this.settings=new ViewSettings();
-                            this.editorMapView= new EditorMapView({ "settings": this.settings});
                             this.editorToolsView=new EditorToolsView({ "settings": this.settings});
+                            this.editorMapView= new EditorMapView({ "settings": this.settings, "tools": this.editorToolsView});
                             var mapArea=$(document.createElement("div"));
                             //resizable container mapArea
                             mapArea.attr("id","editorMapArea");
@@ -106,7 +108,7 @@
                     var EditorToolsView=Backbone.View.extend({
                         id: "editorTools",
                         initialize: function() {
-                            $this=this;
+                            $this=this; //for jquery ui slider
                             _.bindAll(this);
                             this.settings=this.options.settings;
                             this.$el.html(window.JST['editor/tools']);
@@ -118,6 +120,21 @@
                             this.slider.bind("slide", function(event, ui) {
                                 $this.settings.set("size",ui.value);
                             });
+                            this.$el.bind("contextmenu",function() { return false; });
+                            this.buttonColor=[null,"O","S","X"];
+                            this.highlightActiveField();
+                        },
+                        events: {
+                            "mousedown .fieldSelector": "selectField"
+                        },
+                        highlightActiveField: function() {
+                            $('.fieldSelector',this.$el).removeClass("activeFieldSelector");
+                            $('.fieldSelector[rel="'+this.buttonColor[1]+'"]',this.$el).addClass("activeFieldSelector");
+                        },
+
+                        selectField: function(e,i) {
+                            this.buttonColor[e.which]=$(e.currentTarget).attr("rel");
+                            this.highlightActiveField();
                         }
                     });
 
@@ -126,8 +143,9 @@
                         initialize: function() {
                             _.bindAll(this);
                             this.settings=this.options.settings;
+                            this.tools=this.options.tools;
                             this.map =new Map({
-                                mapcode: "XXXXXXXXXXOOOOOOOOOOOOOOOOOOOOO66OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOXXXXX\nXXXXXXXXXOOOOOOOOOOOOOOOOOOOOOO66OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOXXXXXXX\nXXXXXXXXOOOOOOOOOOOOOOOOOOOOOOO66OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOXXXXXXXXXX\nXXXXXXXOOOOOOOOOXXXXXXXXXXXXXXXXXXXXXXXXXXXOOOOOXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXOOOOOOOOXXXXXXXXXXXXXXXXXXXXXXXXXXXXXOOOOOXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXOOOOOOOOXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXOOOOOXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXOOOOOOOOXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXOOOOOXXXXXXXXXXXXXXXXXXXXXXXXX\nXXX55555555XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXOOOOOOXXXXXXXXXXXXXXXXXXXXXXXXX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                                mapcode: "X"
                             });
                             this.map.setMatrixFromCode();
                             this.mapRenderView=new MapRenderView({"settings": this.settings, model: this.map});
@@ -148,10 +166,23 @@
                             }
                         },
 
+                        draw: function(e) {
+                            for (var i=1;i<=3;i++) {
+                                if (buttonDown[i]) {
+                                    var x=e.pageX-this.$el.offset().left;
+                                    var y=e.pageY-this.$el.offset().top;
+                                    $('#drag'+i).text("("+x+"|"+y+")");
+                                    //var field=this.mapRenderView.getFieldAtXY(x,y);
+                                    this.mapRenderView.setFieldAtXY(x,y,this.tools.buttonColor[i]);
+                                }
+                            }
+                        },
+
                         mousedown: function(e) {
                             buttonDown[e.which]=true;
                             e.preventDefault();
                             render();
+                            this.draw(e);
                             this.$el.bind("mousemove",this.mousemove);
                             return false;
                         },
@@ -163,11 +194,7 @@
                         },
 
                         mousemove: function(e) {
-                            for (var i=1;i<=3;i++) {
-                                if (buttonDown[i]) {
-                                    $('#drag'+i).text("("+(e.pageX-this.$el.offset().left)+"|"+(e.pageY-this.$el.offset().top)+")");
-                                }
-                            };
+                            this.draw(e);
                         },
 
                         mouseleave:function(e) {

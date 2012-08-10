@@ -19,7 +19,7 @@ window.JST['editor/tools'] = function() {
 	var fields=["O","X","Y","Z",1,2,3,4,5,6,7,8,9,"P","S","F"]
 	var offset=42;
 	for (var i=0; i<fields.length;i++) {
-		html+='<div class="fieldSelector" field="'+fields[i]+'" style="background-position: -'+(i*offset)+'px 0"></div>';
+		html+='<div class="fieldSelector" rel="'+fields[i]+'" style="background-position: -'+(i*offset)+'px 0"></div>';
 	}
 	return _.template(html);
 }

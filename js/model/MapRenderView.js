@@ -42,6 +42,35 @@ var MapRenderView=Backbone.View.extend({
 			}
 		}
 	},
+
+	getRowColfromXY: function (x,y) {
+		return {
+			"r": this.getRowFromY(y),
+			"c": this.getColFromX(x)
+		}
+	},
+	getRowFromY: function(y) {
+		return Math.floor(y/(this.size+this.border));
+	},
+	getColFromX: function(x) {
+		return Math.floor(x/(this.size+this.border));
+	},
+	getFieldAtXY: function(x,y) {
+		alert("Deprecated");
+		rc=this.getRowColfromXY(x,y);
+		return this.model.get("matrix")[rc.r][rc.c];
+	},
+	getFieldAtRowCol: function(r,c) {
+
+	},
+	setFieldAtXY: function (x,y,field) {
+		var rc=this.getRowColfromXY(x,y);
+		var old=this.getFieldAtRowCol(rc.r,rc.c);
+		if (old!=field) {
+			//this.setFieldAtRowCol(rc.r,rc.c,field);
+			this.drawField(rc.r,rc.c,field);
+		}
+	},
 	drawField: function(r,c,field) {
 		x=c*(this.size+this.border);
 		y=r*(this.size+this.border);
