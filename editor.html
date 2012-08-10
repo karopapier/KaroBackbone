@@ -9,11 +9,18 @@
         <link rel="stylesheet" type="text/css" media="screen" href="css/smoothness/jquery-ui-1.8.22.custom.css" />
 
         <style type="text/css">
-            .mapRenderView {
-                width: 1000px;
-                height: 600px;
-                background-color: lightblue;
+            #editor {
+            }
+            #editorMapView {
                 float: left;
+                max-height: 600px;
+                overflow: auto;
+            }
+            #tools {
+                width: 300px;
+                height: 400px;
+                float: right;
+                background-color: rgba(100,100,100,.3);
             }
         </style>
 
@@ -37,16 +44,17 @@
                 </ul>
             </div>
             <div id="content">
-
-                <div id="editor"></div>
-                <div id="show" style="float:left; background-color: lightyellow; width: 250px">
-                    Mouse Left: <span id="button1"> Button </span> <span id="drag1"> Drag </span><br />
-                    Mouse Middle: <span id="button2"> Button </span> <span id="drag2"> Drag </span><br />
-                    Mouse Right: <span id="button3"> Button </span> <span id="drag3"> Drag </span>
-                    <div id="size-slider" style="margin: 5px"></div>
+                <div id="editor">
+                    <div id="editorMapView"></div>
+                    <div id="tools">
+                        Mouse Left: <span id="button1"> Button </span> <span id="drag1"> Drag </span><br />
+                        Mouse Middle: <span id="button2"> Button </span> <span id="drag2"> Drag </span><br />
+                        Mouse Right: <span id="button3"> Button </span> <span id="drag3"> Drag </span>
+                        <div id="size-slider" style="margin: 5px"></div>
+                    </div>
                 </div>
-
             </div>
+            <div class="clearer"></div>
 
             <center><a href="http://www.karopapier.de">Karopapier.de</a> is brought to you by
                 <script type="text/javascript">document.write(String.fromCharCode(0x44,0x69,0x64,0x69).link(String.fromCharCode(0x6d,0x61,0x69,0x6c,0x74,0x6f,0x3a,0x64,0x69,0x64,0x69,0x40,0x6b,0x61,0x72,0x6f,0x70,0x61,0x70,0x69,0x65,0x72,0x2e,0x64,0x65)));</script></a>
@@ -76,7 +84,8 @@
 
 
                     var MapRenderView=Backbone.View.extend({
-                        className: "mapImageView",
+                        id: "mapRenderView",
+                        className: "mapRenderView",
                         tagName: "canvas",
                         initialize: function() {
                             _.bindAll(this);
@@ -90,10 +99,9 @@
                             },this)
                         },
                         render: function () {
-
                             var size=this.settings.get("size");
-                            this.el.width=size*20;
-                            this.el.height=size*10;
+                            this.el.width=size*80;
+                            this.el.height=size*60;
 
                             var offset=this.$el.offset();
                             this.offsetX=offset.left;
@@ -105,11 +113,14 @@
                             this.ctx.lineWidth   = 4;
 
                             // Draw some rectangles.
-                            this.ctx.fillRect  (0,   0, 150, 50);
+                            this.ctx.fillRect  (0,   0, this.el.width, this.el.height);
                             this.ctx.strokeRect(0,  60, 150, 50);
                             this.ctx.clearRect (30, 25,  90, 60);
                             this.ctx.strokeRect(30, 25,  90, 60);
-                        },
+                        }
+                    });
+
+                    var MapEditorView=Backbone.View.extend({
                         events: {
                             'mousedown': 'mousedown',
                             'mouseup': 'mouseup',
@@ -150,8 +161,8 @@
                     });
 
                     var settings = new ViewSettings();
-                    var mrv= new MapRenderView({"settings": settings});
-                    $('#editor').append(mrv.el);
+                    var mrv= new MapRenderView({"settings": settings });
+                    $('#editorMapView').append(mrv.el);
                     mrv.render();
 
                     $('#size-slider').slider({
@@ -163,6 +174,18 @@
                             settings.set({"size":ui.value});
                         }
                     });
+
+                    $(window).resize(function() {
+                        recalcWidth();
+                    });
+                    function recalcWidth() {
+                        var ww=$(window).width();
+                        var nw=$('#sidebar').width();
+                        var iw=$('#tools').width();
+                        $('#editorMapView').width(ww-nw-iw-30);
+
+                    }
+                    recalcWidth();
                 });
 
             </script>
