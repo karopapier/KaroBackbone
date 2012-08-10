@@ -21,7 +21,7 @@ window.JST['editor/tools'] = function() {
 	for (var i=0; i<fields.length;i++) {
 		html+='<div class="fieldSelector" rel="'+fields[i]+'" style="background-position: -'+(i*offset)+'px 0"></div>';
 	}
-	html+='<p>Mit allen drei Mausknöpfen kann mal auf der Karte herummalen. Standardeinstellung ist</p>\
+	html+='<div class="clearer"></div><p>Mit allen drei Mausknöpfen kann mal auf der Karte herummalen. Standardeinstellung ist</p>\
 	<ul><li>Links Straße</li><li>Mitte Start</li><li>Rechts Grass</li></ul>\
 	<p>Lässt sich rechts in der Auswahl ändern</p>\
 	<p>Und nein, das ist noch lange nicht fertig</p>'
