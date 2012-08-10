@@ -9,14 +9,12 @@
         <link rel="stylesheet" type="text/css" media="screen" href="css/smoothness/jquery-ui-1.8.22.custom.css" />
 
         <style type="text/css">
-            #editor {
-            }
-            #editorMapView {
+            #editorMapArea {
                 float: left;
                 max-height: 600px;
                 overflow: auto;
             }
-            #tools {
+            #editorTools {
                 width: 300px;
                 height: 400px;
                 float: right;
@@ -44,15 +42,6 @@
                 </ul>
             </div>
             <div id="content">
-                <div id="editor">
-                    <div id="editorMapView"></div>
-                    <div id="tools">
-                        Mouse Left: <span id="button1"> Button </span> <span id="drag1"> Drag </span><br />
-                        Mouse Middle: <span id="button2"> Button </span> <span id="drag2"> Drag </span><br />
-                        Mouse Right: <span id="button3"> Button </span> <span id="drag3"> Drag </span>
-                        <div id="size-slider" style="margin: 5px"></div>
-                    </div>
-                </div>
             </div>
             <div class="clearer"></div>
 
@@ -71,6 +60,8 @@
             <script type="text/javascript" src="js/model/Map.js"></script>
             <script type="text/javascript" src="js/model/ViewSettings.js"></script>
 
+            <script type="text/javascript" src="js/templates/jst.js"></script>
+
             <script type="text/javascript">
                 var buttonDown=[false, false, false, false] //null, left, middle, right
 
@@ -83,44 +74,53 @@
                 $(document).ready(function() {
 
 
-                    var MapRenderView=Backbone.View.extend({
-                        id: "mapRenderView",
-                        className: "mapRenderView",
-                        tagName: "canvas",
+                    var EditorView=Backbone.View.extend({
+                        id: 'editor',
                         initialize: function() {
-                            _.bindAll(this);
-                            //this.model.bind("change:id",this.getImage);
-                            //this.options.settings.bind("change",this.getImage);
-                            this.$el.bind("contextmenu",function() { return false; });
-                            this.settings=this.options.settings;
-
-                            this.settings.bind("change:size", function (e,v) {
-                                this.render();
-                            },this)
-                        },
-                        render: function () {
-                            var size=this.settings.get("size");
-                            this.el.width=size*80;
-                            this.el.height=size*60;
-
-                            var offset=this.$el.offset();
-                            this.offsetX=offset.left;
-                            this.offsetY=offset.top;
-                            this.ctx=this.el.getContext("2d");
-
-                            this.ctx.fillStyle   = '#00f'; // blue
-                            this.ctx.strokeStyle = '#f00'; // red
-                            this.ctx.lineWidth   = 4;
-
-                            // Draw some rectangles.
-                            this.ctx.fillRect  (0,   0, this.el.width, this.el.height);
-                            this.ctx.strokeRect(0,  60, 150, 50);
-                            this.ctx.clearRect (30, 25,  90, 60);
-                            this.ctx.strokeRect(30, 25,  90, 60);
+                            this.settings=new ViewSettings();
+                            this.editorMapView= new EditorMapView({ "settings": this.settings});
+                            this.editorToolsView=new EditorToolsView({ "settings": this.settings});
+                            var mapArea=$(document.createElement("div"));
+                            //resizable container mapArea
+                            mapArea.attr("id","editorMapArea");
+                            mapArea.append(this.editorMapView.el);
+                            this.$el.append(mapArea);
+                            this.$el.append(this.editorToolsView.el);
                         }
                     });
 
-                    var MapEditorView=Backbone.View.extend({
+                    var EditorToolsView=Backbone.View.extend({
+                        id: "editorTools",
+                        initialize: function() {
+                            $this=this;
+                            _.bindAll(this);
+                            this.settings=this.options.settings;
+                            this.$el.html(window.JST['editor/tools']);
+                            this.slider=$('#size-slider',this.$el).slider({
+                                value: 8,
+                                min: 1,
+                                max: 20
+                            });
+                            this.slider.bind("slide", function(event, ui) {
+                                $this.settings.set("size",ui.value);
+                            });
+                        }
+                    });
+
+                    var EditorMapView=Backbone.View.extend({
+                        id: "editorMapView",
+                        initialize: function() {
+                            _.bindAll(this);
+                            this.settings=this.options.settings;
+                            this.mapRenderView=new MapRenderView({"settings": this.settings});
+                            this.$el.bind("contextmenu",function() { return false; });
+                            this.$el.append(this.mapRenderView.el);
+
+                            this.$el.css({"display": "inline-block"});
+                        },
+                        render: function () {
+                            this.mapRenderView.render();
+                        },
                         events: {
                             'mousedown': 'mousedown',
                             'mouseup': 'mouseup',
@@ -147,7 +147,7 @@
                         mousemove: function(e) {
                             for (var i=1;i<=3;i++) {
                                 if (buttonDown[i]) {
-                                    $('#drag'+i).text("("+(e.pageX-this.offsetX)+"|"+(e.pageY-this.offsetY)+")");
+                                    $('#drag'+i).text("("+(e.pageX-this.$el.offset().left)+"|"+(e.pageY-this.$el.offset().top)+")");
                                 }
                             };
                         },
@@ -160,29 +160,53 @@
                         }
                     });
 
-                    var settings = new ViewSettings();
-                    var mrv= new MapRenderView({"settings": settings });
-                    $('#editorMapView').append(mrv.el);
-                    mrv.render();
+                    var MapRenderView=Backbone.View.extend({
+                        id: "mapRenderView",
+                        className: "mapRenderView",
+                        tagName: "canvas",
+                        initialize: function() {
+                            _.bindAll(this);
+                            //this.model.bind("change:id",this.getImage);
+                            //this.options.settings.bind("change",this.getImage);
+                            this.settings=this.options.settings;
 
-                    $('#size-slider').slider({
-                        value: 8,
-                        min: 1,
-                        max: 20,
-                        slide: function(event, ui) {
-                            //console.debug(ui.value);
-                            settings.set({"size":ui.value});
+                            this.settings.bind("change:size", function (e,v) {
+                                this.render();
+                            },this)
+                        },
+                        render: function () {
+                            var size=this.settings.get("size");
+                            this.el.width=size*80;
+                            this.el.height=size*60;
+
+                            var offset=this.$el.offset();
+                            this.offsetX=offset.left;
+                            this.offsetY=offset.top;
+                            this.ctx=this.el.getContext("2d");
+
+                            this.ctx.fillStyle   = '#0c0';
+                            this.ctx.strokeStyle = '#ccc';
+                            this.ctx.lineWidth   = this.settings.get("size");
+
+                            this.ctx.fillRect  (0,   0, this.el.width, this.el.height);
+                            this.ctx.strokeRect(0,  0,this.el.width/2, this.el.height/2);
                         }
                     });
 
+                    var settings = new ViewSettings();
+                    var editor= new EditorView();
+                    $('#content').append(editor.el);
+                    editor.editorMapView.render();
+
+                    //here comes the ugly part
                     $(window).resize(function() {
                         recalcWidth();
                     });
                     function recalcWidth() {
                         var ww=$(window).width();
                         var nw=$('#sidebar').width();
-                        var iw=$('#tools').width();
-                        $('#editorMapView').width(ww-nw-iw-30);
+                        var iw=$('#editorTools').width();
+                        $('#editorMapArea').width(ww-nw-iw-30);
 
                     }
                     recalcWidth();
