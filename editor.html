@@ -170,6 +170,7 @@
                         id: "editorMapView",
                         initialize: function() {
                             _.bindAll(this);
+							$this=this;
                             this.settings=this.options.settings;
                             this.tools=this.options.tools;
                             this.map =new Map({
@@ -181,6 +182,14 @@
                             this.$el.append(this.mapRenderView.el);
 
                             this.$el.css({"display": "inline-block"});
+							/**
+							this.$el.resizable({
+								resize: function(e,ui) {
+									var r=(ui.size.height/($this.settings.get("size")+$this.settings.get("border")));
+									//console.log(r,$this.map.get("rows"));
+								}
+							});
+							*/
                         },
                         render: function () {
                             this.mapRenderView.render();
