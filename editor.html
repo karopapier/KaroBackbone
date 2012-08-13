@@ -117,8 +117,10 @@
                                 min: 1,
                                 max: 20
                             });
+                            $('#drawSize',this.$el).text(8);
                             this.slider.bind("slide", function(event, ui) {
                                 $this.settings.set("size",ui.value);
+                                $('#drawSize',this.$el).text(ui.value);
                             });
                             this.$el.bind("contextmenu",function() { return false; });
                             this.buttonColor=[null,"O","S","X"];

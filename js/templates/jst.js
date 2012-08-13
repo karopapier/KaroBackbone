@@ -14,7 +14,9 @@ window.JST['editor/tools'] = function() {
 	Mouse Left: <span id="button1"> Button </span> <span id="drag1"> Drag </span><br />\
 	Mouse Middle: <span id="button2"> Button </span> <span id="drag2"> Drag </span><br />\
 	Mouse Right: <span id="button3"> Button </span> <span id="drag3"> Drag </span>\
-	<div id="size-slider" style="margin: 5px"></div>\
+    <br />\
+	Size: <span id="drawSize">0</span><br />\
+    <div id="size-slider" style="margin: 5px"></div>\
 	';
 	var fields=["O","X","Y","Z",1,2,3,4,5,6,7,8,9,"P","S","F"]
 	var offset=42;
