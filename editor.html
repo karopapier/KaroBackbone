@@ -127,6 +127,7 @@
                             console.debug("Loading code");
                             this.editorMapView.map.set("mapcode",this.mapcode.val());
                             this.editorMapView.map.setMatrixFromCode();
+                            this.editorMapView.render();
                         }
                     });
 
