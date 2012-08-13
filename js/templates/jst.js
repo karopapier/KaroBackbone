@@ -17,6 +17,8 @@ window.JST['editor/tools'] = function() {
     <br />\
 	Size: <span id="drawSize">0</span><br />\
     <div id="size-slider" style="margin: 5px"></div>\
+    Players: <span id="starties">0</span><br />\
+    CPs used: <span id="cpsUsed">-</span><br />\
 	';
 	var fields=["O","X","Y","Z",1,2,3,4,5,6,7,8,9,"P","S","F"]
 	var offset=42;

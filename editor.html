@@ -102,6 +102,17 @@
                             mapArea.append(this.editorMapView.el);
                             this.$el.append(mapArea);
                             this.$el.append(this.editorToolsView.el);
+                            this.mapcode=$('<pre id="mapcode" style="float: left; display: block">XOSOFOX</pre>');
+                            this.$el.append(this.mapcode);
+                            this.editorMapView.map.bind("change:mapcode",function(e,mapcode) {
+                                this.mapcode.text(mapcode);
+                            },this);
+                            this.editorMapView.map.bind("change:starties",function(e,starties) {
+                                $('#starties').text(starties);
+                            },this);
+                            this.editorMapView.map.bind("change:cps",function(e,cps) {
+                                $('#cpsUsed').text(cps.join(","));
+                            },this);
                         }
                     });
 
@@ -147,7 +158,7 @@
                             this.settings=this.options.settings;
                             this.tools=this.options.tools;
                             this.map =new Map({
-                                mapcode: "X"
+                                mapcode: "XOSOFOX"
                             });
                             this.map.setMatrixFromCode();
                             this.mapRenderView=new MapRenderView({"settings": this.settings, model: this.map});
@@ -174,8 +185,8 @@
                                     var x=e.pageX-this.$el.offset().left;
                                     var y=e.pageY-this.$el.offset().top;
                                     $('#drag'+i).text("("+x+"|"+y+")");
-                                    //var field=this.mapRenderView.getFieldAtXY(x,y);
                                     this.mapRenderView.setFieldAtXY(x,y,this.tools.buttonColor[i]);
+                                    //change mapcode/matrix
                                 }
                             }
                         },

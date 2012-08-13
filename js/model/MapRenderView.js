@@ -67,10 +67,13 @@ var MapRenderView=Backbone.View.extend({
 		var rc=this.getRowColfromXY(x,y);
 		var old=this.getFieldAtRowCol(rc.r,rc.c);
 		if (old!=field) {
-			//this.setFieldAtRowCol(rc.r,rc.c,field);
+			this.setFieldAtRowCol(rc.r,rc.c,field);
 			this.drawField(rc.r,rc.c,field);
 		}
 	},
+    setFieldAtRowCol: function (r,c,field) {
+        this.model.setFieldAtRowCol(r,c,field);
+    },
 	drawField: function(r,c,field) {
 		x=c*(this.size+this.border);
 		y=r*(this.size+this.border);
