@@ -128,7 +128,6 @@
                                 this.mapcode.attr("cols",this.editorMapView.map.get("cols"));
                             },this);
                             this.editorMapView.map.bind("change:mapcode",function(e,mapcode) {
-                                console.debug("Mapcode changed");
                                 this.mapcode.val(mapcode);
                             },this);
                             this.editorMapView.map.bind("change:starties",function(e,starties) {
@@ -150,7 +149,6 @@
 							});
 						},
                         loadMapcode: function() {
-                            console.debug("Loading code");
                             this.editorMapView.map.set("mapcode",this.mapcode.val());
                             this.editorMapView.map.setMatrixFromCode();
                             this.editorMapView.render();
