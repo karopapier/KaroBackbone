@@ -50,9 +50,10 @@
         <div id="container">
             <div id="sidebar">
                 <ul id="navi">
+                    <li><a href="#editor/1">Map 1</a></li>
                     <li><a href="#editor/65">Map 65</a></li>
-                    <li><a href="#editor/123">Map 123</a></li>
                     <li><a href="#editor/75">Map 75</a></li>
+                    <li><a href="#editor/123">Map 123</a></li>
                 </ul>
             </div>
             <div id="content">
@@ -80,6 +81,7 @@
 
             <script type="text/javascript">
                 var buttonDown=[false, false, false, false] //null, left, middle, right
+				var app;
 
                 function render() {
                     for (var i=1;i<=3;i++) {
@@ -89,10 +91,26 @@
 
                 $(document).ready(function() {
 
+					var AppView=Backbone.View.extend({});
+					var AppRouter = Backbone.Router.extend({
+						routes: {
+							"editor/:mapId": "loadMap",
+							"editor": "loadMap",
+							"": "loadMap"
+						},
+
+						loadMap: function(mapId) {
+							console.info("Loading "+mapId);
+							mapId = mapId || 1;
+							app.editor.loadMapId(mapId);
+						}
+					});
+
 
                     var EditorView=Backbone.View.extend({
                         id: 'editor',
                         initialize: function() {
+							_.bindAll(this);
                             this.settings=new ViewSettings();
                             this.editorToolsView=new EditorToolsView({ "settings": this.settings});
                             this.editorMapView= new EditorMapView({ "settings": this.settings, "tools": this.editorToolsView});
@@ -123,6 +141,14 @@
                         events: {
                             'click .loadMapcode': "loadMapcode"
                         },
+                        loadMapId: function(mapId) {
+							var $this=this;
+							$.getJSON("http://reloaded.karopapier.de/api/mapcode/"+mapId+".json?callback=?",function(data) {
+								var mapcode=data.mapcode;
+								$this.mapcode.val(mapcode);
+								$this.loadMapcode(mapcode);
+							});
+						},
                         loadMapcode: function() {
                             console.debug("Loading code");
                             this.editorMapView.map.set("mapcode",this.mapcode.val());
@@ -143,6 +169,7 @@
                                 min: 1,
                                 max: 20
                             });
+							this.settings.set("size",8);
                             $('#drawSize',this.$el).text(8);
                             this.slider.bind("slide", function(event, ui) {
                                 $this.settings.set("size",ui.value);
@@ -242,17 +269,13 @@
                         }
                     });
 
+					app = new AppView();
+					app.router= new AppRouter();
                     var settings = new ViewSettings();
-                    var editor= new EditorView();
-                    $('#content').append(editor.el);
-                    editor.editorMapView.render();
+                    app.editor= new EditorView();
+                    $('#content').append(app.editor.el);
+                    app.editor.editorMapView.render();
 
-                    $.getJSON("http://reloaded.karopapier.de/api/map/list.json?callback=?",function(data) {
-                        var mapcode=data[0].mapcode;
-                        editor.editorMapView.map.set("mapcode",mapcode);
-                        editor.editorMapView.map.setMatrixFromCode();
-                        editor.editorMapView.render();
-                    });
                     //here comes the ugly part
                     $(window).resize(function() {
                         recalcWidth();
@@ -265,6 +288,7 @@
 
                     }
                     recalcWidth();
+					Backbone.history.start();
                 });
 
             </script>
