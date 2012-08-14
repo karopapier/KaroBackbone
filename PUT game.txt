@@ -1,0 +1,23 @@
+Required
+{
+	"name": "Runde um Runde nehmen wir jede Ecke und bleiben auf der Strecke!",
+	"map": 43,
+	"cps": true,
+	"zzz": 2,
+	"tcrash": "forbidden",
+	"dir": "classic",
+	"comment": "Bitte alle ordentlich fahren",
+	"players": [1,132,233,239,518,563]
+}
+
+Default
+{
+	"name": "Randwik",
+	"map": 1,
+	"cps": true,
+	"zzz": 2,
+	"tcrash": "forbidden",
+	"dir": "classic",
+	"comment": "",
+	"players": [1]
+}
