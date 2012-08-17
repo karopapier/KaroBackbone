@@ -3,6 +3,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <title>Backbone Routing</title>
+        <style type="text/css">
+            header,footer,nav,section { display: block; }
+        </style>
     </head>
 
     <body>
@@ -26,12 +29,43 @@
             <script type="text/javascript" src="../js/libs/backbone.marionette.min.js"></script>
 
             <script type="text/javascript">
-                var Karopapier = new Backbone.Marionette.Application(); //the main app
 
                 $(document).ready(function () {
+                    var Karopapier = new Backbone.Marionette.Application(); //the main app
+                    Karopapier.addRegions({
+                        content: "#content"
+                    })
+                    Karopapier.module("GameLayout", function (GameLayout, Karopapier, Backbone, Marionette, $, _) {
+                        var Layout = Backbone.Marionette.Layout.extend({
+                            id: "gameLayout",
+                            template:"#layout-template",
+
+                            regions:{
+                                gameMapView:"#gameMap",
+                                gameInfoView:"#gameInfo",
+                                gameNavi: "#gameNavi"
+                            }
+                        });
+                        Karopapier.addInitializer(function(){
+                            Karopapier.layout=new Layout();
+                            Karopapier.content.show(Karopapier.layout);
+                        })
+                        return Layout;
+                    });
+                    Karopapier.module("GameApp", function (GameApp, Karopapier, Backbone, Marionette, $, _) {
+                    });
+                    Karopapier.module("EditorApp", function (EditorApp, Karopapier, Backbone, Marionette, $, _) {
+                    });
                     Karopapier.start();
                 });
 
+            </script>
+            <script id="layout-template" type="text/template">
+                <div class="gamesomething">
+                    <div id="gameMap"></div>
+                    <div id="gameInfo"></div>
+                    <div id="gameNavi"></div>
+                </div>
             </script>
     </body>
 </html>
