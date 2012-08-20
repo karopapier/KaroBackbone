@@ -18,6 +18,10 @@ Default
 	"zzz": 2,
 	"tcrash": "forbidden",
 	"dir": "classic",
+	"specialrules": "",
+	"useHelper": true,
+	"league": false,
 	"comment": "",
-	"players": [1]
+	"players": [<myid>],
+
 }

@@ -30,15 +30,28 @@
 
             <script type="text/javascript">
 
+                var Karopapier; //global for easier console debug access;
                 $(document).ready(function () {
-                    var Karopapier = new Backbone.Marionette.Application(); //the main app
+                    //var Karopapier = new Backbone.Marionette.Application(); //the main app
+                    Karopapier = new Backbone.Marionette.Application(); //the main app
+
                     Karopapier.addRegions({
                         content: "#content"
                     })
+
+                    Karopapier.module("GameApp", function (GameApp, Karopapier, Backbone, Marionette, $, _) {
+                        GameApp = Backbone.Marionette.Application.extend({
+                        });
+                        return GameApp;
+                    });
+                    Karopapier.module("EditorApp", function (EditorApp, Karopapier, Backbone, Marionette, $, _) {
+                    });
+
                     Karopapier.module("GameLayout", function (GameLayout, Karopapier, Backbone, Marionette, $, _) {
-                        var Layout = Backbone.Marionette.Layout.extend({
+
+                        GameLayout = Backbone.Marionette.Layout.extend({
                             id: "gameLayout",
-                            template:"#layout-template",
+                            template:"#game-layout-template",
 
                             regions:{
                                 gameMapView:"#gameMap",
@@ -46,26 +59,22 @@
                                 gameNavi: "#gameNavi"
                             }
                         });
+
                         Karopapier.addInitializer(function(){
-                            Karopapier.layout=new Layout();
-                            Karopapier.content.show(Karopapier.layout);
+                            Karopapier.GameApp.gameLayout=new GameLayout();
+                            Karopapier.content.show(Karopapier.GameApp.gameLayout);
                         })
-                        return Layout;
-                    });
-                    Karopapier.module("GameApp", function (GameApp, Karopapier, Backbone, Marionette, $, _) {
-                    });
-                    Karopapier.module("EditorApp", function (EditorApp, Karopapier, Backbone, Marionette, $, _) {
+                        return GameLayout;
+
                     });
                     Karopapier.start();
                 });
 
             </script>
-            <script id="layout-template" type="text/template">
-                <div class="gamesomething">
-                    <div id="gameMap"></div>
-                    <div id="gameInfo"></div>
-                    <div id="gameNavi"></div>
-                </div>
+            <script id="game-layout-template" type="text/template">
+                <div id="gameMap"></div>
+                <div id="gameInfo"></div>
+                <div id="gameNavi"></div>
             </script>
     </body>
 </html>
