@@ -31,6 +31,7 @@
             <script type="text/javascript">
 
                 var Karopapier; //global for easier console debug access;
+
                 $(document).ready(function () {
                     //var Karopapier = new Backbone.Marionette.Application(); //the main app
                     Karopapier = new Backbone.Marionette.Application(); //the main app
@@ -38,6 +39,20 @@
                     Karopapier.addRegions({
                         content: "#content"
                     })
+
+                    Karopapier.module("StaticApp", function (StaticApp, Karopapier, Backbone, Marionette, $, _) {
+
+                        StaticApp = Backbone.Marionette.ItemView.extend({
+                            tagName: "div",
+                            id: "static",
+                        });
+
+                        Karopapier.addInitializer(function() {
+                            console.log("Shwo static");
+                            Karopapier.content.show(Karopapier.StaticApp);
+                        });
+                        return StaticApp;
+                    });
 
                     Karopapier.module("GameApp", function (GameApp, Karopapier, Backbone, Marionette, $, _) {
                         GameApp = Backbone.Marionette.Application.extend({
@@ -60,10 +75,6 @@
                             }
                         });
 
-                        Karopapier.addInitializer(function(){
-                            Karopapier.GameApp.gameLayout=new GameLayout();
-                            Karopapier.content.show(Karopapier.GameApp.gameLayout);
-                        })
                         return GameLayout;
 
                     });
