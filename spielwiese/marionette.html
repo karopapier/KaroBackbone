@@ -66,9 +66,25 @@
                     });
 
                     Karopapier.module("GameApp", function (GameApp, Karopapier, Backbone, Marionette, $, _) {
-                        GameApp = Backbone.Marionette.Application.extend({
+                        ga= Backbone.Marionette.Application.extend({
+                        });
+
+                        GameApp.showGame = function(id) {
+                            console.info("Zeige SPiel " + id);
+                            setTimeout(function(){Karopapier.content.show(Karopapier.GameApp.layout)},600);
+                        };
+                        GameApp.Router= Backbone.Marionette.AppRouter.extend({
+                            appRoutes: {
+                                "game/:id": "showGame"
+                            },
+                            controller: GameApp
+                        });
+                        GameApp.router=new GameApp.Router();
+                        Karopapier.addInitializer(function() {
+                            Backbone.history.start();
                         });
                     });
+
                     Karopapier.module("EditorApp", function (EditorApp, Karopapier, Backbone, Marionette, $, _) {
                     });
 
@@ -84,10 +100,11 @@
                                 gameNavi: "#gameNavi"
                             }
                         });
+
                         Karopapier.addInitializer(function() {
+                            console.debug("Init lay");
                             Karopapier.GameApp.layout=new GameLayout();
                         });
-                        return GameLayout;
                     });
                     Karopapier.start();
                 });
