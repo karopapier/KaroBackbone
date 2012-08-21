@@ -42,29 +42,39 @@
 
                     Karopapier.module("StaticApp", function (StaticApp, Karopapier, Backbone, Marionette, $, _) {
 
-                        StaticApp = Backbone.Marionette.ItemView.extend({
+                        var StaticView = Backbone.Marionette.ItemView.extend({
                             tagName: "div",
-                            id: "static",
+                            id: "staticContent",
+                            content: "static-welcome",
+                            template: '#static-welcome-template',
+                            render: function() {
+                                this.$el.html(Backbone.Marionette.TemplateCache.get('#'+this.content+'-template'));
+                            }
                         });
 
+                        StaticApp.show=function(id) {
+                            this.StaticView.content=id;
+                            this.StaticView.render();
+                        }
+
                         Karopapier.addInitializer(function() {
-                            console.log("Shwo static");
-                            Karopapier.content.show(Karopapier.StaticApp);
+                            console.log("Show static");
+                            Karopapier.StaticApp.StaticView= new StaticView();
+                            Karopapier.StaticApp.show('static-introduction');
+                            Karopapier.content.show(Karopapier.StaticApp.StaticView);
                         });
-                        return StaticApp;
                     });
 
                     Karopapier.module("GameApp", function (GameApp, Karopapier, Backbone, Marionette, $, _) {
                         GameApp = Backbone.Marionette.Application.extend({
                         });
-                        return GameApp;
                     });
                     Karopapier.module("EditorApp", function (EditorApp, Karopapier, Backbone, Marionette, $, _) {
                     });
 
                     Karopapier.module("GameLayout", function (GameLayout, Karopapier, Backbone, Marionette, $, _) {
 
-                        GameLayout = Backbone.Marionette.Layout.extend({
+                        var GameLayout = Backbone.Marionette.Layout.extend({
                             id: "gameLayout",
                             template:"#game-layout-template",
 
@@ -74,9 +84,10 @@
                                 gameNavi: "#gameNavi"
                             }
                         });
-
+                        Karopapier.addInitializer(function() {
+                            Karopapier.GameApp.layout=new GameLayout();
+                        });
                         return GameLayout;
-
                     });
                     Karopapier.start();
                 });
@@ -86,6 +97,12 @@
                 <div id="gameMap"></div>
                 <div id="gameInfo"></div>
                 <div id="gameNavi"></div>
+            </script>
+            <script id="static-welcome-template" type="text/template">
+                <h1>Welcome</h1>
+            </script>
+            <script id="static-introduction-template" type="text/template">
+                <h1>Introduction</h1>
             </script>
     </body>
 </html>
