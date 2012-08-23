@@ -51,7 +51,6 @@
                             template: '#static-welcome-template',
                             render: function() {
                                 this.$el.html(Backbone.Marionette.TemplateCache.get('#static-'+this.content+'-template'));
-                                console.log("Zeige "+this.content);
                             },
                         });
 
@@ -104,8 +103,11 @@
                     });
 
                     Karopapier.vent.bind("app:change",function (app) {
-                        console.info(app);
-                        Karopapier.content.show(app.layout);
+                        if (Karopapier.activeApp!=app) {
+                            console.warn("App switch: "+ app.moduleName);
+                            Karopapier.content.show(app.layout);
+                            Karopapier.activeApp=app;
+                        }
                     });
                     Karopapier.addInitializer(function() {
                         Backbone.history.start();
