@@ -18,6 +18,8 @@
                     <li><a href="#editor">Editor home</a></li>
                     <li><a href="#editor/1">Map 1</a></li>
                     <li><a href="#editor/5">Map 5</a></li>
+                    <li><a href="#static/welcome">Welcome</a></li>
+                    <li><a href="#static/introduction">Introduction</a></li>
                 </ul>
             </div>
             <div id="content">
@@ -39,57 +41,40 @@
                     Karopapier.addRegions({
                         content: "#content"
                     })
+                    Karopapier.activeApp=false;
 
                     Karopapier.module("StaticApp", function (StaticApp, Karopapier, Backbone, Marionette, $, _) {
-
                         var StaticView = Backbone.Marionette.ItemView.extend({
                             tagName: "div",
                             id: "staticContent",
-                            content: "static-welcome",
+                            content: "welcome",
                             template: '#static-welcome-template',
                             render: function() {
-                                this.$el.html(Backbone.Marionette.TemplateCache.get('#'+this.content+'-template'));
+                                this.$el.html(Backbone.Marionette.TemplateCache.get('#static-'+this.content+'-template'));
+                                console.log("Zeige "+this.content);
+                            },
+                        });
+
+                        StaticApp.layout = new StaticView();
+
+                        StaticApp.showContent= function(content) {
+                            Karopapier.vent.trigger("app:change", StaticApp);
+                            console.info("Showing static " + content);
+                            this.layout.content=content;
+                            this.layout.render();
+                        }
+
+
+                        var StaticRouter= Backbone.Marionette.AppRouter.extend({
+                            appRoutes: {
+                                "static/:content": "showContent"
                             }
                         });
 
-                        StaticApp.show=function(id) {
-                            this.StaticView.content=id;
-                            this.StaticView.render();
-                        }
-
-                        Karopapier.addInitializer(function() {
-                            console.log("Show static");
-                            Karopapier.StaticApp.StaticView= new StaticView();
-                            Karopapier.StaticApp.show('static-introduction');
-                            Karopapier.content.show(Karopapier.StaticApp.StaticView);
-                        });
+                        StaticApp.router=new StaticRouter({ controller: StaticApp});
                     });
 
                     Karopapier.module("GameApp", function (GameApp, Karopapier, Backbone, Marionette, $, _) {
-                        ga= Backbone.Marionette.Application.extend({
-                        });
-
-                        GameApp.showGame = function(id) {
-                            console.info("Zeige SPiel " + id);
-                            setTimeout(function(){Karopapier.content.show(Karopapier.GameApp.layout)},600);
-                        };
-                        GameApp.Router= Backbone.Marionette.AppRouter.extend({
-                            appRoutes: {
-                                "game/:id": "showGame"
-                            },
-                            controller: GameApp
-                        });
-                        GameApp.router=new GameApp.Router();
-                        Karopapier.addInitializer(function() {
-                            Backbone.history.start();
-                        });
-                    });
-
-                    Karopapier.module("EditorApp", function (EditorApp, Karopapier, Backbone, Marionette, $, _) {
-                    });
-
-                    Karopapier.module("GameLayout", function (GameLayout, Karopapier, Backbone, Marionette, $, _) {
-
                         var GameLayout = Backbone.Marionette.Layout.extend({
                             id: "gameLayout",
                             template:"#game-layout-template",
@@ -101,12 +86,33 @@
                             }
                         });
 
-                        Karopapier.addInitializer(function() {
-                            console.debug("Init lay");
-                            Karopapier.GameApp.layout=new GameLayout();
+                        GameApp.showGame = function(id) {
+                            console.info("Zeige SPiel " + id);
+                            Karopapier.vent.trigger("app:change", GameApp);
+                        };
+                        GameApp.Router= Backbone.Marionette.AppRouter.extend({
+                            appRoutes: {
+                                "game/:id": "showGame"
+                            },
+                            controller: GameApp
                         });
+                        GameApp.router=new GameApp.Router();
+                        GameApp.layout=new GameLayout();
+                    });
+
+                    Karopapier.module("EditorApp", function (EditorApp, Karopapier, Backbone, Marionette, $, _) {
+                    });
+
+                    Karopapier.vent.bind("app:change",function (app) {
+                        console.info(app);
+                        Karopapier.content.show(app.layout);
+                    });
+                    Karopapier.addInitializer(function() {
+                        Backbone.history.start();
                     });
                     Karopapier.start();
+
+
                 });
 
             </script>
