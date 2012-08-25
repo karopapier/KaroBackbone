@@ -1,38 +1,13 @@
 <!doctype html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>KaroBackbone</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>Backbone Routing</title>
         <link rel="shortcut icon" href="http://reloaded.karopapier.de/favicon.ico" />
         <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/css/karo.css" />
         <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/themes/black/css/theme.css" />
         <style type="text/css">
-            #gameAppNavigation {
-                position: absolute;
-                right: 0;
-                bottom: 0;
-            }
-            .clickable:hover {
-                cursor: pointer;
-            }
-
-            #gameInfo {
-                font-family: Arial;
-                font-size: 70%;
-                width: 300px;
-                /*position: absolute;
-                right: 0;
-                top: 0;*/
-                float: right;
-                margin-bottom: 10px;
-                z-index: 500;
-            }
-
-            #gameInfo li
-            {
-                font-family: Arial;
-                font-size: 70%;
-            }
+            header,footer,nav,section { display: block; }
         </style>
     </head>
 
@@ -44,471 +19,140 @@
             </div>
         </div>
         <div class="clearer"></div>
-
         <div id="container">
             <div id="sidebar">
                 <ul id="navi">
+                    <li><a href="#newgame">Spiel erstellen</a></li>
                     <li><a href="#game/70321">Spiel</a></li>
                     <li><a href="#game/70178">Nacht</a></li>
                     <li><a href="#game/70179">Nacht2</a></li>
+                    <li><a href="#editor">Editor home</a></li>
+                    <li><a href="#editor/1">Map 1</a></li>
+                    <li><a href="#editor/5">Map 5</a></li>
+                    <li><a href="#static/welcome">Welcome</a></li>
+                    <li><a href="#static/introduction">Introduction</a></li>
                 </ul>
             </div>
-        <div id="content">
+            <div id="content"></div>
+            <footer style="text-align: center"><a href="http://www.karopapier.de">Karopapier.de</a> is brought to you by
+            <script type="text/javascript">document.write(String.fromCharCode(0x44,0x69,0x64,0x69).link(String.fromCharCode(0x6d,0x61,0x69,0x6c,0x74,0x6f,0x3a,0x64,0x69,0x64,0x69,0x40,0x6b,0x61,0x72,0x6f,0x70,0x61,0x70,0x69,0x65,0x72,0x2e,0x64,0x65)));</script>
+            </footer>
 
-            
+            <script type="text/javascript" src="js/libs/underscore-min.js"></script>
+            <script type="text/javascript" src="js/libs/jquery-1.7.2.min.js"></script>
+            <script type="text/javascript" src="js/libs/backbone-min.js"></script>
+            <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
 
-        </div>
+            <script type="text/javascript">
 
-        <center><a href="http://www.karopapier.de">Karopapier.de</a> is brought to you by
-        <script type="text/javascript">document.write(String.fromCharCode(0x44,0x69,0x64,0x69).link(String.fromCharCode(0x6d,0x61,0x69,0x6c,0x74,0x6f,0x3a,0x64,0x69,0x64,0x69,0x40,0x6b,0x61,0x72,0x6f,0x70,0x61,0x70,0x69,0x65,0x72,0x2e,0x64,0x65)));</script></center>
+                var Karopapier; //global for easier console debug access;
 
-        <!-- <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
-        <script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
-        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
-        <script type="text/javascript" src="js/libs/underscore-min.js"></script>
-        <script type="text/javascript" src="js/libs/jquery-1.7.2.min.js"></script>
-        <script type="text/javascript" src="js/libs/backbone-min.js"></script>
-        <script type="text/javascript" src="js/libs/moment.min.js"></script>
-        <script type="text/javascript" src="js/libs/moment-de.js"></script>
+                $(document).ready(function () {
+                    //var Karopapier = new Backbone.Marionette.Application(); //the main app
+                    Karopapier = new Backbone.Marionette.Application(); //the main app
 
-        <script type="text/javascript" src="js/model/Map.js"></script>
-        <script type="text/javascript" src="js/model/ViewSettings.js"></script>
+                    Karopapier.addRegions({
+                        content: "#content"
+                    })
+                    Karopapier.activeApp=false;
 
-        <script type="text/javascript">
-            moment().lang("de");
-            var app;
-            var GameAppView;
-            $(document).ready(function() {
-                app=new AppView();
-                app.router= new AppRouter();
-                var g= new Game();
-                app.gameAppView=new GameAppView({model: g});
-                $("#content").append(app.gameAppView.$el);
-
-                //Backbone.history.start({pushState: true});
-                Backbone.history.start();
-            });
-
-            var AppView = Backbone.View.extend({
-                initialize: function() {
-                    this.content=$('#content')
-                },
-                setTitle: function (title) {
-                    $(document).attr("title",title);
-                    $('#title').text(title);
-                }
-            });
-
-            var Game = Backbone.Model.extend({
-                defaults: {
-                    id: 0
-                },
-
-                url: function() {
-                    return "http://reloaded.karopapier.de/api/game/"+this.get("id")+"/details.json?callback=?";
-                },
-
-                parse: function(data) {
-                    //make sure data is matching current gameId (delayed reposens get dropped)
-                    if (data.game.id==this.id) {
-                        //pass checkpoint info to map as "cpsActive" // map has cps attr as well, array of avail cps
-                        this.map.set({"cpsActive":data.game.cps},{silent:true});
-                        this.map.set(data.map);
-						playersData=data.players;
-						_.each(playersData,function(playerData) {
-							lastmove=new Move(playerData.lastmove);
-							playerData.lastmove=lastmove;
-							moves=new MoveCollection(playerData.moves);
-							playerData.moves=moves;
-						});
-                        this.players.reset(data.players);
-                        return data.game;
-                    } else {
-                        console.info("Dropped response for "+data.game.id);
+                    Karopapier.setTitle=function (title) {
+                        document.title=title;
+                        $('#title').text(title)
                     }
-                },
 
-                initialize: function() {
-                    this.map = new Map();
-					this.moveMessages =new MoveMessageCollection();
-                    this.players = new PlayerCollection([{id:0}],{"moveMessages": this.moveMessages});
-                },
-
-                load: function (id) {
-                    //silently set the id, events trigger after data is here
-                    this.set({"id": id},{silent:true});
-                    console.info("Fetching for "+id);
-                    this.fetch();
-                }
-            });
-
-            var MapImageView=Backbone.View.extend({
-                className: "mapImageView",
-                initialize: function() {
-                    _.bindAll(this);
-                    this.model.bind("change:id",this.getImage);
-					this.options.settings.bind("change",this.getImage);
-                    this.img=$(document.createElement("img"));
-                    this.$img=$(this.img);
-                    this.$img.attr("src", "http://reloaded.karopapier.de/images/loading.gif");
-                    this.$el.append(this.img);
-                },
-                getImage: function() {
-                    console.info("Getting image");
-                    var cps=(this.model.get("cpsActive")===true) ? 1 : 0;
-                    this.$img.attr("src",'http://reloaded.karopapier.de/map/'+this.model.get("id")+'.png?size='+this.options.settings.get("size")+'&border='+this.options.settings.get("border")+'&cps='+cps);
-                }
-
-
-            });
-
-            var Player = Backbone.Model.extend({
-                defaults: {
-                    id: 0
-                },
-
-                initialize: function() {
-                    this.moves=new MoveCollection();
-                    this.lastmove=new Move();
-                    this.bind("change:id",function(o,id) {
-                        console.info(" New Player id: "+id);
-                    });
-                }
-            });
-
-			var MoveMessage = Backbone.Model.extend({
-			});
-
-			var MoveMessageCollection = Backbone.Collection.extend({
-				model: MoveMessage,
-                comparator: function(mm) {
-                    return mm.get("move").get("t");
-                }
-			});
-
-            var MoveMessageView = Backbone.View.extend({
-                initialize: function() {
-                    _.bindAll(this);
-                    this.model.bind("change", this.redraw);
-                    this.template= _.template('<%= name %>: <%= text %><br />\n');
-                    //apply given filter function or preset with returning all
-                    if (this.options.filter) {
-                        this.filter=this.options.filter;
-                    } else {
-                        this.filter=function() { return true };
-                    }
-                },
-                redraw: function() {
-                    var html='';
-                    filtered=this.model.filter(this.filter);
-
-                    _.each(filtered,function(e) {
-                        html+=this.template({
-                            name: e.get("player").get("name"),
-                            text: e.get("move").get("msg")
+                    Karopapier.module("StaticApp", function (StaticApp, Karopapier, Backbone, Marionette, $, _) {
+                        var StaticView = Backbone.Marionette.ItemView.extend({
+                            tagName: "div",
+                            id: "staticContent",
+                            content: "welcome",
+                            template: '#static-welcome-template',
+                            render: function() {
+                                this.$el.html(Backbone.Marionette.TemplateCache.get('#static-'+this.content+'-template'));
+                            },
                         });
-                    },this);
-                    this.$el.html(html);
-                }
-            });
 
-            var PlayerCollection = Backbone.Collection.extend({
-                model: Player,
+                        StaticApp.layout = new StaticView();
 
-                initialize: function(models, options) {
-					_.bindAll(this);
-					this.moveMessages=options.moveMessages;
-                    this.bind("reset",function(o,id) {
-                        console.info("Init Players");
-						//Look for messages
-
-                        //clear messages first
-                        this.moveMessages.reset();
-						this.each(function(player) {
-							//parse player moves for messages
-							player.get("moves").each(function(move){
-								if (move.get("msg")) {
-									mm=new MoveMessage({
-										"move": move,
-										"player": player
-									});
-									this.moveMessages.add(mm,{silent:true});
-								}
-							},this);
-						},this)
-                        this.moveMessages.trigger("change");
-                    });
-                }
-            });
-
-            var PlayerCollectionView = Backbone.View.extend({
-                className: "playerCollection",
-                template: _.template([
-                  "<table class='playerList thin'>",
-                        '<tr><th>Spieler</th><th>Farbe</th><th>Züge</th><th>letzter Zug</th><th>Runde</th></tr>',
-                    "<% items.each(function(player) { %>",
-                      "<%= playerTemplate(player.attributes) %>",
-                    "<% }); %>",
-                  "</table>"
-                ].join('')),
-
-                playerTemplate: function(player) {
-                    var html="";
-                    html+= '<tr>';
-                    html+='<td>'+player.name+'</td>';
-                    html+='<td style="background-color: #'+player.color+'">&nbsp; &nbsp;</td>';
-                    html+='<td><img src="images/car.png" />'+player.moveCount;
-                    html+= player.crashCount > 0 ? ' <img src="images/crash.png" /> ' + player.crashCount : "";
-                    html+='</td>';
-                    var lm=moment(player.lastmove.get("t"),"YYYY-MM-DD HH:mm:ss").toDate();
-                    html+='<td><span title="' + moment(lm).format("DD.MM.YY H:mm") + '">';
-                    if (moment(lm).diff(new Date(),"days")<-1) {
-                        html+="vor "+Math.abs(moment(lm).diff(new Date(),"days"))+" Tagen";
-                    } else {
-                        //only for short timeframes <24h
-                        html+=moment(lm).fromNow();
-                    }
-                    html+='</span></td>';
-                    html+='<td>';
-                    if (player.status =="kicked") {
-                        html+="rausgeworfen";
-                    }
-                    if (player.status == "left") {
-                        html+="ausgestiegen";
-                    }
-                    if (player.status == "invited") {
-                        html+="eingeladen";
-                    }
-                    if (player.status=="ok") {
-                        if (player.dran) {
-                            html+="dran";
-                        } else {
-                            if (player.position != 0) {
-                                html+="wurde "+player.position+".";
-                            } else {
-                                html+=player.moved ? "war schon" : "kommt noch";
+                        StaticApp.showContent= function(content) {
+                            if (!(content)) {
+                                content="welcome";
                             }
+                            Karopapier.vent.trigger("app:change", StaticApp);
+                            console.info("Showing static " + content);
+                            this.layout.content=content;
+                            this.layout.render();
                         }
 
-                    }
-                    html+="</td>";
-                    html+='</tr>';
-                    return html;
-                },
 
-                render: function() {
-                    var html = this.template({
-                        items: this.model /* a collection */,
-                        playerTemplate: this.playerTemplate
+                        var StaticRouter= Backbone.Marionette.AppRouter.extend({
+                            appRoutes: {
+                                "": "showContent",
+                                "static/:content": "showContent"
+                            }
+                        });
+
+                        StaticApp.router=new StaticRouter({ controller: StaticApp});
                     });
 
-                    $(this.el).html(html);
-                },
-				initialize: function() {
-					_.bindAll(this);
-					this.model.bind("reset",function() {
-						console.info("NEUE SPIELER");
-                        this.render();
-					},this);
-				}
-            });
+                    Karopapier.module("GameApp", function (GameApp, Karopapier, Backbone, Marionette, $, _) {
+                        var GameLayout = Backbone.Marionette.Layout.extend({
+                            id: "gameLayout",
+                            template:"#game-layout-template",
 
-            var Move = Backbone.Model.extend({
-                defaults: {
-                    x: 0,
-                    y: 0,
-                    xv: 0,
-                    yv: 0
-                }
-            });
+                            regions:{
+                                gameMapView:"#gameMap",
+                                gameInfoView:"#gameInfo",
+                                gameNavi: "#gameNavi"
+                            }
+                        });
 
-            var MoveCollection = Backbone.Collection.extend({
-                model: Move
-            });
-
-            //container for rendered map and players
-            var GameView = Backbone.View.extend({
-                initialize: function() {
-                    this.game=this.model;
-                    this.template= _.template('<div id="mapImageView"></div><div id="playersView"></div>');
-                    this.$el.html(this.template);
-
-					this.settings=new ViewSettings();
-                    this.mapImageView=new MapImageView({
-                        model: this.model.map,
-						settings: this.settings,
-                        el: $('#mapImageView',this.$el)
+                        GameApp.showGame = function(id) {
+                            console.info("Zeige SPiel " + id);
+                            Karopapier.vent.trigger("app:change", GameApp);
+                        };
+                        GameApp.Router= Backbone.Marionette.AppRouter.extend({
+                            appRoutes: {
+                                "game/:id": "showGame"
+                            },
+                            controller: GameApp
+                        });
+                        GameApp.router=new GameApp.Router();
+                        GameApp.layout=new GameLayout();
                     });
 
-                    this.playersView=new PlayerCollectionView({
-                        model:this.model.players,
-						settings: this.settings,
-                        el: $('#playersView',this.$el)
-                    });
-                },
-                render: function() {
-                    this.$el.html(this.template());
-                    this.mapImageView.render();
-                    this.$el.append(this.mapImageView.$el);
-
-                }
-            });
-
-            var GameAppView = Backbone.View.extend({
-                tagName: "div",
-                id: "GameApp",
-
-
-                initialize: function() {
-                    this.template = _.template('<div style="float: left"><h1 id="title">KaroBackbone</h1><div id="latestMessages"></div></div><div id="gameInfo"></div><div class="clearer"></div></div><div id="GameView"></div><div id="moveMessages"></div><div id="GameDetails"></div><div id="gameAppNavigation"></div>');
-                    this.$el.html(this.template);
-
-                    this.game=this.model;
-
-                    _.bindAll(this);
-
-                    this.gameView=new GameView({
-                        model:this.model,
-                        el: $('#GameView',this.$el)
+                    Karopapier.module("EditorApp", function (EditorApp, Karopapier, Backbone, Marionette, $, _) {
                     });
 
-                    //init game navigation
-                    this.navigation=new GameAppNavigationView({
-                        el: $('#gameAppNavigation',this.$el)
+                    Karopapier.vent.bind("app:change",function (app) {
+                        if (Karopapier.activeApp!=app) {
+                            console.warn("App switch: "+ app.moduleName);
+                            Karopapier.content.show(app.layout);
+                            Karopapier.activeApp=app;
+                        }
                     });
-                    this.navigation.render();
-
-                    //init game info
-                    this.gameInfo=new GameInfoView({
-                        model: this.game,
-                        el: $('#gameInfo',this.$el)
+                    Karopapier.addInitializer(function() {
+                        Backbone.history.start();
                     });
-                    this.gameInfo.render();
-
-                    //init latestMessages
-                    this.latestMessages=new MoveMessageView({
-                        model: this.game.moveMessages,
-                        el: $('#latestMessages',this.$el),
-                        filter: function(mm) {
-                            return (mm.get("player").get("name")=="Kinvarra");
-                        },
-                        max: 5
-                    })
-                    //init moveMessages
-                    this.moveMessages=new MoveMessageView({
-                        model: this.game.moveMessages,
-                        el: $('#moveMessages',this.$el),
-                        filter: false,
-                        max:10
-                    });
-
-                    //events
-                    this.model.bind("change",this.redraw);
-                },
-
-                close: function() {
-                    //remove child views
-                    this.gameView.close();
-                    this.gameInfo.close();
-                    this.navigation.close();
-                    alert("Remove myself");
-                    this.$el.remove();
-                },
-
-                render: function() {
-                    app.content.append(this.el);
-                },
-
-                redraw: function() {
-                    app.setTitle(this.model.get("name"));
-                    this.gameInfo.redraw();
-                    //need to create a template
-                },
-
-                setGameId: function(gameId) {
-                    if (gameId!=0) {
-                        this.model.load(gameId);
-                    }
-                }
-
-            })
-
-            var GameInfoView = Backbone.View.extend({
-                id: "gameInfo",
-                initialize: function() {
-                    this.template= _.template('<b>Spielinfos:</b> <ul> <li>Karte: <%= mapId %> - <%= mapName %> von <%= mapAuthor %></li><li>Richtungsmodus <b><%= gameDir %></b>, MEANING</li><li>ZZZ steht auf <%= gameZzz %></li><li>Checkpoints sind <b><%= gameCps %></b> CHECK MAP</li><li>Taktisches Crashen ist <b><%= gameTc %></b></li></ul>übrigens wurde das Spiel am <%= gameCreated %> von <%= gameCreator %> gestartet.');
-                },
-                redraw: function(){
-                    this.$el.html(this.template({
-                        mapId: this.model.map.get("id"),
-                        mapName: this.model.map.get("name"),
-                        mapAuthor: this.model.map.get("author"),
-                        gameCreator: this.model.get("creator"),
-                        gameCreated: this.model.get("created"),
-                        gameDir: this.model.get("dir"),
-                        gameCps: this.model.get("cps"),
-                        gameTc: this.model.get("tcrash"),
-                        gameZzz: this.model.get("zzz")
-
-                    }));
-                }
-            });
-
-            var GameAppNavigationView = Backbone.View.extend({
-                events: {
-                    'click .back': "backGame",
-                    'click .next': "nextGame",
-                    'click .smaller': "smallerView",
-                    'click .bigger': "biggerView"
-                },
-
-                render: function() {
-                    console.info("Rendering GameAppNav");
-					var html='';
-					html+= '<span class="clickable back">Back</span> ';
-					html+= '<span class="clickable smaller"> - </span> ';
-					html+= '<span class="clickable bigger"> + </span> ';
-					html+= '<span class="clickable next">Next</span> ';
-                    this.$el.html(html);
-                },
-
-				"smallerView": function () {
-					var size=app.gameAppView.gameView.settings.get("size");
-					app.gameAppView.gameView.settings.set({"size":size-1});
-				},
-
-				"biggerView": function () {
-					var size=app.gameAppView.gameView.settings.get("size");
-					app.gameAppView.gameView.settings.set({"size":size+1});
-				},
-
-                "backGame": function() {
-                    var oldId=parseInt(app.gameAppView.model.get("id"));
-                    app.router.navigate('game/'+(oldId-1),{trigger: true});
-                },
-                "nextGame": function() {
-                    var oldId=parseInt(app.gameAppView.model.get("id"));
-                    app.router.navigate('game/'+(oldId+1),{trigger: true});
-                }
-            })
-
-            var AppRouter = Backbone.Router.extend({
-                routes: {
-                    "game/:gameId": "showGame",
-                    "game": "showGame",
-                    "": "showGame"
-                },
-
-                showGame: function(gameId) {
-                    console.info("Routing to "+gameId);
-                    gameId = gameId || 70000;
-                    app.gameAppView.setGameId(gameId);
-                }
-            });
+                    Karopapier.start();
 
 
-        </script>
+                });
 
+            </script>
 
+            <script id="game-layout-template" type="text/template">
+                <div id="gameMap"></div>
+                <div id="gameInfo"></div>
+                <div id="gameNavi"></div>
+            </script>
+
+            <script id="static-welcome-template" type="text/template">
+                <h1>Welcome</h1>
+            </script>
+
+            <script id="static-introduction-template" type="text/template">
+                <h1>Introduction</h1>
+            </script>
     </body>
 </html>
