@@ -73,9 +73,15 @@
             <script type="text/javascript" src="js/libs/backbone-min.js"></script>
 
             <script type="text/javascript" src="js/model/Map.js"></script>
-            <script type="text/javascript" src="js/view/MapRenderView.js"></script>
             <script type="text/javascript" src="js/model/MapRenderPalette.js"></script>
             <script type="text/javascript" src="js/model/ViewSettings.js"></script>
+
+            <script type="text/javascript" src="js/view/MapRenderView.js"></script>
+            <script type="text/javascript" src="js/view/EditorMapView.js"></script>
+            <script type="text/javascript" src="js/view/EditorToolsView.js"></script>
+            <script type="text/javascript" src="js/view/EditorView.js"></script>
+
+            <script type="text/javascript" src="js/router/EditorAppRouter.js"></script>
 
             <script type="text/javascript" src="js/templates/jst.js"></script>
 
@@ -92,183 +98,10 @@
                 $(document).ready(function() {
 
 					var AppView=Backbone.View.extend({});
-					var AppRouter = Backbone.Router.extend({
-						routes: {
-							"editor/:mapId": "loadMap",
-							"editor": "loadMap",
-							"": "loadMap"
-						},
 
-						loadMap: function(mapId) {
-							console.info("Loading "+mapId);
-							mapId = mapId || 1;
-							app.editor.loadMapId(mapId);
-						}
-					});
-
-
-                    var EditorView=Backbone.View.extend({
-                        id: 'editor',
-                        initialize: function() {
-							_.bindAll(this);
-                            this.settings=new ViewSettings();
-                            this.editorToolsView=new EditorToolsView({ "settings": this.settings});
-                            this.editorMapView= new EditorMapView({ "settings": this.settings, "tools": this.editorToolsView});
-                            var mapArea=$(document.createElement("div"));
-                            //resizable container mapArea
-                            mapArea.attr("id","editorMapArea");
-                            mapArea.append(this.editorMapView.el);
-                            this.$el.append(mapArea);
-                            this.$el.append(this.editorToolsView.el);
-                            this.mapcode=$('<textarea id="mapcode" style="float: left; display: block">XOSOFOX</textarea>');
-                            this.$el.append(this.mapcode);
-                            this.$el.append($('<input type="button" class="loadMapcode" value="Load" />'));
-                            this.editorMapView.map.bind("change:rows change:cols",function() {
-                                this.mapcode.attr("rows",this.editorMapView.map.get("rows"));
-                                this.mapcode.attr("cols",this.editorMapView.map.get("cols"));
-                            },this);
-                            this.editorMapView.map.bind("change:mapcode",function(e,mapcode) {
-                                this.mapcode.val(mapcode);
-                            },this);
-                            this.editorMapView.map.bind("change:starties",function(e,starties) {
-                                $('#starties').text(starties);
-                            },this);
-                            this.editorMapView.map.bind("change:cps",function(e,cps) {
-                                $('#cpsUsed').text(cps.join(","));
-                            },this);
-                        },
-                        events: {
-                            'click .loadMapcode': "loadMapcode"
-                        },
-                        loadMapId: function(mapId) {
-							var $this=this;
-							$.getJSON("http://reloaded.karopapier.de/api/mapcode/"+mapId+".json?callback=?",function(data) {
-								var mapcode=data.mapcode;
-								$this.mapcode.val(mapcode);
-								$this.loadMapcode(mapcode);
-							});
-						},
-                        loadMapcode: function() {
-                            this.editorMapView.map.set("mapcode",this.mapcode.val());
-                            this.editorMapView.map.setMatrixFromCode();
-                            this.editorMapView.render();
-                        }
-                    });
-
-                    var EditorToolsView=Backbone.View.extend({
-                        id: "editorTools",
-                        initialize: function() {
-                            $this=this; //for jquery ui slider
-                            _.bindAll(this);
-                            this.settings=this.options.settings;
-                            this.$el.html(window.JST['editor/tools']);
-                            this.slider=$('#size-slider',this.$el).slider({
-                                value: 8,
-                                min: 1,
-                                max: 20
-                            });
-							this.settings.set("size",8);
-                            $('#drawSize',this.$el).text(8);
-                            this.slider.bind("slide", function(event, ui) {
-                                $this.settings.set("size",ui.value);
-                                $('#drawSize',this.$el).text(ui.value);
-                            });
-                            this.$el.bind("contextmenu",function() { return false; });
-                            this.buttonColor=[null,"O","S","X"];
-                            this.highlightActiveField();
-                        },
-                        events: {
-                            "mousedown .fieldSelector": "selectField"
-                        },
-                        highlightActiveField: function() {
-                            $('.fieldSelector',this.$el).removeClass("activeFieldSelector");
-                            $('.fieldSelector[rel="'+this.buttonColor[1]+'"]',this.$el).addClass("activeFieldSelector");
-                        },
-
-                        selectField: function(e,i) {
-                            this.buttonColor[e.which]=$(e.currentTarget).attr("rel");
-                            this.highlightActiveField();
-                        }
-                    });
-
-                    var EditorMapView=Backbone.View.extend({
-                        id: "editorMapView",
-                        initialize: function() {
-                            _.bindAll(this);
-							$this=this;
-                            this.settings=this.options.settings;
-                            this.tools=this.options.tools;
-                            this.map =new Map({
-                                mapcode: "XOSOFOX"
-                            });
-                            this.map.setMatrixFromCode();
-                            this.mapRenderView=new MapRenderView({"settings": this.settings, model: this.map});
-                            this.$el.bind("contextmenu",function() { return false; });
-                            this.$el.append(this.mapRenderView.el);
-
-                            this.$el.css({"display": "inline-block"});
-							/**
-							this.$el.resizable({
-								resize: function(e,ui) {
-									var r=(ui.size.height/($this.settings.get("size")+$this.settings.get("border")));
-									//console.log(r,$this.map.get("rows"));
-								}
-							});
-							*/
-                        },
-                        render: function () {
-                            this.mapRenderView.render();
-                        },
-                        events: {
-                            'mousedown': 'mousedown',
-                            'mouseup': 'mouseup',
-                            'mouseleave': 'mouseleave',
-                            "contextmenu": function() {
-                                return false;
-                            }
-                        },
-
-                        draw: function(e) {
-                            for (var i=1;i<=3;i++) {
-                                if (buttonDown[i]) {
-                                    var x=e.pageX-this.$el.offset().left;
-                                    var y=e.pageY-this.$el.offset().top;
-                                    $('#drag'+i).text("("+x+"|"+y+")");
-                                    this.mapRenderView.setFieldAtXY(x,y,this.tools.buttonColor[i]);
-                                    //change mapcode/matrix
-                                }
-                            }
-                        },
-
-                        mousedown: function(e) {
-                            buttonDown[e.which]=true;
-                            e.preventDefault();
-                            render();
-                            this.draw(e);
-                            this.$el.bind("mousemove",this.mousemove);
-                            return false;
-                        },
-
-                        mouseup:function(e) {
-                            buttonDown[e.which]=false;
-                            render();
-                            this.$el.unbind("mousemove");
-                        },
-
-                        mousemove: function(e) {
-                            this.draw(e);
-                        },
-
-                        mouseleave:function(e) {
-                            for (var i=1;i<=3;i++) {
-                                buttonDown[e.which]=false;
-                            }
-                            render();
-                        }
-                    });
 
 					app = new AppView();
-					app.router= new AppRouter();
+					app.router= new EditorAppRouter();
                     var settings = new ViewSettings();
                     app.editor= new EditorView();
                     $('#content').append(app.editor.el);
