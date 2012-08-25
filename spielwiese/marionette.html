@@ -12,6 +12,7 @@
         <div id="container">
             <div id="sidebar">
                 <ul id="navi">
+                    <li><a href="#newgame">Spiel erstellen</a></li>
                     <li><a href="#game/70321">Spiel</a></li>
                     <li><a href="#game/70178">Nacht</a></li>
                     <li><a href="#game/70179">Nacht2</a></li>
@@ -43,6 +44,11 @@
                     })
                     Karopapier.activeApp=false;
 
+                    Karopapier.setTitle=function (title) {
+                        document.title=title;
+                        $('#title').text(title)
+                    }
+
                     Karopapier.module("StaticApp", function (StaticApp, Karopapier, Backbone, Marionette, $, _) {
                         var StaticView = Backbone.Marionette.ItemView.extend({
                             tagName: "div",
@@ -57,6 +63,9 @@
                         StaticApp.layout = new StaticView();
 
                         StaticApp.showContent= function(content) {
+                            if (!(content)) {
+                                content="welcome";
+                            }
                             Karopapier.vent.trigger("app:change", StaticApp);
                             console.info("Showing static " + content);
                             this.layout.content=content;
@@ -66,6 +75,7 @@
 
                         var StaticRouter= Backbone.Marionette.AppRouter.extend({
                             appRoutes: {
+                                "": "showContent",
                                 "static/:content": "showContent"
                             }
                         });
@@ -118,14 +128,17 @@
                 });
 
             </script>
+
             <script id="game-layout-template" type="text/template">
                 <div id="gameMap"></div>
                 <div id="gameInfo"></div>
                 <div id="gameNavi"></div>
             </script>
+
             <script id="static-welcome-template" type="text/template">
                 <h1>Welcome</h1>
             </script>
+
             <script id="static-introduction-template" type="text/template">
                 <h1>Introduction</h1>
             </script>
