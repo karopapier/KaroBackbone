@@ -1,19 +1,10 @@
-var GameAppNavigationView = Backbone.View.extend({
+var GameAppNavigationView = Backbone.Marionette.ItemView.extend({
+	template: "#game-navi-template",
 	events: {
 		'click .back': "backGame",
 		'click .next': "nextGame",
 		'click .smaller': "smallerView",
 		'click .bigger': "biggerView"
-	},
-
-	render: function() {
-		console.info("Rendering GameAppNav");
-		var html='';
-		html+= '<span class="clickable back">Back</span> ';
-		html+= '<span class="clickable smaller"> - </span> ';
-		html+= '<span class="clickable bigger"> + </span> ';
-		html+= '<span class="clickable next">Next</span> ';
-		this.$el.html(html);
 	},
 
 	"smallerView": function () {

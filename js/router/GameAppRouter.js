@@ -2,7 +2,6 @@ var AppRouter = Backbone.Router.extend({
 	routes: {
 		"game/:gameId": "showGame",
 		"game": "showGame",
-		"": "showGame"
 	},
 
 	showGame: function(gameId) {
