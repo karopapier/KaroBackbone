@@ -1,0 +1,70 @@
+@CHARSET "ISO-8859-1";
+
+#userListContainer
+{
+	width: 300px;
+}
+
+.user
+{
+  font-size: 8pt;
+  height: 20px;
+  background-color: #ffe;
+  margin: 1px;
+  border: 1px solid #cc3;
+	width: 300px;
+	position: relative;
+  background-color: #ffe;
+  border: 1px solid #cc3;
+}
+	
+#invitedUsersContainer
+{
+  float: left;
+	padding-right: 20px;
+	width: 300px;
+}
+
+.invitedUser
+{
+  background-color: #eef;
+  border: 1px solid #33c;
+}
+  
+.openSlot
+{
+  background-color: #efe;
+  border: 1px solid #3c3;
+}
+  
+.freeSlot
+{
+  background-color: transparent;
+  border: 1px dashed #999;
+}
+
+.exceededSlot
+{
+  margin: 1px;
+  border: 1px solid #f00;
+  background-color: #fcc;
+}
+
+#userListContainer
+{
+	float: left;
+	padding-right: 20px;
+}
+
+#mapInfoContainer
+{
+	float: left;
+	padding-right: 20px;
+}
+
+#openGamesContainer
+{
+	float: left;
+	padding-right: 20px;
+}
+

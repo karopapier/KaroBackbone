@@ -15,15 +15,15 @@ var Game = Backbone.Model.extend({
 			this.map.set(data.map);
 			playersData=data.players;
 			_.each(playersData,function(playerData) {
-				lastmove=new Move(playerData.lastmove);
+				var lastmove=new Move(playerData.lastmove);
 				playerData.lastmove=lastmove;
-				moves=new MoveCollection(playerData.moves);
+				var moves=new MoveCollection(playerData.moves);
 				playerData.moves=moves;
 			});
 			this.players.reset(data.players);
 			return data.game;
 		} else {
-			console.info("Dropped response for "+data.game.id);
+			console.warning("Dropped response for "+data.game.id);
 		}
 	},
 

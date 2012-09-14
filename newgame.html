@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -6,6 +6,7 @@
         <link rel="shortcut icon" href="http://reloaded.karopapier.de/favicon.ico" />
         <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/css/karo.css" />
         <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/themes/black/css/theme.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="css/lobby.css" />
         <style type="text/css">
             .clickable:hover {
                 cursor: pointer;
@@ -14,6 +15,10 @@
     </head>
 
     <body>
+        <script type="text/javascript" src="js/libs/jquery-1.7.2.min.js"></script>
+        <script type="text/javascript" src="js/libs/underscore-min.js"></script>
+        <script type="text/javascript" src="js/libs/backbone-min.js"></script>
+        <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
         <div id="header">
             <div id="infoBar">
             <span class="userLabel" name="userLabel1">Didi</span> Spiele: <a href="/dran"><span id="dranCount">5</span></a>/<span id="gamesCount">105</span> [5/105]
@@ -28,11 +33,123 @@
                     <li>Nix</li>
                 </ul>
             </div>
-        <div id="content">
 
-            
+            <div id="content">
+                <div id="userListContainer">
+                    <h2>Verfügbare Spieler</h2>
+                    <h3>Filter</h3>
+                    <table>
+                        <tr>
+                            <td>Login</td><td><input type="text" name="filterLogin" id="filterLogin" /></td>
+                        </tr>
+                        <tr>
+                            <td>Tage weg</td><td><input type="text" name="filterLastVisit" id="filterLastVisit" value="0" /></td>
+                        </tr>
+                    </table>
 
+                    <div id="userList"><img src="images/loading.gif" / ></div>
+                </div>
+
+                <div id="invitedUsersContainer">
+                    <h2>Eingeladen</h2>
+                    <img id="addOpenSlot" class="clickable" src="/images/plus.png" />  Offene Einladung hinzufügen	<div id="invitedUsers"></div>
+                </div>
+
+                <div id="mapInfoContainer">
+                    <h2>Kartenauswahl</h2>
+                    <div id="mapInfo"><img src="images/loading.gif" / ></div>
+                </div>
+
+            </div>
         </div>
+
+        <script type="text/template" id="user-template">
+        <div class="user"><span class="userLabel"><%= login %></span> [<%= lastVisit %>|<%= signup %>] @ <%= activeGames %> / <%= maxGames %>
+<img class="invite clickable" style="position: absolute; right: 0px; top: 0px" src="http://reloaded.karopapier.de/images/plus.png" ref="60">
+        </div>
+        </script>
+
+        <script type="text/template" id="selected user-template">
+        <div class="user"><span class="userLabel<% if (selected) { %> invitedUser<% } %>"><%= login %></span> [<%= lastVisit %>|<%= signup %>] @ <%= activeGames %> / <%= maxGames %>
+<img class="uninvite clickable" style="display: none; position: absolute; right: 0px; top: 0px" src="http://reloaded.karopapier.de/images/x.png" ref="60">
+        </div>
+        </script>
+
+        <script type="text/javascript" src="js/model/User.js"></script>
+
+        <script type="text/javascript">
+
+            var LobbyUser = User.extend({
+                defaults: {
+                    selected: false,
+                    login: "Freier Slot"
+                }
+            });
+
+            function FilteredCollection(original){
+                var filtered = new original.constructor();
+
+                filtered.filter = function(criteria){
+                    var items;
+                    if (criteria){
+                        items = original.filter(criteria);
+                    } else {
+                        items = original.models;
+                    }
+                    filtered.reset(items);
+                };
+
+                original.on("reset", function(){
+                        filtered.reset(original.models);
+                        });
+
+                return filtered;
+            }
+            
+            var UserCollection= Backbone.Collection.extend({
+                model: LobbyUser,
+            });
+
+            var UserItemView = Backbone.Marionette.ItemView.extend({
+                template: '#user-template'
+            });
+
+            var UserListView = Backbone.Marionette.CollectionView.extend({
+                itemView: UserItemView
+            });
+
+
+            $(document).ready(function(){
+                var allAvailableUsers=new UserCollection({ });
+                allAvailableUsers.url="http://reloaded.karopapier.de/api/user/list.json?callback=?";
+                var filteredUsers=FilteredCollection(allAvailableUsers);
+
+                var userListView = new UserListView({
+                    collection: filteredUsers,
+                    events: {
+                        'click': 'focus_content'
+                    },
+                    focus_content: function(e) {
+                        console.log(e);
+                    }
+                });
+
+                $('#userList').html(userListView.el);
+
+                allAvailableUsers.fetch();
+
+                $('#filterLogin').keyup(function(e) {
+                    var login=$(e.target).val();
+                    if (login=="") {
+                        filteredUsers.filter();
+                    } else {
+                        filteredUsers.filter(function(e) { return (e.get("login").toLowerCase().indexOf(login.toLowerCase())>=0);});
+                    }
+                });
+
+                
+            });
+        </script>
 
         <center><a href="http://www.karopapier.de">Karopapier.de</a> is brought to you by
         <script type="text/javascript">document.write(String.fromCharCode(0x44,0x69,0x64,0x69).link(String.fromCharCode(0x6d,0x61,0x69,0x6c,0x74,0x6f,0x3a,0x64,0x69,0x64,0x69,0x40,0x6b,0x61,0x72,0x6f,0x70,0x61,0x70,0x69,0x65,0x72,0x2e,0x64,0x65)));</script></center>

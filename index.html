@@ -40,9 +40,17 @@
         </footer>
 
         <script id="game-layout-template" type="text/template">
-            <div id="gameMap"></div>
+            <div style="float: left">
+                <h1 id="title">KaroBackbone</h1>
+                <div id="latestMessages"></div>
+            </div>
             <div id="gameInfo"></div>
+            <div class="clearer"></div>
+            <div id="gameView"></div>
+            <div id="moveMessages"></div>
+            <div id="gameDetails"></div>
             <div id="gameNavi"></div>
+            <div id="gameInfo"></div>
         </script>
 
         <script id="static-welcome-template" type="text/template">
@@ -65,8 +73,17 @@
         <script type="text/javascript" src="js/libs/backbone-min.js"></script>
         <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
 
+        <script type="text/javascript" src="js/model/Game.js"></script>
+        <script type="text/javascript" src="js/model/Player.js"></script>
+        <script type="text/javascript" src="js/model/PlayerCollection.js"></script>
         <script type="text/javascript" src="js/model/Map.js"></script>
+        <script type="text/javascript" src="js/model/Move.js"></script>
+        <script type="text/javascript" src="js/model/MoveCollection.js"></script>
+        <script type="text/javascript" src="js/model/MoveMessage.js"></script>
+        <script type="text/javascript" src="js/model/MoveMessageCollection.js"></script>
+
         <script type="text/javascript" src="js/view/GameAppNavigationView.js"></script>
+        <script type="text/javascript" src="js/view/GameInfoView.js"></script>
 
         <script type="text/javascript">
 
@@ -128,15 +145,25 @@
                         template:"#game-layout-template",
 
                         regions:{
-                            gameMapView:"#gameMap",
-                            gameInfoView:"#gameInfo",
+                            gameMap:"#gameMap",
+                            gameInfo:"#gameInfo",
                             gameNavi: "#gameNavi"
                         }
                     });
+                    GameApp.gameId=0;
+                    GameApp.model = new Game();
+                    GameApp.game=GameApp.model;
 
                     GameApp.showGame = function(id) {
-                        console.info("Zeige SPiel " + id);
+                        console.info("Showing game " + id);
                         Karopapier.vent.trigger("app:change", GameApp);
+                        if (id!=this.gameId) {
+                            this.gameId=id;
+                            this.game.set("id",this.gameId);
+                            Karopapier.vent.trigger("game:change", this.gameId);
+                        }
+                        GameApp.layout.gameNavi.show(GameApp.gameAppNavi);
+                        GameApp.layout.gameInfo.show(GameApp.gameInfo);
                     };
 
                     GameApp.Router= Backbone.Marionette.AppRouter.extend({
@@ -148,11 +175,8 @@
 
                     GameApp.router=new GameApp.Router();
                     GameApp.layout=new GameLayout();
-                    GameApp.layout.render();
                     GameApp.gameAppNavi = new GameAppNavigationView();
-                    GameApp.layout.gameNavi.show(GameApp.gameAppNavi);
-
-
+                    GameApp.gameInfo = new GameInfoView();
                 });
 
                 Karopapier.module("EditorApp", function (EditorApp, Karopapier, Backbone, Marionette, $, _) {
