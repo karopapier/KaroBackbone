@@ -33,8 +33,7 @@ var EditorView=Backbone.View.extend({
 	},
 	loadMapId: function(mapId) {
 		var $this=this;
-		$.getJSON("http://reloaded.karopapier.de/api/mapcode/"+mapId+".json?callback=?",function(data) {
-			var mapcode=data.mapcode;
+		$.getJSON("http://reloaded.karopapier.de/api/mapcode/"+mapId+".json?callback=?",function(mapcode) {
 			$this.mapcode.val(mapcode);
 			$this.loadMapcode(mapcode);
 		});
