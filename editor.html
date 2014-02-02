@@ -14,22 +14,24 @@
                 max-height: 600px;
                 overflow: auto;
             }
+
             #editorTools {
                 width: 300px;
                 height: 500px;
                 float: right;
-                background-color: rgba(100,100,100,.3);
+                background-color: rgba(100, 100, 100, .3);
             }
 
             .fieldSelector {
                 width: 20px;
                 height: 20px;
                 background-image: url('images/mapfields.png');
-                float:left;
+                float: left;
                 margin: 2px;
                 border: 2px solid #333;
                 opacity: 0.7;
             }
+
             .activeFieldSelector {
                 border: 2px solid white;
                 opacity: 1;
@@ -41,8 +43,11 @@
     <body>
         <div id="header">
             <div id="infoBar">
-                <span class="userLabel" name="userLabel1">Didi</span> Spiele: <a href="/dran"><span id="dranCount">5</span></a>/<span id="gamesCount">105</span> [5/105]
-                <a href="/logout">Logout</a>                <div id="NotifierContainer"></div>
+                <span class="userLabel" name="userLabel1">Didi</span>
+                Spiele: <a href="/dran"><span id="dranCount">5</span></a>/<span id="gamesCount">105</span> [5/105]
+                <a href="/logout">Logout</a>
+
+                <div id="NotifierContainer"></div>
             </div>
         </div>
         <div class="clearer"></div>
@@ -61,7 +66,8 @@
             <div class="clearer"></div>
 
             <center><a href="http://www.karopapier.de">Karopapier.de</a> is brought to you by
-                <script type="text/javascript">document.write(String.fromCharCode(0x44,0x69,0x64,0x69).link(String.fromCharCode(0x6d,0x61,0x69,0x6c,0x74,0x6f,0x3a,0x64,0x69,0x64,0x69,0x40,0x6b,0x61,0x72,0x6f,0x70,0x61,0x70,0x69,0x65,0x72,0x2e,0x64,0x65)));</script></a>
+                <script type="text/javascript">document.write(String.fromCharCode(0x44, 0x69, 0x64, 0x69).link(String.fromCharCode(0x6d, 0x61, 0x69, 0x6c, 0x74, 0x6f, 0x3a, 0x64, 0x69, 0x64, 0x69, 0x40, 0x6b, 0x61, 0x72, 0x6f, 0x70, 0x61, 0x70, 0x69, 0x65, 0x72, 0x2e, 0x64, 0x65)));</script>
+                </a>
             </center>
 
             <!-- <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
@@ -86,40 +92,41 @@
             <script type="text/javascript" src="js/templates/jst.js"></script>
 
             <script type="text/javascript">
-                var buttonDown=[false, false, false, false] //null, left, middle, right
-				var app;
+                var buttonDown = [false, false, false, false] //null, left, middle, right
+                var app;
 
                 function render() {
-                    for (var i=1;i<=3;i++) {
-                        $('#button'+i).css({backgroundColor: buttonDown[i] ? 'red' : 'transparent'});
+                    for (var i = 1; i <= 3; i++) {
+                        $('#button' + i).css({backgroundColor: buttonDown[i] ? 'red' : 'transparent'});
                     }
                 }
 
-                $(document).ready(function() {
+                $(document).ready(function () {
 
-					var AppView=Backbone.View.extend({});
+                    var AppView = Backbone.View.extend({});
 
-
-					app = new AppView();
-					app.router= new EditorAppRouter();
+                    app = new AppView();
+                    app.router = new EditorAppRouter();
                     var settings = new ViewSettings();
-                    app.editor= new EditorView();
+                    app.editor = new EditorView();
                     $('#content').append(app.editor.el);
                     app.editor.editorMapView.render();
 
                     //here comes the ugly part
-                    $(window).resize(function() {
+                    $(window).resize(function () {
                         recalcWidth();
                     });
                     function recalcWidth() {
-                        var ww=$(window).width();
-                        var nw=$('#sidebar').width();
-                        var iw=$('#editorTools').width();
-                        $('#editorMapArea').width(ww-nw-iw-30);
+                        var ww = $(window).width();
+                        var nw = $('#sidebar').width();
+                        var iw = $('#editorTools').width();
+                        $('#editorMapArea').width(ww - nw - iw - 30);
 
                     }
+
                     recalcWidth();
-					Backbone.history.start();
+                    Backbone.history.start();
+
                 });
 
             </script>
