@@ -1,0 +1,17 @@
+<html>
+<body>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+
+$.getJSON("https://api.github.com/repos/xosofox/karobackbone/commits?callback=?", function(data) {
+    var l=data.data.length;
+    l = l>10 ? 10:l;
+    var html="";
+    for (var i=0; i<l;i++) {
+        html+=data.data[i].commit.message+ "<br />";
+    }
+    $('body').append(html);
+});
+</script>
+</body>
+</html>
