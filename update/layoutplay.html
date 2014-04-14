@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script type="text/javascript" src="js/libs/jquery-1.11.0.min.js"></script>
+        <script src="js/libs/underscore-min.js"></script>
+        <script src="js/libs/backbone-min.js"></script>
+        <script src="js/libs/backbone.marionette.min.js"></script>
+    </head>
+    <body>
+        <script id="PageLayoutTemplate" type="text/template">
+            <h1>Hallo</h1>
+            <div id="header"></div>
+            <div id="content"></div>
+            <div id="footer"></div>
+        </script>
+
+        <script id="headerTemplate" type="text/template">
+            Header
+        </script>
+
+        <script id="footerTemplate" type="text/template">
+            Footer
+        </script>
+
+        Content
+        <div id="mainPage"></div>
+
+        <script type="text/javascript">
+            var PageLayout = Backbone.Marionette.Layout.extend({
+                template: "#PageLayoutTemplate",
+                regions: {
+                    header:"#header",
+                    content: "#content",
+                    footer: "#footer"
+                }
+            })
+
+            var pageLayout = new PageLayout({
+                el: '#mainPage'
+            });
+            pageLayout.render();
+
+            var HeaderView = Backbone.Marionette.ItemView.extend({
+                template: "#headerTemplate"
+            })
+            var header = new HeaderView();
+
+            var FooterView = Backbone.Marionette.ItemView.extend({
+                template: '#footerTemplate'
+            })
+            var footer = new FooterView();
+
+            pageLayout.header.show(header);
+            pageLayout.footer.show(footer);
+
+        </script>
+
+    </body>
+</html>

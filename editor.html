@@ -127,7 +127,42 @@
                     recalcWidth();
                     Backbone.history.start();
 
+                    $('#editorMapArea').on("mousewheel DOMMouseScroll", handleScroll);
                 });
+
+
+                var scale = 1;
+                var handleScroll = function (e) {
+                    //console.log(e);
+                    e.delta = null;
+                    if (e.originalEvent) {
+                        if (e.originalEvent.wheelDelta) e.delta = e.originalEvent.wheelDelta / -40;
+                        if (e.originalEvent.deltaY) e.delta = e.originalEvent.deltaY;
+                        if (e.originalEvent.detail) e.delta = e.originalEvent.detail;
+                    }
+                    //console.log(e.delta);
+                    if (e.delta > 0) {
+                        //zoom out
+                        scale *= 0.9;
+                    } else {
+                        //zoom in
+                        scale *= 1.1;
+                    }
+                    console.log(scale)
+                    var x = e.pageX || e.originalEvent.pageX;
+                    var y = e.pageY || e.originalEvent.pageY;
+
+                    x = x - $('#editorMapArea').offset().left;
+                    y = y - $('#editorMapArea').offset().top;
+
+                    var trans="scale("+scale+")";
+                    trans = trans + " translate(-"+x+"px,-"+y+"px)";
+
+                    console.log(x,y, trans);
+                    $('#editorMapView').css("transform", trans);
+                    //$('#editorMapView').css("transform-origin", x + " " + y);
+                    e.preventDefault();
+                };
 
             </script>
         </div>

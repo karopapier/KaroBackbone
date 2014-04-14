@@ -61,12 +61,9 @@ var MapRenderView = Backbone.View.extend({
         rc = this.getRowColfromXY(x, y);
         return this.model.get("matrix")[rc.r][rc.c];
     },
-    getFieldAtRowCol: function (r, c) {
-
-    },
     setFieldAtXY: function (x, y, field) {
         var rc = this.getRowColfromXY(x, y);
-        var old = this.getFieldAtRowCol(rc.r, rc.c);
+        var old = this.model.getFieldAtRowCol(rc.r, rc.c);
         if (old != field) {
             this.setFieldAtRowCol(rc.r, rc.c, field);
             this.drawField(rc.r, rc.c, field);

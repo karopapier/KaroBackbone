@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script type="text/javascript" src="js/libs/jquery-1.11.0.min.js"></script>
+        <script src="js/libs/underscore-min.js"></script>
+        <script src="js/libs/backbone-min.js"></script>
+        <script src="js/libs/backbone.marionette.min.js"></script>
+
+        <script src="../js/model/Map.js"></script>
+        <script src="../js/model/MapPathFinder.js"></script>
+        <script src="../js/view/MapView.js"></script>
+        <script src="../js/view/MapCodeView.js"></script>
+    </head>
+    <body>
+        <div id="content"></div>
+        Mapid: <input type="text" id="mapid" value="154" />
+        <button id="getMapcode">Get</button>
+        <br>
+        <textarea cols="100" rows="50" style="font-size: 8px" id="mapCodeView"></textarea><br>
+        <button id="getMainfill">Mainfill</button>
+        <button id="getNextpath">Next Path</button>
+        <br>
+        <svg xmlns="http://www.w3.org/2000/svg"
+             xmlns:xlink="http://www.w3.org/1999/xlink" id="mapview" width="300" height="200" style="border: 1px solid red">
+            <defs>
+                <style type="text/css">
+                    .grass {
+                        fill: rgb(0, 200, 0);
+                    }
+
+                    .road {
+                        fill: rgb(128, 128, 128);
+                    }
+
+                    .mud {
+                        fill: rgb(100, 70, 0);
+                    }
+
+                    .sand {
+                        fill: rgb(230, 230, 115);
+                    }
+
+                    .water {
+                        fill: blue;
+                    }
+
+                    .earth {
+                        fill: brown;
+                    }
+
+                    .parc {
+                        fill: rgb(200, 200, 200);
+                    }
+
+                    .cp1 {
+
+                    }
+                </style>
+                <!--<filter id='n' x='0' y='0'>
+                    <feTurbulence type='fractalNoise' baseFrequency='2' numOctaves='1' stitchTiles='stitch'/>
+                </filter> -->
+                <pattern id="grid" patternUnits="userSpaceOnUse" width="13" height="13" x="0" y="0">
+                    <line x1="13" y1="0" x2="13" y2="13" stroke="black" stroke-width="1"></line>
+                    <line x1="0" y1="13" x2="13" y2="13" stroke="black" stroke-width="1"></line>
+                </pattern>
+            </defs>
+            <rect id="mainfill" class="" x="0" y="0" width="100%" height="100%" />
+            <!--<rect x="0" y="0" width="100%" height="100%" filter="url(#n)" opacity='0.7'/>-->
+            <g id="paths">
+            </g>
+            <rect x="0" y="0" width="100%" height="100%" fill="url(#grid)" opacity=".3"></rect>
+        </svg>
+
+        <script type="text/javascript">
+
+            var MAP_FIELDS = {
+                "X": "grass",
+                "O": "road",
+                "P": "parc",
+                "Y": "sand",
+                "Z": "mud",
+                "W": "water",
+                "V": "stone"
+            };
+            $('#getMapcode').click(function () {
+                $.getJSON("http://reloaded.karopapier.de/api/mapcode/" + $('#mapid').val() + ".json?callback=?", function (data) {
+                    map.set("mapcode", data);
+                    map.setMatrixFromCode();
+                })
+            })
+
+            $('#getMainfill').click(function () {
+                var mc = map.get("mapcode");
+                var mostChar = "";
+                var charCount = 0;
+                for (char in MAP_FIELDS) {
+                    var nb = mc.match(new RegExp(char, "g"))
+                    if (nb) {
+                        if (nb.length > charCount) {
+                            mostChar = char;
+                            charCount = nb.length;
+                        }
+                    }
+                }
+
+                if (mostChar in MAP_FIELDS) {
+                    mc = mc.replace(new RegExp(mostChar, "g"), "_");
+                    map.set("mapcode", mc);
+                    map.setMatrixFromCode();
+
+                    console.log(MAP_FIELDS[mostChar]);
+                    $('#mainfill').attr("class", MAP_FIELDS[mostChar]);
+                }
+            })
+
+            function makeSVG(tag, attrs) {
+                var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+                for (var k in attrs)
+                    el.setAttribute(k, attrs[k]);
+                return el;
+            }
+
+            $('#getNextpath').click(function () {
+                mapPathFinder.getNextPath();
+
+                //for (var i = 0; i < mapPathFinder.paths.length; i++) {
+                    //var path = mapPathFinder.paths[i];
+                    //console.log(path);
+                //}
+            })
+
+            /* init stuff */
+            var map = new Map();
+            map.bind("change:rows change:cols", function () {
+                $('#mapview').attr({
+                    width: map.get("cols") * 13,
+                    height: map.get("rows") * 13
+                })
+            })
+
+            var mapView = new MapView({
+                model: map,
+                size: 20,
+                border: 2
+            });
+
+            var mapCodeView = new MapCodeView({
+                model: map,
+                el: "#mapCodeView"
+            })
+
+            var Path = Backbone.Model.extend({
+
+            });
+
+            var PathCollection = Backbone.Collection.extend({
+                model:Path
+            })
+
+            var mapPathFinder = new MapPathFinder({
+                map: map
+            })
+
+            var PathCollectionView = Backbone.View.extend({
+                collection: PathCollection,
+                initialize: function() {
+                    var me = this;
+                    this.collection.bind("add", function(path) {
+                        console.log("Path added",path);
+                        var p = makeSVG("path",{
+                            d: path.get("path"),
+                            class: path.get("class"),
+                            stroke: "#0FF",
+                            "stroke-width":"5"
+                        })
+                        //var p = makeSVG("path",{d: path.get("path"), class: path.get("class")})
+                        me.el.appendChild(p);
+                    })
+                }
+            })
+
+            var pathCollectionView = new PathCollectionView({
+                el: document.getElementById('paths'),
+                collection: mapPathFinder.paths
+            })
+
+            map.set("mapcode", "XXXXXXX\nXOSOFOX\nXXXXXXX");
+            map.setMatrixFromCode();
+
+        </script>
+
+    </body>
+</html>
