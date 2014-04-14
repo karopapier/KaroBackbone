@@ -13,6 +13,7 @@ var MapPathFinder = Backbone.Model.extend({
         this.alreadyChecked = {};
         this.depthSecurityBreak = 5000;
         this.WILDCARD_FIELDS = ["F", "S", "1", "2", "3", "4", "5", "6", "7", "8", "9", 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        this.stack = 0;
     },
     getNextPath: function () {
         var mapcode = this.map.get("mapcode");
@@ -86,18 +87,22 @@ var MapPathFinder = Backbone.Model.extend({
         return { r: parseInt(s[0]), c: parseInt(s[1])};
     },
     checkField: function (r, c, char, depth, from) {
+        this.stack++;
+        $('#stack').text(this.stack);
         if (typeof depth === "undefined") {
             depth = 1;
         }
-        console.log("Looking at ", r, c, " with depth ", depth);
+        console.log("Looking at ", r, c, " with depth ", depth, "this", this);
 
         if (depth > this.depthSecurityBreak) {
             console.log("Security Break at depth ", depth);
+            this.stack--;
             return false;
         }
 
         if (this.alreadyChecked[r + "|" + c]) {
-            console.log("... but it is already checked");
+            //console.log("... but it is already checked");
+            this.stack--;
             return true;
         }
 
@@ -145,8 +150,8 @@ var MapPathFinder = Backbone.Model.extend({
         var testField;
 
         for (var direction in modifiers) {
-            console.log("Now doing directions: ",direction,"from ", r,c)
-            console.log("Remembering i am coming from ", from);
+            //console.log("Now doing directions: ",direction,"from ", r,c)
+            //console.log("Remembering i am coming from ", from);
             var mod = modifiers[direction];
             var testR = r + mod.r;
             var testC = c + mod.c;
@@ -155,12 +160,18 @@ var MapPathFinder = Backbone.Model.extend({
                 testField = this.map.getFieldAtRowCol(testR, testC)
                 console.log("Considering ",testField,testR, testC);
                 if ((testField === char) || (this.WILDCARD_FIELDS.indexOf(testField) >= 0)) {
-                    console.log("Gonna check ",testR,testC);
-                    this.checkField(testR, testC, char, depth + 1, {r: r, c: c});
+                    //console.log("Gonna check ",testR,testC);
+
+                    //this.checkField(testR, testC, char, depth + 1, {r: r, c: c});
+                    var me = this;
+                    setTimeout((function () {
+                        console.log("Sending forth ",testR,testC,testField);
+                        this.checkField(testR, testC, char, depth + 1, {r: r, c: c});
+                    }).call(this),1)
                 } else {
                     var fromMod = outlineModifiers[direction].from;
                     var toMod = outlineModifiers[direction].to;
-                    console.log("Adding outline", direction, fromMod, toMod)
+                    //console.log("Adding outline", direction, fromMod, toMod)
                     this.outlines[this.getKeyForRowCol(r+fromMod.r, c+fromMod.c)] = {r: r+toMod.r, c: c + toMod.c};
                 }
 
@@ -171,6 +182,8 @@ var MapPathFinder = Backbone.Model.extend({
         //right this.outlines[this.getKeyForRowCol(r, c + 1)] = {r: r + 1, c: c + 1};
         //bottom this.outlines[this.getKeyForRowCol(r + 1, c + 1)] = {r: r + 1, c: c};
         //left this.outlines[this.getKeyForRowCol(r + 1, c)] = {r: r, c: c};
+        this.stack--;
+        $('#stack').text(this.stack);
         return true;
     },
     oldthing: function () {
