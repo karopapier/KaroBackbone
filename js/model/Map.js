@@ -5,56 +5,49 @@ var Map = Backbone.Model.extend({
         rows: 0,
         cols: 0
     },
-    initialize: function() {
-        _.bindAll(this,"updateStarties","updateCpList","setMatrixFromCode","setFieldAtRowCol","getFieldAtRowCol","setMapcodeFromMatrix");
-        this.bind("change:id",function() {
-            this.setMatrixFromCode()
-        });
-        this.bind("change:mapcode",function(e,mapcode) {
+    initialize: function () {
+        _.bindAll(this, "updateSize", "updateStarties", "updateCpList", "setFieldAtRowCol", "getFieldAtRowCol", "getPosFromRowCol");
+        this.bind("change:mapcode", function (e, mapcode) {
+            this.updateSize();
+            var trimcode = mapcode;
+            trimcode = trimcode.replace(/\r/g, ""); //make sure we don't have CR in there
+            this.set("mapcode", trimcode, {silent: true});
             this.updateStarties();
             this.updateCpList();
-        },this);
+        }, this);
     },
-    updateStarties: function() {
-        this.set("starties",(this.get("mapcode").match(/S/g)||[]).length);
+    updateStarties: function () {
+        this.set("starties", (this.get("mapcode").match(/S/g) || []).length);
     },
-    updateCpList: function() {
-        this.set("cps",(this.get("mapcode").match(/\d/g)||[]).sort().filter(function(el,i,a){if(i==a.indexOf(el))return 1;return 0}));
+    updateCpList: function () {
+        this.set("cps", (this.get("mapcode").match(/\d/g) || []).sort().filter(function (el, i, a) {
+            if (i == a.indexOf(el))return 1;
+            return 0
+        }));
     },
-    setMatrixFromCode: function () {
-        var lines=this.get("mapcode").split('\n');
-        this.set({"rows":lines.length});
-        var matrix= [];
-        for (var l=0;l<this.get("rows");l++) {
-            var line=(lines[l]).trim();
-            matrix[l]=[];
-            var chars=line.split('');
-            this.set({"cols":chars.length});
-            for (var c=0;c<this.get("cols");c++) {
-                matrix[l][c]=line[c];
-            }
-        }
-	    this.set({"matrix":matrix});
+    updateSize: function () {
+        var lines = this.get("mapcode").split('\n');
+        this.set({"rows": lines.length});
+        var line = lines[0].trim();
+        this.set("cols", line.length);
     },
-    setFieldAtRowCol: function(r,c,field) {
-        this.attributes.matrix[r][c]=field;
-        this.setMapcodeFromMatrix();
+    setFieldAtRowCol: function (r, c, field) {
+        var pos = this.getPosFromRowCol(r, c);
+        var mapcode = this.get("mapcode");
+        var l = mapcode.length;
+        mapcode = mapcode.substr(0, pos) + field + mapcode.substr(pos + 1);
+        this.set("mapcode", mapcode);
     },
     getFieldAtRowCol: function (r, c) {
-        if (r<0) return undefined;
-        if (c<0) return undefined;
-        if (r>=this.get("rows")) return undefined;
-        if (c>=this.get("cols")) return undefined;
-        var matrix=this.get("matrix");
-        var f = matrix[r][c];
-        return f;
+        if (r < 0) return undefined;
+        if (c < 0) return undefined;
+        if (r >= this.get("rows")) return undefined;
+        if (c >= this.get("cols")) return undefined;
+        var pos = this.getPosFromRowCol(r, c);
+        return this.get("mapcode").charAt(pos);
     },
-    setMapcodeFromMatrix: function() {
-        var matrix=this.get("matrix");
-        var mapcodelines=[];
-        for (r=0;r<matrix.length;r++) {
-            mapcodelines.push(matrix[r].join(""));
-        }
-        this.set("mapcode",mapcodelines.join("\n"));
+    getPosFromRowCol: function (r, c) {
+        var pos = ( r * (this.get("cols")+1)) + c;
+        return pos;
     }
 });

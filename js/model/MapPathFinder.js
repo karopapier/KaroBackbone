@@ -3,7 +3,6 @@ var MapPathFinder = Backbone.Model.extend({
         _.bindAll(this, "getNextPath", "checkField", "oldthing");
         //console.log(options);
         this.map = options.map;
-        this.matrix = this.map.get("matrix");
         this.paths = new PathCollection();
         this.done = false;
         this.lastStartRow = 0;
@@ -21,6 +20,12 @@ var MapPathFinder = Backbone.Model.extend({
         var rows = this.map.get("rows");
         var lines = mapcode.split("\n");
 
+        /*
+        for rows and cols (start -1|-1)
+        check right and bottom for change of field, if yes add outline
+         */
+
+        var currentChar = "";
         var r = this.lastStartRow;
         var c = this.lastStartCol;
         while (r < rows) {
@@ -43,7 +48,7 @@ var MapPathFinder = Backbone.Model.extend({
 
         this.outlines = {};
         //recursive check for all adjacent fields
-        this.checkField(startRow, startCol, char, 0, {r:startRow,c:startCol});
+        this.checkField(startRow, startCol, char, 0, {r: startRow, c: startCol});
 
 
         //set all checked to " "
@@ -53,7 +58,6 @@ var MapPathFinder = Backbone.Model.extend({
                 this.map.setFieldAtRowCol(rc.r, rc.c, "_");
             }
         }.bind(this))
-        this.map.setMapcodeFromMatrix();
 
         //now combine all outlines into a path and add them
 
@@ -132,17 +136,17 @@ var MapPathFinder = Backbone.Model.extend({
                 from: { r: 0, c: 0},
                 to: { r: 0, c: +1}
             },
-            right:{
-                from: { r:0,c:+1},
-                to: {r:+1,c:+1}
+            right: {
+                from: { r: 0, c: +1},
+                to: {r: +1, c: +1}
             },
             bottom: {
-                from: {r:+1, c:+1},
-                to: {r:+1, c:0}
+                from: {r: +1, c: +1},
+                to: {r: +1, c: 0}
             },
             left: {
                 from: {r: +1, c: 0},
-                to: {r: 0, c:0}
+                to: {r: 0, c: 0}
             }
         }
 
@@ -158,21 +162,24 @@ var MapPathFinder = Backbone.Model.extend({
 
             if (!((testR === from.r) && (testC === from.c))) {
                 testField = this.map.getFieldAtRowCol(testR, testC)
-                console.log("Considering ",testField,testR, testC);
+                console.log("Considering ", testField, testR, testC);
                 if ((testField === char) || (this.WILDCARD_FIELDS.indexOf(testField) >= 0)) {
                     //console.log("Gonna check ",testR,testC);
 
-                    //this.checkField(testR, testC, char, depth + 1, {r: r, c: c});
-                    var me = this;
-                    setTimeout((function () {
-                        console.log("Sending forth ",testR,testC,testField);
-                        this.checkField(testR, testC, char, depth + 1, {r: r, c: c});
-                    }).call(this),1)
+                    var k = this.getKeyForRowCol(testR, testC);
+                    if (!(k in this.alreadyChecked)) {
+                        //this.checkField(testR, testC, char, depth + 1, {r: r, c: c});
+                        var me = this;
+                        setTimeout((function () {
+                            console.log("Sending forth ", testR, testC, testField);
+                            this.checkField(testR, testC, char, depth + 1, {r: r, c: c});
+                        }).call(this), 1)
+                    }
                 } else {
                     var fromMod = outlineModifiers[direction].from;
                     var toMod = outlineModifiers[direction].to;
                     //console.log("Adding outline", direction, fromMod, toMod)
-                    this.outlines[this.getKeyForRowCol(r+fromMod.r, c+fromMod.c)] = {r: r+toMod.r, c: c + toMod.c};
+                    this.outlines[this.getKeyForRowCol(r + fromMod.r, c + fromMod.c)] = {r: r + toMod.r, c: c + toMod.c};
                 }
 
             }

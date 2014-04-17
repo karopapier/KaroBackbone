@@ -39,7 +39,7 @@ var MapRenderView = Backbone.View.extend({
         this.ctx.fillRect(0, 0, this.el.width, this.el.height);
         for (var r = 0; r < map.get("rows"); r++) {
             for (var c = 0; c < map.get("cols"); c++) {
-                this.drawField(r, c, map.get("matrix")[r][c]);
+                this.drawField(r, c, map.getFieldAtRowCol(r,c));
             }
         }
     },
@@ -59,7 +59,7 @@ var MapRenderView = Backbone.View.extend({
     getFieldAtXY: function (x, y) {
         alert("Deprecated");
         rc = this.getRowColfromXY(x, y);
-        return this.model.get("matrix")[rc.r][rc.c];
+        return this.model.getFieldAtRowCol(rc.r,rc.c);
     },
     setFieldAtXY: function (x, y, field) {
         var rc = this.getRowColfromXY(x, y);

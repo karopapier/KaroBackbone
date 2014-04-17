@@ -15,7 +15,8 @@ var MapCodeView = Backbone.View.extend({
     },
     setCode: function() {
         console.log("Set Code");
-        this.$el.val(this.model.get("mapcode"));
+        var mapcode = this.model.getMapcodeLines();
+        this.$el.val(mapcode);
     },
     render: function () {
         this.setBounds();

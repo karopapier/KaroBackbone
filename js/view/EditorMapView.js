@@ -8,7 +8,6 @@
                             this.map =new Map({
                                 mapcode: "XOSOFOX"
                             });
-                            this.map.setMatrixFromCode();
                             this.mapRenderView=new MapRenderView({"settings": this.settings, model: this.map});
                             this.$el.bind("contextmenu",function() { return false; });
                             this.$el.append(this.mapRenderView.el);
@@ -42,7 +41,6 @@
                                     var y=e.pageY-this.$el.offset().top;
                                     $('#drag'+i).text("("+x+"|"+y+")");
                                     this.mapRenderView.setFieldAtXY(x,y,this.tools.buttonColor[i]);
-                                    //change mapcode/matrix
                                 }
                             }
                         },

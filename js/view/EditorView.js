@@ -40,7 +40,6 @@ var EditorView=Backbone.View.extend({
 	},
 	loadMapcode: function() {
 		this.editorMapView.map.set("mapcode",this.mapcode.val());
-		this.editorMapView.map.setMatrixFromCode();
 		this.editorMapView.render();
 	}
 });

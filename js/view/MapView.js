@@ -48,7 +48,7 @@ var MapView = Backbone.View.extend({
     getFieldAtXY: function (x, y) {
         alert("Deprecated");
         var rc = this.getRowColfromXY(x, y);
-        return this.model.get("matrix")[rc.r][rc.c];
+        return this.model.getFieldAtRowCol(rc.r,rc.c);
     },
 
     setFieldAtXY: function (x, y, field) {
