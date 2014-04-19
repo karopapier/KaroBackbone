@@ -76,43 +76,41 @@
         <script type="text/javascript">
 
             var MAP_FIELDS = {
-                "X": "grass",
+                "F": "finish",
                 "O": "road",
                 "P": "parc",
+                "S": "start",
+                "V": "stone",
+                "W": "water",
+                "X": "grass",
                 "Y": "sand",
                 "Z": "mud",
-                "W": "water",
-                "V": "stone"
+                "1": "cp1",
+                "2": "cp2",
+                "3": "cp3",
+                "4": "cp4",
+                "5": "cp5",
+                "6": "cp6",
+                "7": "cp7",
+                "8": "cp8",
+                "9": "cp9"
             };
             $('#getMapcode').click(function () {
                 $.getJSON("http://reloaded.karopapier.de/api/mapcode/" + $('#mapid').val() + ".json?callback=?", function (data) {
                     map.set("mapcode", data);
-                    map.setMatrixFromCode();
                 })
             })
 
             $('#getMainfill').click(function () {
+
+                var mostChar = mapPathFinder.getMainField();
+                console.log(mostChar, MAP_FIELDS[mostChar]);
+                $('#mainfill').attr("class", MAP_FIELDS[mostChar]);
+
                 var mc = map.get("mapcode");
-                var mostChar = "";
-                var charCount = 0;
-                for (char in MAP_FIELDS) {
-                    var nb = mc.match(new RegExp(char, "g"))
-                    if (nb) {
-                        if (nb.length > charCount) {
-                            mostChar = char;
-                            charCount = nb.length;
-                        }
-                    }
-                }
+                mc = mc.replace(new RegExp(mostChar, "g"), "_");
+                map.set("mapcode", mc);
 
-                if (mostChar in MAP_FIELDS) {
-                    mc = mc.replace(new RegExp(mostChar, "g"), "_");
-                    map.set("mapcode", mc);
-                    map.setMatrixFromCode();
-
-                    console.log(MAP_FIELDS[mostChar]);
-                    $('#mainfill').attr("class", MAP_FIELDS[mostChar]);
-                }
             })
 
             function makeSVG(tag, attrs) {
@@ -123,11 +121,13 @@
             }
 
             $('#getNextpath').click(function () {
-                mapPathFinder.getNextPath();
+                mapPathFinder.getAllOutlines();
+
+                mapPathFinder.cleanOutlines();
 
                 //for (var i = 0; i < mapPathFinder.paths.length; i++) {
-                    //var path = mapPathFinder.paths[i];
-                    //console.log(path);
+                //var path = mapPathFinder.paths[i];
+                //console.log(path);
                 //}
             })
 
@@ -156,7 +156,7 @@
             });
 
             var PathCollection = Backbone.Collection.extend({
-                model:Path
+                model: Path
             })
 
             var mapPathFinder = new MapPathFinder({
@@ -165,15 +165,15 @@
 
             var PathCollectionView = Backbone.View.extend({
                 collection: PathCollection,
-                initialize: function() {
+                initialize: function () {
                     var me = this;
-                    this.collection.bind("add", function(path) {
-                        console.log("Path added",path);
-                        var p = makeSVG("path",{
+                    this.collection.bind("add", function (path) {
+                        console.log("Path added", path);
+                        var p = makeSVG("path", {
                             d: path.get("path"),
                             class: path.get("class"),
                             stroke: "#0FF",
-                            "stroke-width":"5"
+                            "stroke-width": "5"
                         })
                         //var p = makeSVG("path",{d: path.get("path"), class: path.get("class")})
                         me.el.appendChild(p);
@@ -187,7 +187,6 @@
             })
 
             map.set("mapcode", "XXXXXXX\nXOSOFOX\nXXXXXXX");
-            map.setMatrixFromCode();
 
         </script>
 

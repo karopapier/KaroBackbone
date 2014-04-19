@@ -1,11 +1,11 @@
 test("Map pos calculations", function () {
     expect(3);
     var map = new Map();
-    map.set("rows",5);
-    map.set("cols",6);
-    equal(map.getPosFromRowCol(0,2),2,"getPosFromRowCol works correctly");
-    equal(map.getPosFromRowCol(1,2),9,"getPosFromRowCol works correctly");
-    equal(map.getPosFromRowCol(2,4),18,"getPosFromRowCol works correctly");
+    map.set("rows", 5);
+    map.set("cols", 6);
+    equal(map.getPosFromRowCol(0, 2), 2, "getPosFromRowCol works correctly");
+    equal(map.getPosFromRowCol(1, 2), 9, "getPosFromRowCol works correctly");
+    equal(map.getPosFromRowCol(2, 4), 18, "getPosFromRowCol works correctly");
 
 });
 test("Map setup functions", function () {
