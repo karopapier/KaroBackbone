@@ -1,6 +1,6 @@
 var MapPathFinder = Backbone.Model.extend({
         initialize: function (options) {
-            _.bindAll(this, "getMainField", "getAllOutlines", "checkField", "oldthing");
+            _.bindAll(this, "getMainField", "getAllOutlines", "getFieldOutlines", "getOutlineDirection");
             //console.log(options);
             this.map = options.map;
             this.mainField = '';
@@ -18,6 +18,12 @@ var MapPathFinder = Backbone.Model.extend({
                 right: { r: 0, c: +1 },
                 bottom: { r: +1, c: 0 },
                 left: { r: 0, c: -1 }
+            };
+            this.directions = {
+                "-1|0": "up",
+                "0|1" : "right",
+                "1|0": "down",
+                "0|-1": "left"
             };
             this.outlineModifiers = {
                 top: {
@@ -71,7 +77,7 @@ var MapPathFinder = Backbone.Model.extend({
                     if (char == "O") {
                         //if (char in MAP_FIELDS) {
                         console.log(r, c, char);
-                        this.checkField(r, c);
+                        this.getFieldOutlines(r, c);
                     }
                     c++;
                 }
@@ -99,6 +105,12 @@ var MapPathFinder = Backbone.Model.extend({
             return true;
         },
 
+        getOutlineDirection: function(outline) {
+            var x = outline.x2 - outline.x1;
+            var y = outline.y2 - outline.y1;
+            return this.directions[y + "|" + x];
+        },
+
         getKeyForRowCol: function (r, c) {
             return (r + "|" + c);
         },
@@ -106,14 +118,13 @@ var MapPathFinder = Backbone.Model.extend({
             var s = k.split("|");
             return { r: parseInt(s[0]), c: parseInt(s[1])};
         },
-        checkField: function (r, c) {
+        getFieldOutlines: function (r, c) {
 
             var currentField = this.map.getFieldAtRowCol(r, c);
 
             //for all 4 directions
             // get the char and if it is different, add outline
 
-            //top
             var testField;
 
             for (var direction in this.modifiers) {
@@ -134,12 +145,22 @@ var MapPathFinder = Backbone.Model.extend({
                     var fromMod = this.outlineModifiers[direction].from;
                     var toMod = this.outlineModifiers[direction].to;
                     if (!(currentField in this.outlines)) {
+                        //init outline per char
                         this.outlines[currentField] = {};
                     }
 
-                    var lineCoords = [ r + fromMod.r, c + fromMod.c, r + toMod.r, c + toMod.c];
-                    var lineKey = lineCoords.join("|");
-                    this.outlines[currentField][lineKey] = true;
+                    //use start as key and add array of outlines, as several outlines can start at one point
+
+                    var x1 = c + fromMod.c;
+                    var y1 = r + fromMod.r;
+                    var x2 = c + toMod.c;
+                    var y2 = r + toMod.r;
+                    var k = this.getKeyForRowCol(y1, x1);
+
+                    if (!(k in this.outlines[currentField])) {
+                        this.outlines[currentField][k] = [];
+                    }
+                    this.outlines[currentField][k].push({x1:x1,y1:y1,x2:x2,y2:y2});
                 }
             }
 
