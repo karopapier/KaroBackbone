@@ -123,7 +123,14 @@
             $('#getNextpath').click(function () {
                 mapPathFinder.getAllOutlines();
 
-                mapPathFinder.cleanOutlines();
+                for (var char in mapPathFinder.outlines) {
+                    console.log(char);
+                    var path = mapPathFinder.getSvgPathFromOutlines(mapPathFinder.outlines[char])
+                    mapPathFinder.paths.add(new Path({
+                        path: path,
+                        class: "road"
+                    }));
+                }
 
                 //for (var i = 0; i < mapPathFinder.paths.length; i++) {
                 //var path = mapPathFinder.paths[i];

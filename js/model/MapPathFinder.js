@@ -21,7 +21,7 @@ var MapPathFinder = Backbone.Model.extend({
             };
             this.directions = {
                 "-1|0": "up",
-                "0|1" : "right",
+                "0|1": "right",
                 "1|0": "down",
                 "0|-1": "left"
             };
@@ -76,7 +76,6 @@ var MapPathFinder = Backbone.Model.extend({
                     char = this.map.getFieldAtRowCol(r, c);
                     if (char == "O") {
                         //if (char in MAP_FIELDS) {
-                        console.log(r, c, char);
                         this.getFieldOutlines(r, c);
                     }
                     c++;
@@ -84,6 +83,76 @@ var MapPathFinder = Backbone.Model.extend({
                 r++;
             }
             return true;
+        },
+        getSvgPathFromOutlines: function (outlines, size) {
+            var s = size || 13;
+            var path = "";
+            var emergencyBreak = 1000;
+            var lastR = -1;
+            var lastC = -1;
+            var lastDirection = "";
+
+            console.info(outlines);
+
+            //get first
+            //console.log(outlines);
+            var firstOutline = _.first(_.values(outlines));
+
+            console.debug(firstOutline);
+
+            //set initial "last position" to start of first outline
+            lastR = firstOutline[0].y1;
+            lastC = firstOutline[0].x1;
+            lastDirection = this.getOutlineDirection(firstOutline);
+            path = "M" + lastC * s + "," + lastR * s;
+
+            console.log(lastR,lastC);
+
+            while ((!(_.isEmpty(outlines))) && (emergencyBreak > 0)) {
+                var searchKey = this.getKeyForRowCol(lastR, lastC);
+                console.log("Looking for key", searchKey);
+                console.log(path);
+
+                if (searchKey in outlines) {
+                    var a = outlines[searchKey];
+                    var o = a.shift();
+                    var thisDirection = this.getOutlineDirection(o);
+
+                    if (thisDirection!=lastDirection) {
+                        path += "L"+(o.x1*s) + "," + (o.y1*s);
+                    }
+
+                    lastDirection = thisDirection;
+
+                    lastC = o.x2;
+                    lastR = o.y2;
+
+                    if (a.length===0) {
+                        console.log("del ",searchKey);
+                        delete outlines[searchKey];
+                    } else {
+                        console.info(o.length);
+                    }
+                } else {
+                    console.info("No connection for ",searchKey);
+                    console.log("Close");
+                    path += "L"+(lastC*s) + "," + (lastR*s);
+                    console.info("Start NEW");
+                    var firstOutline = _.first(_.values(outlines));
+                    lastR = firstOutline[0].y1;
+                    lastC = firstOutline[0].x1;
+                    lastDirection = this.getOutlineDirection(firstOutline);
+                    path += "M" + lastC * s + "," + lastR * s;
+                }
+
+                console.log(outlines);
+
+                emergencyBreak--;
+            }
+
+            console.log("Break",emergencyBreak);
+            path +="Z";
+            return path;
         },
         cleanOutlines: function () {
             for (var char in this.outlines) {
@@ -96,8 +165,8 @@ var MapPathFinder = Backbone.Model.extend({
                     var c2 = coords[3];
 
                     this.paths.add({
-                        path: "M" + c1 * 13 + " " + r1 * 13 + "L" + c2 * 13 + " " + r2 * 13 + " Z",
-                        class: "mud"
+                        path: "M" + c1 * 13 + "" + r1 * 13 + "L" + c2 * 13 + " " + r2 * 13 + " Z",
+                        class: "road"
                     });
 
                 }
@@ -105,7 +174,7 @@ var MapPathFinder = Backbone.Model.extend({
             return true;
         },
 
-        getOutlineDirection: function(outline) {
+        getOutlineDirection: function (outline) {
             var x = outline.x2 - outline.x1;
             var y = outline.y2 - outline.y1;
             return this.directions[y + "|" + x];
@@ -160,7 +229,7 @@ var MapPathFinder = Backbone.Model.extend({
                     if (!(k in this.outlines[currentField])) {
                         this.outlines[currentField][k] = [];
                     }
-                    this.outlines[currentField][k].push({x1:x1,y1:y1,x2:x2,y2:y2});
+                    this.outlines[currentField][k].push({x1: x1, y1: y1, x2: x2, y2: y2});
                 }
             }
 
