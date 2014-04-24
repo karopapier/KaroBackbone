@@ -9,7 +9,7 @@ var MapPathFinder = Backbone.Model.extend({
             this.lastStartRow = 0;
             this.lastStartCol = 0;
             this.outlines = {};
-            this.size = 13;
+            this.size = 12;
             this.depthSecurityBreak = 5000;
             this.WILDCARD_FIELDS = ["F", "S", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
             this.stack = 0;
@@ -102,7 +102,7 @@ var MapPathFinder = Backbone.Model.extend({
             return true;
         },
         getSvgPathFromOutlines: function (outlines, size) {
-            var s = size || 13;
+            var s = size || 12;
             var path = "";
             var emergencyBreak = 10000;
             var lastR = -1;
@@ -182,7 +182,7 @@ var MapPathFinder = Backbone.Model.extend({
                     var c2 = coords[3];
 
                     this.paths.add({
-                        path: "M" + c1 * 13 + "" + r1 * 13 + "L" + c2 * 13 + " " + r2 * 13 + " Z",
+                        path: "M" + c1 * 12 + "" + r1 * 12 + "L" + c2 * 12 + " " + r2 * 12 + " Z",
                         class: "road"
                     });
 
@@ -255,55 +255,6 @@ var MapPathFinder = Backbone.Model.extend({
             //bottom this.outlines[this.getKeyForRowCol(r + 1, c + 1)] = {r: r + 1, c: c};
             //left this.outlines[this.getKeyForRowCol(r + 1, c)] = {r: r, c: c};
             return true;
-        },
-        oldthing: function () {
-            var mapcode = this.map.get("mapcode");
-            var cols = this.map.get("cols");
-            var rows = this.map.get("rows");
-            var lines = mapcode.split("\n");
-            while (mapcode.match(/[V|W|X|Y|Z|O|P]/)) {
-                //for (var i = 0; i < 1400; i++) {
-
-                var r = 0;
-                var c = 0;
-                while (r < rows) {
-                    c = 0;
-                    while (c < cols) {
-                        var line = lines[r].replace("\n", "");
-                        var char = line.charAt(c);
-                        if (char in MAP_FIELDS) {
-                            var startRow = r;
-                            var startCol = c;
-                            r = 9999;
-                            c = 9999;
-                        }
-                        c++;
-                    }
-                    r++;
-                }
-
-                line = lines[startRow]
-                var num = 1;
-                while (line.charAt(startCol + num) === char) {
-                    num++;
-                }
-                line = line.substr(0, startCol) + new Array(num + 1).join(' ') + line.substr(startCol + num);
-                lines[startRow] = line;
-
-                mapcode = lines.join("\n");
-                map.set("mapcode", mapcode);
-                var size = 13;
-                var left = startCol * size;
-                var top = startRow * size;
-                var right = left + (size * num);
-                var bottom = top + size;
-                this.paths.add({
-                    path: "M" + left + " " + top + "L" + right + " " + top + " L " + right + " " + bottom + " L " + left + " " + bottom + " Z",
-                    class: MAP_FIELDS[char]
-                });
-                return true;
-            }
         }
-
     })
     ;
