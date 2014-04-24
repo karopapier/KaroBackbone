@@ -45,15 +45,32 @@ var MapPathFinder = Backbone.Model.extend({
             };
         },
         getMainField: function () {
+
+            function occurrences(string, subString, allowOverlapping){
+
+                string+=""; subString+="";
+                if(subString.length<=0) return string.length+1;
+
+                var n=0, pos=0;
+                var step=(allowOverlapping)?(1):(subString.length);
+
+                while(true){
+                    pos=string.indexOf(subString,pos);
+                    if(pos>=0){ n++; pos+=step; } else break;
+                }
+                return(n);
+            }
+
+
             var mc = this.map.get("mapcode");
             var mostChar = "";
             var charCount = 0;
             for (var char in MAP_FIELDS) {
-                var nb = mc.match(new RegExp(char, "g"))
+                var nb =  occurrences(mc,char)
                 if (nb) {
-                    if (nb.length > charCount) {
+                    if (nb > charCount) {
                         mostChar = char;
-                        charCount = nb.length;
+                        charCount = nb;
                     }
                 }
             }
@@ -92,13 +109,13 @@ var MapPathFinder = Backbone.Model.extend({
             var lastC = -1;
             var lastDirection = "";
 
-            console.info(outlines);
+            //console.info(outlines);
 
             //get first
             //console.log(outlines);
             var firstOutline = _.first(_.values(outlines));
 
-            console.debug(firstOutline);
+            //console.debug(firstOutline);
 
             //set initial "last position" to start of first outline
             lastR = firstOutline[0].y1;
@@ -106,12 +123,12 @@ var MapPathFinder = Backbone.Model.extend({
             lastDirection = this.getOutlineDirection(firstOutline);
             path = "M" + lastC * s + "," + lastR * s;
 
-            console.log(lastR, lastC);
+            //console.log(lastR, lastC);
 
             while ((!(_.isEmpty(outlines))) && (emergencyBreak > 0)) {
                 var searchKey = this.getKeyForRowCol(lastR, lastC);
-                console.log("Looking for key", searchKey);
-                console.log(path);
+                //console.log("Looking for key", searchKey);
+                //console.log(path);
 
                 if (searchKey in outlines) {
                     var a = outlines[searchKey];
@@ -128,16 +145,16 @@ var MapPathFinder = Backbone.Model.extend({
                     lastR = o.y2;
 
                     if (a.length === 0) {
-                        console.log("del ", searchKey);
+                        //console.log("del ", searchKey);
                         delete outlines[searchKey];
-                    } else {
-                        console.info(o.length);
+                    //} else {
+                        //console.info(o.length);
                     }
                 } else {
-                    console.info("No connection for ", searchKey);
-                    console.log("Close");
+                    //console.info("No connection for ", searchKey);
+                    //console.log("Close");
                     path += "L" + (lastC * s) + "," + (lastR * s);
-                    console.info("Start NEW");
+                    //console.info("Start NEW");
                     var firstOutline = _.first(_.values(outlines));
                     lastR = firstOutline[0].y1;
                     lastC = firstOutline[0].x1;
@@ -145,7 +162,7 @@ var MapPathFinder = Backbone.Model.extend({
                     path += "M" + lastC * s + "," + lastR * s;
                 }
 
-                console.log(outlines);
+                //console.log(outlines);
 
                 emergencyBreak--;
             }

@@ -171,7 +171,9 @@
                 $('#mainfill').attr("class", MAP_FIELDS[mostChar]);
 
                 var mc = map.get("mapcode");
-                mc = mc.replace(new RegExp(mostChar, "g"), "_");
+                var replaceChar = mostChar;
+                if (mostChar===".") replaceChar="\.";
+                mc = mc.replace(new RegExp(replaceChar, "g"), "_");
                 map.set("mapcode", mc);
 
             })
