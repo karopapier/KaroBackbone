@@ -87,7 +87,7 @@ var MapPathFinder = Backbone.Model.extend({
         getSvgPathFromOutlines: function (outlines, size) {
             var s = size || 13;
             var path = "";
-            var emergencyBreak = 1000;
+            var emergencyBreak = 10000;
             var lastR = -1;
             var lastC = -1;
             var lastDirection = "";

@@ -58,6 +58,10 @@
                         fill: brown;
                     }
 
+					.night {
+						fill: black;
+					}
+
                     .parc {
                         fill: rgb(200, 200, 200);
                     }
@@ -126,7 +130,7 @@
             </g>
             <rect x="0" y="0" width="100%" height="100%" fill="url(#grid)" opacity=".3"></rect>
         </svg>
-        <img src="http://reloaded.karopapier.de/images/maps/154_12_1_1.png">
+        <img id="reference" src="http://reloaded.karopapier.de/images/maps/105_12_1_1.png">
 
         <script type="text/javascript">
 
@@ -140,6 +144,7 @@
                 "X": "grass",
                 "Y": "sand",
                 "Z": "mud",
+				".": "night",
                 "1": "cp1",
                 "2": "cp2",
                 "3": "cp3",
@@ -151,9 +156,12 @@
                 "9": "cp9"
             };
             $('#getMapcode').click(function () {
-                $.getJSON("http://reloaded.karopapier.de/api/mapcode/" + $('#mapid').val() + ".json?callback=?", function (data) {
+				var mapid = $('#mapid').val();
+                $.getJSON("http://reloaded.karopapier.de/api/mapcode/" + mapid + ".json?callback=?", function (data) {
                     map.set("mapcode", data);
                 })
+				var url="http://reloaded.karopapier.de/images/maps/" + mapid + "_12_1_1.png";
+				$('#reference').attr("src",url);
             })
 
             $('#getMainfill').click(function () {
