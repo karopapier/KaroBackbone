@@ -74,8 +74,8 @@ var MapPathFinder = Backbone.Model.extend({
                 c = 0;
                 while (c < cols) {
                     char = this.map.getFieldAtRowCol(r, c);
-                    if (char == "O") {
-                        //if (char in MAP_FIELDS) {
+                    //if (char == "O") {
+                    if (char in MAP_FIELDS) {
                         this.getFieldOutlines(r, c);
                     }
                     c++;
@@ -106,7 +106,7 @@ var MapPathFinder = Backbone.Model.extend({
             lastDirection = this.getOutlineDirection(firstOutline);
             path = "M" + lastC * s + "," + lastR * s;
 
-            console.log(lastR,lastC);
+            console.log(lastR, lastC);
 
             while ((!(_.isEmpty(outlines))) && (emergencyBreak > 0)) {
                 var searchKey = this.getKeyForRowCol(lastR, lastC);
@@ -118,8 +118,8 @@ var MapPathFinder = Backbone.Model.extend({
                     var o = a.shift();
                     var thisDirection = this.getOutlineDirection(o);
 
-                    if (thisDirection!=lastDirection) {
-                        path += "L"+(o.x1*s) + "," + (o.y1*s);
+                    if (thisDirection != lastDirection) {
+                        path += "L" + (o.x1 * s) + "," + (o.y1 * s);
                     }
 
                     lastDirection = thisDirection;
@@ -127,16 +127,16 @@ var MapPathFinder = Backbone.Model.extend({
                     lastC = o.x2;
                     lastR = o.y2;
 
-                    if (a.length===0) {
-                        console.log("del ",searchKey);
+                    if (a.length === 0) {
+                        console.log("del ", searchKey);
                         delete outlines[searchKey];
                     } else {
                         console.info(o.length);
                     }
                 } else {
-                    console.info("No connection for ",searchKey);
+                    console.info("No connection for ", searchKey);
                     console.log("Close");
-                    path += "L"+(lastC*s) + "," + (lastR*s);
+                    path += "L" + (lastC * s) + "," + (lastR * s);
                     console.info("Start NEW");
                     var firstOutline = _.first(_.values(outlines));
                     lastR = firstOutline[0].y1;
@@ -150,8 +150,8 @@ var MapPathFinder = Backbone.Model.extend({
                 emergencyBreak--;
             }
 
-            console.log("Break",emergencyBreak);
-            path +="Z";
+            console.log("Break", emergencyBreak);
+            path += "Z";
             return path;
         },
         cleanOutlines: function () {

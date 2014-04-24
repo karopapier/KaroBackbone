@@ -34,6 +34,14 @@
                         fill: rgb(128, 128, 128);
                     }
 
+                    .start {
+                        fill: rgb(200,200,200)
+                    }
+
+                    .finish {
+                        fill: rgb(255,255,255)
+                    }
+
                     .mud {
                         fill: rgb(100, 70, 0);
                     }
@@ -55,8 +63,49 @@
                     }
 
                     .cp1 {
-
+                        fill: rgb(0, 102, 255);
                     }
+
+                    .cp2 {
+                        fill: rgb(0, 100, 200);
+                    }
+
+                    .cp3color {
+                        fill: rgb(0, 255, 102);
+                    }
+
+                    .cp3 {
+                        fill: url(#cp3)
+                    }
+
+                    .cp4 {
+                        fill: rgb(0, 200, 0);
+                    }
+
+                    .cp5 {
+                        fill: rgb(255, 255, 0);
+                    }
+
+                    .cp6 {
+                        fill: rgb(200, 200, 0);
+                    }
+
+                    .cp7 {
+                        fill: rgb(255, 0, 0);
+                    }
+
+                    .cp8 {
+                        fill: rgb(200, 0, 0);
+                    }
+
+                    .cp9 {
+                        fill: rgb(255, 0, 255);
+                    }
+
+                    .primaryColor {
+                        fill: rgb(0,255,102)
+                    }
+
                 </style>
                 <!--<filter id='n' x='0' y='0'>
                     <feTurbulence type='fractalNoise' baseFrequency='2' numOctaves='1' stitchTiles='stitch'/>
@@ -65,6 +114,11 @@
                     <line x1="13" y1="0" x2="13" y2="13" stroke="black" stroke-width="1"></line>
                     <line x1="0" y1="13" x2="13" y2="13" stroke="black" stroke-width="1"></line>
                 </pattern>
+                <pattern id="cp3" patternUnits="userSpaceOnUse" width="13" height="13" x="0" y="0">
+                    <rect x="0" y="0" width="13" height="13" class="primaryColor"></rect>
+                    <path d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3" fill="black"></path>
+                    <path d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9" fill="black"></path>
+                </pattern>
             </defs>
             <rect id="mainfill" class="" x="0" y="0" width="100%" height="100%" />
             <!--<rect x="0" y="0" width="100%" height="100%" filter="url(#n)" opacity='0.7'/>-->
@@ -72,6 +126,7 @@
             </g>
             <rect x="0" y="0" width="100%" height="100%" fill="url(#grid)" opacity=".3"></rect>
         </svg>
+        <img src="http://reloaded.karopapier.de/images/maps/154_12_1_1.png">
 
         <script type="text/javascript">
 
@@ -128,7 +183,7 @@
                     var path = mapPathFinder.getSvgPathFromOutlines(mapPathFinder.outlines[char])
                     mapPathFinder.paths.add(new Path({
                         path: path,
-                        class: "road"
+                        class: MAP_FIELDS[char]
                     }));
                 }
 
@@ -178,9 +233,9 @@
                         console.log("Path added", path);
                         var p = makeSVG("path", {
                             d: path.get("path"),
-                            class: path.get("class"),
-                            stroke: "#0FF",
-                            "stroke-width": "5"
+                            class: path.get("class")
+                            //stroke: "#0FF",
+                            //"stroke-width": "1"
                         })
                         //var p = makeSVG("path",{d: path.get("path"), class: path.get("class")})
                         me.el.appendChild(p);
