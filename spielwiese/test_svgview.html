@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>Svg Inject Test</title>
+        <script type="text/javascript" src="../js/libs/jquery-1.7.2.min.js"></script>
+        <script type="text/javascript" src="../js/libs/underscore-min.js"></script>
+        <script type="text/javascript" src="../js/libs/backbone-min.js"></script>
+
+        <script src="../js/templates/mapTemplate.js"></script>
+        <script type="text/javascript">
+            function makeSVG(tag, attrs) {
+                var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+                for (var k in attrs)
+                    el.setAttribute(k, attrs[k]);
+                return el;
+            }
+
+            var SvgView = Backbone.View.extend({
+                tagName: "svg",
+                initialize: function(options) {
+                    console.log("Init");
+                    var svgTemplate = MapTemplate();
+                    var svgDOM = new DOMParser().parseFromString(svgTemplate, "text/xml");
+                    this.el = svgDOM.documentElement;
+                    this.$el = $(this.el);
+                    _.bindAll(this,"render");
+                    this.model = new Backbone.Model();
+                    this.collection = new Backbone.Collection();
+                    this.render();
+                },
+                render: function() {
+                    var rect = makeSVG("rect", {
+                        x: "0",
+                        y: "0",
+                        width: "20",
+                        height: "20",
+                        stroke: "blue",
+                        fill: "green"
+                    })
+                    this.el.appendChild(rect);
+
+                    var pathEL = this.$el.find('#paths');
+                    var bla = {30:40, 50:60};
+                    for (var x in bla) {
+                        var y = bla[x];
+                        var p = makeSVG("path",{
+                            stroke: "red",
+                            d: "M"+x+","+y+ " L"+(x+10)+","+(y+5)+"Z"
+                        });
+                        pathEL[0].appendChild(p);
+                    }
+
+                    var rectTemplate = '<rect xmlns="http://www.w3.org/2000/svg" x="30" y="30" width="30" height="30" fill="blue"></rect>';
+                    var rectDOM = new DOMParser().parseFromString(rectTemplate, "text/xml");
+                    this.el.appendChild(rectDOM.documentElement);
+
+                }
+            });
+            </script>
+    </head>
+    <body>
+        <div id="content" style="border: 1px solid red; width: 400px; height: 200px"></div>
+
+        <script type="text/javascript">
+            var svgView = new SvgView();
+            $('#content').append(svgView.el);
+            $('#mainfill').attr({"class":"road"});
+            $('svg').attr({
+                width: 400,
+                height: 120
+            })
+        </script>
+    </body>
+</html>
