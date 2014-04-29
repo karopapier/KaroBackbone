@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title></title>
+        <script type="text/javascript" src="../js/libs/jquery-1.7.2.min.js"></script>
+        <script type="text/javascript" src="../js/libs/underscore-min.js"></script>
+        <script type="text/javascript" src="../js/libs/backbone-min.js"></script>
+        <script type="text/javascript">
+            var BaseView = Backbone.View.extend({
+                optionDefaults: {
+                    size: 12,
+                    border: 1
+                },
+                initialize: function(options) {
+                    console.log("Base init");
+                    _.defaults(options,this.optionDefaults);
+                    this.settings = new Backbone.Model(options);
+                    this.bla = "HIER";
+                    console.log("Base Options",options);
+                    console.log(this.settings);
+                    console.log(this.settings.get("size"));
+                    console.log(this.settings.get("border"));
+                    console.log(this.settings.get("asdf"));
+                },
+                render: function() {
+                    console.log("bla");
+                }
+
+            });
+
+            var CustView = BaseView.extend({
+                initialize: function(options) {
+                    this.constructor.__super__.initialize.apply(this,arguments);
+                    console.log("Cust init");
+                    console.log(this.bla);
+                    console.log("Cust Options",options);
+                    console.log(this.settings);
+                    console.log(this.settings.get("size"));
+                    console.log(this.settings.get("border"));
+                    console.log(this.settings.get("asdf"));
+                }
+            })
+
+            var m = new Backbone.Model();
+            var c = new CustView({
+                model: m
+            })
+
+            console.log(c.bla);
+
+
+        </script>
+    </head>
+    <body>
+
+    </body>
+</html>

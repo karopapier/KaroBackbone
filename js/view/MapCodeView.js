@@ -1,4 +1,5 @@
 var MapCodeView = Backbone.View.extend({
+    tagName: "textarea",
     initialize: function () {
         _.bindAll(this, "render","setBounds");
         this.model.bind("change:mapcode", this.render);

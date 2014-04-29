@@ -1,16 +1,11 @@
+var Path = Backbone.Model.extend({});
+var PathCollection = Backbone.Collection.extend({ model: Path })
 var MapPathFinder = Backbone.Model.extend({
-        initialize: function (options) {
+        initialize: function (map) {
             _.bindAll(this, "getMainField", "getAllOutlines", "getFieldOutlines", "getOutlineDirection");
-            //console.log(options);
-            this.map = options.map;
-            this.mainField = '';
+            this.map = map;
             this.paths = new PathCollection();
-            this.done = false;
-            this.lastStartRow = 0;
-            this.lastStartCol = 0;
             this.outlines = {};
-            this.size = 12;
-            this.depthSecurityBreak = 5000;
             this.WILDCARD_FIELDS = ["F", "S", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
             this.stack = 0;
             this.modifiers = {
@@ -74,8 +69,6 @@ var MapPathFinder = Backbone.Model.extend({
                     }
                 }
             }
-
-            this.mainField = mostChar;
             return mostChar;
         },
         getAllOutlines: function () {
@@ -101,8 +94,7 @@ var MapPathFinder = Backbone.Model.extend({
             }
             return true;
         },
-        getSvgPathFromOutlines: function (outlines, size) {
-            var s = size || 12;
+        getSvgPathFromOutlines: function (outlines) {
             var path = "";
             var emergencyBreak = 10000;
             var lastR = -1;

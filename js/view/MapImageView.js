@@ -1,17 +1,17 @@
-var MapImageView=Backbone.View.extend({
+var MapImageView=MapBaseView.extend({
 	className: "mapImageView",
-	initialize: function() {
-		_.bindAll(this);
-		this.model.bind("change:id",this.getImage);
-		this.options.settings.bind("change",this.getImage);
-		this.img=$(document.createElement("img"));
-		this.$img=$(this.img);
-		this.$img.attr("src", "http://reloaded.karopapier.de/images/loading.gif");
-		this.$el.append(this.img);
+    tag: "img",
+	initialize: function(options) {
+        //init MapBaseView with creation of a settings model
+        this.constructor.__super__.initialize.apply(this,arguments);
+		_.bindAll(this,"render");
+		this.model.bind("change:id",this.render);
+        this.settings.bind("change",this.render);
 	},
-	getImage: function() {
-		console.info("Getting image");
+	render: function() {
+		//console.info("Getting image");
 		var cps=(this.model.get("cpsActive")===true) ? 1 : 0;
-		this.$img.attr("src",'http://reloaded.karopapier.de/map/'+this.model.get("id")+'.png?size='+this.options.settings.get("size")+'&border='+this.options.settings.get("border")+'&cps='+cps);
-	}
+        this.$el.attr("src", "http://reloaded.karopapier.de/images/loading.gif");
+		this.$el.attr("src",'http://reloaded.karopapier.de/map/'+this.model.get("id")+'.png?size='+this.settings.get("size")+'&border='+this.settings.get("border")+'&cps='+cps);
+    }
 });
