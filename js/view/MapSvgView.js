@@ -6,7 +6,6 @@ var MapSvgView = MapBaseView.extend({
         _.bindAll(this, "adjustSize","render");
         this.model.bind("change:rows change:cols", this.adjustSize);
 
-
         this.mapPathFinder = new MapPathFinder({
             map: this.model
         });

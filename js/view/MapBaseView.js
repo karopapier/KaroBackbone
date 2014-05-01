@@ -9,18 +9,19 @@
 var MapBaseView = Backbone.View.extend({
     optionDefaults: {
         size: 12,
-        border: 1
+        border: 1,
+        cpsActive: true
     },
     initialize: function (options) {
         _.bindAll(this,"updateFieldSize","getRowColFromXY","getRowFromY","getColFromX","getXYFromRowCol","getXFromCol","getYFromRow","getFieldAtXY","setFieldAtXY","setFieldAtRowCol");
         _.defaults(options,this.optionDefaults);
         this.options = options;
-        this.settings = new Backbone.Model(options);
-        this.settings.bind("change:size change:border",this.updateFieldSize)
+        this.mapViewSettings = new Backbone.Model(options);
+        this.mapViewSettings.bind("change:size change:border",this.updateFieldSize)
         this.updateFieldSize();
     },
     updateFieldSize: function() {
-        this.fieldSize = (this.settings.get("size") + this.settings.get("border"));
+        this.fieldSize = (this.mapViewSettings.get("size") + this.mapViewSettings.get("border"));
         console.log("New fieldsize",this.fieldSize);
     },
     getRowColFromXY: function (x, y) {

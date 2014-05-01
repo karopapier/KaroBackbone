@@ -6,75 +6,41 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var MapRenderView = Backbone.View.extend({
+var MapRenderView = MapBaseView.extend({
     id: "mapRenderView",
     className: "mapRenderView",
     tagName: "canvas",
-    initialize: function () {
-        _.bindAll(this);
-        //this.model.bind("change:id",this.getImage);
-        //this.options.settings.bind("change",this.getImage);
-        var settings = this.options.settings;
-        this.settings = settings;
-
-        this.settings.bind("change:size", function (e, v) {
-            this.render();
-        }, this)
-
+    initialize: function (options) {
+        //init MapBaseView with creation of a settings model
+        this.constructor.__super__.initialize.apply(this, arguments);
+        _.bindAll(this, "render", "drawBorder", "drawField", "drawFlagField", "drawStandardField", "drawStartField");
+        this.model.bind("change:mapcode", this.render);
+        this.mapViewSettings.bind("change", this.render);
         this.palette = new MapRenderPalette();
     },
     render: function () {
         var map = this.model;
-        this.size = this.settings.get("size");
-        this.border = this.settings.get("border");
-        this.fillBorder = this.settings.get("fillBorder");
-        this.el.width = map.get("cols") * (this.size + this.border);
-        this.el.height = map.get("rows") * (this.size + this.border);
+        this.size = this.mapViewSettings.get("size");
+        this.border = this.mapViewSettings.get("border");
+        this.el.width = map.get("cols") * (this.fieldSize);
+        this.el.height = map.get("rows") * (this.fieldSize);
 
         this.ctx = this.el.getContext("2d");
 
         this.ctx.fillStyle = this.palette.getRGB("offroad");
-        this.ctx.lineWidth = this.settings.get("size");
+        this.ctx.lineWidth = this.mapViewSettings.get("size");
 
         this.ctx.fillRect(0, 0, this.el.width, this.el.height);
         for (var r = 0; r < map.get("rows"); r++) {
             for (var c = 0; c < map.get("cols"); c++) {
-                this.drawField(r, c, map.getFieldAtRowCol(r,c));
+                this.drawField(r, c, map.getFieldAtRowCol(r, c));
             }
         }
     },
 
-    getRowColfromXY: function (x, y) {
-        return {
-            "r": this.getRowFromY(y),
-            "c": this.getColFromX(x)
-        }
-    },
-    getRowFromY: function (y) {
-        return Math.floor(y / (this.size + this.border));
-    },
-    getColFromX: function (x) {
-        return Math.floor(x / (this.size + this.border));
-    },
-    getFieldAtXY: function (x, y) {
-        alert("Deprecated");
-        rc = this.getRowColfromXY(x, y);
-        return this.model.getFieldAtRowCol(rc.r,rc.c);
-    },
-    setFieldAtXY: function (x, y, field) {
-        var rc = this.getRowColfromXY(x, y);
-        var old = this.model.getFieldAtRowCol(rc.r, rc.c);
-        if (old != field) {
-            this.setFieldAtRowCol(rc.r, rc.c, field);
-            this.drawField(rc.r, rc.c, field);
-        }
-    },
-    setFieldAtRowCol: function (r, c, field) {
-        this.model.setFieldAtRowCol(r, c, field);
-    },
     drawField: function (r, c, field) {
-        x = c * (this.size + this.border);
-        y = r * (this.size + this.border);
+        x = c * (this.fieldSize);
+        y = r * (this.fieldSize);
 
         //faster than 1x1 rect
         //this.specle=this.ctx.getImageData(0,0,1,1);
@@ -130,7 +96,7 @@ var MapRenderView = Backbone.View.extend({
             drawSpecles = false;
         }
 
-        this.drawBorder(x, y, specle)
+        this.drawBorder(x, y, specle);
         if (drawSpecles) {
             this.ctx.fillStyle = specle;
             for (var i = 0; i < this.size; i++) {
@@ -144,7 +110,6 @@ var MapRenderView = Backbone.View.extend({
     },
 
     drawBorder: function (x, y, specle) {
-        if (this.fillBorder) {
             this.ctx.lineWidth = this.border;
             this.ctx.strokeStyle = specle;
             this.ctx.beginPath();
@@ -153,7 +118,6 @@ var MapRenderView = Backbone.View.extend({
             this.ctx.lineTo(x, y + this.size + .5);
             this.ctx.stroke();
             this.ctx.closePath();
-        }
     },
 
     drawFlagField: function (x, y, c1, c2) {
@@ -198,6 +162,5 @@ var MapRenderView = Backbone.View.extend({
 
         //add border
         //$this->drawBorder($x,$y,$this->MapPalette['roadspecle']);
-
     }
 });

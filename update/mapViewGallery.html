@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script type="text/javascript" src="js/libs/jquery-1.11.0.min.js"></script>
+        <script src="js/libs/underscore-min.js"></script>
+        <script src="js/libs/backbone-min.js"></script>
+        <script src="js/libs/backbone.marionette.min.js"></script>
+
+        <script src="../js/model/Map.js"></script>
+        <script src="../js/view/MapBaseView.js"></script>
+        <script src="../js/view/MapCodeView.js"></script>
+        <script src="../js/model/MapRenderPalette.js"></script>
+        <script src="../js/view/MapRenderView.js"></script>
+        <script src="../js/view/MapImageView.js"></script>
+        <script src="../js/view/MapSvgView.js"></script>
+        <script src="../js/model/MapPathFinder.js"></script>
+        <script src="../js/templates/jst.js"></script>
+    </head>
+    <body>
+        <div id="content"></div>
+        Mapid: <input type="text" id="mapid" value="154" />
+        <button id="getMapcode">Get</button>
+        <br>
+
+        <p>CodeView:<br>
+            <textarea cols="100" rows="50" style="font-size: 8px" id="mapCodeView"></textarea></p>
+
+        SvgView:<br>
+
+        <div id="svgcontainer"></div>
+        <br />
+
+        <p>RenderView (HTML5 Canvas)<br>
+            <canvas id="mapRenderView"></canvas>
+        </p>
+
+        <p>Image from Server:<br>
+            <img id="mapImageView"></p>
+
+        <p>Copy of SVG as img tag with bas64 src<br>
+            <img id="svgCopy" src="" alt="Map"></p>
+
+        <script type="text/javascript">
+
+            var map = new Map();
+
+            $('#getMapcode').click(function () {
+                var mapid = $('#mapid').val();
+                $.getJSON("http://reloaded.karopapier.de/api/map/" + mapid + ".json?callback=?", function (data) {
+                    map.set(data);
+                })
+            })
+
+            var mapCodeView = new MapCodeView({
+                model: map,
+                el: "#mapCodeView"
+            })
+
+            var mapRenderView = new MapRenderView({
+                model: map,
+                size: 11,
+                el: '#mapRenderView'
+            })
+            var mapImageView = new MapImageView({
+                model: map,
+                size: 11,
+                el: $('#mapImageView')
+            });
+
+            var mapSvgView = new MapSvgView({
+                el: '#mapSvgView',
+                model: map,
+                size: 11
+            });
+
+            function encode_as_img_and_link() {
+                var svg = $("#svgcontainer").html().trim();
+                var b64 = btoa(svg);
+                $("#svg").attr("src", "data:image/svg+xml;base64,\n" + b64);
+            }
+            encode_as_img_and_link();
+        </script>
+        <button onclick="encode_as_img_and_link()">save</button>
+    </body>
+</html>
