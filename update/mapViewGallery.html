@@ -16,6 +16,7 @@
         <script src="../js/view/MapSvgView.js"></script>
         <script src="../js/model/MapPathFinder.js"></script>
         <script src="../js/templates/jst.js"></script>
+        <script src="../js/templates/MapTemplate.js"></script>
     </head>
     <body>
         <div id="content"></div>
@@ -27,7 +28,6 @@
             <textarea cols="100" rows="50" style="font-size: 8px" id="mapCodeView"></textarea></p>
 
         SvgView:<br>
-
         <div id="svgcontainer"></div>
         <br />
 
@@ -69,7 +69,7 @@
             });
 
             var mapSvgView = new MapSvgView({
-                el: '#mapSvgView',
+                el: '#svgcontainer',
                 model: map,
                 size: 11
             });
@@ -77,10 +77,10 @@
             function encode_as_img_and_link() {
                 var svg = $("#svgcontainer").html().trim();
                 var b64 = btoa(svg);
-                $("#svg").attr("src", "data:image/svg+xml;base64,\n" + b64);
+                $("#svgCopy").attr("src", "data:image/svg+xml;base64,\n" + b64);
             }
-            encode_as_img_and_link();
+            //encode_as_img_and_link();
         </script>
-        <button onclick="encode_as_img_and_link()">save</button>
+        <button onclick="encode_as_img_and_link()">save generated svg to image tag</button>
     </body>
 </html>

@@ -49,5 +49,26 @@ var Map = Backbone.Model.extend({
     getPosFromRowCol: function (r, c) {
         var pos = ( r * (this.get("cols")+1)) + c;
         return pos;
+    },
+    FIELDS: {
+        "F": "finish",
+        "O": "road",
+        "P": "parc",
+        "S": "start",
+        "V": "stone",
+        "W": "water",
+        "X": "grass",
+        "Y": "sand",
+        "Z": "mud",
+        ".": "night",
+        "1": "cp1",
+        "2": "cp2",
+        "3": "cp3",
+        "4": "cp4",
+        "5": "cp5",
+        "6": "cp6",
+        "7": "cp7",
+        "8": "cp8",
+        "9": "cp9"
     }
 });

@@ -2,8 +2,13 @@ var Path = Backbone.Model.extend({});
 var PathCollection = Backbone.Collection.extend({ model: Path })
 var MapPathFinder = Backbone.Model.extend({
         initialize: function (map) {
+            if (typeof map === "undefined") {
+                throw "MAP_MISSING";
+            }
+            console.log("INit Pathfinder");
             _.bindAll(this, "getMainField", "getAllOutlines", "getFieldOutlines", "getOutlineDirection");
             this.map = map;
+            console.log("MAP im Finder",this.map);
             this.paths = new PathCollection();
             this.outlines = {};
             this.WILDCARD_FIELDS = ["F", "S", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
@@ -38,6 +43,7 @@ var MapPathFinder = Backbone.Model.extend({
                     to: {r: 0, c: 0}
                 }
             };
+            console.log("INit Pathfinder DONE");
         },
         getMainField: function () {
 
@@ -57,10 +63,12 @@ var MapPathFinder = Backbone.Model.extend({
             }
 
 
+            console.log(this);
+            console.log(this.map);
             var mc = this.map.get("mapcode");
             var mostChar = "";
             var charCount = 0;
-            for (var char in MAP_FIELDS) {
+            for (var char in this.map.FIELDS) {
                 var nb =  occurrences(mc,char)
                 if (nb) {
                     if (nb > charCount) {
@@ -85,7 +93,7 @@ var MapPathFinder = Backbone.Model.extend({
                 while (c < cols) {
                     char = this.map.getFieldAtRowCol(r, c);
                     //if (char == "O") {
-                    if (char in MAP_FIELDS) {
+                    if (char in this.map.FIELDS) {
                         this.getFieldOutlines(r, c);
                     }
                     c++;
@@ -94,7 +102,7 @@ var MapPathFinder = Backbone.Model.extend({
             }
             return true;
         },
-        getSvgPathFromOutlines: function (outlines) {
+        getSvgPathFromOutlines: function (outlines, s) {
             var path = "";
             var emergencyBreak = 10000;
             var lastR = -1;

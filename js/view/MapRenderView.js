@@ -19,6 +19,7 @@ var MapRenderView = MapBaseView.extend({
         this.palette = new MapRenderPalette();
     },
     render: function () {
+        console.log("Rendering RenderView");
         var map = this.model;
         this.size = this.mapViewSettings.get("size");
         this.border = this.mapViewSettings.get("border");
