@@ -5,14 +5,13 @@ var MapPathFinder = Backbone.Model.extend({
             if (typeof map === "undefined") {
                 throw "MAP_MISSING";
             }
-            console.log("INit Pathfinder");
-            _.bindAll(this, "getMainField", "getAllOutlines", "getFieldOutlines", "getOutlineDirection");
+            //console.log("INit Pathfinder");
+            _.bindAll(this, "reset","getMainField", "getAllOutlines", "getFieldOutlines", "getOutlineDirection");
             this.map = map;
+            this.reset();
+
             console.log("MAP im Finder",this.map);
-            this.paths = new PathCollection();
-            this.outlines = {};
             this.WILDCARD_FIELDS = ["F", "S", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-            this.stack = 0;
             this.modifiers = {
                 top: { r: -1, c: 0 },
                 right: { r: 0, c: +1 },
@@ -44,6 +43,9 @@ var MapPathFinder = Backbone.Model.extend({
                 }
             };
             console.log("INit Pathfinder DONE");
+        },
+        reset:function() {
+            this.outlines = {};
         },
         getMainField: function () {
 
@@ -80,6 +82,7 @@ var MapPathFinder = Backbone.Model.extend({
             return mostChar;
         },
         getAllOutlines: function () {
+            this.reset();
             var char;
             var mapcode = this.map.get("mapcode");
             var cols = this.map.get("cols");
@@ -167,28 +170,9 @@ var MapPathFinder = Backbone.Model.extend({
                 emergencyBreak--;
             }
 
-            console.log("Break", emergencyBreak);
+            //console.log("Break", emergencyBreak);
             path += "Z";
             return path;
-        },
-        cleanOutlines: function () {
-            for (var char in this.outlines) {
-                var pathKeys = this.outlines[char];
-                for (var code in pathKeys) {
-                    var coords = code.split("|");
-                    var r1 = coords[0];
-                    var c1 = coords[1];
-                    var r2 = coords[2];
-                    var c2 = coords[3];
-
-                    this.paths.add({
-                        path: "M" + c1 * 12 + "" + r1 * 12 + "L" + c2 * 12 + " " + r2 * 12 + " Z",
-                        class: "road"
-                    });
-
-                }
-            }
-            return true;
         },
 
         getOutlineDirection: function (outline) {

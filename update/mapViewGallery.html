@@ -28,6 +28,7 @@
             <textarea cols="100" rows="50" style="font-size: 8px" id="mapCodeView"></textarea></p>
 
         SvgView:<br>
+
         <div id="svgcontainer"></div>
         <br />
 
@@ -38,19 +39,21 @@
         <p>Image from Server:<br>
             <img id="mapImageView"></p>
 
-        <p>Copy of SVG as img tag with bas64 src<br>
+        <p>Copy of SVG as img tag with bas64 src -> for right click, save as... <br>
             <img id="svgCopy" src="" alt="Map"></p>
 
         <script type="text/javascript">
 
             var map = new Map();
 
-            $('#getMapcode').click(function () {
+            $('#getMapcode').click(getMap);
+
+            function getMap() {
                 var mapid = $('#mapid').val();
                 $.getJSON("http://reloaded.karopapier.de/api/map/" + mapid + ".json?callback=?", function (data) {
                     map.set(data);
                 })
-            })
+            };
 
             var mapCodeView = new MapCodeView({
                 model: map,
@@ -61,7 +64,8 @@
                 model: map,
                 size: 11,
                 el: '#mapRenderView'
-            })
+            });
+
             var mapImageView = new MapImageView({
                 model: map,
                 size: 11,
@@ -72,7 +76,9 @@
                 el: '#svgcontainer',
                 model: map,
                 size: 11
-            });
+            }).on("rendered", function () {
+                        encode_as_img_and_link();
+                    });
 
             function encode_as_img_and_link() {
                 var svg = $("#svgcontainer").html().trim();
@@ -80,7 +86,10 @@
                 $("#svgCopy").attr("src", "data:image/svg+xml;base64,\n" + b64);
             }
             //encode_as_img_and_link();
+
+            $(document).ready(function() {
+                getMap();
+            })
         </script>
-        <button onclick="encode_as_img_and_link()">save generated svg to image tag</button>
     </body>
 </html>
