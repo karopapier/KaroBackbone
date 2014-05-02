@@ -42,6 +42,7 @@
         <p>Copy of SVG as img tag with bas64 src -> for right click, save as... <br>
             <img id="svgCopy" src="" alt="Map"></p>
 
+		<form id="svgForm"><input type="hidden" id="svgid" name="svgid"><input type="hidden" id="svgcode" name="svgcode"></form>
         <script type="text/javascript">
 
             var map = new Map();
@@ -83,22 +84,57 @@
             function encode_as_img_and_link() {
                 var svg = $("#svgcontainer").html().trim();
                 var b64 = btoa(svg);
-                console.log(b64);
-                sendToServer(b64);
+				if (batchMode) {
+					sendToServer(b64);
+				}
                 $("#svgCopy").attr("src", "data:image/svg+xml;base64,\n" + b64);
 
             }
             //encode_as_img_and_link();
 
             var sendToServer = function(b64) {
-                $.getJSON("http://2.karopapier.de/svg.php?id=" + map.get("id") + "&code=" + b64 + "callback=?", function(data) {
-                    console.log(data);
-                })
+				$('#svgid').val(map.get("id"));
+				$('#svgcode').val(b64);
+				var frm = $('#svgForm');
+				var payload = frm.serialize();
+				if (payload !=="") {
+					$.ajax({
+						url: "/svg.php",
+						type: "POST",
+						dataType: "json",
+						data: payload,
+						success: function(data) { nextBatch() },
+						error: function(data) { console.error(data) }
+					});
+				} else {
+					console.log("Payload empty");
+				}
             };
 
             $(document).ready(function() {
                 getMap();
             })
+
+			var allMaps;
+			var batchIndex=0;
+			var batchMode=false;
+
+			function nextBatch() {
+				if (batchMode) {
+					console.info("Batch ",batchIndex);
+					map.set(allMaps[batchIndex]);
+					batchIndex++;
+				}
+			};
+
+			function runAll() {
+				$.getJSON("http://reloaded.karopapier.de/api/map/list.json?callback=?",function(maps) {
+					allMaps=maps;
+					batchMode=true;
+					batchIndex=0;
+					nextBatch();
+				});
+			}
         </script>
     </body>
 </html>
