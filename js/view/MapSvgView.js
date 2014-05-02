@@ -17,8 +17,8 @@ var MapSvgView = MapBaseView.extend({
             this.render();
         },
         adjustSize: function () {
-            console.log(this.model.get("cols"));
-            console.log(this.fieldSize);
+            //console.log(this.model.get("cols"));
+            //console.log(this.fieldSize);
             var w = this.model.get("cols") * this.fieldSize;
             var h = this.model.get("rows") * this.fieldSize;
             this.$el.css({width: w, height: h});
@@ -34,14 +34,14 @@ var MapSvgView = MapBaseView.extend({
             this.el.appendChild(this.SVG);
         },
         render: function () {
-            console.log("Rendering SvgView");
+            //console.log("Rendering SvgView");
             if (typeof this.model.get("mapcode") === "undefined") {
                 return false;
             }
 
             //get mainfill
             var mainchar = this.mapPathFinder.getMainField();
-            console.log("Mainchar",mainchar);
+            //console.log("Mainchar",mainchar);
             var mainclass = this.model.FIELDS[mainchar];
             this.$SVG.find('#mainfill').attr("class", mainclass);
 
@@ -50,12 +50,12 @@ var MapSvgView = MapBaseView.extend({
 
             //get outlines
             this.mapPathFinder.getAllOutlines();
-            console.log(this.mapPathFinder.outlines);
+            //console.log(this.mapPathFinder.outlines);
 
             //render paths
             for (var char in this.mapPathFinder.outlines) {
                 if (char !== mainchar) {
-                    console.log("Path for ",char);
+                    //console.log("Path for ",char);
                     var path = this.mapPathFinder.getSvgPathFromOutlines(this.mapPathFinder.outlines[char], this.fieldSize);
                     var fieldClass = this.model.FIELDS[char];
 

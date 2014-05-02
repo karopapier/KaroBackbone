@@ -22,7 +22,7 @@ var MapBaseView = Backbone.View.extend({
     },
     updateFieldSize: function() {
         this.fieldSize = (this.mapViewSettings.get("size") + this.mapViewSettings.get("border"));
-        console.log("New fieldsize",this.fieldSize);
+        //console.log("New fieldsize",this.fieldSize);
     },
     getRowColFromXY: function (x, y) {
         return {

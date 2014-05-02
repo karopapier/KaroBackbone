@@ -7,7 +7,7 @@ var MapCodeView = Backbone.View.extend({
         this.render();
     },
     setBounds: function() {
-        console.log("Bounds");
+        //console.log("Bounds");
         this.$el.attr({
                 "rows": this.model.get("rows")+1,
                 "cols": this.model.get("cols")+1

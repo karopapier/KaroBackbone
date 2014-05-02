@@ -83,9 +83,18 @@
             function encode_as_img_and_link() {
                 var svg = $("#svgcontainer").html().trim();
                 var b64 = btoa(svg);
+                console.log(b64);
+                sendToServer(b64);
                 $("#svgCopy").attr("src", "data:image/svg+xml;base64,\n" + b64);
+
             }
             //encode_as_img_and_link();
+
+            var sendToServer = function(b64) {
+                $.getJSON("http://2.karopapier.de/svg.php?id=" + map.get("id") + "&code=" + b64 + "callback=?", function(data) {
+                    console.log(data);
+                })
+            };
 
             $(document).ready(function() {
                 getMap();

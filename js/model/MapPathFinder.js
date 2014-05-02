@@ -10,7 +10,7 @@ var MapPathFinder = Backbone.Model.extend({
             this.map = map;
             this.reset();
 
-            console.log("MAP im Finder",this.map);
+            //console.log("MAP im Finder",this.map);
             this.WILDCARD_FIELDS = ["F", "S", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
             this.modifiers = {
                 top: { r: -1, c: 0 },
@@ -42,7 +42,7 @@ var MapPathFinder = Backbone.Model.extend({
                     to: {r: 0, c: 0}
                 }
             };
-            console.log("INit Pathfinder DONE");
+            //console.log("INit Pathfinder DONE");
         },
         reset:function() {
             this.outlines = {};
@@ -64,9 +64,6 @@ var MapPathFinder = Backbone.Model.extend({
                 return(n);
             }
 
-
-            console.log(this);
-            console.log(this.map);
             var mc = this.map.get("mapcode");
             var mostChar = "";
             var charCount = 0;

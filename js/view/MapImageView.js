@@ -10,7 +10,6 @@ var MapImageView=MapBaseView.extend({
 	},
 	render: function() {
 		//console.info("Getting image");
-        console.log(this.model);
 		var cps=(this.mapViewSettings.get("cpsActive")===true) ? 1 : 0;
         this.$el.attr("src", "http://reloaded.karopapier.de/images/loading.gif");
 		this.$el.attr("src",'http://reloaded.karopapier.de/map/'+this.model.get("id")+'.png?size='+this.mapViewSettings.get("size")+'&border='+this.mapViewSettings.get("border")+'&cps='+cps);
