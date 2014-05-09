@@ -25,7 +25,9 @@
         <br>
 
         <p>CodeView:<br>
-            <textarea cols="100" rows="50" style="font-size: 8px" id="mapCodeView"></textarea></p>
+            <textarea cols="100" rows="50" style="font-size: 8px" id="mapCodeView"></textarea>
+            <button id="setCode">Render this code</button>
+        </p>
 
         SvgView:<br>
 
@@ -135,6 +137,11 @@
 					nextBatch();
 				});
 			}
+
+            $('#setCode').click(function () {
+                var mc = mapCodeView.getCode();
+                map.set({id: 0,mapcode:mc});
+            })
         </script>
     </body>
 </html>
