@@ -6,15 +6,19 @@ var Map = Backbone.Model.extend({
         cols: 0
     },
     initialize: function () {
-        _.bindAll(this, "updateSize", "updateStarties", "updateCpList", "setFieldAtRowCol", "getFieldAtRowCol", "getPosFromRowCol");
-        this.bind("change:mapcode", function (e, mapcode) {
-            this.updateSize();
-            var trimcode = mapcode;
-            trimcode = trimcode.replace(/\r/g, ""); //make sure we don't have CR in there
-            this.set("mapcode", trimcode, {silent: true});
-            this.updateStarties();
-            this.updateCpList();
-        }, this);
+        _.bindAll(this, "updateMapcode", "updateSize", "updateStarties", "updateCpList", "setFieldAtRowCol", "getFieldAtRowCol", "getPosFromRowCol");
+        this.bind("change:mapcode", this.updateMapcode);
+    },
+    updateMapcode: function (e, mapcode) {
+        this.updateSize();
+
+        //make sure we don't have CR in there and make it all UPPERCASE
+        var trimcode = mapcode.toUpperCase();
+        trimcode = trimcode.replace(/\r/g, "");
+
+        this.set("mapcode", trimcode, {silent: true});
+        this.updateStarties();
+        this.updateCpList();
     },
     updateStarties: function () {
         this.set("starties", (this.get("mapcode").match(/S/g) || []).length);
@@ -47,7 +51,7 @@ var Map = Backbone.Model.extend({
         return this.get("mapcode").charAt(pos);
     },
     getPosFromRowCol: function (r, c) {
-        var pos = ( r * (this.get("cols")+1)) + c;
+        var pos = ( r * (this.get("cols") + 1)) + c;
         return pos;
     },
     FIELDS: {
