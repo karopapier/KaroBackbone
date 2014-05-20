@@ -1,7 +1,7 @@
                     var EditorMapView=Backbone.View.extend({
                         id: "editorMapView",
                         initialize: function() {
-                            _.bindAll(this);
+                            _.bindAll(this,"render", "draw", "mousedown", "mouseup", "mousemove", "mouseleave");
 							$this=this;
                             this.settings=this.options.settings;
                             this.tools=this.options.tools;
@@ -48,7 +48,7 @@
                         mousedown: function(e) {
                             buttonDown[e.which]=true;
                             e.preventDefault();
-                            render();
+                            this.render();
                             this.draw(e);
                             this.$el.bind("mousemove",this.mousemove);
                             return false;
@@ -56,7 +56,7 @@
 
                         mouseup:function(e) {
                             buttonDown[e.which]=false;
-                            render();
+                            this.render();
                             this.$el.unbind("mousemove");
                         },
 
@@ -68,6 +68,6 @@
                             for (var i=1;i<=3;i++) {
                                 buttonDown[e.which]=false;
                             }
-                            render();
+                            this.render();
                         }
                     });

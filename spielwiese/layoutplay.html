@@ -6,53 +6,90 @@
         <script src="../js/libs/underscore-min.js"></script>
         <script src="../js/libs/backbone-min.js"></script>
         <script src="../js/libs/backbone.marionette.min.js"></script>
+        <script src="../js/templates/jst.js"></script>
     </head>
     <body>
-        <script id="PageLayoutTemplate" type="text/template">
-            <h1>Hallo</h1>
-            <div id="header"></div>
-            <div id="content"></div>
-            <div id="footer"></div>
-        </script>
+        Drum
+        <div id="content" style="background-color: #eee"></div>
+        rum
+
 
         <script id="headerTemplate" type="text/template">
-            Header
+            <h1>Header</h1>
+        </script>
+
+        <script id="contentTemplate" type="text/template">
+            <p>Dies ist normaler content in der mitte der Seite</p>
         </script>
 
         <script id="footerTemplate" type="text/template">
-            Footer
+            <b>Footer</b>
         </script>
 
-        Content
-        <div id="mainPage"></div>
-
         <script type="text/javascript">
+
             var PageLayout = Backbone.Marionette.Layout.extend({
-                template: "#PageLayoutTemplate",
+                template: window.JST["basic"],
                 regions: {
-                    header:"#header",
+                    header: "#header",
                     content: "#content",
                     footer: "#footer"
+                },
+                events: {
+                    "mouseover #content": "toggle"
+                },
+                toggle: function (e) {
+                    console.log(e)
+                    console.log(this);
+                }
+            })
+
+            var BackView = Backbone.View.extend({
+                initialize: function () {
+                    _.bindAll(this, "render");
+                    //this.render();
+                },
+                render: function () {
+                    this.$el.append(this.template);
+                },
+                template: '<b>Direktes HTML</b>'
+            })
+
+            var DingsView = Backbone.View.extend({
+                initialize: function () {
+                    _.bindAll(this, "render");
+                },
+                render: function () {
+                    this.$el.html("Eine neue View");
                 }
             })
 
             var pageLayout = new PageLayout({
-                el: '#mainPage'
+                el: '#content'
             });
             pageLayout.render();
 
             var HeaderView = Backbone.Marionette.ItemView.extend({
-                template: "#headerTemplate"
+                template: "#headerTemplate",
             })
-            var header = new HeaderView();
 
             var FooterView = Backbone.Marionette.ItemView.extend({
                 template: '#footerTemplate'
             })
-            var footer = new FooterView();
 
-            pageLayout.header.show(header);
-            pageLayout.footer.show(footer);
+            var eins = new DingsView();
+            pageLayout.header.show(new HeaderView());
+            pageLayout.content.show(eins);
+            pageLayout.footer.show(new FooterView());
+
+            var zwei = new BackView();
+
+            setTimeout(function () {
+                pageLayout.content.show(zwei);
+            }, 500);
+            setTimeout(function () {
+                pageLayout.content.show(eins);
+            }, 1000);
 
         </script>
 

@@ -2,7 +2,7 @@ var EditorToolsView=Backbone.View.extend({
 	id: "editorTools",
 	initialize: function() {
 		$this=this; //for jquery ui slider
-		_.bindAll(this);
+		_.bindAll(this, "highlightActiveField","selectField");
 		this.settings=this.options.settings;
 		this.$el.html(window.JST['editor/tools']);
 		this.slider=$('#size-slider',this.$el).slider({

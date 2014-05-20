@@ -1,0 +1,27 @@
+#editorMap {
+    float: left;
+    max-height: 600px;
+    overflow: auto;
+}
+
+#editorTools {
+    width: 300px;
+    height: 500px;
+    float: right;
+    background-color: rgba(100, 100, 100, .3);
+}
+
+.fieldSelector {
+    width: 20px;
+    height: 20px;
+    background-image: url('images/mapfields.png');
+    float: left;
+    margin: 2px;
+    border: 2px solid #333;
+    opacity: 0.7;
+}
+
+.activeFieldSelector {
+    border: 2px solid white;
+    opacity: 1;
+}
