@@ -33,7 +33,12 @@ window.JST['editor/tools'] = function () {
 }
 
 window.JST['basic'] = function() {
-    var html = '<div id="header"></div><div id="content"></div><div id="footer"></div>';
+    var html = '<div id="header">Header</div><div id="content">Content</div><div id="footer">Footer</div>';
+    return html
+}
+
+window.JST['dumbview'] = function() {
+    var html = 'Here I am, I am quite dumb';
     return html
 }
 

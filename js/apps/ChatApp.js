@@ -1,4 +1,4 @@
-var ChatApp = Backbone.Marionette.ItemView.extend({
+var ChatApp = Backbone.Marionette.Layout.extend({
 
     //layout, regions, views
 

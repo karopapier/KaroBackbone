@@ -5,5 +5,4 @@
 
 var KaropapierApp = Backbone.Marionette.Layout.extend({
     //global layout with regions for nav, sidebar, header and user info...
-
 })

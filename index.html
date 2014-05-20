@@ -7,12 +7,14 @@
         <script type="text/javascript" src="js/libs/backbone-min.js"></script>
         <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
 
+        <script src="js/templates/jst.js"></script>
+
     </head>
     <body>
         <p>Bottom up!!<br />
             Start plain, just one view, then add second views and regions, then extend to top and switch between apps/views/layouts/regions
 
-        <div id="content" style="border: 1px solid blue"></div>
+        <div id="container" style="border: 1px solid blue"></div>
         Done:
         <ul>
             <li>-</li>
@@ -28,5 +30,36 @@
             <li>Editor</li>
             <li>Game</li>
         </ul>
+
+        <script type="text/javascript">
+            var LayoutHelper = Marionette.Layout.extend({
+                regions: {
+                    "content": "#content"
+                },
+                template: window.JST["basic"]
+            })
+
+            var layoutHelper = new LayoutHelper({
+                el: '#container'
+            }).render();
+
+            //var v = new ChatApp();
+
+            var DumbView = Backbone.View.extend({
+                template: window.JST["dumbview"],
+                initialize: function() {
+                    _.bindAll(this, "render");
+                    this.render();
+                    return this;
+                },
+                render: function() {
+                    this.$el.html(this.template);
+                    return this;
+                }
+            })
+            var v = new DumbView();
+
+            layoutHelper.content.show(v);
+        </script>
     </body>
 </html>
