@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>Chat</title>
+        <link rel="shortcut icon" href="http://reloaded.karopapier.de/favicon.ico" />
+        <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/css/karo.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/themes/black/css/theme.css" />
+        <style type="text/css">
+            header,footer,nav,section { display: block; }
+        </style>
+        <script type="text/javascript">
+            var Karopapier = {}; //global namespace;
+        </script>
+    </head>
+
+    <body>
+        <div id="header">
+            <div id="infoBar">
+            <span class="userLabel" name="userLabel1">Didi</span> Spiele: <a href="/dran"><span id="dranCount">5</span></a>/<span id="gamesCount">105</span> [5/105]
+            <a href="/logout">Logout</a>                <div id="NotifierContainer"></div>
+            </div>
+        </div>
+        <div class="clearer"></div>
+        <div id="container">
+            <div id="sidebar">
+                <ul id="navi">
+                    <li>/dev/null</li>
+                </ul>
+            </div>
+            <div id="content">
+                <div id="chatMessages"></div>
+            </div>
+        </div>
+        <footer style="text-align: center"><a href="http://www.karopapier.de">Karopapier.de</a> is brought to you by
+            <script type="text/javascript">document.write(String.fromCharCode(0x44,0x69,0x64,0x69).link(String.fromCharCode(0x6d,0x61,0x69,0x6c,0x74,0x6f,0x3a,0x64,0x69,0x64,0x69,0x40,0x6b,0x61,0x72,0x6f,0x70,0x61,0x70,0x69,0x65,0x72,0x2e,0x64,0x65)));</script>
+        </footer>
+
+        <script type="text/javascript" src="js/libs/underscore-min.js"></script>
+        <script type="text/javascript" src="js/libs/jquery-1.7.2.min.js"></script>
+        <script type="text/javascript" src="js/libs/backbone-min.js"></script>
+        <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
+
+        <script type="text/javascript" src="js/model/ChatMessage.js"></script>
+        <script type="text/javascript" src="js/model/ChatMessageCollection.js"></script>
+
+        <script type="text/javascript" src="js/view/ChatMessageView.js"></script>
+        <script type="text/javascript" src="js/view/ChatMessagesView.js"></script>
+
+        <script type="text/javascript" src="js/model/Util.js"></script>
+
+        <script type="text/javascript">
+
+            $(document).ready(function () {
+                var chatMessageCollection = new ChatMessageCollection();
+                var chatMessagesView = new ChatMessagesView({
+                    collection: chatMessageCollection,
+                    el: "#chatMessages"
+                });
+            });
+        </script>
+    </body>
+</html>
