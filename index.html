@@ -7,7 +7,7 @@
         <script type="text/javascript" src="js/libs/backbone-min.js"></script>
         <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
 
-        <script src="js/templates/jst.js"></script>
+        <script type="text/javascript" src="js/templates/JST.js"></script>
 
     </head>
     <body>
@@ -36,17 +36,13 @@
                 regions: {
                     "content": "#content"
                 },
-                template: window.JST["basic"]
+                template: window.JST["basic/basic.html"]
             })
-
-            var layoutHelper = new LayoutHelper({
-                el: '#container'
-            }).render();
 
             //var v = new ChatApp();
 
             var DumbView = Backbone.View.extend({
-                template: window.JST["dumbview"],
+                template: window["JST"]["dumbview.html"],
                 initialize: function() {
                     _.bindAll(this, "render");
                     this.render();
@@ -57,9 +53,18 @@
                     return this;
                 }
             })
-            var v = new DumbView();
 
-            layoutHelper.content.show(v);
+            $(document).ready(function() {
+                var layoutHelper = new LayoutHelper({
+                    el: '#container'
+                }).render();
+
+                var v = new DumbView();
+
+
+                layoutHelper.content.show(v);
+            })
+
         </script>
     </body>
 </html>
