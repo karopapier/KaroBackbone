@@ -6,10 +6,13 @@ var ChatApp = Backbone.Marionette.Layout.extend({
         }), this.layout.render(), this.chatMessageCollection = new ChatMessageCollection(), 
         this.chatMessagesView = new ChatMessagesView({
             collection: this.chatMessageCollection
+        }), this.chatUserCollection = new ChatUserCollection(), this.chatUsersView = new ChatUsersView({
+            collection: this.chatUserCollection
         }), console.log("Init Chat app");
     },
     render: function() {
-        console.log("Someone called ChatApp's render"), this.layout.chatmessages.show(this.chatMessagesView);
+        console.log("Someone called ChatApp's render"), this.layout.chatmessages.show(this.chatMessagesView), 
+        this.layout.chatinfo.show(this.chatUsersView);
     }
 }), KaropapierApp = Backbone.Marionette.Layout.extend({}), ChatLayout = Backbone.Marionette.Layout.extend({
     template: window.JST["chat/layout"],
@@ -20,6 +23,13 @@ var ChatApp = Backbone.Marionette.Layout.extend({
 }), ChatMessage = Backbone.Model.extend({}), ChatMessageCollection = Backbone.Collection.extend({
     url: "http://reloaded.karopapier.de/api/chat/list.json?limit=10&callback=?",
     model: ChatMessage,
+    initialize: function() {
+        _.bindAll(this, "addItem");
+    },
+    addItem: function() {}
+}), ChatUser = Backbone.Model.extend({}), ChatUserCollection = Backbone.Collection.extend({
+    url: "http://reloaded.karopapier.de/api/chat/users.json?callback=?",
+    model: ChatUser,
     initialize: function() {
         _.bindAll(this, "addItem");
     },
@@ -427,6 +437,32 @@ var ViewSettings = Backbone.Model.extend({
     },
     render: function() {
         console.log("Rendering the ChatMessagesView"), this.$el.empty();
+        return this.collection.each(function(a) {
+            this.addItem(a);
+        }.bind(this)), this;
+    }
+}), ChatUserView = Backbone.View.extend({
+    tagName: "div",
+    initialize: function() {
+        _.bindAll(this, "render"), this.render();
+    },
+    render: function() {
+        return this.$el.html(this.model.get("login")), this;
+    }
+}), ChatUsersView = Backbone.View.extend({
+    tagName: "div",
+    initialize: function() {
+        _.bindAll(this, "render", "addItem"), this.collection.on("reset", this.render), 
+        this.collection.fetch(), this.collection.on("add", this.addItem);
+    },
+    addItem: function(a) {
+        var b = new ChatUserView({
+            model: a
+        });
+        this.$el.append(b.el);
+    },
+    render: function() {
+        console.log("Rendering the ChatUserView"), this.$el.empty();
         return this.collection.each(function(a) {
             this.addItem(a);
         }.bind(this)), this;
