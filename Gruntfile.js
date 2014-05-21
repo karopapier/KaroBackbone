@@ -42,14 +42,14 @@ module.exports = function (grunt) {
         },
         watch: {
             scripts: {
-                files: ['js/**/*.js'],
+                files: ['js/**/*.js', '!js/<%= pkg.name %>*.js'],
                 tasks: ['uglify'],
                 options: {
                     interrupt: true
                 }
             },
             templates: {
-                files: ['js/templates/*.html', 'js/templates/*.tpl'],
+                files: ['js/templates/**/*.html', 'js/templates/**/*.tpl'],
                 tasks: ['jst'],
                 options: {
                     interrupt: true

@@ -1,0 +1,16 @@
+#chatMessages
+{
+	width:70%;
+	min-height: 400px;
+	max-height: 600px;
+	margin-bottom: 20px;
+	overflow-y: scroll;
+	float: left;
+}
+
+#chatInfo
+{
+    float: right;
+	width: 250px;
+    overflow: auto;
+}

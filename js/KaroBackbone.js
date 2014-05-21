@@ -1,24 +1,25 @@
-/*! KaroBackbone 2014-05-21 */
+/*! KaroBackbone 2014-05-22 */
 var ChatApp = Backbone.Marionette.Layout.extend({
     initialize: function() {
         this.layout = new ChatLayout({
             el: this.el
-        }), this.layout.render(), this.chatMessageCollection = new ChatMessageCollection(), 
-        this.chatMessagesView = new ChatMessagesView({
+        }), this.layout.render(), this.configuration = new Backbone.Model(), this.configuration.set("limit", 4), 
+        this.chatMessageCollection = new ChatMessageCollection(), this.chatMessagesView = new ChatMessagesView({
+            model: this.configuration,
             collection: this.chatMessageCollection
         }), this.chatUserCollection = new ChatUserCollection(), this.chatUsersView = new ChatUsersView({
             collection: this.chatUserCollection
         }), console.log("Init Chat app");
     },
     render: function() {
-        console.log("Someone called ChatApp's render"), this.layout.chatmessages.show(this.chatMessagesView), 
-        this.layout.chatinfo.show(this.chatUsersView);
+        console.log("Someone called ChatApp's render"), this.layout.chatMessages.show(this.chatMessagesView), 
+        this.layout.chatInfo.show(this.chatUsersView);
     }
 }), KaropapierApp = Backbone.Marionette.Layout.extend({}), ChatLayout = Backbone.Marionette.Layout.extend({
-    template: window.JST["chat/layout"],
+    template: window.JST["chat/chatLayout"],
     regions: {
-        chatmessages: "#chatmessages",
-        chatinfo: "#chatinfo"
+        chatMessages: "#chatMessages",
+        chatInfo: "#chatInfo"
     }
 }), ChatMessage = Backbone.Model.extend({}), ChatMessageCollection = Backbone.Collection.extend({
     url: "http://reloaded.karopapier.de/api/chat/list.json?limit=10&callback=?",
@@ -426,18 +427,22 @@ var ViewSettings = Backbone.Model.extend({
 }), ChatMessagesView = Backbone.View.extend({
     tagName: "div",
     initialize: function() {
-        _.bindAll(this, "render", "addItem"), this.collection.on("reset", this.render), 
-        this.collection.fetch(), this.collection.on("add", this.addItem);
+        _.bindAll(this, "render", "addItem", "limit"), this.collection.on("reset", this.render), 
+        this.collection.fetch(), this.collection.on("add", this.addItem), this.message_limit = 0, 
+        this.model.on("change", this.limit);
     },
     addItem: function(a) {
         var b = new ChatMessageView({
             model: a
         });
-        console.log("Adding item to ", this.$el), this.$el.append(b.el);
+        this.$el.append(b.el);
+    },
+    limit: function() {
+        this.message_limit = this.model.get("limit"), this.render();
     },
     render: function() {
-        console.log("Rendering the ChatMessagesView"), this.$el.empty();
-        return this.collection.each(function(a) {
+        this.$el.empty();
+        return _.each(this.collection.last(this.message_limit), function(a) {
             this.addItem(a);
         }.bind(this)), this;
     }
@@ -462,7 +467,7 @@ var ViewSettings = Backbone.Model.extend({
         this.$el.append(b.el);
     },
     render: function() {
-        console.log("Rendering the ChatUserView"), this.$el.empty();
+        this.$el.empty();
         return this.collection.each(function(a) {
             this.addItem(a);
         }.bind(this)), this;

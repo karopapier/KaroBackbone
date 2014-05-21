@@ -11,7 +11,6 @@ var ChatUsersView = Backbone.View.extend({
         this.$el.append(chatUserView.el);
     },
     render: function () {
-        console.log("Rendering the ChatUserView");
         this.$el.empty();
         var me = this;
         this.collection.each(function (chatUser) {
