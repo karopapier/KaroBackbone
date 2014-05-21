@@ -8,9 +8,11 @@ var ChatMessagesView = Backbone.View.extend({
     },
     addItem: function (chatMessage) {
         var chatMessageView = new ChatMessageView({model: chatMessage});
+        console.log("Adding item to ",this.$el);
         this.$el.append(chatMessageView.el);
     },
     render: function () {
+        console.log("Rendering the ChatMessagesView");
         this.$el.empty();
         var me = this;
         this.collection.each(function (chatMessage) {

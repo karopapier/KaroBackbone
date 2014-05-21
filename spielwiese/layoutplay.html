@@ -6,7 +6,7 @@
         <script src="../js/libs/underscore-min.js"></script>
         <script src="../js/libs/backbone-min.js"></script>
         <script src="../js/libs/backbone.marionette.min.js"></script>
-        <script src="../js/templates/ajst.js"></script>
+        <script src="../js/templates/JST.js"></script>
     </head>
     <body>
         Drum
@@ -29,7 +29,7 @@
         <script type="text/javascript">
 
             var PageLayout = Backbone.Marionette.Layout.extend({
-                template: window.JST["basic"],
+                template: window.JST["basic/basic"],
                 regions: {
                     header: "#header",
                     content: "#content",
@@ -70,7 +70,7 @@
             pageLayout.render();
 
             var HeaderView = Backbone.Marionette.ItemView.extend({
-                template: "#headerTemplate",
+                template: "#headerTemplate"
             })
 
             var FooterView = Backbone.Marionette.ItemView.extend({

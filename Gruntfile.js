@@ -1,42 +1,55 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         uglify: {
-            options: {
-                banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+            min: {
+                files: {
+                    "js/<%= pkg.name %>.min.js": ['js/app/*.js', 'js/layout/*.js', 'js/model/*.js', 'js/view/*.js', 'js/router/*.js']
+                },
+                options: {
+                    banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+                }
             },
-            build: {
-                src: ['js/model/*.js','js/view/*.js'],
-                dest: 'js/<%= pkg.name %>.min.js'
+            dev: {
+                files: {
+                    "js/<%= pkg.name %>.js": ['js/app/*.js', 'js/layout/*.js', 'js/model/*.js', 'js/view/*.js', 'js/router/*.js']
+                },
+                options: {
+                    banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+                    beautify: true
+                }
             }
         },
         jst: {
             options: {
                 prettify: true,
-                processName: function(filepath) {
-                    var p = filepath.replace("js/templates/","");
+                processName: function (filepath) {
+                    var p = filepath;
+                    p = p.replace("js/templates/", "");
+                    p = p.replace(/\.html$/, "");
+                    p = p.replace(/\.tpl$/, "");
                     return p;
                 }
             },
             compile: {
                 files: {
-                    "js/templates/JST.js": ['js/templates/**/*.html','js/templates/**/*.tpl']
+                    "js/templates/JST.js": ['js/templates/**/*.html', 'js/templates/**/*.tpl']
                 }
             }
 
         },
         watch: {
             scripts: {
-                files: ['js/model/*.js','js/view/*.js','js/app/*.js'],
+                files: ['js/**/*.js'],
                 tasks: ['uglify'],
                 options: {
                     interrupt: true
                 }
             },
             templates: {
-                files: ['js/templates/*.html','js/templates/*.tpl'],
+                files: ['js/templates/*.html', 'js/templates/*.tpl'],
                 tasks: ['jst'],
                 options: {
                     interrupt: true

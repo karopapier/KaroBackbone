@@ -1,70 +1,81 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title></title>
-        <script type="text/javascript" src="js/libs/jquery-1.11.0.min.js"></script>
-        <script type="text/javascript" src="js/libs/underscore-min.js"></script>
-        <script type="text/javascript" src="js/libs/backbone-min.js"></script>
-        <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
+<head>
+    <title></title>
+    <script type="text/javascript">
+        var Karopapier = {}; // currently only for Util.js to not throw an error
+    </script>
+    <script type="text/javascript" src="js/libs/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="js/libs/underscore-min.js"></script>
+    <script type="text/javascript" src="js/libs/backbone-min.js"></script>
+    <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
 
-        <script type="text/javascript" src="js/templates/JST.js"></script>
+    <script type="text/javascript" src="js/templates/JST.js"></script>
 
-    </head>
-    <body>
-        <p>Bottom up!!<br />
-            Start plain, just one view, then add second views and regions, then extend to top and switch between apps/views/layouts/regions
+    <script type="text/javascript" src="js/KaroBackbone.js"></script>
 
-        <div id="container" style="border: 1px solid blue"></div>
-        Done:
-        <ul>
-            <li>-</li>
-        </ul>
-        Doing
-        <ul>
-            <li>Chat</li>
-        </ul>
-        Todo
-        <ul>
-            <li>KaroAppView</li>
-            <li>UserInfo top right</li>
-            <li>Editor</li>
-            <li>Game</li>
-        </ul>
+</head>
+<body>
+<p>Bottom up!!<br/>
+    Start plain, just one view, then add second views and regions, then extend to top and switch between
+    apps/views/layouts/regions
+</p>
 
-        <script type="text/javascript">
-            var LayoutHelper = Marionette.Layout.extend({
-                regions: {
-                    "content": "#content"
-                },
-                template: window.JST["basic/basic.html"]
-            })
+Startcontainer
+<div id="container" style="border: 1px solid blue"></div>
+Endcontainer<br />
+Done
+<ul>
+    <li>-</li>
+</ul>
+Doing
+<ul>
+    <li>Chat</li>
+</ul>
+Todo
+<ul>
+    <li>KaroAppView</li>
+    <li>UserInfo top right</li>
+    <li>Editor</li>
+    <li>Game</li>
+</ul>
 
-            //var v = new ChatApp();
+<script type="text/javascript">
 
-            var DumbView = Backbone.View.extend({
-                template: window["JST"]["dumbview.html"],
-                initialize: function() {
-                    _.bindAll(this, "render");
-                    this.render();
-                    return this;
-                },
-                render: function() {
-                    this.$el.html(this.template({adjective: "nice"}));
-                    return this;
-                }
-            })
-
-            $(document).ready(function() {
-                var layoutHelper = new LayoutHelper({
-                    el: '#container'
-                }).render();
-
-                var v = new DumbView();
+    var LayoutHelper = Marionette.Layout.extend({
+        regions: {
+            "content": "#content"
+        },
+        template: window.JST["basic/basic"]
+    })
 
 
-                layoutHelper.content.show(v);
-            })
+    var DumbView = Backbone.View.extend({
+        template: window["JST"]["dumbview"],
+        initialize: function () {
+            _.bindAll(this, "render");
+            return this;
+        },
+        render: function () {
+            console.log("Rendering dumb view");
+            this.$el.html(this.template({adjective: "nice"}));
+            return this;
+        }
+    })
 
-        </script>
-    </body>
+    var dumbView = new DumbView();
+
+    $(document).ready(function () {
+        var layoutHelper = new LayoutHelper({
+            el: '#container'
+        }).render();
+
+        //layoutHelper.content.show(dumbView);
+
+        Karopapier.chatApp = new ChatApp()
+        layoutHelper.content.show(Karopapier.chatApp);
+    })
+
+</script>
+</body>
 </html>
