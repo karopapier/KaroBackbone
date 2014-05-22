@@ -446,14 +446,6 @@ var ViewSettings = Backbone.Model.extend({
             this.addItem(a);
         }.bind(this)), this;
     }
-}), ChatUserView = Backbone.View.extend({
-    tagName: "div",
-    initialize: function() {
-        _.bindAll(this, "render"), this.render();
-    },
-    render: function() {
-        return this.$el.html(this.model.get("login")), this;
-    }
 }), ChatUsersView = Backbone.View.extend({
     tagName: "div",
     initialize: function() {
@@ -461,10 +453,13 @@ var ViewSettings = Backbone.Model.extend({
         this.collection.fetch(), this.collection.on("add", this.addItem);
     },
     addItem: function(a) {
-        var b = new ChatUserView({
-            model: a
-        });
-        this.$el.append(b.el);
+        var b = new UserView({
+            model: a,
+            withGames: !0,
+            withAnniversary: !0,
+            withDesperation: !0
+        }), c = $("<li></li>");
+        c.append(b.el), this.$el.append(c);
     },
     render: function() {
         this.$el.empty();
@@ -930,6 +925,20 @@ var ViewSettings = Backbone.Model.extend({
         _.bindAll(this), this.model.bind("reset", function() {
             console.info("NEUE SPIELER"), this.render();
         }, this);
+    }
+}), UserView = Backbone.View.extend({
+    options: {
+        withAnniversary: !0,
+        withGames: !1,
+        withDesperation: !1
+    },
+    tagName: "span",
+    initialize: function(a) {
+        this.options = _.defaults(a || {}, this.options), console.log("Mit spiel", this.options.withGames), 
+        _.bindAll(this, "render"), this.render(), console.log("User view options", a);
+    },
+    render: function() {
+        return this.$el.html(this.model.get("login")), this;
     }
 }), EditorAppRouter = Backbone.Router.extend({
     routes: {

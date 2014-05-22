@@ -7,8 +7,15 @@ var ChatUsersView = Backbone.View.extend({
         this.collection.on("add", this.addItem)
     },
     addItem: function (user) {
-        var chatUserView = new ChatUserView({model: user});
-        this.$el.append(chatUserView.el);
+        var chatUserView = new UserView({
+            model: user,
+            withGames: true,
+            withAnniversary: true,
+            withDesperation: true
+        });
+        var li = $('<li></li>');
+        li.append(chatUserView.el);
+        this.$el.append(li);
     },
     render: function () {
         this.$el.empty();
