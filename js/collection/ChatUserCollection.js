@@ -1,6 +1,6 @@
 var ChatUserCollection = Backbone.Collection.extend({
     url: "http://reloaded.karopapier.de/api/chat/users.json?callback=?",
-    model: ChatUser,
+    model: User,
     initialize: function() {
         _.bindAll(this, "addItem");
     },

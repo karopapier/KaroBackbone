@@ -21,21 +21,7 @@ var ChatApp = Backbone.Marionette.Layout.extend({
         chatMessages: "#chatMessages",
         chatInfo: "#chatInfo"
     }
-}), ChatMessage = Backbone.Model.extend({}), ChatMessageCollection = Backbone.Collection.extend({
-    url: "http://reloaded.karopapier.de/api/chat/list.json?limit=10&callback=?",
-    model: ChatMessage,
-    initialize: function() {
-        _.bindAll(this, "addItem");
-    },
-    addItem: function() {}
-}), ChatUser = Backbone.Model.extend({}), ChatUserCollection = Backbone.Collection.extend({
-    url: "http://reloaded.karopapier.de/api/chat/users.json?callback=?",
-    model: ChatUser,
-    initialize: function() {
-        _.bindAll(this, "addItem");
-    },
-    addItem: function() {}
-}), Game = Backbone.Model.extend({
+}), ChatMessage = Backbone.Model.extend({}), ChatUser = Backbone.Model.extend({}), Game = Backbone.Model.extend({
     defaults: {
         id: 0
     },
@@ -358,12 +344,7 @@ var ChatApp = Backbone.Marionette.Layout.extend({
     }
 }), MoveCollection = Backbone.Collection.extend({
     model: Move
-}), MoveMessage = Backbone.Model.extend({}), MoveMessageCollection = Backbone.Collection.extend({
-    model: MoveMessage,
-    comparator: function(a) {
-        return a.get("move").get("t");
-    }
-}), Player = Backbone.Model.extend({
+}), MoveMessage = Backbone.Model.extend({}), Player = Backbone.Model.extend({
     defaults: {
         id: 0
     },
@@ -372,26 +353,13 @@ var ChatApp = Backbone.Marionette.Layout.extend({
             console.info(" New Player id: " + b);
         });
     }
-}), PlayerCollection = Backbone.Collection.extend({
-    model: Player,
-    initialize: function(a, b) {
-        _.bindAll(this), this.moveMessages = b.moveMessages, this.bind("reset", function() {
-            console.info("Init Players"), this.moveMessages.reset(), this.each(function(a) {
-                a.get("moves").each(function(b) {
-                    b.get("msg") && (mm = new MoveMessage({
-                        move: b,
-                        player: a
-                    }), this.moveMessages.add(mm, {
-                        silent: !0
-                    }));
-                }, this);
-            }, this), this.moveMessages.trigger("change");
-        });
-    }
-}), User = Backbone.Model.extend({
+}), User = Backbone.ModelFactory({
     defaults: {
         id: 0,
         login: "Gast"
+    },
+    initialize: function() {
+        console.log("I am ", this);
     }
 });
 
@@ -413,6 +381,41 @@ var ViewSettings = Backbone.Model.extend({
         border: 1,
         fillBorder: !0,
         specles: !1
+    }
+}), ChatMessageCollection = Backbone.Collection.extend({
+    url: "http://reloaded.karopapier.de/api/chat/list.json?limit=10&callback=?",
+    model: ChatMessage,
+    initialize: function() {
+        _.bindAll(this, "addItem");
+    },
+    addItem: function() {}
+}), ChatUserCollection = Backbone.Collection.extend({
+    url: "http://reloaded.karopapier.de/api/chat/users.json?callback=?",
+    model: User,
+    initialize: function() {
+        _.bindAll(this, "addItem");
+    },
+    addItem: function() {}
+}), MoveMessageCollection = Backbone.Collection.extend({
+    model: MoveMessage,
+    comparator: function(a) {
+        return a.get("move").get("t");
+    }
+}), PlayerCollection = Backbone.Collection.extend({
+    model: Player,
+    initialize: function(a, b) {
+        _.bindAll(this), this.moveMessages = b.moveMessages, this.bind("reset", function() {
+            console.info("Init Players"), this.moveMessages.reset(), this.each(function(a) {
+                a.get("moves").each(function(b) {
+                    b.get("msg") && (mm = new MoveMessage({
+                        move: b,
+                        player: a
+                    }), this.moveMessages.add(mm, {
+                        silent: !0
+                    }));
+                }, this);
+            }, this), this.moveMessages.trigger("change");
+        });
     }
 }), ChatMessageView = Backbone.View.extend({
     tagName: "div",
@@ -934,11 +937,14 @@ var ViewSettings = Backbone.Model.extend({
     },
     tagName: "span",
     initialize: function(a) {
-        this.options = _.defaults(a || {}, this.options), console.log("Mit spiel", this.options.withGames), 
-        _.bindAll(this, "render"), this.render(), console.log("User view options", a);
+        this.options = _.defaults(a || {}, this.options), _.bindAll(this, "render"), this.model.on("change", this.render), 
+        this.render();
     },
     render: function() {
-        return this.$el.html(this.model.get("login")), this;
+        var a = "";
+        return this.options.withDesperation && this.model.get("desperate") && (a += '<img src="http:///reloaded.karopapier.de/images/spielegeil.png" alt="Spielegeil" title="Spielegeil">'), 
+        a += '<span class="userLabel">' + this.model.get("login") + "</span>", this.options.withGames && (a += "<small>(" + this.model.get("dran") + "/" + this.model.get("activeGames") + ")</small>"), 
+        this.$el.html(a), this;
     }
 }), EditorAppRouter = Backbone.Router.extend({
     routes: {
