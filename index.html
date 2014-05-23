@@ -1,73 +1,66 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title></title>
-    <script type="text/javascript" src="js/libs/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="js/libs/underscore-min.js"></script>
-    <script type="text/javascript" src="js/libs/backbone-min.js"></script>
-    <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
-    <script type="text/javascript" src="js/libs/backbone-model-factory-min.js"></script>
-    <script type="text/javascript">
-        var Karopapier = new Marionette.Application(); // currently only for Util.js to not throw an error
-    </script>
+    <head>
+        <title></title>
+        <script type="text/javascript" src="js/libs/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="js/libs/underscore-min.js"></script>
+        <script type="text/javascript" src="js/libs/backbone-min.js"></script>
+        <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
+        <script type="text/javascript" src="js/libs/backbone-model-factory-min.js"></script>
+        <script type="text/javascript">
+            var Karopapier = new Marionette.Application(); // currently only for Util.js to not throw an error
+        </script>
 
-    <script type="text/javascript" src="js/templates/JST.js"></script>
-    <script type="text/javascript" src="js/KaroBackbone.js"></script>
+        <script type="text/javascript" src="js/templates/JST.js"></script>
+        <script type="text/javascript" src="js/KaroBackbone.js"></script>
 
-    <link rel="stylesheet" href="css/global.css" />
-    <link rel="stylesheet" href="css/chat.css" />
+        <link rel="stylesheet" href="css/main.css" />
+        <link rel="stylesheet" href="css/global.css" />
+        <link rel="stylesheet" href="css/chat.css" />
+    </head>
+    <body>
+        <header id="header"><h1>Karopapier</h1></header>
+        <div id="content">Content</div>
+        <footer id="footer">
+            Todo
+            <ul>
+                <li>UserInfo top right</li>
+                <li>Routing</li>
+                <li>Editor</li>
+                <li>Game</li>
+                <li>Karotris</li>
+            </ul>
+        </footer>
 
-</head>
-<body>
-<p>Bottom up!!<br/>
-    Start plain, just one view, then add second views and regions, then extend to top and switch between
-    apps/views/layouts/regions
-</p>
+        <script type="text/javascript">
 
-Startcontainer
-<div id="container" style="border: 1px solid blue">
-    <div id="header">Header</div>
-    <div id="content">Content</div>
-    <div id="footer">Footer</div>
-</div>
-Endcontainer<br />
-Todo
-<ul>
-    <li>KaroApp</li>
-    <li>UserInfo top right</li>
-    <li>Editor</li>
-    <li>Game</li>
-</ul>
+            var DumbView = Backbone.View.extend({
+                template: window["JST"]["dumbview"],
+                initialize: function () {
+                    _.bindAll(this, "render");
+                    return this;
+                },
+                render: function () {
+                    console.log("Rendering dumb view");
+                    this.$el.html(this.template({adjective: "nice"}));
+                    return this;
+                }
+            })
 
-<script type="text/javascript">
+            var dumbView = new DumbView();
 
-    var DumbView = Backbone.View.extend({
-        template: window["JST"]["dumbview"],
-        initialize: function () {
-            _.bindAll(this, "render");
-            return this;
-        },
-        render: function () {
-            console.log("Rendering dumb view");
-            this.$el.html(this.template({adjective: "nice"}));
-            return this;
-        }
-    })
+            $(document).ready(function () {
 
-    var dumbView = new DumbView();
+                Karopapier.addRegions({
+                    header: '#header',
+                    content: '#content',
+                    footer: '#footer'
+                })
 
-    $(document).ready(function () {
+                Karopapier.chatApp = new ChatApp()
+                Karopapier.content.show(Karopapier.chatApp);
+            })
 
-        Karopapier.addRegions({
-            header: '#header',
-            content: '#content',
-            footer: '#footer'
-        })
-
-        Karopapier.chatApp = new ChatApp()
-        Karopapier.content.show(Karopapier.chatApp);
-    })
-
-</script>
-</body>
+        </script>
+    </body>
 </html>

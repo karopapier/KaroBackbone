@@ -1,4 +1,4 @@
-/*! KaroBackbone 2014-05-23 */
+/*! KaroBackbone 2014-05-24 */
 var ChatApp = Backbone.Marionette.Layout.extend({
     initialize: function() {
         this.layout = new ChatLayout({
@@ -945,7 +945,7 @@ var ViewSettings = Backbone.Model.extend({
     render: function() {
         var a = "";
         return this.options.withDesperation && this.model.get("desperate") && (a += '<img src="http:///reloaded.karopapier.de/images/spielegeil.png" alt="Spielegeil" title="Spielegeil">'), 
-        a += '<span class="userLabel">' + this.model.get("login") + "</span>", this.options.withGames && (a += "<small>(" + this.model.get("dran") + "/" + this.model.get("activeGames") + ")</small>"), 
+        a += '<span class="userLabel">' + this.model.get("login") + "</span>", this.options.withGames && (a += " <small>(" + this.model.get("dran") + "/" + this.model.get("activeGames") + ")</small>"), 
         this.$el.html(a), this;
     }
 }), EditorAppRouter = Backbone.Router.extend({

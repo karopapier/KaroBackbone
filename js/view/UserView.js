@@ -22,7 +22,7 @@ var UserView = Backbone.View.extend({
         html += '<span class="userLabel">' + this.model.get("login") + '</span>';
 
         if (this.options.withGames) {
-            html += '<small>(' + this.model.get("dran") + '/' + this.model.get("activeGames") + ')</small>';
+            html += ' <small>(' + this.model.get("dran") + '/' + this.model.get("activeGames") + ')</small>';
         }
         this.$el.html(html);
         return this;

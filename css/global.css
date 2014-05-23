@@ -1,6 +1,10 @@
+html,body,header,footer,nav,aside {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     background-image: url(http://www.karopapier.de/images/background.jpg);
-    margin: 0;
 }
 
 body, td, ul, caption, center, form, div, span {
