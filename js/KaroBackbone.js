@@ -1,4 +1,4 @@
-/*! KaroBackbone 2014-05-22 */
+/*! KaroBackbone 2014-05-23 */
 var ChatApp = Backbone.Marionette.Layout.extend({
     initialize: function() {
         this.layout = new ChatLayout({
@@ -19,7 +19,8 @@ var ChatApp = Backbone.Marionette.Layout.extend({
     template: window.JST["chat/chatLayout"],
     regions: {
         chatMessages: "#chatMessages",
-        chatInfo: "#chatInfo"
+        chatInfo: "#chatInfo",
+        chatEnter: "#chatEnter"
     }
 }), ChatMessage = Backbone.Model.extend({}), ChatUser = Backbone.Model.extend({}), Game = Backbone.Model.extend({
     defaults: {
@@ -358,9 +359,7 @@ var ChatApp = Backbone.Marionette.Layout.extend({
         id: 0,
         login: "Gast"
     },
-    initialize: function() {
-        console.log("I am ", this);
-    }
+    initialize: function() {}
 });
 
 !function(a) {
@@ -435,16 +434,17 @@ var ViewSettings = Backbone.Model.extend({
         this.model.on("change", this.limit);
     },
     addItem: function(a) {
+        console.log("Single chatmessage add");
         var b = new ChatMessageView({
             model: a
         });
-        this.$el.append(b.el);
+        this.$el.append(b.$el.hide().fadeIn());
     },
     limit: function() {
         this.message_limit = this.model.get("limit"), this.render();
     },
     render: function() {
-        this.$el.empty();
+        console.log("Full chatmessage render"), this.$el.empty();
         return _.each(this.collection.last(this.message_limit), function(a) {
             this.addItem(a);
         }.bind(this)), this;
@@ -452,8 +452,8 @@ var ViewSettings = Backbone.Model.extend({
 }), ChatUsersView = Backbone.View.extend({
     tagName: "div",
     initialize: function() {
-        _.bindAll(this, "render", "addItem"), this.collection.on("reset", this.render), 
-        this.collection.fetch(), this.collection.on("add", this.addItem);
+        _.bindAll(this, "render", "addItem", "delItem"), this.collection.on("reset", this.render), 
+        this.collection.fetch(), this.collection.on("add", this.addItem), this.collection.on("remove", this.delItem);
     },
     addItem: function(a) {
         var b = new UserView({
@@ -463,6 +463,9 @@ var ViewSettings = Backbone.Model.extend({
             withDesperation: !0
         }), c = $("<li></li>");
         c.append(b.el), this.$el.append(c);
+    },
+    delItem: function(a) {
+        console.log("Expecting to Remove ", a);
     },
     render: function() {
         this.$el.empty();

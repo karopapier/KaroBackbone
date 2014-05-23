@@ -1,16 +1,37 @@
+#chatWrapper {
+    /* padding-right: 15em; */
+}
+
 #chatMessages
 {
-	width:70%;
-	min-height: 400px;
-	max-height: 600px;
-	margin-bottom: 20px;
+    width: 100%;
 	overflow-y: scroll;
-	float: left;
+    /* min-height: 480px; */
+    min-width: 320px;
 }
 
 #chatInfo
 {
-    float: right;
-	width: 250px;
+	width: 15em;
+    min-width: 15em;
+    /* margin-right: -15em; */
     overflow: auto;
+}
+
+@media all and (min-width:630px) {
+    #chatWrapper {
+        padding-right: 15em;
+    }
+    #chatMessages {
+        float: left;
+    }
+    #chatInfo{
+        margin-right: -15em;
+        float: right;
+    }
+}
+
+#chatEnter
+{
+
 }
