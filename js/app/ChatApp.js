@@ -6,7 +6,7 @@ var ChatApp = Backbone.Marionette.Layout.extend({
         this.layout.render();
 
         this.configuration = new Backbone.Model();
-        this.configuration.set("limit",4);
+        this.configuration.set("limit", 4);
 
         this.chatMessageCollection = new ChatMessageCollection();
         this.chatMessagesView = new ChatMessagesView({
@@ -18,12 +18,8 @@ var ChatApp = Backbone.Marionette.Layout.extend({
         this.chatUsersView = new ChatUsersView({
             collection: this.chatUserCollection
         })
-
-
-        console.log("Init Chat app");
     },
-    render: function() {
-        console.log("Someone called ChatApp's render");
+    render: function () {
         this.layout.chatMessages.show(this.chatMessagesView);
         this.layout.chatInfo.show(this.chatUsersView);
     }

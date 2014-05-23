@@ -12,7 +12,6 @@
     </script>
 
     <script type="text/javascript" src="js/templates/JST.js"></script>
-
     <script type="text/javascript" src="js/KaroBackbone.js"></script>
 
     <link rel="stylesheet" href="css/global.css" />
@@ -26,33 +25,21 @@
 </p>
 
 Startcontainer
-<div id="container" style="border: 1px solid blue"></div>
+<div id="container" style="border: 1px solid blue">
+    <div id="header">Header</div>
+    <div id="content">Content</div>
+    <div id="footer">Footer</div>
+</div>
 Endcontainer<br />
-Done
-<ul>
-    <li>-</li>
-</ul>
-Doing
-<ul>
-    <li>Chat</li>
-</ul>
 Todo
 <ul>
-    <li>KaroAppView</li>
+    <li>KaroApp</li>
     <li>UserInfo top right</li>
     <li>Editor</li>
     <li>Game</li>
 </ul>
 
 <script type="text/javascript">
-
-    var LayoutHelper = Marionette.Layout.extend({
-        regions: {
-            "content": "#content"
-        },
-        template: window.JST["basic/basic"]
-    })
-
 
     var DumbView = Backbone.View.extend({
         template: window["JST"]["dumbview"],
@@ -70,14 +57,15 @@ Todo
     var dumbView = new DumbView();
 
     $(document).ready(function () {
-        var layoutHelper = new LayoutHelper({
-            el: '#container'
-        }).render();
 
-        //layoutHelper.content.show(dumbView);
+        Karopapier.addRegions({
+            header: '#header',
+            content: '#content',
+            footer: '#footer'
+        })
 
         Karopapier.chatApp = new ChatApp()
-        layoutHelper.content.show(Karopapier.chatApp);
+        Karopapier.content.show(Karopapier.chatApp);
     })
 
 </script>
