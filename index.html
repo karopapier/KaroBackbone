@@ -14,9 +14,9 @@
         <script type="text/javascript" src="js/templates/JST.js"></script>
         <script type="text/javascript" src="js/KaroBackbone.min.js"></script>
 
-        <link rel="stylesheet" href="css/main.css" />
-        <link rel="stylesheet" href="css/global.css" />
-        <link rel="stylesheet" href="css/chat.css" />
+        <link rel="stylesheet" href="css/main.css"/>
+        <link rel="stylesheet" href="css/global.css"/>
+        <link rel="stylesheet" href="css/chat.css"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     </head>
     <body>
@@ -50,8 +50,26 @@
 
             var dumbView = new DumbView();
 
+
+            Karopapier.addInitializer(function (options) {
+                // do useful stuff here
+                console.log("Initializer der App");
+                Karopapier.User = new User({});
+                //make this user refer to "check" for loging in
+                Karopapier.User.url = function () {
+                    return "http://reloaded.karopapier.de/api/user/check.json?callback=?"
+                }
+                Karopapier.User.fetch();
+            });
+
             $(document).ready(function () {
 
+                console.log("Doc ready, start app");
+                Karopapier.start({
+                    baseApiUrl: "http://reloaded.karopapier.de/api/"
+                });
+
+                console.log("App started");
                 Karopapier.addRegions({
                     header: '#header',
                     content: '#content',

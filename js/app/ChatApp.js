@@ -19,6 +19,10 @@ var ChatApp = Backbone.Marionette.Layout.extend({
             collection: this.chatUserCollection
         })
 
+        this.chatControlView = new ChatControlView({
+            model: this.configuration
+        });
+
         //dirty first poor man's refresh
         this.refreshMessages = setInterval(function() {
             this.chatMessageCollection.fetch()
@@ -27,6 +31,7 @@ var ChatApp = Backbone.Marionette.Layout.extend({
     render: function () {
         this.layout.chatMessages.show(this.chatMessagesView);
         this.layout.chatInfo.show(this.chatUsersView);
+        this.layout.chatControl.show(this.chatControlView);
     }
 });
 

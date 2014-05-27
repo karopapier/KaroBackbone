@@ -9,19 +9,22 @@ var ChatApp = Backbone.Marionette.Layout.extend({
             collection: this.chatMessageCollection
         }), this.chatUserCollection = new ChatUserCollection(), this.chatUsersView = new ChatUsersView({
             collection: this.chatUserCollection
+        }), this.chatControlView = new ChatControlView({
+            model: this.configuration
         }), this.refreshMessages = setInterval(function() {
             this.chatMessageCollection.fetch();
         }.bind(this), 6e4);
     },
     render: function() {
-        this.layout.chatMessages.show(this.chatMessagesView), this.layout.chatInfo.show(this.chatUsersView);
+        this.layout.chatMessages.show(this.chatMessagesView), this.layout.chatInfo.show(this.chatUsersView), 
+        this.layout.chatControl.show(this.chatControlView);
     }
-}), KaropapierApp = Backbone.Marionette.Layout.extend({}), ChatLayout = Backbone.Marionette.Layout.extend({
+}), KaropapierApp = Backbone.Marionette.Application.extend({}), ChatLayout = Backbone.Marionette.Layout.extend({
     template: window.JST["chat/chatLayout"],
     regions: {
         chatMessages: "#chatMessages",
         chatInfo: "#chatInfo",
-        chatEnter: "#chatEnter"
+        chatControl: "#chatControl"
     }
 }), ChatMessage = Backbone.Model.extend({}), ChatUser = Backbone.Model.extend({}), Game = Backbone.Model.extend({
     defaults: {
@@ -416,6 +419,17 @@ var ViewSettings = Backbone.Model.extend({
                 }, this);
             }, this), this.moveMessages.trigger("change");
         });
+    }
+}), ChatControlView = Backbone.View.extend({
+    tagName: "div",
+    template: window.JST["chat/chatControl"],
+    initialize: function() {
+        return _.bindAll(this, "render"), Karopapier.User.on("change:id", this.render), 
+        this;
+    },
+    render: function() {
+        return this.$el.html(0 != Karopapier.User.get("id") ? this.template(Karopapier.User.toJSON()) : "Nicht angemeldet"), 
+        this;
     }
 }), ChatMessageView = Backbone.View.extend({
     tagName: "div",

@@ -3,6 +3,8 @@
  */
 
 
-var KaropapierApp = Backbone.Marionette.Layout.extend({
+var KaropapierApp = Backbone.Marionette.Application.extend({
     //global layout with regions for nav, sidebar, header and user info...
+
+
 })

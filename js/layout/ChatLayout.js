@@ -3,6 +3,6 @@ var ChatLayout = Backbone.Marionette.Layout.extend({
     regions: {
         chatMessages: "#chatMessages",
         chatInfo: "#chatInfo",
-        chatEnter: "#chatEnter"
+        chatControl: "#chatControl"
     }
 })
