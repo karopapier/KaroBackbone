@@ -1,4 +1,4 @@
-/*! KaroBackbone 2014-05-24 */
+/*! KaroBackbone 2014-05-27 */
 var ChatApp = Backbone.Marionette.Layout.extend({
     initialize: function() {
         this.layout = new ChatLayout({

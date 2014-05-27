@@ -9,6 +9,7 @@ module.exports = function (grunt) {
                     "js/<%= pkg.name %>.min.js": ['js/app/*.js', 'js/layout/*.js', 'js/model/*.js', 'js/collection/*.js', 'js/view/*.js', 'js/router/*.js']
                 },
                 options: {
+                    sourceMap: true,
                     banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
                 }
             },
