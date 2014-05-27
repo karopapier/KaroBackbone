@@ -610,6 +610,33 @@ var ViewSettings = Backbone.Model.extend({
     loadMapcode: function() {
         this.editorMapView.map.set("mapcode", this.mapcode.val()), this.editorMapView.render();
     }
+}), FaviconView = Backbone.View.extend({
+    tagName: "link",
+    initialize: function() {
+        _.bindAll(this, "update", "reset", "addNum", "render"), this.baseUrl = this.el.href, 
+        this.src = this.baseUrl, this.head = document.head || document.getElementsByTagName("head")[0], 
+        this.canvas = document.createElement("canvas"), this.canvas.width = 16, this.canvas.height = 16, 
+        this.ctx = this.canvas.getContext("2d"), this.img = new Image(), this.img.src = this.src, 
+        this.model.on("change:dran", this.update);
+    },
+    update: function(a, b) {
+        this.reset(), b > 0 && this.addNum(b), this.render();
+    },
+    reset: function() {
+        this.src = this.baseUrl;
+    },
+    addNum: function(a) {
+        this.ctx.drawImage(this.img, 0, 0), a > 99 && (a = "99"), this.ctx.textBaseline = "bottom", 
+        this.ctx.textAlign = "right", this.ctx.font = "8pt Arial", this.ctx.fillStyle = "white", 
+        this.ctx.fillText(a, 15, 15), this.ctx.fillText(a, 15, 17), this.ctx.fillText(a, 17, 15), 
+        this.ctx.fillText(a, 17, 17), this.ctx.fillStyle = "black", this.ctx.fillText(a, 16, 16), 
+        this.src = this.canvas.toDataURL(), this.render();
+    },
+    render: function() {
+        var a = document.createElement("link");
+        a.id = "favicon", a.type = "image/x-icon", a.rel = "shortcut icon", a.href = this.src, 
+        this.el && document.head.removeChild(this.el), document.head.appendChild(a), this.el = a;
+    }
 }), GameAppNavigationView = Backbone.Marionette.ItemView.extend({
     template: "#game-navi-template",
     events: {
