@@ -3,13 +3,15 @@ var ChatApp = Backbone.Marionette.Layout.extend({
     initialize: function() {
         this.layout = new ChatLayout({
             el: this.el
-        }), this.layout.render(), this.configuration = new Backbone.Model(), this.configuration.set("limit", 4), 
+        }), this.layout.render(), this.configuration = new Backbone.Model(), this.configuration.set("limit", 20), 
         this.chatMessageCollection = new ChatMessageCollection(), this.chatMessagesView = new ChatMessagesView({
             model: this.configuration,
             collection: this.chatMessageCollection
         }), this.chatUserCollection = new ChatUserCollection(), this.chatUsersView = new ChatUsersView({
             collection: this.chatUserCollection
-        });
+        }), this.refreshMessages = setInterval(function() {
+            this.chatMessageCollection.fetch();
+        }.bind(this), 6e4);
     },
     render: function() {
         this.layout.chatMessages.show(this.chatMessagesView), this.layout.chatInfo.show(this.chatUsersView);
@@ -381,7 +383,7 @@ var ViewSettings = Backbone.Model.extend({
         specles: !1
     }
 }), ChatMessageCollection = Backbone.Collection.extend({
-    url: "http://reloaded.karopapier.de/api/chat/list.json?limit=10&callback=?",
+    url: "http://reloaded.karopapier.de/api/chat/list.json?limit=100&callback=?",
     model: ChatMessage,
     initialize: function() {
         _.bindAll(this, "addItem");
@@ -429,8 +431,10 @@ var ViewSettings = Backbone.Model.extend({
     tagName: "div",
     initialize: function() {
         _.bindAll(this, "render", "addItem", "limit"), this.collection.on("reset", this.render), 
-        this.collection.fetch(), this.collection.on("add", this.addItem), this.message_limit = 0, 
-        this.model.on("change", this.limit);
+        this.collection.on("add", this.addItem), this.collection.on("remove", this.removeItem), 
+        this.collection.fetch({
+            reset: !0
+        }), this.message_limit = this.model.get("limit"), this.model.on("change", this.limit);
     },
     addItem: function(a) {
         console.log("Single chatmessage add");
@@ -439,11 +443,13 @@ var ViewSettings = Backbone.Model.extend({
         });
         this.$el.append(b.$el.hide().fadeIn());
     },
+    removeItem: function() {},
     limit: function() {
         this.message_limit = this.model.get("limit"), this.render();
     },
     render: function() {
-        console.log("Full chatmessage render"), this.$el.empty();
+        console.log("Full chatmessage render", this.message_limit), console.log("Items: ", this.collection.length), 
+        this.$el.empty();
         return _.each(this.collection.last(this.message_limit), function(a) {
             this.addItem(a);
         }.bind(this)), this;
