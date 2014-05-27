@@ -17,7 +17,7 @@ var UserView = Backbone.View.extend({
     render: function () {
         var html = '';
         if (this.options.withDesperation && this.model.get("desperate")) {
-            html += '<img src="http:///reloaded.karopapier.de/images/spielegeil.png" alt="Spielegeil" title="Spielegeil">';
+            html += '<img src="http://reloaded.karopapier.de/images/spielegeil.png" alt="Spielegeil" title="Spielegeil">';
         }
         html += '<span class="userLabel">' + this.model.get("login") + '</span>';
 

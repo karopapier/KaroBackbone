@@ -14,10 +14,9 @@ var ChatApp = Backbone.Marionette.Layout.extend({
             collection: this.chatMessageCollection
         });
 
-        this.chatUserCollection = new ChatUserCollection();
-        this.chatUsersView = new ChatUsersView({
-            collection: this.chatUserCollection
-        })
+        this.chatInfoView = new ChatInfoView({
+            model: Karopapier.User
+        });
 
         this.chatControlView = new ChatControlView({
             model: this.configuration
@@ -30,7 +29,7 @@ var ChatApp = Backbone.Marionette.Layout.extend({
     },
     render: function () {
         this.layout.chatMessages.show(this.chatMessagesView);
-        this.layout.chatInfo.show(this.chatUsersView);
+        this.layout.chatInfo.show(this.chatInfoView);
         this.layout.chatControl.show(this.chatControlView);
     }
 });

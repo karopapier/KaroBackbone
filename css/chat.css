@@ -2,36 +2,39 @@
     /* padding-right: 15em; */
 }
 
-#chatMessages
-{
+#chatMessages {
     width: 100%;
-	overflow-y: scroll;
+    overflow-y: scroll;
     /* min-height: 480px; */
     min-width: 320px;
 }
 
-#chatInfo
-{
-	width: 15em;
+#chatInfo {
+    width: 15em;
     min-width: 15em;
     /* margin-right: -15em; */
     overflow: auto;
 }
 
-@media all and (min-width:630px) {
+@media all and (min-width: 630px) {
     #chatWrapper {
         padding-right: 15em;
     }
+
     #chatMessages {
         float: left;
     }
-    #chatInfo{
+
+    #chatInfo {
         margin-right: -15em;
         float: right;
     }
 }
 
-#chatEnter
-{
+.chatUsersView {
+    list-style: none;
+}
+
+#chatEnter {
 
 }

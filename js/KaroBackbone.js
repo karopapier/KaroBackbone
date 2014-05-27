@@ -7,8 +7,8 @@ var ChatApp = Backbone.Marionette.Layout.extend({
         this.chatMessageCollection = new ChatMessageCollection(), this.chatMessagesView = new ChatMessagesView({
             model: this.configuration,
             collection: this.chatMessageCollection
-        }), this.chatUserCollection = new ChatUserCollection(), this.chatUsersView = new ChatUsersView({
-            collection: this.chatUserCollection
+        }), this.chatInfoView = new ChatInfoView({
+            model: Karopapier.User
         }), this.chatControlView = new ChatControlView({
             model: this.configuration
         }), this.refreshMessages = setInterval(function() {
@@ -16,7 +16,7 @@ var ChatApp = Backbone.Marionette.Layout.extend({
         }.bind(this), 6e4);
     },
     render: function() {
-        this.layout.chatMessages.show(this.chatMessagesView), this.layout.chatInfo.show(this.chatUsersView), 
+        this.layout.chatMessages.show(this.chatMessagesView), this.layout.chatInfo.show(this.chatInfoView), 
         this.layout.chatControl.show(this.chatControlView);
     }
 }), KaropapierApp = Backbone.Marionette.Application.extend({}), ChatLayout = Backbone.Marionette.Layout.extend({
@@ -431,6 +431,60 @@ var ViewSettings = Backbone.Model.extend({
         return this.$el.html(0 != Karopapier.User.get("id") ? this.template(Karopapier.User.toJSON()) : "Nicht angemeldet"), 
         this;
     }
+}), ChatInfoView = Backbone.Marionette.ItemView.extend({
+    tagName: "div",
+    template: window.JST["chat/chatInfo"],
+    initialize: function() {
+        _.bindAll(this, "updateTopBlocker", "updateHabdich", "updateDranInfo", "render"), 
+        this.$el.html(this.template), this.chatUserCollection = new ChatUserCollection(), 
+        this.chatUsersView = new ChatUsersView({
+            collection: this.chatUserCollection,
+            el: this.$("#chatUsers")
+        }), this.chatUserCollection.on("add remove reset change", this.updateHabdich), this.blockerInterval = setInterval(this.updateDranInfo, 6e4), 
+        this.updateDranInfo(), this.updateTopBlocker();
+    },
+    onClose: function() {
+        clearInterval(this.blockerInterval);
+    },
+    updateDranInfo: function() {
+        if (0 != this.model.get("id")) {
+            var a;
+            $.getJSON("http://reloaded.karopapier.de/api/user/blockerlist.json?callback=?", function(b) {
+                blockerlist = b, $.getJSON("http://reloaded.karopapier.de/api/user/" + this.model.get("id") + "/info.json?callback=?", function(b) {
+                    var c = b.dran;
+                    a = 0 == c ? 'Du bist ein <a href="http://www.karopapier.de/karowiki/index.php/Nixblocker">Nixblocker</a>' : 1 == c ? '<a target="ibndran" href="http://www.karopapier.de/showgames.php?dranbin=' + this.model.get("id") + '">Bei einem Spiel dran</a>' : '<a href="/dran" target="ibndran">Bei <strong>' + c + "</strong> Spielen dran</a>", 
+                    $("#chatInfoDran").html(a);
+                    var d = 0;
+                    if (blockerlist.length > 0) for (var e = blockerlist.length, f = 0; e > f; f++) 1 == blockerlist[f].id && (d = f + 1, 
+                    f = e + 100);
+                    a = "", d > 0 && (a += 1 == d ? "DU BIST DER <b>VOLLBLOCKER</b>" : 2 == d ? "DU BIST DER <b>VIZE-VOLLBLOCKER</b>" : "Platz " + d + ' der <a href="/blocker">Blockerliste</a>'), 
+                    $("#chatInfoBlockerRank").html(a);
+                });
+            });
+        }
+    },
+    updateHabdich: function() {
+        console.log(this.chatUserCollection.pluck("dran"));
+        var a = _.reduce(this.chatUserCollection.pluck("dran"), function(a, b) {
+            return a + b;
+        }, 0);
+        this.$("#chatHabdich").text(a);
+    },
+    updateTopBlocker: function() {
+        if (0 != this.model.get("id")) {
+            var a;
+            $.getJSON("http://reloaded.karopapier.de/api/user/" + this.model.get("id") + "/blocker.json?callback=?", function(b) {
+                if (b.length > 0) {
+                    var c = b[0];
+                    a = "Dein Top-Blocker: " + c.login + " (" + c.blocked + ")";
+                } else a = "";
+                $("#chatInfoTopBlocker").html(a);
+            });
+        }
+    },
+    render: function() {
+        return console.log("Chat info render"), this;
+    }
 }), ChatMessageView = Backbone.View.extend({
     tagName: "div",
     initialize: function() {
@@ -469,10 +523,13 @@ var ViewSettings = Backbone.Model.extend({
         }.bind(this)), this;
     }
 }), ChatUsersView = Backbone.View.extend({
-    tagName: "div",
+    tagName: "ul",
+    className: "chatUsersView",
     initialize: function() {
         _.bindAll(this, "render", "addItem", "delItem"), this.collection.on("reset", this.render), 
-        this.collection.fetch(), this.collection.on("add", this.addItem), this.collection.on("remove", this.delItem);
+        this.collection.fetch({
+            reset: !0
+        }), this.collection.on("add", this.addItem), this.collection.on("remove", this.delItem);
     },
     addItem: function(a) {
         var b = new UserView({
@@ -991,7 +1048,7 @@ var ViewSettings = Backbone.Model.extend({
     },
     render: function() {
         var a = "";
-        return this.options.withDesperation && this.model.get("desperate") && (a += '<img src="http:///reloaded.karopapier.de/images/spielegeil.png" alt="Spielegeil" title="Spielegeil">'), 
+        return this.options.withDesperation && this.model.get("desperate") && (a += '<img src="http://reloaded.karopapier.de/images/spielegeil.png" alt="Spielegeil" title="Spielegeil">'), 
         a += '<span class="userLabel">' + this.model.get("login") + "</span>", this.options.withGames && (a += " <small>(" + this.model.get("dran") + "/" + this.model.get("activeGames") + ")</small>"), 
         this.$el.html(a), this;
     }
