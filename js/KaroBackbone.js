@@ -1,4 +1,4 @@
-/*! KaroBackbone 2014-05-27 */
+/*! KaroBackbone 2014-05-30 */
 var ChatApp = Backbone.Marionette.Layout.extend({
     initialize: function() {
         this.layout = new ChatLayout({
@@ -435,16 +435,19 @@ var ViewSettings = Backbone.Model.extend({
     tagName: "div",
     template: window.JST["chat/chatInfo"],
     initialize: function() {
-        _.bindAll(this, "updateTopBlocker", "updateHabdich", "updateDranInfo", "render"), 
+        _.bindAll(this, "updateInfos", "updateTopBlocker", "updateHabdich", "updateDranInfo", "render"), 
         this.$el.html(this.template), this.chatUserCollection = new ChatUserCollection(), 
         this.chatUsersView = new ChatUsersView({
             collection: this.chatUserCollection,
             el: this.$("#chatUsers")
-        }), this.chatUserCollection.on("add remove reset change", this.updateHabdich), this.blockerInterval = setInterval(this.updateDranInfo, 6e4), 
-        this.updateDranInfo(), this.updateTopBlocker();
+        }), this.chatUserCollection.on("add remove reset change", this.updateHabdich), this.model.on("change:id", this.updateInfos), 
+        this.blockerInterval = setInterval(this.updateDranInfo, 6e4), this.updateInfos();
     },
     onClose: function() {
         clearInterval(this.blockerInterval);
+    },
+    updateInfos: function() {
+        this.updateDranInfo(), this.updateHabdich();
     },
     updateDranInfo: function() {
         if (0 != this.model.get("id")) {
@@ -459,12 +462,11 @@ var ViewSettings = Backbone.Model.extend({
                     f = e + 100);
                     a = "", d > 0 && (a += 1 == d ? "DU BIST DER <b>VOLLBLOCKER</b>" : 2 == d ? "DU BIST DER <b>VIZE-VOLLBLOCKER</b>" : "Platz " + d + ' der <a href="/blocker">Blockerliste</a>'), 
                     $("#chatInfoBlockerRank").html(a);
-                });
-            });
+                }.bind(this));
+            }.bind(this));
         }
     },
     updateHabdich: function() {
-        console.log(this.chatUserCollection.pluck("dran"));
         var a = _.reduce(this.chatUserCollection.pluck("dran"), function(a, b) {
             return a + b;
         }, 0);
@@ -483,7 +485,7 @@ var ViewSettings = Backbone.Model.extend({
         }
     },
     render: function() {
-        return console.log("Chat info render"), this;
+        return this;
     }
 }), ChatMessageView = Backbone.View.extend({
     tagName: "div",
@@ -505,7 +507,6 @@ var ViewSettings = Backbone.Model.extend({
         }), this.message_limit = this.model.get("limit"), this.model.on("change", this.limit);
     },
     addItem: function(a) {
-        console.log("Single chatmessage add");
         var b = new ChatMessageView({
             model: a
         });
@@ -516,7 +517,6 @@ var ViewSettings = Backbone.Model.extend({
         this.message_limit = this.model.get("limit"), this.render();
     },
     render: function() {
-        console.log("Full chatmessage render", this.message_limit), console.log("Items: ", this.collection.length), 
         this.$el.empty();
         return _.each(this.collection.last(this.message_limit), function(a) {
             this.addItem(a);

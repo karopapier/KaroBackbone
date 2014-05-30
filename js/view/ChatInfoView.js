@@ -2,7 +2,7 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
     tagName: "div",
     template: window["JST"]["chat/chatInfo"],
     initialize: function () {
-        _.bindAll(this, "updateTopBlocker", "updateHabdich", "updateDranInfo", "render");
+        _.bindAll(this, "updateInfos", "updateTopBlocker", "updateHabdich", "updateDranInfo", "render");
         this.$el.html(this.template);
 
         this.chatUserCollection = new ChatUserCollection();
@@ -11,17 +11,21 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
             el: this.$('#chatUsers')
         });
         this.chatUserCollection.on("add remove reset change", this.updateHabdich);
+        this.model.on("change:id", this.updateInfos);
 
         this.blockerInterval = setInterval(this.updateDranInfo, 60000);
 
-        this.updateDranInfo();
-        this.updateTopBlocker();
+        this.updateInfos();
     },
-    onClose: function() {
+    onClose: function () {
         clearInterval(this.blockerInterval);
     },
+    updateInfos: function () {
+        this.updateDranInfo();
+        this.updateHabdich();
+    },
     updateDranInfo: function () {
-        if (this.model.get("id")==0) return;
+        if (this.model.get("id") == 0) return;
         var html;
         $.getJSON('http://reloaded.karopapier.de/api/user/blockerlist.json?callback=?', function (bl) {
             blockerlist = bl;
@@ -60,18 +64,17 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
 
                 //Check blocker list rank
                 $('#chatInfoBlockerRank').html(html);
-            });
-        });
+            }.bind(this));
+        }.bind(this));
     },
     updateHabdich: function () {
-        console.log(this.chatUserCollection.pluck("dran"));
         var habdich = _.reduce(this.chatUserCollection.pluck("dran"), function (sum, el) {
             return sum + el;
         }, 0);
         this.$('#chatHabdich').text(habdich);
     },
     updateTopBlocker: function () {
-        if (this.model.get("id")==0) return;
+        if (this.model.get("id") == 0) return;
         var html;
         $.getJSON('http://reloaded.karopapier.de/api/user/' + this.model.get("id") + '/blocker.json?callback=?', function (data) {
             if (data.length > 0) {
@@ -84,7 +87,6 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
         });
     },
     render: function () {
-        console.log("Chat info render");
         return this;
     }
 })

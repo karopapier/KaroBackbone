@@ -11,7 +11,7 @@ var ChatMessagesView = Backbone.View.extend({
         this.model.on("change", this.limit)
     },
     addItem: function (chatMessage) {
-        console.log("Single chatmessage add");
+        //console.log("Single chatmessage add");
         var chatMessageView = new ChatMessageView({model: chatMessage});
         this.$el.append(chatMessageView.$el.hide().fadeIn());
     },
@@ -25,8 +25,8 @@ var ChatMessagesView = Backbone.View.extend({
         this.render();
     },
     render: function () {
-        console.log("Full chatmessage render", this.message_limit);
-        console.log("Items: ", this.collection.length);
+        //console.log("Full chatmessage render", this.message_limit);
+        //console.log("Items: ", this.collection.length);
         this.$el.empty();
         var me = this;
         _.each(this.collection.last(this.message_limit), function (chatMessage) {
