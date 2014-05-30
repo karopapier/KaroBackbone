@@ -441,7 +441,8 @@ var ViewSettings = Backbone.Model.extend({
             collection: this.chatUserCollection,
             el: this.$("#chatUsers")
         }), this.chatUserCollection.on("add remove reset change", this.updateHabdich), this.model.on("change:id", this.updateInfos), 
-        this.blockerInterval = setInterval(this.updateDranInfo, 6e4), this.updateInfos();
+        this.model.on("change:dran", this.updateInfos), this.blockerInterval = setInterval(this.updateDranInfo, 6e4), 
+        this.updateInfos();
     },
     onClose: function() {
         clearInterval(this.blockerInterval);
@@ -453,16 +454,15 @@ var ViewSettings = Backbone.Model.extend({
         if (0 != this.model.get("id")) {
             var a;
             $.getJSON("http://reloaded.karopapier.de/api/user/blockerlist.json?callback=?", function(b) {
-                blockerlist = b, $.getJSON("http://reloaded.karopapier.de/api/user/" + this.model.get("id") + "/info.json?callback=?", function(b) {
-                    var c = b.dran;
-                    a = 0 == c ? 'Du bist ein <a href="http://www.karopapier.de/karowiki/index.php/Nixblocker">Nixblocker</a>' : 1 == c ? '<a target="ibndran" href="http://www.karopapier.de/showgames.php?dranbin=' + this.model.get("id") + '">Bei einem Spiel dran</a>' : '<a href="/dran" target="ibndran">Bei <strong>' + c + "</strong> Spielen dran</a>", 
-                    $("#chatInfoDran").html(a);
-                    var d = 0;
-                    if (blockerlist.length > 0) for (var e = blockerlist.length, f = 0; e > f; f++) 1 == blockerlist[f].id && (d = f + 1, 
-                    f = e + 100);
-                    a = "", d > 0 && (a += 1 == d ? "DU BIST DER <b>VOLLBLOCKER</b>" : 2 == d ? "DU BIST DER <b>VIZE-VOLLBLOCKER</b>" : "Platz " + d + ' der <a href="/blocker">Blockerliste</a>'), 
-                    $("#chatInfoBlockerRank").html(a);
-                }.bind(this));
+                blockerlist = b;
+                var c = this.model.get("dran");
+                a = 0 == c ? 'Du bist ein <a href="http://www.karopapier.de/karowiki/index.php/Nixblocker">Nixblocker</a>' : 1 == c ? '<a target="ibndran" href="http://www.karopapier.de/showgames.php?dranbin=' + this.model.get("id") + '">Bei einem Spiel dran</a>' : '<a href="/dran" target="ibndran">Bei <strong>' + c + "</strong> Spielen dran</a>", 
+                $("#chatInfoDran").html(a);
+                var d = 0;
+                if (blockerlist.length > 0) for (var e = blockerlist.length, f = 0; e > f; f++) 1 == blockerlist[f].id && (d = f + 1, 
+                f = e + 100);
+                a = "", d > 0 && (a += 1 == d ? "DU BIST DER <b>VOLLBLOCKER</b>" : 2 == d ? "DU BIST DER <b>VIZE-VOLLBLOCKER</b>" : "Platz " + d + ' der <a href="/blocker">Blockerliste</a>'), 
+                $("#chatInfoBlockerRank").html(a);
             }.bind(this));
         }
     },

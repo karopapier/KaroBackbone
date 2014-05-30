@@ -12,6 +12,7 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
         });
         this.chatUserCollection.on("add remove reset change", this.updateHabdich);
         this.model.on("change:id", this.updateInfos);
+        this.model.on("change:dran", this.updateInfos);
 
         this.blockerInterval = setInterval(this.updateDranInfo, 60000);
 
@@ -29,8 +30,7 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
         var html;
         $.getJSON('http://reloaded.karopapier.de/api/user/blockerlist.json?callback=?', function (bl) {
             blockerlist = bl;
-            $.getJSON('http://reloaded.karopapier.de/api/user/' + this.model.get("id") + '/info.json?callback=?', function (data) {
-                var dran = data.dran;
+                var dran = this.model.get("dran");
                 if (dran == 0) {
                     html = 'Du bist ein <a href="http://www.karopapier.de/karowiki/index.php/Nixblocker">Nixblocker</a>';
                 } else if (dran == 1) {
@@ -64,7 +64,6 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
 
                 //Check blocker list rank
                 $('#chatInfoBlockerRank').html(html);
-            }.bind(this));
         }.bind(this));
     },
     updateHabdich: function () {
