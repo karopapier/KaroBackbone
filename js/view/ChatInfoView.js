@@ -26,7 +26,8 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
         this.updateHabdich();
     },
     updateDranInfo: function () {
-        if (this.model.get("id") == 0) return;
+        var myId = this.model.get("id");
+        if (myId == 0) return;
         var html;
         $.getJSON('http://reloaded.karopapier.de/api/user/blockerlist.json?callback=?', function (bl) {
             blockerlist = bl;
@@ -34,7 +35,7 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
                 if (dran == 0) {
                     html = 'Du bist ein <a href="http://www.karopapier.de/karowiki/index.php/Nixblocker">Nixblocker</a>';
                 } else if (dran == 1) {
-                    html = '<a target="ibndran" href="http://www.karopapier.de/showgames.php?dranbin=' + this.model.get("id") + '">Bei einem Spiel dran</a>';
+                    html = '<a target="ibndran" href="http://www.karopapier.de/showgames.php?dranbin=' + myId + '">Bei einem Spiel dran</a>';
                 } else {
                     html = '<a href="/dran" target="ibndran">Bei <strong>' + dran + '</strong> Spielen dran</a>';
                 }
@@ -44,7 +45,7 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
                 if (blockerlist.length > 0) {
                     var l = blockerlist.length;
                     for (var i = 0; i < l; i++) {
-                        if (blockerlist[i].id == 1) {
+                        if (blockerlist[i].id == myId) {
                             pos = i + 1;
                             i = l + 100;
                         }

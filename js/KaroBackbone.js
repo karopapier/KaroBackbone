@@ -433,11 +433,22 @@ var ViewSettings = Backbone.Model.extend({
     sendMessage: function(a) {
         console.log(a), a.preventDefault(), console.log(a);
         var b = $("#newchatmessage").val();
-        "" != b && ($.post("http://reloaded.karopapier.de/api/chat/message.json", {
-            msg: b
-        }, function() {
-            $("#newchatmessagesubmi").prop("disabled", !1);
-        }), $("#newchatmessagesubmi").prop("disabled", !0));
+        "" != b && ($.ajax({
+            url: "http://reloaded.karopapier.de/api/chat/message.json",
+            type: "POST",
+            crossDomain: !0,
+            data: "msg=" + b,
+            dataType: "json",
+            xhrFields: {
+                withCredentials: !0
+            },
+            success: function() {
+                $("#newchatmessagesubmit").prop("disabled", !1), $("#newchatmessage").val("");
+            },
+            error: function(a, b) {
+                console.error(b, a);
+            }
+        }), $("#newchatmessagesubmit").prop("disabled", !0));
     },
     render: function() {
         return this.$el.html(0 != Karopapier.User.get("id") ? this.template(Karopapier.User.toJSON()) : "Nicht angemeldet"), 
@@ -463,18 +474,19 @@ var ViewSettings = Backbone.Model.extend({
         this.updateDranInfo(), this.updateHabdich();
     },
     updateDranInfo: function() {
-        if (0 != this.model.get("id")) {
-            var a;
-            $.getJSON("http://reloaded.karopapier.de/api/user/blockerlist.json?callback=?", function(b) {
-                blockerlist = b;
-                var c = this.model.get("dran");
-                a = 0 == c ? 'Du bist ein <a href="http://www.karopapier.de/karowiki/index.php/Nixblocker">Nixblocker</a>' : 1 == c ? '<a target="ibndran" href="http://www.karopapier.de/showgames.php?dranbin=' + this.model.get("id") + '">Bei einem Spiel dran</a>' : '<a href="/dran" target="ibndran">Bei <strong>' + c + "</strong> Spielen dran</a>", 
-                $("#chatInfoDran").html(a);
-                var d = 0;
-                if (blockerlist.length > 0) for (var e = blockerlist.length, f = 0; e > f; f++) 1 == blockerlist[f].id && (d = f + 1, 
-                f = e + 100);
-                a = "", d > 0 && (a += 1 == d ? "DU BIST DER <b>VOLLBLOCKER</b>" : 2 == d ? "DU BIST DER <b>VIZE-VOLLBLOCKER</b>" : "Platz " + d + ' der <a href="/blocker">Blockerliste</a>'), 
-                $("#chatInfoBlockerRank").html(a);
+        var a = this.model.get("id");
+        if (0 != a) {
+            var b;
+            $.getJSON("http://reloaded.karopapier.de/api/user/blockerlist.json?callback=?", function(c) {
+                blockerlist = c;
+                var d = this.model.get("dran");
+                b = 0 == d ? 'Du bist ein <a href="http://www.karopapier.de/karowiki/index.php/Nixblocker">Nixblocker</a>' : 1 == d ? '<a target="ibndran" href="http://www.karopapier.de/showgames.php?dranbin=' + a + '">Bei einem Spiel dran</a>' : '<a href="/dran" target="ibndran">Bei <strong>' + d + "</strong> Spielen dran</a>", 
+                $("#chatInfoDran").html(b);
+                var e = 0;
+                if (blockerlist.length > 0) for (var f = blockerlist.length, g = 0; f > g; g++) blockerlist[g].id == a && (e = g + 1, 
+                g = f + 100);
+                b = "", e > 0 && (b += 1 == e ? "DU BIST DER <b>VOLLBLOCKER</b>" : 2 == e ? "DU BIST DER <b>VIZE-VOLLBLOCKER</b>" : "Platz " + e + ' der <a href="/blocker">Blockerliste</a>'), 
+                $("#chatInfoBlockerRank").html(b);
             }.bind(this));
         }
     },

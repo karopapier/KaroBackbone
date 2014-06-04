@@ -15,25 +15,25 @@ var ChatControlView = Backbone.View.extend({
         console.log(e);
         var msg = $('#newchatmessage').val();
         if (msg != "") {
-            $.post("http://reloaded.karopapier.de/api/chat/message.json", {"msg": msg}, function sendMessageSuccess(data) {
-                $('#newchatmessagesubmi').prop("disabled", false);
-            });
-            /*
             $.ajax({
                 url: "http://reloaded.karopapier.de/api/chat/message.json",
                 type: "POST",
                 crossDomain: true,
-                data: JSON.stringify({"msg": msg}),
+                data: "msg=" + msg,
+                //JSON.stringify({"msg": msg}),
                 dataType: "json",
+                xhrFields: {
+                    withCredentials: true
+                },
                 success: function sendMessageSuccess(data) {
-                    $('#newchatmessagesubmi').prop("disabled", false);
+                    $('#newchatmessagesubmit').prop("disabled", false);
+                    $('#newchatmessage').val("");
                 },
                 error: function (xhr, status) {
                     console.error(status, xhr);
                 }
             });
-            */
-            $('#newchatmessagesubmi').prop("disabled", true);
+            $('#newchatmessagesubmit').prop("disabled", true);
         }
     },
     render: function () {
