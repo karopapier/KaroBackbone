@@ -1,4 +1,4 @@
-/*! KaroBackbone 2014-05-30 */
+/*! KaroBackbone 2014-06-04 */
 var ChatApp = Backbone.Marionette.Layout.extend({
     initialize: function() {
         this.layout = new ChatLayout({
@@ -424,8 +424,20 @@ var ViewSettings = Backbone.Model.extend({
     tagName: "div",
     template: window.JST["chat/chatControl"],
     initialize: function() {
-        return _.bindAll(this, "render"), Karopapier.User.on("change:id", this.render), 
+        return _.bindAll(this, "render"), this.listenTo(Karopapier.User, "change:id", this.render), 
         this;
+    },
+    events: {
+        submit: "sendMessage"
+    },
+    sendMessage: function(a) {
+        console.log(a), a.preventDefault(), console.log(a);
+        var b = $("#newchatmessage").val();
+        "" != b && ($.post("http://reloaded.karopapier.de/api/chat/message.json", {
+            msg: b
+        }, function() {
+            $("#newchatmessagesubmi").prop("disabled", !1);
+        }), $("#newchatmessagesubmi").prop("disabled", !0));
     },
     render: function() {
         return this.$el.html(0 != Karopapier.User.get("id") ? this.template(Karopapier.User.toJSON()) : "Nicht angemeldet"), 
