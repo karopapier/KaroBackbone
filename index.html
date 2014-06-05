@@ -7,6 +7,9 @@
         <script type="text/javascript" src="js/libs/backbone-min.js"></script>
         <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
         <script type="text/javascript" src="js/libs/backbone-model-factory-min.js"></script>
+        <script type="text/javascript" src="js/libs/TURTED.js"></script>
+        <script type="text/javascript" src="js/libs/sockjs-0.3.min.js"></script>
+
         <script type="text/javascript">
             var Karopapier = new Marionette.Application(); // currently only for Util.js to not throw an error
         </script>
@@ -85,6 +88,24 @@
                     model: Karopapier.User,
                     el: '#favicon'
                 })
+
+                var turted = new TURTED("http://ape.reloaded.karopapier.de/turted");
+                turted.ident(1,'Didi',"asdf");
+                turted.join("karochat");
+                turted.join("livelog");
+                turted.on("yourTurn", function (data) {
+                    console.log("yourTurn",data);
+                    var dran = Karopapier.User.get("dran");
+                    Karopapier.User.set("dran",dran++);
+                });
+                turted.on('youMoved', function (data) {
+                    console.log("youMoved",data);
+                    var dran = Karopapier.User.get("dran");
+                    Karopapier.User.set("dran",dran--);
+                });
+                turted.on('newChatMessage',function(data) {
+                    Karopapier.chatApp.chatMessageCollection.fetch();
+                });
             })
 
         </script>
