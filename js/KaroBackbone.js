@@ -1,4 +1,4 @@
-/*! KaroBackbone 2014-06-04 */
+/*! KaroBackbone 2014-06-05 */
 var ChatApp = Backbone.Marionette.Layout.extend({
     initialize: function() {
         this.layout = new ChatLayout({
@@ -12,7 +12,7 @@ var ChatApp = Backbone.Marionette.Layout.extend({
         }), this.chatControlView = new ChatControlView({
             model: this.configuration
         }), this.refreshMessages = setInterval(function() {
-            this.chatMessageCollection.fetch();
+            this.chatMessageCollection.fetch(), this.chatInfoView.updateTopBlocker();
         }.bind(this), 6e4);
     },
     render: function() {
@@ -361,9 +361,18 @@ var ChatApp = Backbone.Marionette.Layout.extend({
 }), User = Backbone.ModelFactory({
     defaults: {
         id: 0,
-        login: "Gast"
+        login: "Gast",
+        dran: 0
     },
-    initialize: function() {}
+    initialize: function() {
+        _.bindAll(this, "increaseDran", "decreaseDran");
+    },
+    increaseDran: function() {
+        this.set("dran", this.get("dran") + 1);
+    },
+    decreaseDran: function() {
+        this.set("dran", this.get("dran") - 1);
+    }
 });
 
 !function(a) {
@@ -465,13 +474,13 @@ var ViewSettings = Backbone.Model.extend({
             el: this.$("#chatUsers")
         }), this.chatUserCollection.on("add remove reset change", this.updateHabdich), this.model.on("change:id", this.updateInfos), 
         this.model.on("change:dran", this.updateInfos), this.blockerInterval = setInterval(this.updateDranInfo, 6e4), 
-        this.updateInfos();
+        this.blockerInterval = setInterval(this.updateTopBlocker, 6e4), this.updateInfos();
     },
     onClose: function() {
         clearInterval(this.blockerInterval);
     },
     updateInfos: function() {
-        this.updateDranInfo(), this.updateHabdich();
+        this.updateDranInfo(), this.updateHabdich(), this.updateTopBlocker();
     },
     updateDranInfo: function() {
         var a = this.model.get("id");
@@ -1067,8 +1076,15 @@ var ViewSettings = Backbone.Model.extend({
     },
     tagName: "span",
     initialize: function(a) {
-        this.options = _.defaults(a || {}, this.options), _.bindAll(this, "render"), this.model.on("change", this.render), 
+        this.options = _.defaults(a || {}, this.options), _.bindAll(this, "dranChange", "render"), 
+        this.model.on("change", this.render), this.listenTo(this.model, "change:dran", this.dranChange), 
         this.render();
+    },
+    dranChange: function(a, b) {
+        var c = this.model.previous("dran"), d = c > b ? "#00ff00" : "#ff0000";
+        this.$el.effect("highlight", {
+            color: d
+        });
     },
     render: function() {
         var a = "";

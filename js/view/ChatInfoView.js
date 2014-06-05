@@ -15,6 +15,7 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
         this.model.on("change:dran", this.updateInfos);
 
         this.blockerInterval = setInterval(this.updateDranInfo, 60000);
+        this.blockerInterval = setInterval(this.updateTopBlocker, 60000);
 
         this.updateInfos();
     },
@@ -24,6 +25,7 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
     updateInfos: function () {
         this.updateDranInfo();
         this.updateHabdich();
+        this.updateTopBlocker();
     },
     updateDranInfo: function () {
         var myId = this.model.get("id");

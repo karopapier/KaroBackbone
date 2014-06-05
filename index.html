@@ -3,6 +3,7 @@
     <head>
         <title></title>
         <script type="text/javascript" src="js/libs/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="js/libs/jquery-ui-1.10.4.custom.min.js"></script>
         <script type="text/javascript" src="js/libs/underscore-min.js"></script>
         <script type="text/javascript" src="js/libs/backbone-min.js"></script>
         <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
@@ -93,15 +94,12 @@
                 turted.ident(1,'Didi',"asdf");
                 turted.join("karochat");
                 turted.join("livelog");
-                turted.on("yourTurn", function (data) {
-                    console.log("yourTurn",data);
-                    var dran = Karopapier.User.get("dran");
-                    Karopapier.User.set("dran",dran++);
-                });
-                turted.on('youMoved', function (data) {
-                    console.log("youMoved",data);
-                    var dran = Karopapier.User.get("dran");
-                    Karopapier.User.set("dran",dran--);
+                turted.on('anyOtherMoved', function (data) {
+                    console.log("anyOtherMoved",data);
+                    var movedUser = new User({id: data.movedId, login: data.movedLogin})
+                    movedUser.decreaseDran();
+                    var nextUser = new User({id: data.nextId, login: data.nextLogin});
+                    nextUser.increaseDran();
                 });
                 turted.on('newChatMessage',function(data) {
                     Karopapier.chatApp.chatMessageCollection.fetch();
