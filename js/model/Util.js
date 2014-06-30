@@ -5,7 +5,6 @@
 
         text = text.replace(/((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi,function(url){
             nice = url;
-            console.log(nice);
             if( url.match('^https?:\/\/') ) {
                 nice = nice.replace(/^https?:\/\//i,'')
             } else {

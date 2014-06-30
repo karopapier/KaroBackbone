@@ -91,17 +91,17 @@
                 })
 
                 var turted = new TURTED("http://ape.reloaded.karopapier.de/turted");
-                turted.ident(1,'Didi',"asdf");
+                turted.ident(1, 'Didi', "asdf");
                 turted.join("karochat");
                 turted.join("livelog");
                 turted.on('anyOtherMoved', function (data) {
-                    console.log("anyOtherMoved",data);
+                    console.log("anyOtherMoved", data);
                     var movedUser = new User({id: data.movedId, login: data.movedLogin})
                     movedUser.decreaseDran();
                     var nextUser = new User({id: data.nextId, login: data.nextLogin});
                     nextUser.increaseDran();
                 });
-                turted.on('newChatMessage',function(data) {
+                turted.on('newChatMessage', function (data) {
                     Karopapier.chatApp.chatMessageCollection.fetch();
                 });
             })

@@ -23,10 +23,10 @@ var ChatApp = Backbone.Marionette.Layout.extend({
         });
 
         //dirty first poor man's refresh
-        this.refreshMessages = setInterval(function() {
+        this.refreshMessages = setInterval(function () {
             this.chatMessageCollection.fetch()
             this.chatInfoView.updateTopBlocker();
-        }.bind(this),60000);
+        }.bind(this), 60000);
     },
     render: function () {
         this.layout.chatMessages.show(this.chatMessagesView);

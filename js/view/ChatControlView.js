@@ -7,7 +7,8 @@ var ChatControlView = Backbone.View.extend({
         return this;
     },
     events: {
-        "submit": "sendMessage"
+        "submit": "sendMessage",
+        "change #messageLimit": "setLimit"
     },
     sendMessage: function (e) {
         console.log(e);
@@ -35,6 +36,10 @@ var ChatControlView = Backbone.View.extend({
             });
             $('#newchatmessagesubmit').prop("disabled", true);
         }
+    },
+    setLimit: function (e) {
+        var limit = $(e.currentTarget).val();
+        this.model.set("limit", limit);
     },
     render: function () {
         if (Karopapier.User.get("id") != 0) {

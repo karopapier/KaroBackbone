@@ -1,4 +1,4 @@
-/*! KaroBackbone 2014-06-24 */
+/*! KaroBackbone 2014-06-30 */
 var ChatApp = Backbone.Marionette.Layout.extend({
     initialize: function() {
         this.layout = new ChatLayout({
@@ -378,7 +378,7 @@ var ChatApp = Backbone.Marionette.Layout.extend({
 !function(a) {
     a.Util = {}, a.Util.linkify = function(a) {
         return a ? (a = a.replace(/((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi, function(a) {
-            return nice = a, console.log(nice), a.match("^https?://") ? nice = nice.replace(/^https?:\/\//i, "") : a = "http://" + a, 
+            return nice = a, a.match("^https?://") ? nice = nice.replace(/^https?:\/\//i, "") : a = "http://" + a, 
             '<a target="_blank" rel="nofollow" href="' + a + '">' + nice.replace(/^www./i, "") + "</a>";
         }), a = a.replace(/\banders\b/gi, ' <img style="opacity: .3" src="http://reloaded.karopapier.de/images/anders.jpg" alt="anders" title="anders" />'), 
         a = a.replace(/\bnen\b/gi, "einen"), a = a.replace(/img src="\/images\/smilies\/(.*?).gif" alt=/g, 'img src="http://www.karopapier.de/bilder/smilies/$1.gif" alt='), 
@@ -440,7 +440,8 @@ var ViewSettings = Backbone.Model.extend({
         this;
     },
     events: {
-        submit: "sendMessage"
+        submit: "sendMessage",
+        "change #messageLimit": "setLimit"
     },
     sendMessage: function(a) {
         console.log(a), a.preventDefault(), console.log(a);
@@ -461,6 +462,10 @@ var ViewSettings = Backbone.Model.extend({
                 console.error(b, a);
             }
         }), $("#newchatmessagesubmit").prop("disabled", !0));
+    },
+    setLimit: function(a) {
+        var b = $(a.currentTarget).val();
+        this.model.set("limit", b);
     },
     render: function() {
         return this.$el.html(0 != Karopapier.User.get("id") ? this.template(Karopapier.User.toJSON()) : "Nicht angemeldet"), 
@@ -525,6 +530,7 @@ var ViewSettings = Backbone.Model.extend({
     }
 }), ChatMessageView = Backbone.View.extend({
     tagName: "div",
+    className: "chatMessage",
     initialize: function() {
         _.bindAll(this, "render"), this.render();
     },

@@ -33,40 +33,40 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
         var html;
         $.getJSON('http://reloaded.karopapier.de/api/user/blockerlist.json?callback=?', function (bl) {
             blockerlist = bl;
-                var dran = this.model.get("dran");
-                if (dran == 0) {
-                    html = 'Du bist ein <a href="http://www.karopapier.de/karowiki/index.php/Nixblocker">Nixblocker</a>';
-                } else if (dran == 1) {
-                    html = '<a target="ibndran" href="http://www.karopapier.de/showgames.php?dranbin=' + myId + '">Bei einem Spiel dran</a>';
+            var dran = this.model.get("dran");
+            if (dran == 0) {
+                html = 'Du bist ein <a href="http://www.karopapier.de/karowiki/index.php/Nixblocker">Nixblocker</a>';
+            } else if (dran == 1) {
+                html = '<a target="ibndran" href="http://www.karopapier.de/showgames.php?dranbin=' + myId + '">Bei einem Spiel dran</a>';
+            } else {
+                html = '<a href="/dran" target="ibndran">Bei <strong>' + dran + '</strong> Spielen dran</a>';
+            }
+            $('#chatInfoDran').html(html)
+
+            var pos = 0;
+            if (blockerlist.length > 0) {
+                var l = blockerlist.length;
+                for (var i = 0; i < l; i++) {
+                    if (blockerlist[i].id == myId) {
+                        pos = i + 1;
+                        i = l + 100;
+                    }
+                }
+            }
+
+            html = "";
+            if (pos > 0) {
+                if (pos == 1) {
+                    html += "DU BIST DER <b>VOLLBLOCKER</b>";
+                } else if (pos == 2) {
+                    html += "DU BIST DER <b>VIZE-VOLLBLOCKER</b>";
                 } else {
-                    html = '<a href="/dran" target="ibndran">Bei <strong>' + dran + '</strong> Spielen dran</a>';
+                    html += 'Platz ' + pos + ' der <a href="/blocker">Blockerliste</a>';
                 }
-                $('#chatInfoDran').html(html)
+            }
 
-                var pos = 0;
-                if (blockerlist.length > 0) {
-                    var l = blockerlist.length;
-                    for (var i = 0; i < l; i++) {
-                        if (blockerlist[i].id == myId) {
-                            pos = i + 1;
-                            i = l + 100;
-                        }
-                    }
-                }
-
-                html = "";
-                if (pos > 0) {
-                    if (pos == 1) {
-                        html += "DU BIST DER <b>VOLLBLOCKER</b>";
-                    } else if (pos == 2) {
-                        html += "DU BIST DER <b>VIZE-VOLLBLOCKER</b>";
-                    } else {
-                        html += 'Platz ' + pos + ' der <a href="/blocker">Blockerliste</a>';
-                    }
-                }
-
-                //Check blocker list rank
-                $('#chatInfoBlockerRank').html(html);
+            //Check blocker list rank
+            $('#chatInfoBlockerRank').html(html);
         }.bind(this));
     },
     updateHabdich: function () {
