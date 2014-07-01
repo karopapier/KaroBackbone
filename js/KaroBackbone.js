@@ -1,4 +1,4 @@
-/*! KaroBackbone 2014-06-30 */
+/*! KaroBackbone 2014-07-01 */
 var ChatApp = Backbone.Marionette.Layout.extend({
     initialize: function() {
         this.layout = new ChatLayout({
@@ -373,13 +373,30 @@ var ChatApp = Backbone.Marionette.Layout.extend({
     decreaseDran: function() {
         this.set("dran", this.get("dran") - 1);
     }
-});
+}), YOUTUBE_CACHE = {};
 
 !function(a) {
     a.Util = {}, a.Util.linkify = function(a) {
-        return a ? (a = a.replace(/((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi, function(a) {
-            return nice = a, a.match("^https?://") ? nice = nice.replace(/^https?:\/\//i, "") : a = "http://" + a, 
-            '<a target="_blank" rel="nofollow" href="' + a + '">' + nice.replace(/^www./i, "") + "</a>";
+        return a ? (a = a.replace(/(?![^<]+>)((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi, function(b) {
+            var c = "", d = b, e = b;
+            if (b.match("^https?://") || (b = "http://" + b), b.match("youtube.com/.*v=.*")) {
+                console.log("Its a yt url", b);
+                var f = b.split("?").filter(function(a) {
+                    return "v=" == a.substr(0, 2);
+                })[0].split("=")[1];
+                console.log("Its a yt url", b, f), c += " yt_" + f;
+                var g = "https://www.googleapis.com/youtube/v3/videos?id=" + f + "&key=AIzaSyBuMu8QDh49VqGJo4cSS4_9pTC9cqZwy98&part=snippet";
+                if (f in YOUTUBE_CACHE) {
+                    var h = YOUTUBE_CACHE[f];
+                    d = '<img height="20" src="' + h.thumbnails.default.url + '" />' + h.title, e = h.description;
+                } else $.getJSON(g, function(a) {
+                    var b = a.items[0].snippet;
+                    YOUTUBE_CACHE[f] = b, d = '<img height="20" src="' + b.thumbnails.default.url + '" />' + b.title, 
+                    $("a.yt_" + f).attr("title", b.description).html(d);
+                });
+            } else b.match(".*.jpg") ? (console.log("Handling jpg url", b), d = '<img src="' + b + '" height="20" />') : (console.log("Handling default url", b, a), 
+            b.match("^https?://") && (d = d.replace(/^https?:\/\//i, ""), d = d.replace(/^www./i, "")));
+            return '<a class="' + c + '" title="' + e + '" target="_blank" rel="nofollow" href="' + b + '">' + d + "</a>";
         }), a = a.replace(/\banders\b/gi, ' <img style="opacity: .3" src="http://reloaded.karopapier.de/images/anders.jpg" alt="anders" title="anders" />'), 
         a = a.replace(/\bnen\b/gi, "einen"), a = a.replace(/img src="\/images\/smilies\/(.*?).gif" alt=/g, 'img src="http://www.karopapier.de/bilder/smilies/$1.gif" alt='), 
         a = a.replace(/GID[ =]([0-9]{3,6})/gi, function(a, b) {
