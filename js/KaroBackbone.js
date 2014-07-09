@@ -1,4 +1,4 @@
-/*! KaroBackbone 2014-07-08 */
+/*! KaroBackbone 2014-07-09 */
 var ChatApp = Backbone.Marionette.Layout.extend({
     initialize: function() {
         this.layout = new ChatLayout({
@@ -458,7 +458,7 @@ var ViewSettings = Backbone.Model.extend({
     },
     events: {
         submit: "sendMessage",
-        "change #messageLimit": "setLimit"
+        "click .messageLimit": "setLimit"
     },
     sendMessage: function(a) {
         console.log(a), a.preventDefault(), console.log(a);
@@ -481,7 +481,7 @@ var ViewSettings = Backbone.Model.extend({
         }), $("#newchatmessagesubmit").prop("disabled", !0));
     },
     setLimit: function(a) {
-        var b = $(a.currentTarget).val();
+        var b = parseInt($(a.currentTarget).text());
         this.model.set("limit", b);
     },
     render: function() {

@@ -1,11 +1,15 @@
 <div id="chatEnter">
-    Zeilen: <input id="messageLimit" type="range" name="points" min="1" max="100" value="10">
+    Zeilen:
+	<span class="messageLimit">10</span>
+	<span class="messageLimit">20</span>
+	<span class="messageLimit">50</span>
+	<span class="messageLimit">100</span>
     <!-- <input type="checkbox" id="autoscroll" checked="checked"> <label for="autoscroll">Scrollen?</label>
     <input type="checkbox" id="showBotrixGames"> <label for="showBotrixGames"> Botrix Spielanfragen anzeigen</label> -->
 
     <form id="chatEnterForm">
         <span id="chatUserName"><%= login %>: </span>
-        <input type="text" name="newchatmessage" id="newchatmessage" style="width: 400px" />
+        <input type="text" name="newchatmessage" id="newchatmessage" style="width: 300px" />
         <input type="submit" value="Sag es" id="newchatmessagesubmit" />
     </form>
 </div>

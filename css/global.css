@@ -47,12 +47,19 @@ div.clearer {
 }
 
 .karoborder {
-    border-style: dashed;
-    border-width: 26px 30px;
-    border-color: lightblue;
-    -moz-border-image: url("images/borderImage.png") 26 30 repeat;
-    -webkit-border-image: url("images/borderImage.png") 26 30 repeat;
-    -o-border-image: url("images/borderImage.png") 26 30 repeat;
-    border-image: url("images/borderImage.png") 26 30 repeat;
-    behavior: url(/js/libs/PIE-1.0.0/PIE.htc);
+	border-style: solid;
+	border-width: 2px;
+	border-color: blue;
+}
+
+@media all and (min-width: 480px) {
+	.karoborder {
+		border-style: solid;
+		border-width: 26px 30px;
+		-moz-border-image: url("images/borderImage.png") 26 30 repeat;
+		-webkit-border-image: url("images/borderImage.png") 26 30 repeat;
+		-o-border-image: url("images/borderImage.png") 26 30 repeat;
+		border-image: url("images/borderImage.png") 26 30 repeat;
+		behavior: url(/js/libs/PIE-1.0.0/PIE.htc);
+	}
 }

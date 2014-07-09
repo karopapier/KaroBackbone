@@ -8,7 +8,7 @@ var ChatControlView = Backbone.View.extend({
     },
     events: {
         "submit": "sendMessage",
-        "change #messageLimit": "setLimit"
+        "click .messageLimit": "setLimit"
     },
     sendMessage: function (e) {
         console.log(e);
@@ -38,7 +38,7 @@ var ChatControlView = Backbone.View.extend({
         }
     },
     setLimit: function (e) {
-        var limit = $(e.currentTarget).val();
+        var limit = parseInt($(e.currentTarget).text());
         this.model.set("limit", limit);
     },
     render: function () {
