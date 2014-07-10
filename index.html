@@ -41,22 +41,6 @@
 
         <script type="text/javascript">
 
-            var DumbView = Backbone.View.extend({
-                template: window["JST"]["dumbview"],
-                initialize: function () {
-                    _.bindAll(this, "render");
-                    return this;
-                },
-                render: function () {
-                    console.log("Rendering dumb view");
-                    this.$el.html(this.template({adjective: "nice"}));
-                    return this;
-                }
-            })
-
-            var dumbView = new DumbView();
-
-
             Karopapier.addInitializer(function (options) {
                 // do useful stuff here
                 console.log("Initializer der App");
