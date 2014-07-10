@@ -1,4 +1,4 @@
-/*! KaroBackbone 2014-07-09 */
+/*! KaroBackbone 2014-07-10 */
 var ChatApp = Backbone.Marionette.Layout.extend({
     initialize: function() {
         this.layout = new ChatLayout({
@@ -405,7 +405,9 @@ var ChatApp = Backbone.Marionette.Layout.extend({
             }), '<a class="GidLink' + b + '" href="http://www.karopapier.de/showmap.php?GID=' + b + '" target="_blank">' + b + "</a>";
         })) : a;
     };
-}(Karopapier);
+}(Karopapier), "".trim || (String.prototype.trim = function() {
+    return this.replace(/^[\s\uFEFF]+|[\s\uFEFF]+$/g, "");
+});
 
 var ViewSettings = Backbone.Model.extend({
     defaults: {
@@ -553,8 +555,10 @@ var ViewSettings = Backbone.Model.extend({
     },
     render: function() {
         var a = this.model.get("text");
-        return this.$el.html(a), a = this.$el.text(), a = Karopapier.Util.linkify(a), this.$el.attr("id", this.model.get("id")).html("<b>" + this.model.get("user") + "</b> (" + this.model.get("time") + "): " + a), 
-        this;
+        this.$el.html(a), a = this.$el.text(), a = Karopapier.Util.linkify(a);
+        var b = "";
+        return "" !== this.model.get("user").trim() && (b += "<b>" + this.model.get("user") + "</b> (" + this.model.get("time") + "): "), 
+        console.log(b), b += a, this.$el.attr("id", this.model.get("id")).html(b), this;
     }
 }), ChatMessagesView = Backbone.View.extend({
     tagName: "div",

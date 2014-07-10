@@ -71,3 +71,5 @@ var YOUTUBE_CACHE = {};
         return text;
     }
 }(Karopapier));
+
+''.trim||(String.prototype.trim=function(){return this.replace(/^[\s\uFEFF]+|[\s\uFEFF]+$/g,'')});
