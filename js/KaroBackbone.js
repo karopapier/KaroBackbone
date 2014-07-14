@@ -1,5 +1,6 @@
-/*! KaroBackbone 2014-07-10 */
+/*! KaroBackbone 2014-07-14 */
 var ChatApp = Backbone.Marionette.Layout.extend({
+    className: "chatApp",
     initialize: function() {
         this.layout = new ChatLayout({
             el: this.el
@@ -492,6 +493,7 @@ var ViewSettings = Backbone.Model.extend({
     }
 }), ChatInfoView = Backbone.Marionette.ItemView.extend({
     tagName: "div",
+    className: "chatInfoView",
     template: window.JST["chat/chatInfo"],
     initialize: function() {
         _.bindAll(this, "updateInfos", "updateTopBlocker", "updateHabdich", "updateDranInfo", "render"), 
@@ -558,7 +560,7 @@ var ViewSettings = Backbone.Model.extend({
         this.$el.html(a), a = this.$el.text(), a = Karopapier.Util.linkify(a);
         var b = "";
         return "" !== this.model.get("user").trim() && (b += "<b>" + this.model.get("user") + "</b> (" + this.model.get("time") + "): "), 
-        console.log(b), b += a, this.$el.attr("id", this.model.get("id")).html(b), this;
+        b += a, this.$el.attr("id", this.model.get("id")).html(b), this;
     }
 }), ChatMessagesView = Backbone.View.extend({
     tagName: "div",

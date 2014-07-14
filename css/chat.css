@@ -7,6 +7,9 @@
     overflow-y: scroll;
     /* min-height: 480px; */
     min-width: 320px;
+    margin-bottom: 20px;
+    min-height: 400px;
+    max-height: 600px;
 }
 
 #chatInfo {
@@ -33,7 +36,8 @@
 
 .chatUsersView {
     list-style: none;
-    line-height: 14px;
+    line-height: 18px;
+    font-size: 10pt;
 }
 
 #chatEnter {
@@ -42,4 +46,8 @@
 
 div.chatMessage {
     line-height: 18px;
+}
+
+small.chatInfo {
+    font-size: .7em;
 }

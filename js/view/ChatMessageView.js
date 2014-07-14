@@ -16,7 +16,6 @@ var ChatMessageView = Backbone.View.extend({
         if (this.model.get("user").trim()!=="") {
             html+= "<b>" + this.model.get("user") + "</b> (" + this.model.get("time") + "): ";
         }
-        console.log(html);
         html += text;
         this.$el.attr("id", this.model.get("id")).html(html);
         return this;

@@ -1,5 +1,6 @@
 var ChatInfoView = Backbone.Marionette.ItemView.extend({
     tagName: "div",
+    className: "chatInfoView",
     template: window["JST"]["chat/chatInfo"],
     initialize: function () {
         _.bindAll(this, "updateInfos", "updateTopBlocker", "updateHabdich", "updateDranInfo", "render");
