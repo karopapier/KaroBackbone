@@ -1100,6 +1100,22 @@ var ViewSettings = Backbone.Model.extend({
             console.info("NEUE SPIELER"), this.render();
         }, this);
     }
+}), UserInfoBar = Backbone.View.extend({
+    id: "userInfoBar",
+    tagName: "div",
+    template: window.JST["global/userInfoBar"],
+    initialize: function() {
+        _.bindAll(this, "render"), this.userView = new UserView({
+            model: this.model,
+            withGames: !0,
+            withAnniversary: !0,
+            withDesperation: !1
+        }), this.listenTo(this.model, "change", this.render);
+    },
+    render: function() {
+        return 0 != this.model.get("id") ? (this.$el.html(this.userView.$el), this.$el.append(this.template())) : this.$el.html("Nicht angemeldet"), 
+        this;
+    }
 }), UserView = Backbone.View.extend({
     options: {
         withAnniversary: !0,

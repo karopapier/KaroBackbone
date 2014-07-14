@@ -4,3 +4,9 @@
     background-position: -4px 0px;
     height: 51px;
 }
+
+#userInfoBar {
+    float: right;
+    margin-right: 10px;
+    margin-top: 20px;
+}

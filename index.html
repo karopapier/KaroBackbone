@@ -75,6 +75,11 @@
                     el: '#favicon'
                 })
 
+                var infoBar = new UserInfoBar({
+                    model: Karopapier.User
+                });
+                Karopapier.header.show(infoBar);
+
                 var turted = new TURTED("http://ape.reloaded.karopapier.de/turted");
                 turted.ident(1, 'Didi', "asdf");
                 turted.join("karochat");
