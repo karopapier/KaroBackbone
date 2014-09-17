@@ -1,22 +1,23 @@
 #chatWrapper {
     /* padding-right: 15em; */
+    z-index: 20;
 }
 
 #chatMessages {
     width: 100%;
-    overflow-y: scroll;
-    /* min-height: 480px; */
-    min-width: 320px;
     margin-bottom: 20px;
-    min-height: 400px;
-    max-height: 600px;
 }
 
+/* mobile mode*/
 #chatInfo {
     width: 15em;
     min-width: 15em;
-    /* margin-right: -15em; */
     overflow: auto;
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
 }
 
 @media all and (min-width: 630px) {
@@ -26,11 +27,19 @@
 
     #chatMessages {
         float: left;
+        overflow-y: scroll;
+        /* min-height: 480px; */
+        min-width: 320px;
+        min-height: 400px;
+        max-height: 600px;
     }
 
     #chatInfo {
         margin-right: -15em;
+        position: static;
         float: right;
+        display: block;
+        z-index: 21;
     }
 }
 
