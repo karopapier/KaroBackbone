@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Karopapier 2.1</title>
+        <script type="text/javascript" src="js/libs/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="js/libs/jquery-ui-1.10.4.custom.min.js"></script>
+        <script type="text/javascript" src="js/libs/underscore-min.js"></script>
+        <script type="text/javascript" src="js/libs/hammer.min.js"></script>
+        <script type="text/javascript" src="js/libs/touch-emulator.js"></script>
+        <script> TouchEmulator(); </script>
+
+        <link id="favicon" rel="shortcut icon" href="favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                var myOptions = {};
+                var hammertime = new Hammer(document.body, myOptions);
+                //hammertime.get('pan').set("direction", DIRECTION_HORIZONTAL);
+                //beim dragstart am rechten rand einblenden, wenn ueber gewisse breite reingeholt und drag end stehen lassen, sonst wieder rausfahren0
+                hammertime.on('panleft', function (e) {
+                    console.log(e);
+                    e.preventDefault();
+                    $('#chatInfo').css({
+                        left: e.center.x,
+                        top: $(document).scrollTop(),
+                    }).show();
+                });
+                hammertime.on('panright', function (ev) {
+                    console.log(ev);
+                    ev.preventDefault();
+                    $('#chatInfo').hide();
+                });
+            })
+
+        </script>
+        <script type="text/javascript" src="js/libs/pomacolo.min.js"></script>
+    </body>
+</html>
