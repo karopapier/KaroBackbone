@@ -91,34 +91,95 @@
         However, welcomed content and interim certificate will record us to support successfully throughout the coming
         discussion: Focusing on box retail with distributing attention, please find attached coherences describing
         approach choice and legal workaround.
-        <div id="sidebar" style="background-color: yellow; position: absolute; display: none; height: 400px; width: 200px">
+        <div id="sidebar"
+             style="background-color: yellow; position: absolute; display: none; height: 400px; width: 200px">
 
         </div>
 
         <script type="text/javascript">
-            var isActive=false;
+            var isActive = false;
+            var isVisible = false;
+            var dw = $(document).width();
+            var sw = $('#sidebar').width();
+
             function sideStart(e) {
+                var borderPercent = .2;
+                var x = e.center.x;
+                var b = dw * (1 - borderPercent);
+
                 console.log(e.type + " " + e.center.x);
-                isActive=(e.center.x > 300);
-                if (isActive) {
-                    $('#sidebar').show().css({
-                        top: $(document).scrollTop()
-                    });
-                }
-            }
-            function sideDrag(e) {
-                if (isActive) {
+                console.log(x + " > " + b);
+
+                isActive = (x > dw * (1 - borderPercent));
+                if (isActive || isVisible) {
                     $('#sidebar').css({
-                        left: e.center.x
-                    });
-                    console.log(e.type + " " + e.center.x);
-                    console.log("first" +e.isFirst);
-                    e.preventDefault();
+                        left: x,
+                        top: $(document).scrollTop()
+                    }).show();
+                    isVisible = true;
                 }
             }
+
+            function sideDrag(e) {
+                if (isVisible || isActive) {
+                    var x = (dw - sw);
+                    var ex = e.center.x;
+                    //only pull out max width
+                    if (ex > x) {
+                        x = ex
+                    }
+
+                    $('#sidebar').css({
+                        left: x
+                    });
+                    console.log(e.type + " " + x);
+                    e.preventDefault();
+                } else {
+                    console.log("IGNORE");
+                }
+            }
+
             function sideEnd(e) {
+                if (!(isActive||isVisible)) {
+                    return true;
+                }
+
+                //only if active
                 console.log(e.type + " " + e.center.x);
                 isActive = false;
+                var x = e.center.x;
+                var openedPos = dw - sw;
+                var closedPos = dw;
+
+                //default closed
+                var l = closedPos;
+
+                //now fully open or close?
+                //was it moved out more then half way?
+                if (x < (dw - sw / 2)) {
+                    //open it
+                    l = openedPos;
+                }
+
+                //now high velocity overrules
+                var v = e.velocityX;
+                //positive x velo is right to left
+                if (Math.abs(v) > 1) {
+                    if (v > 0) {
+                        l = openedPos;
+                    } else {
+                        l = closedPos;
+                    }
+
+                }
+                console.log("close velo: " + e.velocity + " X: " + e.velocityX);
+
+                $('#sidebar').animate({
+                    left: l
+                });
+                console.log(l, openedPos);
+                isVisible = (l == openedPos);
+                console.log("Now act, vis", isActive, isVisible);
             }
 
             $(document).ready(function () {
