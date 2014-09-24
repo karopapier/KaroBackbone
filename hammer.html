@@ -92,7 +92,7 @@
         discussion: Focusing on box retail with distributing attention, please find attached coherences describing
         approach choice and legal workaround.
         <div id="sidebar"
-             style="background-color: yellow; position: absolute; display: none; height: 400px; width: 200px">
+             style="background-color: yellow; position: fixed; display: none; height: 400px; width: 200px; top:0">
 
         </div>
 
@@ -113,8 +113,7 @@
                 isActive = (x > dw * (1 - borderPercent));
                 if (isActive || isVisible) {
                     $('#sidebar').css({
-                        left: x,
-                        top: $(document).scrollTop()
+                        left: x
                     }).show();
                     isVisible = true;
                 }
@@ -164,7 +163,7 @@
                 //now high velocity overrules
                 var v = e.velocityX;
                 //positive x velo is right to left
-                if (Math.abs(v) > 1) {
+                if (Math.abs(v) > .5) {
                     if (v > 0) {
                         l = openedPos;
                     } else {
@@ -179,6 +178,9 @@
                 });
                 console.log(l, openedPos);
                 isVisible = (l == openedPos);
+				if (!isVisible) {
+					$('#sidebar').hide();
+				}
                 console.log("Now act, vis", isActive, isVisible);
             }
 
@@ -194,6 +196,6 @@
                 hammertime.on("panend", sideEnd);
             })
         </script>
-        <script type="text/javascript" src="js/libs/pomacolo.min.js"></script>
+        <!-- <script type="text/javascript" src="js/libs/pomacolo.min.js"></script> -->
     </body>
 </html>
