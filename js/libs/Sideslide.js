@@ -1,103 +1,136 @@
 var Sideslide = function (el, options) {
+        var me = this;
         options = options || {};
-        this.el = el;
-        this.$el = $(el);
-        this.borderPercent = .2;
-        this.dw = $(document).width();
-        this.sw = this.$el.width();
-        this.isActive = false;
-        this.isVisible = false;
-        this.side = options.side || "right";
-        this.rightSide = this.side == "right";
-        this.x = 0;
+        me.el = el;
+        me.$el = $(el);
+        me.borderPercent = .2;
+        me.isActive = false;
+        me.isVisible = false;
+        me.side = options.side || "right";
+        me.rightSide = (me.side == "right");
+        me.x = 0;
 
-        this.slideIn = function () {
-            if (this.rightSide) {
-                this.$el.animate({
-                    left: this.dw - this.sw
-                });
-            } else {
-                this.$el.animate({
-                    left: 0
-                });
-            }
-            //this.$el.hide();
-            console.log("DA");
-        };
-
-        this.slideOut = function () {
-            if (this.rightSide) {
-                this.$el.animate({
-                    left: -this.sw
-                })
-            } else {
-                this.$el.animate({
-                    left: this.dw
-                })
-            }
-            console.log("WEG");
-        };
-
-        this.slideTo = function (x) {
-            if (!this.rightSide) {
-                x = x - this.sw;
-            }
-            this.$el.css({
-                left: x
-            });
-        };
-
-        this.isPulledOut = function () {
-            return (this.x < this.dw - (this.sw / 2));
+        me.recalc = function () {
+            me.dw = $(document).width();
+            me.sw = me.$el.width();
         }
 
-        this.handleStart = function (e) {
+        me.rotate = function () {
+            console.log("Rotating, " + me.el.id + " isVisible " + me.isVisible);
+            me.recalc();
+            if (me.isVisible) {
+                console.log("OPEN", me.el.id);
+                me.slideTo(me.openX());
+            } else {
+                console.log("CLOSE", me.el.id);
+                me.slideOut();
+            }
+        }
+
+        me.recalc();
+
+        me.openX = function () {
+            console.log(me.el.id + "is right: " + me.rightSide);
+            if (me.rightSide) {
+                return me.dw - me.sw
+            } else {
+                return me.sw;
+            }
+        }
+
+        me.closeX = function () {
+            if (me.rightSide) {
+                return me.dw
+            } else {
+                return 0;
+            }
+        }
+
+        me.slideIn = function () {
+            me.slideTo(me.openX(),true);
+            console.log("DA " + me.el.id);
+            me.isVisible = true;
+        };
+
+        me.slideOut = function () {
+            me.slideTo(me.closeX(), true);
+            console.log("WEG " + me.el.id);
+            me.isVisible = false;
+            me.$el.hide();
+        };
+
+        me.slideTo = function (x, animate) {
+            animate = animate || false;
+            if (!me.rightSide) {
+                x = x - me.sw;
+            }
+            if (animate) {
+                me.$el.animate({
+                    left: x
+                })
+            } else {
+                me.$el.css({
+                    left: x
+                });
+            }
+            console.log("Slide to " + x);
+        };
+
+        me.isPulledOut = function () {
+            if (me.rightSide) {
+                return (me.x < me.dw - (me.sw / 2));
+            } else {
+                return (me.x > (me.sw / 2));
+            }
+
+        }
+
+        me.handleStart = function (e) {
             var x = e.center.x;
-            var b = this.dw * (1 - this.borderPercent);
+            var b = me.dw * (1 - me.borderPercent);
 
             console.log(e.type + " " + e.center.x);
             console.log(x + " > " + b);
 
-            if (this.rightSide) {
-                this.isActive = (x > this.dw * (1 - this.borderPercent));
+            if (me.rightSide) {
+                me.isActive = (x > me.dw * (1 - me.borderPercent));
             } else {
-                this.isActive = (x < this.dw * this.borderPercent);
+                me.isActive = (x < me.dw * me.borderPercent);
             }
-            if (this.isActive || this.isVisible) {
-                this.$el.show();
-                this.slideTo.call(this, x);
-                this.isVisible = true;
+            if (me.isActive || me.isVisible) {
+                me.$el.show();
+                me.slideTo(x);
+                me.isVisible = true;
             }
         };
 
-        this.handleDrag = function (e) {
-            if (this.isVisible || this.isActive) {
+        me.handleDrag = function (e) {
+            if (me.isVisible || me.isActive) {
                 var x = e.center.x;
                 //only pull out max width
-                if (this.rightSide) {
-                    if (x < this.dw-this.sw) {
-                        x = this.dw-this.sw;
+                if (me.rightSide) {
+                    if (x < me.dw - me.sw) {
+                        x = me.dw - me.sw;
                     }
                 } else {
-                    if (x > this.sw) {
-                        x = this.sw
+                    if (x > me.sw) {
+                        x = me.sw
                     }
                 }
-                this.x = x;
-                this.slideTo.call(this, x);
-                console.log(e.type + " " + x);
+                me.x = x;
+                me.slideTo(x);
                 e.preventDefault();
             }
         };
 
-        this.handleEnd = function (e) {
-            if (!(this.isActive || this.isVisible)) {
+        me.handleEnd = function (e) {
+            if (!(me.isActive || me.isVisible)) {
                 return true;
             }
 
             //only if active
             console.log(e.type + " " + e.center.x);
-            this.isActive = false;
+            me.isActive = false;
             var x = e.center.x;
 
             //default closed
@@ -105,7 +138,7 @@ var Sideslide = function (el, options) {
 
             //now fully open or close?
             //was it moved out more then half way?
-            if (this.isPulledOut()) {
+            if (me.isPulledOut()) {
                 //open it
                 endOpen = true;
             }
@@ -114,24 +147,30 @@ var Sideslide = function (el, options) {
             var v = e.velocityX;
             //positive x velo is right to left
             if (Math.abs(v) > .5) {
-                endOpen = (v > 0);
+                if (me.rightSide) {
+                    endOpen = (v > 0);
+                } else {
+                    endOpen = (v < 0);
+                }
             }
             if (endOpen) {
-                this.slideOut();
+                me.slideIn();
             } else {
-                this.slideIn();
+                me.slideOut();
             }
-            console.log("Now act, vis", this.isActive, this.isVisible);
+            console.log("Now " + me.el.id + " act, vis", me.isActive, me.isVisible);
         }
 
 //init
         var hammerOptions = {};
         var hammertime = new Hammer(document.body, hammerOptions);
         hammertime.get('pan').set({direction: Hammer.DIRECTION_HORIZONTAL});
-        hammertime.on("press", this.handleStart.bind(this));
-        hammertime.on("panstart", this.handleStart.bind(this));
-        hammertime.on('pan', this.handleDrag.bind(this));
-        hammertime.on("panend", this.handleEnd.bind(this));
+        hammertime.on("press", me.handleStart);
+        hammertime.on("panstart", me.handleStart);
+        hammertime.on('pan', me.handleDrag);
+        hammertime.on("panend", me.handleEnd);
 
+        var supportsOrientationChange = "onorientationchange" in window, orientationEvent = supportsOrientationChange ? "orientationchange" : "resize";
+        window.addEventListener(orientationEvent, me.rotate);
     }
     ;
