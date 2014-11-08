@@ -18,12 +18,17 @@ var YOUTUBE_CACHE = {};
             }
 
             //special handdling: youtube
-            if (url.match('youtube.com/.*v=.*')) {
-                console.log("Its a yt url", url);
+            if (url.match('youtube.com/.*v=.*') || url.match('youtu.be/.*')) {
+                //console.log("Its a yt url", url);
+				try {
                 var videoid = url.split("?").filter(function (part) {
                     return part.substr(0, 2) == "v=";
                 })[0].split("=")[1];
-                console.log("Its a yt url", url, videoid);
+				} catch (err) {
+					//console.log("Try yt");
+					var videoid = url.split("tu\.be/")[1];
+				}
+                //console.log("Its a yt url", url, videoid);
                 className += " yt_" + videoid;
                 var yt_url = 'https://www.googleapis.com/youtube/v3/videos?id=' + videoid + '&key=AIzaSyBuMu8QDh49VqGJo4cSS4_9pTC9cqZwy98&part=snippet';
                 if (videoid in YOUTUBE_CACHE) {
@@ -31,6 +36,7 @@ var YOUTUBE_CACHE = {};
                     linktext = '<img height="20" src="' + snippet.thumbnails.default.url + '" />' + snippet.title;
                     linktitle = snippet.description;
                 } else {
+					//console.log(yt_url);
                     $.getJSON(yt_url, function (data) {
                         var snippet = data.items[0].snippet;
                         YOUTUBE_CACHE[videoid] = snippet;
@@ -38,7 +44,7 @@ var YOUTUBE_CACHE = {};
                         $('a.yt_' + videoid).attr("title", snippet.description).html(linktext);
                     });
                 }
-            } else if (url.match('.*\.jpg')) {
+            } else if (url.match('.*\.(jpg|gif|png)')) {
                 console.log("Handling jpg url", url);
                 linktext = '<img src="' + url + '" height="20" />';
             } else {
