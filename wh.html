@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Karopapier 2.1</title>
+        <script type="text/javascript" src="js/libs/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="js/libs/jquery-ui-1.10.4.custom.min.js"></script>
+        <script type="text/javascript" src="js/libs/underscore-min.js"></script>
+        <script type="text/javascript" src="js/libs/hammer.min.js"></script>
+
+        <link id="favicon" rel="shortcut icon" href="favicon.ico"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+        <meta charset="utf-8"/>
+		<style>
+			#pomacolo { background-color: #ffffff}
+		</style>
+    </head>
+    <body>
+		<div id="debug" style="width: 100%"></div>
+		<div id="drag"></div>
+		<div id="dot" style="position: absolute; left: 0; top: 0; width: 10px; height: 10px; background-color: red"></div>
+        <script type="text/javascript">
+		var debugprint = function(s) {
+			$('#debug').append(s + "<br>");
+		}
+
+            $(document).ready(function () {
+
+        var recalc = function () {
+			var ori = window.orientation || 0;
+			var dpr = window.devicePixelRatio || 0;
+			$('#debug').text("");
+			debugprint("Orient " + ori);
+			debugprint("wW wH " + $(window).width() + " " + $(window).height());
+			debugprint("dW dH " + $(document).width() + " " + $(document).height());
+			debugprint("iW iH " + window.innerWidth + " " + window.innerHeight);
+			debugprint("sW sH " + screen.width + " " + screen.height);
+			debugprint("ratio " + dpr);
+			debugprint("sw / r " + screen.width / dpr);
+			debugprint("sh / r " + screen.height / dpr);
+			var dotpos = $('#dot').css({ right: 0, left:''}).offset().left + $('#dot').width();
+			debugprint("dotpos " + dotpos);
+        }
+
+        var rotate = function () {
+            recalc();
+        }
+
+        var handleDrag = function (e) {
+                var x = e.center.x;
+                var y = e.center.y;
+				$('#drag').text(x + "|" + y);
+				$('#dot').css({left: x, top: y});
+                e.preventDefault();
+        };
+
+        var hammerOptions = {};
+        var hammertime = new Hammer(document.body, hammerOptions);
+        hammertime.get('pan').set({direction: Hammer.DIRECTION_HORIZONTAL});
+        hammertime.on('pan', handleDrag);
+        hammertime.on('press', handleDrag);
+
+        var supportsOrientationChange = "onorientationchange" in window, orientationEvent = supportsOrientationChange ? "orientationchange" : "resize";
+        window.addEventListener(orientationEvent, function() {
+			setTimeout(function() {
+				rotate();
+			},500);
+		});
+
+		recalc();
+            })
+        </script>
+    </body>
+</html>

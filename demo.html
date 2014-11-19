@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Panzoom for jQuery</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+	  html {height:100%}
+      body { background: #F5FCFF; color: #333666; }
+      section { text-align: center; margin: 50px 0; }
+      .panzoom-parent { border: 2px solid #333; }
+      .panzoom-parent .panzoom { border: 2px dashed #666; }
+      .buttons { margin: 40px 0 0; }
+    </style>
+    <script src="js/libs/jquery-1.11.0.min.js"></script>
+    <script src="js/libs/jquery.panzoom.min.js"></script>
+    <script src="js/libs/jquery.mousewheel.min.js"></script>
+  </head>
+  <body>
+      <div id="container">
+        <div class="map">
+          <img src="http://blog.millermedeiros.com/wp-content/uploads/2010/04/awesome_tiger.svg" width="900" height="900">
+        </div>
+      </div>
+      <script>
+        (function() {
+          var $panzoom = $('#container').panzoom()
+
+          $('#container').on('mousewheel.focal', function( e ) {
+            e.preventDefault();
+            var delta = e.delta || e.originalEvent.wheelDelta;
+            var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
+            $panzoom.panzoom('zoom', zoomOut, {
+              increment: 0.1,
+              animate: false,
+              focal: e
+            });
+          });
+        })();
+      </script>
+  </body>
+</html>
