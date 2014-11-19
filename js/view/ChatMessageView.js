@@ -20,4 +20,4 @@ var ChatMessageView = Backbone.View.extend({
         this.$el.attr("id", this.model.get("id")).html(html);
         return this;
     }
-})
+});

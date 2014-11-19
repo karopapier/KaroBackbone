@@ -46,14 +46,16 @@ module.exports = function (grunt) {
                 files: ['js/**/*.js', '!js/<%= pkg.name %>*.js'],
                 tasks: ['uglify'],
                 options: {
-                    interrupt: true
+                    interrupt: true,
+                    livereload: true
                 }
             },
             templates: {
                 files: ['js/templates/**/*.html', 'js/templates/**/*.tpl'],
                 tasks: ['jst'],
                 options: {
-                    interrupt: true
+                    interrupt: true,
+                    livereload: true
                 }
             }
         }

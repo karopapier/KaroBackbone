@@ -5,8 +5,8 @@ var ChatUsersView = Backbone.View.extend({
         _.bindAll(this, "render", "addItem", "delItem");
         this.collection.on("reset", this.render);
         this.collection.fetch({reset: true});
-        this.collection.on("add", this.addItem)
-        this.collection.on("remove", this.delItem)
+        this.collection.on("add", this.addItem);
+        this.collection.on("remove", this.delItem);
     },
     addItem: function (user) {
         var chatUserView = new UserView({
@@ -30,4 +30,4 @@ var ChatUsersView = Backbone.View.extend({
         }.bind(this));
         return this;
     }
-})
+});
