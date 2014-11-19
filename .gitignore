@@ -1,3 +1,6 @@
 .idea
 *.php
 node_modules
+js/KaroBackbone.*
+js/templates/JST.js
+
