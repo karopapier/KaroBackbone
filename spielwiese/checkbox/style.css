@@ -1,0 +1,15 @@
+.cb input {
+    display: none
+}
+
+.cb label::after {
+    content:url("checkbox_unchecked.png")
+}
+
+.cb input:checked+label::after {
+    content:url("checkbox_checked.png")}
+
+.cb {
+    background-color: white
+}
+
