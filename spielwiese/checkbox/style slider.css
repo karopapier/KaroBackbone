@@ -1,0 +1,67 @@
+.cb {
+    display: block;
+    margin-left: 10px;
+    box-shadow: inset 0px 0px 5px rgba(0,0,0,.3);
+    width: 44px;
+    height: 44px;
+    position: relative
+}
+
+
+.cb input {
+    display: none;
+}
+
+.cb label.cb_bulb {
+   background-image: url(slider_bulb.jpg);
+}
+
+.cb label.cb_smile {
+   background-image: url(slider_smile.jpg);
+}
+
+.cb label.cb_onoff {
+   background-image: url(slider_onoff.jpg);
+}
+
+.cb label.cb_check {
+   background-image: url(slider_check.jpg);
+}
+
+.cb label {
+    display: block;
+    position: absolute;
+    top:2px;
+    left: 2px;
+    width: 40px;
+    height: 40px;
+    background-image: url(slider_smile.jpg);
+    background-repeat:no-repeat;
+    background-position:-48px;    
+    transition:background-position 500ms ease;
+}
+
+.cb input:checked+label {
+    background-position:-8px;    
+}
+
+.cb label::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top:0px;
+    left: 80px;
+    width: 200px;
+    height: 40px;
+    box-shadow: -3px 0px 3px -3px rgba(0,0,0,.3);
+    background-image: url(slider_smile.jpg);
+    background-repeat:no-repeat;
+    background-position:-128px;    
+    -webkit-transition:background-position 1s ease;
+    transition:background-position 500ms ease;
+}
+
+.cb input:checked+label::after {
+    background-position:-88px;    
+}
+
