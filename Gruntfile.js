@@ -1,5 +1,4 @@
 module.exports = function (grunt) {
-
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -57,6 +56,13 @@ module.exports = function (grunt) {
                     interrupt: true,
                     livereload: true
                 }
+            },
+            spielwiese: {
+                files: ['spielwiese/**/*'],
+                options: {
+                    interrupt: true,
+                    livereload: true
+                }
             }
         }
     });
@@ -69,5 +75,6 @@ module.exports = function (grunt) {
     // Default task(s).
     grunt.registerTask('default', ['uglify', 'jst', 'watch']);
     //grunt.registerTask('guck', ['watch']);
+    grunt.registerTask('spielwiese', ['spielwiese']);
 
 };

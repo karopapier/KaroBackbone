@@ -28,6 +28,10 @@
    background-image: url(slider_check.jpg);
 }
 
+.cb label.cb_lights {
+   background-image: url(slider_lights.jpg);
+}
+
 .cb label {
     display: block;
     position: absolute;
@@ -64,4 +68,3 @@
 .cb input:checked+label::after {
     background-position:-88px;    
 }
-
