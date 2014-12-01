@@ -8,6 +8,10 @@
     margin-bottom: 20px;
 }
 
+.chatInfoView {
+    padding-left: 20px;
+}
+
 /* mobile mode*/
 #chatInfo {
     width: 15em;
@@ -48,6 +52,7 @@
     list-style: none;
     line-height: 18px;
     font-size: 10pt;
+    padding-left: 0;
 }
 
 #chatEnter {

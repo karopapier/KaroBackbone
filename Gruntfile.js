@@ -57,6 +57,13 @@ module.exports = function (grunt) {
                     livereload: true
                 }
             },
+            statics: {
+                files: ['**/*.html', 'css/**/*', 'images/**/*'],
+                options: {
+                    interrupt: true,
+                    livereload: true
+                }
+            },
             spielwiese: {
                 files: ['spielwiese/**/*'],
                 options: {

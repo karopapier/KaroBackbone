@@ -53,7 +53,6 @@
             });
 
             $(document).ready(function () {
-
                 console.log("Doc ready, start app");
                 Karopapier.start({
                     baseApiUrl: "http://www.karopapier.de/api/"
@@ -80,7 +79,7 @@
                 Karopapier.header.show(infoBar);
 
                 var turted = new TURTED("http://ape.karopapier.de/turted");
-                turted.ident(1, 'Didi', "asdf");
+                turted.ident(1, 'Didi', "notokenyet");
                 turted.join("karochat");
                 turted.join("livelog");
                 turted.on('anyOtherMoved', function (data) {
@@ -96,8 +95,9 @@
 
 				//var rightSlide = new Sideslide(document.getElementById('chatInfo'));
             })
-
+            if ( !/karopapier/.test(window.location.hostname) ) {
+                document.write('<scr' + 'ipt src="http://localhost:35729/livereload.js"></scr' + 'ipt>');
+            }
         </script>
-        <script src="//localhost:35729/livereload.js"></script>
     </body>
 </html>
