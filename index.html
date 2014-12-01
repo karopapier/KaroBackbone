@@ -47,7 +47,7 @@
                 Karopapier.User = new User({});
                 //make this user refer to "check" for loging in
                 Karopapier.User.url = function () {
-                    return "http://reloaded.karopapier.de/api/user/check.json?callback=?"
+                    return "http://www.karopapier.de/api/user/check.json?callback=?"
                 }
                 Karopapier.User.fetch();
             });
@@ -56,7 +56,7 @@
 
                 console.log("Doc ready, start app");
                 Karopapier.start({
-                    baseApiUrl: "http://reloaded.karopapier.de/api/"
+                    baseApiUrl: "http://www.karopapier.de/api/"
                 });
 
                 console.log("App started");
@@ -79,7 +79,7 @@
                 });
                 Karopapier.header.show(infoBar);
 
-                var turted = new TURTED("http://ape.reloaded.karopapier.de/turted");
+                var turted = new TURTED("http://ape.karopapier.de/turted");
                 turted.ident(1, 'Didi', "asdf");
                 turted.join("karochat");
                 turted.join("livelog");

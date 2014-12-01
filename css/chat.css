@@ -18,7 +18,7 @@
     top: 0;
     right: 0;
     z-index: 10;
-    background-color: white;
+	background-image: inherit;
 }
 
 @media all and (min-width: 630px) {
