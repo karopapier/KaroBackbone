@@ -10,8 +10,8 @@ var UserView = Backbone.View.extend({
 
         _.bindAll(this, "dranChange", "render");
 
-        this.model.on("change", this.render)
-        this.listenTo(this.model, "change:dran", this.dranChange)
+        this.model.on("change", this.render);
+        this.listenTo(this.model, "change:dran", this.dranChange);
 
         this.render();
     },
@@ -24,7 +24,7 @@ var UserView = Backbone.View.extend({
     render: function () {
         var html = '';
         if (this.options.withDesperation && this.model.get("desperate")) {
-            html += '<img src="http://reloaded.karopapier.de/images/spielegeil.png" alt="Spielegeil" title="Spielegeil">';
+            html += '<img src="http://www.karopapier.de/images/spielegeil.png" alt="Spielegeil" title="Spielegeil">';
         }
         html += '<span class="userLabel">' + this.model.get("login") + '</span>';
 
@@ -34,4 +34,4 @@ var UserView = Backbone.View.extend({
         this.$el.html(html);
         return this;
     }
-})
+});
