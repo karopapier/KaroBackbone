@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Karopapier 2.1</title>
+    <script type="text/javascript" src="js/libs/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="js/libs/jquery-ui-1.10.4.custom.min.js"></script>
+    <script type="text/javascript" src="js/libs/underscore-min.js"></script>
+    <script type="text/javascript" src="js/libs/backbone-min.js"></script>
+    <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
+    <script type="text/javascript" src="js/libs/backbone-model-factory-min.js"></script>
+    <script type="text/javascript" src="js/libs/notify.js"></script>
+
+    <script type="text/javascript" src="js/libs/TURTED.js"></script>
+    <script type="text/javascript" src="js/libs/sockjs-0.3.min.js"></script>
+
+    <link id="favicon" rel="shortcut icon" href="favicon.ico" />
+
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/global.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <meta charset="utf-8" />
+</head>
+
+<body>
+    <div id="dran"></div>
+
+    <script type="text/javascript">
+        $(document).ready(function()
+        {
+            console.log("Doc ready, start app");
+
+            var turted = new TURTED("http://ape.karopapier.de/turted");
+            turted.ident(1, 'Didi', "notokenyet");
+            turted.join("karochat");
+            turted.join("livelog");
+            turted.on('anyOtherMoved', function(data)
+            {
+                console.log("anyOtherMoved", data);
+                var n = new Notify(data.movedLogin + " moved",
+                {
+                    tag: "Moved",
+                    body: data.name,
+                    icon: "http://www.karopapier.de/favicon.ico",
+                    timeout: 4
+                }).show();
+
+            });
+            turted.on('newChatMessage', function(data)
+            {
+                console.log(data);
+                msg = data.chatmsg;
+                var n = new Notify(msg.user + " sagt:",
+                {
+                    tag: "Chat",
+                    body: msg.text,
+                    icon: "http://www.karopapier.de/favicon.ico",
+                }).show();
+            });
+
+        })
+        if (!/karopapier/.test(window.location.hostname))
+        {
+            document.write('<scr' +
+                'ipt src="http://localhost:35729/livereload.js"></scr' +
+                'ipt>');
+        }
+    </script>
+</body>
+
+</html>
