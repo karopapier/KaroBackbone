@@ -1,37 +1,86 @@
 <!doctype html>
 <html>
+
 <head>
-    <link href="style slider.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" media="screen" href="http://www.karopapier.de/css/karo.css" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-	<meta charset="utf-8" />
+    <link href="slidercheckbox.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" media="screen" href="http://www.karopapier.de/css/karo.css"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <meta charset="utf-8" />
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
+
 <body>
-    <b>Mit Leuchte</b><br />
-    <span class="cb">
+    <b>Mit Leuchte</b>
+    <br />
+    <span class="slidercheckbox">
         <input type="checkbox" id="bulbswitch" checked="checked">
-        <label for="bulbswitch" class="cb_bulb"></label>
-    </span><br>
-    <b>Grins</b><br />
-    <span class="cb">
+        <label for="bulbswitch" class="slidercheckbox_bulb"></label>
+    </span>
+    <br>
+    <b>Grins</b>
+    <br />
+    <span class="slidercheckbox">
         <input type="checkbox" id="smileswitch">
-        <label for="smileswitch" class="cb_smile"></label>
-    </span><br>
-    <b>Pavel Poweronoff</b><br />
-    <span class="cb">
+        <label for="smileswitch" class="slidercheckbox_smile"></label>
+    </span>
+    <br>
+    <b>Pavel Poweronoff</b>
+    <br />
+    <span class="slidercheckbox">
         <input type="checkbox" id="onoffswitch">
-        <label for="onoffswitch" class="cb_onoff"></label>
-    </span><br>
-    <b>Checkbox</b><br />
-    <span class="cb">
+        <label for="onoffswitch" class="slidercheckbox_onoff"></label>
+    </span>
+    <br>
+    <b>Checkbox</b>
+    <br />
+    <span class="slidercheckbox">
         <input type="checkbox" id="checkswitch">
-        <label for="checkswitch" class="cb_check"></label>
-    </span><br>
-    <b>Fußgängerampel</b><br />
-    <span class="cb">
+        <label for="checkswitch" class="slidercheckbox_check"></label>
+    </span>
+    <br>
+    <b>Fußgängerampel</b>
+    <br />
+    <span class="slidercheckbox">
         <input type="checkbox" id="lightsswitch">
-        <label for="lightsswitch" class="cb_lights"></label>
-    </span><br>
+        <label for="lightsswitch" class="slidercheckbox_lights"></label>
+    </span>
+    <br>
+    <b>Raw</b>
+    <br />
+    <input id="id1" name="field1" type="checkbox" class="slidercheckbox" checked="checked">
+    <br />
+    <input id="id2" name="field2" type="checkbox" class="slidercheckbox">
+    <br />
+    <input id="id3" name="field3" type="checkbox" class="slidercheckbox" checked="checked">
+    <br />
+    <input id="id4" name="field4" type="checkbox" class="slidercheckbox">
+    <br />
+    <br>
     <script src="//localhost:35729/livereload.js"></script>
+    <script>
+        $("input.slidercheckbox").each(function(i, e)
+        {
+            var id = e.id;
+            var name = e.name;
+            var checked = $(e).attr("checked");
+            var html = '';
+            html += '<span class="slidercheckbox">';
+            html += '<input type="checkbox" name="' + name + '" id="' + id + '"';
+            if (checked) {
+                html += 'checked="checked"';
+            }
+            html += '>';
+            //html += '<label for="'+id+'" class="slidercheckbox_bulb">'
+            html += '<label for="' + id + '"></label>'
+            html += '</span>';
+
+            $(e).replaceWith(html);
+
+        });
+    </script>
+
 </body>
+
 </html>
