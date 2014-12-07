@@ -25,10 +25,30 @@
 
 <body>
     <div id="dran"></div>
+    <label>
+        <input type="checkbox" id="webNot">Browser Notifications</label>
+    <br>
+    <label>
+        <input type="checkbox" id="anyMoveNot">Anybody Move Notifications</label>
+    <br>
+    <label>
+        <input type="checkbox" id="myMoveNot">Mygames Move Notifications</label>
+    <br>
+    <label>
+        <input type="checkbox" id="dranNot">Dran Notifications</label>
+    <br>
+    <label>
+        <input type="checkbox" id="chatNot">Chat Notifications</label>
+    <br>
 
     <script type="text/javascript">
-        $(document).ready(function()
-        {
+        $(document).ready(function() {
+
+            if (Notify.permissionLevel === "denied") {
+                permissionCompletelyDenied();
+            }
+
+
             console.log("Doc ready, start app");
 
             var turted = new TURTED("http://ape.karopapier.de/turted");
@@ -37,6 +57,8 @@
             turted.join("livelog");
             turted.on('anyOtherMoved', function(data)
             {
+                permStats();
+                requestPerm();
                 console.log("anyOtherMoved", data);
                 var n = new Notify(data.movedLogin + " moved",
                 {
@@ -56,15 +78,51 @@
                     tag: "Chat",
                     body: msg.text,
                     icon: "http://www.karopapier.de/favicon.ico",
+                    permissionDenied: permissionDenied
                 }).show();
             });
 
-        })
-        if (!/karopapier/.test(window.location.hostname))
-        {
+            $('#webNot').change(function(e) {
+                    console.log("Ich prüfe");
+                    if (e.currentTarget.checked) {
+                        console.log("Ich prüfe ob ich darf");
+                        requestPerm();
+                    }
+            });
+
+        });
+
+        if (!/karopapier/.test(window.location.hostname)) {
             document.write('<scr' +
                 'ipt src="http://localhost:35729/livereload.js"></scr' +
                 'ipt>');
+        }
+
+        function permStats()
+        {
+            console.log("Level: " + Notify.permissionLevel);
+        }
+
+        function requestPerm()
+        {
+            console.log("Dann frag ich mal...");
+            Notify.requestPermission(permissionGranted, permissionDenied);
+            console.log("Und nu?");
+        }
+
+        function permissionGranted() {
+            console.log("Ich darf");
+        }
+
+        function permissionDenied()
+        {
+            console.log("Ich darf gerade noch nicht!");
+        }
+
+        function permissionCompletelyDenied()
+        {
+            console.log("All is lost! No way to ask again...");
+            $('#webNot').attr("disabled","disabled");
         }
     </script>
 </body>
