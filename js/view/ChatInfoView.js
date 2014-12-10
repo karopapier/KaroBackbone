@@ -32,7 +32,7 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
         var myId = this.model.get("id");
         if (myId == 0) return;
         var html;
-        $.getJSON('http://reloaded.karopapier.de/api/user/blockerlist.json?callback=?', function (bl) {
+        $.getJSON('http://www.karopapier.de/api/user/blockerlist.json?callback=?', function (bl) {
             blockerlist = bl;
             var dran = this.model.get("dran");
             if (dran == 0) {
@@ -79,7 +79,7 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
     updateTopBlocker: function () {
         if (this.model.get("id") == 0) return;
         var html;
-        $.getJSON('http://reloaded.karopapier.de/api/user/' + this.model.get("id") + '/blocker.json?callback=?', function (data) {
+        $.getJSON('http://www.karopapier.de/api/user/' + this.model.get("id") + '/blocker.json?callback=?', function (data) {
             if (data.length > 0) {
                 var blocker = data[0];
                 html = 'Dein Top-Blocker: ' + blocker.login + ' (' + blocker.blocked + ')';

@@ -59,7 +59,7 @@ var YOUTUBE_CACHE = {};
         });
 
         //Thomas Anders
-        text = text.replace(/\banders\b/gi, ' <img style="opacity: .3" src="http://reloaded.karopapier.de/images/anders.jpg" alt="anders" title="anders" />');
+        text = text.replace(/\banders\b/gi, ' <img style="opacity: .3" src="http://www.karopapier.de/images/anders.jpg" alt="anders" title="anders" />');
         //nen -> einen
         text = text.replace(/\bnen\b/gi, 'einen');
 
@@ -68,7 +68,7 @@ var YOUTUBE_CACHE = {};
 
         //GID replacement to game link
         text = text.replace(/GID[ =]([0-9]{3,6})/gi, function (all, gid) {
-            $.getJSON('http://reloaded.karopapier.de/api/game/' + gid + '/info.json?callback=?', function (gameInfo) {
+            $.getJSON('http://www.karopapier.de/api/game/' + gid + '/info.json?callback=?', function (gameInfo) {
                 $('a.GidLink' + gid).text(gid + ' - ' + gameInfo.game.name);
             });
             return '<a class="GidLink' + gid + '" href="http://www.karopapier.de/showmap.php?GID=' + gid + '" target="_blank">' + gid + '</a>';

@@ -3,9 +3,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>KaroBackbone - New game</title>
-        <link rel="shortcut icon" href="http://reloaded.karopapier.de/favicon.ico" />
-        <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/css/karo.css" />
-        <link rel="stylesheet" type="text/css" media="screen" href="http://reloaded.karopapier.de/themes/black/css/theme.css" />
+        <link rel="shortcut icon" href="http://www.karopapier.de/favicon.ico" />
+        <link rel="stylesheet" type="text/css" media="screen" href="http://www.karopapier.de/css/karo.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="http://www.karopapier.de/themes/black/css/theme.css" />
         <link rel="stylesheet" type="text/css" media="screen" href="../css/lobby.css" />
         <style type="text/css">
             .clickable:hover {
@@ -65,13 +65,13 @@
 
         <script type="text/template" id="user-template">
         <div class="user"><span class="userLabel"><%= login %></span> [<%= lastVisit %>|<%= signup %>] @ <%= activeGames %> / <%= maxGames %>
-<img class="invite clickable" style="position: absolute; right: 0px; top: 0px" src="http://reloaded.karopapier.de/images/plus.png" ref="60">
+<img class="invite clickable" style="position: absolute; right: 0px; top: 0px" src="http://www.karopapier.de/images/plus.png" ref="60">
         </div>
         </script>
 
         <script type="text/template" id="selected user-template">
         <div class="user"><span class="userLabel<% if (selected) { %> invitedUser<% } %>"><%= login %></span> [<%= lastVisit %>|<%= signup %>] @ <%= activeGames %> / <%= maxGames %>
-<img class="uninvite clickable" style="display: none; position: absolute; right: 0px; top: 0px" src="http://reloaded.karopapier.de/images/x.png" ref="60">
+<img class="uninvite clickable" style="display: none; position: absolute; right: 0px; top: 0px" src="http://www.karopapier.de/images/x.png" ref="60">
         </div>
         </script>
 
@@ -121,7 +121,7 @@
 
             $(document).ready(function(){
                 var allAvailableUsers=new UserCollection({ });
-                allAvailableUsers.url="http://reloaded.karopapier.de/api/user/list.json?callback=?";
+                allAvailableUsers.url="http://www.karopapier.de/api/user/list.json?callback=?";
                 var filteredUsers=FilteredCollection(allAvailableUsers);
 
                 var userListView = new UserListView({

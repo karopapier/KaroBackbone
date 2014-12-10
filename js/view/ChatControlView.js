@@ -17,7 +17,7 @@ var ChatControlView = Backbone.View.extend({
         var msg = $('#newchatmessage').val();
         if (msg != "") {
             $.ajax({
-                url: "http://reloaded.karopapier.de/api/chat/message.json",
+                url: "http://www.karopapier.de/api/chat/message.json",
                 type: "POST",
                 crossDomain: true,
                 data: "msg=" + msg,

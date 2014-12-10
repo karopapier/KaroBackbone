@@ -53,7 +53,7 @@
 
             function getMap() {
                 var mapid = $('#mapid').val();
-                $.getJSON("http://reloaded.karopapier.de/api/map/" + mapid + ".json?callback=?", function (data) {
+                $.getJSON("http://www.karopapier.de/api/map/" + mapid + ".json?callback=?", function (data) {
                     map.set(data);
                 })
             };
@@ -130,7 +130,7 @@
 			};
 
 			function runAll() {
-				$.getJSON("http://reloaded.karopapier.de/api/map/list.json?callback=?",function(maps) {
+				$.getJSON("http://www.karopapier.de/api/map/list.json?callback=?",function(maps) {
 					allMaps=maps;
 					batchMode=true;
 					batchIndex=0;

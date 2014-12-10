@@ -16,8 +16,8 @@ var MapImageView = MapBaseView.extend({
             //console.info("Getting image");
             var cps = (this.mapViewSettings.get("cpsActive") === true) ? 1 : 0;
             this.$el.show();
-            this.$el.attr("src", "http://reloaded.karopapier.de/images/loading.gif");
-            this.$el.attr("src", 'http://reloaded.karopapier.de/map/' + mapid + '.png?size=' + this.mapViewSettings.get("size") + '&border=' + this.mapViewSettings.get("border") + '&cps=' + cps);
+            this.$el.attr("src", "http://www.karopapier.de/images/loading.gif");
+            this.$el.attr("src", 'http://www.karopapier.de/map/' + mapid + '.png?size=' + this.mapViewSettings.get("size") + '&border=' + this.mapViewSettings.get("border") + '&cps=' + cps);
         }
     }
 });
