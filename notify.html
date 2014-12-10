@@ -42,6 +42,7 @@
     <br>
 
     <script type="text/javascript">
+		var DRAN=0;
         $(document).ready(function() {
 
             if (Notify.permissionLevel === "denied") {
@@ -57,30 +58,49 @@
             turted.join("livelog");
             turted.on('anyOtherMoved', function(data)
             {
-                permStats();
-                requestPerm();
                 console.log("anyOtherMoved", data);
-                var n = new Notify(data.movedLogin + " moved",
-                {
-                    tag: "Moved",
-                    body: data.name,
-                    icon: "http://www.karopapier.de/images/spielegeil.png",
-                    timeout: 4
-                }).show();
+				if (document.getElementById("anyMoveNot").checked) {
+					var n = new Notify(data.movedLogin + " moved", {
+						tag: "Moved",
+						body: data.name,
+						icon: "http://www.karopapier.de/pre/"+data.gid+".png",
+						timeout: 5,
+						notifyClick: function() {
+							window.open("http://www.karopapier.de/showmap.php?GID="+data.gid);
+						}
+					}).show();
+				} else {
+					console.log("No not");
+				}
 
             });
             turted.on('newChatMessage', function(data)
             {
                 console.log(data);
                 msg = data.chatmsg;
-                var n = new Notify(msg.user + " sagt:",
-                {
-                    tag: "Chat",
-                    body: msg.text,
-                    icon: "http://www.karopapier.de/favicon.ico",
-                    permissionDenied: permissionDenied
-                }).show();
+				if (document.getElementById("chatNot").checked) {
+					var n = new Notify(msg.user + " sagt:",
+					{
+						tag: "Chat",
+						body: msg.text,
+						icon: "http://www.karopapier.de/favicon.ico",
+						permissionDenied: permissionDenied,
+						notifyClick: function() {
+							window.open("http://www.karopapier.de/chat");
+						}
+					}).show();
+				}
             });
+
+			turted.on('yourTurn',function(data) {
+				DRAN++;
+				dranNotification();
+			});
+			turted.on('youMoved',function(data) {
+				DRAN--;
+				DRAN = DRAN<0?0:DRAN;
+				dranNotification();
+			});
 
             $('#webNot').change(function(e) {
                     console.log("Ich prüfe");
@@ -97,6 +117,22 @@
                 'ipt src="http://localhost:35729/livereload.js"></scr' +
                 'ipt>');
         }
+
+		function dranNotification()
+		{
+				if (document.getElementById("dranNot").checked) {
+					var n = new Notify("Du bist bei " + DRAN + " Spielen dran", {
+						tag: "Dran",
+						body: "Musst halt ziehen...",
+						timeout: DRAN > 0 ? 0 : 2,
+						permissionDenied: permissionDenied,
+						notifyClick: function() {
+							//window.open("http://www.karopapier.de/showmap.php?GID="+data.gid);
+							window.open("http://www.karopapier.de/dran");
+						}
+					}).show();
+				}
+		}
 
         function permStats()
         {
