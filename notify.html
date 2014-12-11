@@ -61,16 +61,18 @@
             {
                 console.log("anyOtherMoved", data);
 				if (document.getElementById("anyMoveNot").checked) {
+                    var html='Bei "' + data.name + '" hat '+data.movedLogin+' gerade gezogen und jetzt ist '+data.nextLogin+' dran';  
 					var n = new Notify(data.movedLogin + " moved", {
 						tag: "Moved",
-						body: data.name,
+                        body: html,
 						icon: "http://www.karopapier.de/pre/"+data.gid+".png",
 						timeout: 5,
 						notifyClick: function() {
 							window.open("http://www.karopapier.de/showmap.php?GID="+data.gid);
 						}
 					}).show();
-                    $.notify("Any: " + data.movedLogin + " bei " + data.name, { position: "top-center", className: "info"});
+                    $.notify(html, { position: "top-center", className: "info"});
+
 				} else {
 					console.log("No not");
 				}
