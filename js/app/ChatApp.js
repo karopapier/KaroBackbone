@@ -33,6 +33,10 @@ var ChatApp = Backbone.Marionette.Layout.extend({
         this.layout.chatMessages.show(this.chatMessagesView);
         this.layout.chatInfo.show(this.chatInfoView);
         this.layout.chatControl.show(this.chatControlView);
+        var $el = this.layout.chatMessages.$el;
+        setTimeout(function() {
+            $el.animate({ scrollTop: $el.prop('scrollHeight') }, 1000);
+        },1000);
     }
 });
 
