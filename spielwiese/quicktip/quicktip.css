@@ -1,0 +1,68 @@
+span.quicktip {
+  display: inline-block;
+  position: relative;
+  padding-right: 20px;
+  background-image: url(info.png);
+  background-repeat: no-repeat;
+  background-position: right; 
+
+}
+
+span.quicktip-error {
+  background-image: url(error.png);
+}
+
+span.quicktip-help {
+  background-image: url(help.png);
+}
+
+span.quicktip-info {
+  background-image: url(info.png);
+}
+
+span.quicktip-warn {
+  background-image: url(warn.png);
+}
+
+span.quicktip-ok {
+  background-image: url(ok.png);
+}
+
+span[data-quicktip]:before {
+  position: absolute;
+  left: 0;
+  top: -40px;
+  background-color: #CCCCFF;
+  color: #ffffff;
+  height: 30px;
+  line-height: 30px;
+  border-radius: 5px;
+  padding: 0 15px;
+  content: attr(data-quicktip);
+  white-space: nowrap;
+  display: none;
+}
+
+span[data-quicktip].quicktip-error:before {
+  background-color: #ff0000;
+  color: #ffffff;
+}
+
+span[data-quicktip].quicktip-warn:before {
+  background-color: #ffff00;
+  color: #000000;
+}
+
+span[data-quicktip].quicktip-info:before {
+  background-color: lightblue;
+  color: #000000;
+}
+
+span[data-quicktip].quicktip-ok:before {
+  background-color: #00ff00;
+  color: #000000;
+}
+
+span[data-quicktip]:hover:before {
+  display: block;
+}
