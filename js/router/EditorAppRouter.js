@@ -8,6 +8,6 @@ var EditorAppRouter = Backbone.Router.extend({
 	loadMap: function(mapId) {
 		console.info("Loading "+mapId);
 		mapId = mapId || 1;
-		app.editor.loadMapId(mapId);
+		app.loadMapId(mapId);
 	}
 });

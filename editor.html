@@ -42,6 +42,10 @@
             </footer>
         </div>
 
+        <script type="text/javascript">
+            var Karopapier={};
+        </script>
+
         <!-- <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
         <script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
         <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
@@ -49,19 +53,10 @@
         <script type="text/javascript" src="js/libs/jquery-ui-1.8.22.custom.min.js"></script>
         <script type="text/javascript" src="js/libs/underscore-min.js"></script>
         <script type="text/javascript" src="js/libs/backbone-min.js"></script>
-
-        <script type="text/javascript" src="js/model/Map.js"></script>
-        <script type="text/javascript" src="js/model/MapRenderPalette.js"></script>
-
-        <script type="text/javascript" src="js/view/MapBaseView.js"></script>
-        <script type="text/javascript" src="js/view/MapRenderView.js"></script>
-        <script type="text/javascript" src="js/view/EditorMapView.js"></script>
-        <script type="text/javascript" src="js/view/EditorToolsView.js"></script>
-        <script type="text/javascript" src="js/view/EditorView.js"></script>
-
-        <script type="text/javascript" src="js/router/EditorAppRouter.js"></script>
-
+        <script type="text/javascript" src="js/libs/backbone-model-factory-min.js"></script>
+        <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
         <script type="text/javascript" src="js/templates/JST.js"></script>
+        <script type="text/javascript" src="js/KaroBackbone.min.js"></script>
 
         <script type="text/javascript">
             var app;
@@ -125,6 +120,9 @@
                 e.preventDefault();
             };
 
+            if (!/karopapier/.test(window.location.hostname)) {
+                document.write('<scr' + 'ipt src="http://localhost:35729/livereload.js"></scr' + 'ipt>');
+            }
         </script>
     </body>
 </html>
