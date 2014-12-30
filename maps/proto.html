@@ -1,0 +1,223 @@
+<!doctype html>
+<html>
+<head>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="http://www.karopapier.de/js/libs/json2.min.js"></script>
+<script src="http://www.karopapier.de/js/libs/store.min.js"></script>
+<script src="http://www.karopapier.de/js/libs/lz-string.min.js"></script>
+<!--<script src="http://www.karopapier.de/js/libs/svg4everybody.min.js"></script>-->
+
+<style type="text/css">
+.grass {fill: rgb(0, 200, 0);}
+.road {fill: rgb(128, 128, 128);}
+.start {fill: url(#startPattern)}
+.finish {fill: url(#finishPattern)}
+.mud {fill: rgb(100, 70, 0);}
+.sand {fill: rgb(230, 230, 115);}
+.water {fill: blue;}
+.earth {fill: brown;}
+.night {fill: black;}
+.parc {fill: rgb(200, 200, 200);}
+.cp1color {fill: rgb(0, 102, 255);}
+.cp2color {fill: rgb(0, 100, 200);}
+.cp3color {fill: rgb(0, 255, 102);}
+.cp4color {fill: rgb(0, 200, 0);}
+.cp5color {fill: rgb(255, 255, 0);}
+.cp6color {fill: rgb(200, 200, 0);}
+.cp7color {fill: rgb(255, 0, 0);}
+.cp8color {fill: rgb(200, 0, 0);}
+.cp9color {fill: rgb(255, 0, 255);}
+.cp1 {fill: url(#cp1pattern);}
+.cp2 {fill: url(#cp2pattern);}
+.cp3 {fill: url(#cp3pattern);}
+.cp4 {fill: url(#cp4pattern);}
+.cp5 {fill: url(#cp5pattern);}
+.cp6 {fill: url(#cp6pattern);}
+.cp7 {fill: url(#cp7pattern);}
+.cp8 {fill: url(#cp8pattern);}
+.cp9 {fill: url(#cp9pattern);}
+.primaryColor {fill: rgb(0, 255, 102);}
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+ <meta charset="utf-8" />
+
+</head>
+
+<body>
+<input type="number" id="mapid" onchange="update()"><button onclick="update()">Go</button><br />
+<button onclick="dec()"> &lt; </button>
+<button onclick="inc()"> &gt; </button>
+<br />
+
+
+<svg height="400px" width="100%" id="mapSvgView" viewBox="0 0 84 36" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg">
+	<defs id="defs"></defs>
+	<g id="map"></g>
+	<rect opacity=".3" fill="url(#grid)" height="100%" width="100%" y="0" x="0"></rect>
+</svg>
+
+<script>
+$(document).ready(function() {
+	loadSvgToId("/maps/defs.svg","defs");
+	changeMap(105);
+
+	//setTimeout(function() { changeMap(1)},2000);
+	//setTimeout(function() { changeMap(127)},4000);
+	//setTimeout(function() { changeMap(128)},6000);
+});
+
+
+function dec() {
+	var mapid=document.getElementById("mapid").value;
+	mapid--;
+	mapid = mapid <1 ? 1: mapid;
+	document.getElementById("mapid").value=mapid;
+	update();
+}
+
+function inc() {
+	var mapid=document.getElementById("mapid").value;
+	mapid++;
+	document.getElementById("mapid").value=mapid;
+	//console.log(mapid);
+	update();
+}
+
+
+function update() {
+	changeMap(document.getElementById('mapid').value);
+}
+
+function getMap(mapid, cb) {
+	var rows=0;
+	var cols =0;
+	var path="";
+
+	var amifinished= function(){
+		//console.log("check if finished");
+		if (rows!=0 && cols!=0 && path!="") {
+			var m = {};
+			m.r=rows;
+			m.c=cols;
+			m.p=LZString.compress(path);
+			store.set("map"+mapid,m);
+			cb(m);
+		} else {
+			//console.errorlog("Fehlt noch was");
+		}
+	};
+
+	var i = store.get("map"+mapid);
+	if (i) {
+		//console.log ("I from store",i);
+		cb(i);
+	} else {
+		document.getElementById("mapid").value=mapid;
+		myget("/paths/"+mapid+".svg", function(data) {
+			//console.log(data);
+			path=data;
+			amifinished();
+		});
+		$.getJSON("http://www.karopapier.de/api/map/"+mapid+".json?callback=?", function (data) {
+			//console.log(data);
+			rows=data.rows;
+			cols=data.cols;
+			amifinished();
+		});
+	}
+}
+
+function changeMap(mapid) {
+	//console.log("Man frug, zu wechseln zu ", mapid);
+	document.getElementById("mapid").value=mapid;
+
+	getMap(mapid, function(map) {
+		//console.log("Ich hab ne Karte",map);
+		var parser = new DOMParser();
+		var path = map.p;
+		if (path.charAt(0)!="<") {
+			path =LZString.decompress(path);
+		}
+		var doc = parser.parseFromString(path, "image/svg+xml");
+		//console.log(doc);
+		//console.log(document.getElementById("map").firstChild);
+		var mapNode = document.getElementById("map");
+		//console.log(mapNode);
+		while (mapNode.childNodes.length>0) {
+			var f = mapNode.firstChild;
+			mapNode.removeChild(f);
+		}
+		//console.log("Jetzt einfug");
+		document.getElementById("map").appendChild(document.importNode(doc.getElementsByTagName("svg")[0],true));
+		//console.log("Gefugt");
+		//$('#map').html(map.path);
+		//$('#map').append(doc);
+		//$(doc).appendTo($('#map'));
+		document.getElementById('mapSvgView').setAttribute("viewBox","0 0 " + (map.c*12) + " " + (map.r*12));
+
+		
+		//funky scal calc
+		//take width for granted and adjust height to certain max height, then start using transform
+		//maxzoom = 3;
+		
+
+
+		//alert(document.getElementById('mapSvgView').currentScale);
+	});
+}
+
+function myget(url, cb) {
+	var request = new XMLHttpRequest();
+	request.open('GET', url, true);
+
+	request.onload = function() {
+		if (request.status >= 200 && request.status < 400){
+			// Success!
+			resp = request.responseText;
+			cb(resp);
+		} else {
+			// We reached our target server, but it returned an error
+		}
+	};
+
+	request.onerror = function() {
+		// There was a connection error of some sort
+	};
+
+	request.send();
+}
+
+function loadSvgToId(url, id) {
+	myget(url, function(text) {
+		//console.log("HIER mit url",url);
+		var parser = new DOMParser();
+		var doc = parser.parseFromString(text, "image/svg+xml");
+		//console.log("Doc",doc);
+		document.getElementById(id).appendChild(document.importNode(doc.getElementsByTagName(id)[0],true));
+	});
+};
+
+function DOALL() {
+	for (var i = 1; i<=213; i++) {
+		changeMap(i);
+	}
+}
+
+var localStorageSpace = function(){
+        var allStrings = '';
+        for(var key in window.localStorage){
+            if(window.localStorage.hasOwnProperty(key)){
+                allStrings += window.localStorage[key];
+            }
+        }
+        return allStrings ? 3 + ((allStrings.length*16)/(8*1024)) + ' KB' : 'Empty (0 KB)';
+    };
+
+
+
+</script>
+<p>Alle karten als svg: 2428.65625 KB</p>
+<p>Karten LZcompress: 508.26171875 KB</p>
+</body>
+</html>

@@ -1,0 +1,8 @@
+<svg height="36" width="84" id="map105" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg">
+	<rect height="100%" width="100%" y="0" x="0" class="grass" id="mainfill"></rect>
+	<g id="paths">
+		<path class="road" d="M12,12L12,12L24,12L24,24L12,24L12,12M36,12L36,12L48,12L48,24L36,24L36,12M60,12L60,12L72,12L72,24L60,24Z"></path>
+		<path class="start" d="M24,12L24,12L36,12L36,24L24,24Z"></path>
+		<path class="finish" d="M48,12L48,12L60,12L60,24L48,24Z"></path>
+	</g>
+</svg>

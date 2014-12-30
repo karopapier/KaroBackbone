@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<style type="text/css">
+.grass {fill: rgb(0, 200, 0);}
+.road {fill: rgb(128, 128, 128);}
+.start {fill: url(#startPattern)}
+.finish {fill: url(#finishPattern)}
+.mud {fill: rgb(100, 70, 0);}
+.sand {fill: rgb(230, 230, 115);}
+.water {fill: blue;}
+.earth {fill: brown;}
+.night {fill: black;}
+.parc {fill: rgb(200, 200, 200);}
+.cp1color {fill: rgb(0, 102, 255);}
+.cp2color {fill: rgb(0, 100, 200);}
+.cp3color {fill: rgb(0, 255, 102);}
+.cp4color {fill: rgb(0, 200, 0);}
+.cp5color {fill: rgb(255, 255, 0);}
+.cp6color {fill: rgb(200, 200, 0);}
+.cp7color {fill: rgb(255, 0, 0);}
+.cp8color {fill: rgb(200, 0, 0);}
+.cp9color {fill: rgb(255, 0, 255);}
+.cp1 {fill: url(#cp1pattern);}
+.cp2 {fill: url(#cp2pattern);}
+.cp3 {fill: url(#cp3pattern);}
+.cp4 {fill: url(#cp4pattern);}
+.cp5 {fill: url(#cp5pattern);}
+.cp6 {fill: url(#cp6pattern);}
+.cp7 {fill: url(#cp7pattern);}
+.cp8 {fill: url(#cp8pattern);}
+.cp9 {fill: url(#cp9pattern);}
+.primaryColor {fill: rgb(0, 255, 102);}
+</style>
+</head>
+
+<body>
+<div id="bla"></div>
+Tach
+
+<!--<svg height="36" width="84" id="mapSvgView" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg"> -->
+<svg height="36" width="84" id="mapSvgView" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg">
+	<defs id="defs"></defs>
+	<g id="map"></g>
+	<rect opacity=".3" fill="url(#grid)" height="100%" width="100%" y="0" x="0"></rect>
+</svg>
+
+<script>
+console.log("Ja");
+//$('#map').load("/maps/105min.svg");
+//$('#defs').load("/maps/defs.svg");
+myget("/maps/defs.svg", function (text) {
+
+	console.log("HIER");
+	var parser = new DOMParser();
+	var doc = parser.parseFromString(text, "image/svg+xml");
+	console.log("Doc",doc);
+	document.getElementById("defs").appendChild(document.importNode(doc.getElementsByTagName("defs")[0],true));
+});
+
+myget("/maps/105min.svg", function (text) {
+
+	var parser = new DOMParser();
+	var doc = parser.parseFromString(text, "image/svg+xml");
+	console.log(doc);
+	console.log(document.getElementById("map").firstChild);
+	var mapNode = document.getElementById("map");
+	while (mapNode.childNodes.length>0) {
+		var f = mapNode.firstChild;
+		mapNode.removeChild(f);
+	}
+	document.getElementById("map").appendChild(document.importNode(doc.getElementsByTagName("svg")[0],true));
+});
+
+function insertDOM() {
+		var parser = new DOMParser();
+		var doc = parser.parseFromString(map.path, "image/svg+xml");
+		console.log(doc);
+		console.log(document.getElementById("map").firstChild);
+		var mapNode = document.getElementById("map");
+		while (mapNode.childNodes.length>0) {
+			var f = mapNode.firstChild;
+			mapNode.removeChild(f);
+		}
+		document.getElementById("map").appendChild(document.importNode(doc.getElementsByTagName("svg")[0],true));
+		//$('#map').html(map.path);
+		//$('#map').append(doc);
+		//$(doc).appendTo($('#map'));
+
+}
+
+function myget(url, cb) {
+	var request = new XMLHttpRequest();
+	request.open('GET', url, true);
+
+	request.onload = function() {
+		if (request.status >= 200 && request.status < 400){
+			// Success!
+			resp = request.responseText;
+			cb(resp);
+		} else {
+			// We reached our target server, but it returned an error
+			console.log("ERROR: " + request.status);
+		}
+	};
+
+	request.onerror = function() {
+		// There was a connection error of some sort
+	};
+
+	request.send();
+}
+</script>
+</body>
+</html>
+

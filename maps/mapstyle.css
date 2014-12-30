@@ -1,0 +1,29 @@
+.grass {fill: rgb(0, 200, 0);}
+.road {fill: rgb(128, 128, 128);}
+.start {fill: url(#startPattern)}
+.finish {fill: url(#finishPattern)}
+.mud {fill: rgb(100, 70, 0);}
+.sand {fill: rgb(230, 230, 115);}
+.water {fill: blue;}
+.earth {fill: brown;}
+.night {fill: black;}
+.parc {fill: rgb(200, 200, 200);}
+.cp1color {fill: rgb(0, 102, 255);}
+.cp2color {fill: rgb(0, 100, 200);}
+.cp3color {fill: rgb(0, 255, 102);}
+.cp4color {fill: rgb(0, 200, 0);}
+.cp5color {fill: rgb(255, 255, 0);}
+.cp6color {fill: rgb(200, 200, 0);}
+.cp7color {fill: rgb(255, 0, 0);}
+.cp8color {fill: rgb(200, 0, 0);}
+.cp9color {fill: rgb(255, 0, 255);}
+.cp1 {fill: url(#cp1pattern);}
+.cp2 {fill: url(#cp2pattern);}
+.cp3 {fill: url(#cp3pattern);}
+.cp4 {fill: url(#cp4pattern);}
+.cp5 {fill: url(#cp5pattern);}
+.cp6 {fill: url(#cp6pattern);}
+.cp7 {fill: url(#cp7pattern);}
+.cp8 {fill: url(#cp8pattern);}
+.cp9 {fill: url(#cp9pattern);}
+.primaryColor {fill: rgb(0, 255, 102);}
