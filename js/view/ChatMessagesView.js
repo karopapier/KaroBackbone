@@ -14,6 +14,7 @@ var ChatMessagesView = Backbone.View.extend({
         //console.log("Single chatmessage add");
         var chatMessageView = new ChatMessageView({model: chatMessage});
         this.$el.append(chatMessageView.$el.hide().fadeIn());
+        this.scrollDown();
     },
     removeItem: function (chatMessage) {
         //console.log("Single chatmessage remove");
@@ -23,6 +24,23 @@ var ChatMessagesView = Backbone.View.extend({
     limit: function (e, a) {
         this.message_limit = this.model.get("limit")
         this.render();
+    },
+    scrollDown: function() {
+        //check if scrolled down
+        var $parent = this.$el.parent();;
+        var toScrollDown =$parent.prop("scrollHeight") - $parent.prop("clientHeight") - $parent.prop("scrollTop");
+        //user is scrolled up, don't follow new line
+        //console.log("To scroll down", toScrollDown, "force", force);
+        if  (toScrollDown >40) {
+            //console.log("Skip scroll");
+            return false;
+        }
+        //console.log("Ich scrolle",$parent.prop('scrollHeight') );
+        setTimeout(function() {
+            //$el.animate({ scrollTop: $el.prop('scrollHeight') }, 1000);
+            $parent.stop().animate({ scrollTop: $parent.prop("scrollHeight") }, 1000);
+        },1000);
+
     },
     render: function () {
         //console.log("Full chatmessage render", this.message_limit);
@@ -35,3 +53,9 @@ var ChatMessagesView = Backbone.View.extend({
         return this;
     }
 })
+
+function wieweitunten() {
+
+    var $c=$('#chatMessages');
+    return unten;
+}
