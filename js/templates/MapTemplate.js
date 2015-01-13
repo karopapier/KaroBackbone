@@ -1,6 +1,7 @@
-function MapTemplate() {
+function MapTemplate(pathOnly) {
     var tplt = '';
     tplt += '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" id="mapSvgView" width="300" height="200">';
+	if (typeof pathOnly ==="undefined") {
     tplt += '    <defs>';
     tplt += '        <style type="text/css">';
     tplt += '            .grass {';
@@ -200,10 +201,13 @@ function MapTemplate() {
     tplt += '                  fill="black"></path>';
     tplt += '        </pattern>';
     tplt += '    </defs>';
+	}
     tplt += '    <rect id="mainfill" class="" x="0" y="0" width="100%" height="100%"/>';
     tplt += '    <g id="paths">';
     tplt += '    </g>';
+	if (typeof pathOnly ==="undefined") {
     tplt += '    <rect x="0" y="0" width="100%" height="100%" fill="url(#grid)" opacity=".3"></rect>';
+	}
     tplt += '</svg>';
     return tplt;
 }
