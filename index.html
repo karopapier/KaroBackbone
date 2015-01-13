@@ -41,6 +41,8 @@
 
         <script type="text/javascript">
 
+            var vent = new Backbone.Wreqr.EventAggregator();
+
             Karopapier.addInitializer(function (options) {
                 // do useful stuff here
                 console.log("Initializer der App");
@@ -51,6 +53,26 @@
                 }
                 Karopapier.User.fetch();
             });
+
+            vent.on("logout", function() {
+                console.log("Logging out");
+                Karopapier.User.set("id", 0);
+                console.log(Karopapier.User);
+            })
+
+            vent.on("login", function() {
+                console.log("Logging in");
+                $.post("http://www.karopapier.de/api/user/login.json",{"login":login, "password":pass},function(data) {
+                    console.log(data);
+                    Karopapier.User.set(data);
+                })
+                /*
+                Karopapier.User.url = function () {
+                    return "http://www.karopapier.de/api/user/check.json?callback=?"
+                }
+                Karopapier.User.fetch();
+                */
+            })
 
             $(document).ready(function () {
                 console.log("Doc ready, start app");
