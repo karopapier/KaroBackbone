@@ -1,0 +1,5 @@
+#moveMessages {
+    max-height: 80px;
+    overflow-y: scroll;
+    display: inline-block;
+}

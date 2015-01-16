@@ -2,7 +2,6 @@ var PlayerCollection = Backbone.Collection.extend({
     model: Player,
 
     initialize: function(models, options) {
-        _.bindAll(this);
         this.moveMessages=options.moveMessages;
         this.bind("reset",function(o,id) {
             console.info("Init Players");

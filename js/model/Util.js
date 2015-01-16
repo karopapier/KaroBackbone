@@ -63,6 +63,9 @@ var YOUTUBE_CACHE = {};
         //nen -> einen
         text = text.replace(/\bnen\b/gi, 'einen');
 
+        text = text.replace("-:K","<i>");
+        text = text.replace("K:-","</i>");
+
         //smilies
         text = text.replace(/img src="\/images\/smilies\/(.*?).gif" alt=/g, 'img src="http://www.karopapier.de/bilder/smilies/$1.gif" alt=');
 
@@ -79,3 +82,8 @@ var YOUTUBE_CACHE = {};
 }(Karopapier));
 
 ''.trim||(String.prototype.trim=function(){return this.replace(/^[\s\uFEFF]+|[\s\uFEFF]+$/g,'')});
+if (typeof String.prototype.startsWith != 'function') {
+  String.prototype.startsWith = function (str){
+    return this.slice(0, str.length) == str;
+  };
+}

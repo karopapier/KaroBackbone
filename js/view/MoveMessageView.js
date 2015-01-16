@@ -1,25 +1,45 @@
 var MoveMessageView = Backbone.View.extend({
-    initialize: function() {
-        _.bindAll(this);
-        this.model.bind("change", this.redraw);
-        this.template= _.template('<%= name %>: <%= text %><br />\n');
-        //apply given filter function or preset with returning all
-        if (this.options.filter) {
-            this.filter=this.options.filter;
-        } else {
-            this.filter=function() { return true };
+    template: _.template('<%= name %> (<%= date %>): &quot;<%= text %>&quot;<br />\n'),
+    statusTemplate: _.template('<small><%= name %> (<%= date %>): &quot;<%= text %>&quot;<br /></small>\n'),
+    initialize: function (options) {
+        options = options || {};
+
+        this.listenTo(this.collection, "change", this.render);
+        _.bindAll(this, "render");
+        //check statusmeldung add small
+        //this.template = _.template('<small><%= name %> (<%= date %>): &quot;<%= text %>&quot;<br /></small>\n');
+        this.template = _.template('<%= name %> (<%= date %>): &quot;<%= text %>&quot;<br />\n');
+        this.filter = false;
+        if (options.filter) {
+            this.filter = options.filter;
         }
     },
-    redraw: function() {
-        var html='';
-        filtered=this.model.filter(this.filter);
+    render: function () {
+        console.log("Rendering mmv");
+        var html = '';
+        var filtered = this.collection.models;
+        if (this.filter) {
+            filtered = this.collection.filter(this.filter);
+        }
 
-        _.each(filtered,function(e) {
-            html+=this.template({
+        console.log(filtered);
+
+        _.each(filtered, function (e) {
+            var txt = e.get("move").get("msg");
+            var tpl = this.template;
+            if (txt.startsWith("-:K")) {
+                tpl = this.statusTemplate;
+            }
+            html += tpl({
                 name: e.get("player").get("name"),
-                text: e.get("move").get("msg")
+                text: Karopapier.Util.linkify(e.get("move").get("msg")),
+                date: moment(e.get("move").get("t"), "YYYY-MM-dd hh:mm:ss").format("YYYY-MM-DD")
             });
-        },this);
-        this.$el.html(html);
+        }, this);
+        console.log(html);
+        if (html) {
+            this.$el.html(html);
+            this.$el[0].scrollTop = this.$el[0].scrollHeight;
+        }
     }
 });

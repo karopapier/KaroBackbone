@@ -1,0 +1,20 @@
+digraph Karo {
+
+"Karopapier" -> "User"
+"User"-> "Login"
+"Karopapier" -> "Game"
+"Game" -> "Map"
+"Game" -> "MapVote"
+"Map" -> "MapVote"
+"Map"->"MapView"
+"Game" ->"Players"
+"Game" ->"MapView"
+"Players"->"MapView"
+"Game"->"Moves"
+"Moves"->"MapView"
+"Game" ->"MoveMessage"
+"Game" ->"Pin"
+"Game" -> "Bordfunk"
+"MapView" ->"ViewSettings"
+"Karopapier" ->"Chat"
+}
