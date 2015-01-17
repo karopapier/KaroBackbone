@@ -7,7 +7,7 @@ var GameInfoView = Backbone.View.extend({
 
         this.dirTitle = {
             "formula1": "Formula 1",
-            "classic": "Klassisch",
+            "classic": "klassisch",
             "free": "egal"
         }
         this.dirMeaning = {
@@ -17,17 +17,22 @@ var GameInfoView = Backbone.View.extend({
         }
 
         this.tcMeaning = {
-            "forbidden": "verboten"
+            "forbidden": "nicht erlaubt"
         }
     },
     render: function () {
+        if (!this.model.get("completed")) {
+            //console.log("Skip rendering, game not complete");
+            return false;
+        }
         var data = this.model.toJSON();
-        console.log(data);
         data.mapId = this.model.map.get("id");
         data.mapName = this.model.map.get("name");
         data.mapAuthor = this.model.map.get("author");
         data.dirMeaning = this.dirMeaning[data.dir];
         data.dirTitle = this.dirTitle[data.dir];
+        data.createdDate = moment(this.model.get("created"),"YYYY-MM-DD HH:mm").format("DD.MM.YYYY");
+        data.createdTime = moment(this.model.get("created"),"YYYY-MM-DD HH:mm").format("HH:mm");
 
         var cpStatus = "aktiviert";
         if (this.model.map.get("cps").lenght==0) {

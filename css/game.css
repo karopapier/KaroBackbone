@@ -1,3 +1,7 @@
+#gameTitle {
+    text-shadow: 2px 2px 0px rgba(100,100,200,0.5);
+}
+
 #moveMessages {
     max-height: 140px;
     overflow-y: scroll;

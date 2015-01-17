@@ -15,14 +15,11 @@ var MoveMessageView = Backbone.View.extend({
         }
     },
     render: function () {
-        console.log("Rendering mmv");
         var html = '';
         var filtered = this.collection.models;
         if (this.filter) {
             filtered = this.collection.filter(this.filter);
         }
-
-        console.log(filtered);
 
         _.each(filtered, function (e) {
             var txt = e.get("move").get("msg");
@@ -36,7 +33,7 @@ var MoveMessageView = Backbone.View.extend({
                 date: moment(e.get("move").get("t"), "YYYY-MM-dd hh:mm:ss").format("YYYY-MM-DD")
             });
         }, this);
-        console.log(html);
+
         if (html) {
             this.$el.html(html);
             this.$el[0].scrollTop = this.$el[0].scrollHeight;
