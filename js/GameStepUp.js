@@ -8,5 +8,11 @@ var mmv = new MoveMessageView({
     collection: game.moveMessages
 });
 
+var giv = new GameInfoView({
+    model: game,
+    el: "#gameInfo"
+});
+giv.render();
+
 
 mmv.render();
