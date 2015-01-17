@@ -77,6 +77,17 @@ var YOUTUBE_CACHE = {};
             return '<a class="GidLink' + gid + '" href="http://www.karopapier.de/showmap.php?GID=' + gid + '" target="_blank">' + gid + '</a>';
         });
 
+        text = text.replace(/:([a-z]*?):/g, function(all, smil) {
+            console.log(smil);
+            var img = document.createElement("img");
+            img.src="http://www.karopapier.de/bilder/smilies/"+smil+".gif";
+            img.onload=function() {
+                console.log("Ich lud");
+                $('.smiley.'+smil).replaceWith(img);
+            }
+            return '<span class="smiley ' + smil + '">'+ all + '</span>';
+        });
+
         return text;
     }
 }(Karopapier));
