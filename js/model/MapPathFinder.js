@@ -1,22 +1,22 @@
 var Path = Backbone.Model.extend({});
-var PathCollection = Backbone.Collection.extend({ model: Path })
+var PathCollection = Backbone.Collection.extend({model: Path})
 var MapPathFinder = Backbone.Model.extend({
         initialize: function (map) {
             if (typeof map === "undefined") {
                 throw "MAP_MISSING";
             }
             //console.log("INit Pathfinder");
-            _.bindAll(this, "reset","getMainField", "getAllOutlines", "getFieldOutlines", "getOutlineDirection");
+            _.bindAll(this, "reset", "getMainField", "getAllOutlines", "getFieldOutlines", "getOutlineDirection");
             this.map = map;
             this.reset();
 
             //console.log("MAP im Finder",this.map);
-            this.WILDCARD_FIELDS = ["F", "S", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+            this.ROAD_FIELDS = ["O", "F", "S", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
             this.modifiers = {
-                top: { r: -1, c: 0 },
-                right: { r: 0, c: +1 },
-                bottom: { r: +1, c: 0 },
-                left: { r: 0, c: -1 }
+                top: {r: -1, c: 0},
+                right: {r: 0, c: +1},
+                bottom: {r: +1, c: 0},
+                left: {r: 0, c: -1}
             };
             this.directions = {
                 "-1|0": "up",
@@ -26,11 +26,11 @@ var MapPathFinder = Backbone.Model.extend({
             };
             this.outlineModifiers = {
                 top: {
-                    from: { r: 0, c: 0},
-                    to: { r: 0, c: +1}
+                    from: {r: 0, c: 0},
+                    to: {r: 0, c: +1}
                 },
                 right: {
-                    from: { r: 0, c: +1},
+                    from: {r: 0, c: +1},
                     to: {r: +1, c: +1}
                 },
                 bottom: {
@@ -44,31 +44,35 @@ var MapPathFinder = Backbone.Model.extend({
             };
             //console.log("INit Pathfinder DONE");
         },
-        reset:function() {
+        reset: function () {
             this.outlines = {};
         },
         getMainField: function () {
 
-            function occurrences(string, subString, allowOverlapping){
+            function occurrences(string, subString, allowOverlapping) {
 
-                string+=""; subString+="";
-                if(subString.length<=0) return string.length+1;
+                string += "";
+                subString += "";
+                if (subString.length <= 0) return string.length + 1;
 
-                var n=0, pos=0;
-                var step=(allowOverlapping)?(1):(subString.length);
+                var n = 0, pos = 0;
+                var step = (allowOverlapping) ? (1) : (subString.length);
 
-                while(true){
-                    pos=string.indexOf(subString,pos);
-                    if(pos>=0){ n++; pos+=step; } else break;
+                while (true) {
+                    pos = string.indexOf(subString, pos);
+                    if (pos >= 0) {
+                        n++;
+                        pos += step;
+                    } else break;
                 }
-                return(n);
+                return (n);
             }
 
             var mc = this.map.get("mapcode");
             var mostChar = "";
             var charCount = 0;
             for (var char in this.map.FIELDS) {
-                var nb =  occurrences(mc,char)
+                var nb = occurrences(mc, char)
                 if (nb) {
                     if (nb > charCount) {
                         mostChar = char;
@@ -147,7 +151,7 @@ var MapPathFinder = Backbone.Model.extend({
                     if (a.length === 0) {
                         //console.log("del ", searchKey);
                         delete outlines[searchKey];
-                    //} else {
+                        //} else {
                         //console.info(o.length);
                     }
                 } else {
@@ -183,7 +187,10 @@ var MapPathFinder = Backbone.Model.extend({
         },
         getRowColFromKey: function (k) {
             var s = k.split("|");
-            return { r: parseInt(s[0]), c: parseInt(s[1])};
+            return {r: parseInt(s[0]), c: parseInt(s[1])};
+        },
+        isLikeRoad: function(s) {
+            return this.ROAD_FIELDS.indexOf(s) >=0;
         },
         getFieldOutlines: function (r, c) {
 
@@ -194,6 +201,7 @@ var MapPathFinder = Backbone.Model.extend({
 
             var testField;
 
+            var copyToRoad = false;
             for (var direction in this.modifiers) {
                 //console.log("Now doing directions: ",direction,"from ", r,c)
                 //console.log("Remembering i am coming from ", from);
@@ -206,6 +214,19 @@ var MapPathFinder = Backbone.Model.extend({
                 ////no need to draw the outline here
                 //return true;
                 //}
+
+                //SOme note: if both fields are in the list of ROAD fields, don't consider the outline
+                //solution: add an outline of a CP to "not Road" as an outline for road as well
+                //if we are on a "not road" and next is a road alternative, copy
+
+                copyToRoad = false;
+                if (currentField !== "O") {
+                    //now if we are on a "road alternative" and the outline is to something that is not road,
+                    // add the outline as a road outline as well
+                    if (this.isLikeRoad(currentField) && !this.isLikeRoad(testField)) {
+                        copyToRoad = true;
+                    }
+                }
 
                 if (testField != currentField) {
                     //add outlines
@@ -224,10 +245,26 @@ var MapPathFinder = Backbone.Model.extend({
                     var y2 = r + toMod.r;
                     var k = this.getKeyForRowCol(y1, x1);
 
-                    if (!(k in this.outlines[currentField])) {
-                        this.outlines[currentField][k] = [];
+                    //if we are on a road and next is a road alternative
+                    if (currentField == "O" && this.isLikeRoad(testField)) {
+                        //don't add it to road outlines
+                    } else {
+                        if (!(k in this.outlines[currentField])) {
+                            this.outlines[currentField][k] = [];
+                        }
+                        this.outlines[currentField][k].push({x1: x1, y1: y1, x2: x2, y2: y2});
                     }
-                    this.outlines[currentField][k].push({x1: x1, y1: y1, x2: x2, y2: y2});
+
+                    //if we should add to road
+                    if (copyToRoad) {
+                        if (!("O" in this.outlines)) {
+                            this.outlines["O"] = {};
+                        }
+                        if (!(k in this.outlines["O"])) {
+                            this.outlines["O"][k] = [];
+                        }
+                        this.outlines["O"][k].push({x1: x1, y1: y1, x2: x2, y2: y2});
+                    }
                 }
             }
 

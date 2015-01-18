@@ -75,7 +75,7 @@ var MapSvgView = MapBaseView.extend({
         if (cpsVisited.length == 0) return true;
         for (var cp = 0; cp < cpsVisited.length; cp++) {
             //console.log("CP",cpsVisited[cp]);
-            this.styleSheet.insertRule(".cp" + cpsVisited[cp] + " { fill-opacity: .3; }", this.styleSheet.cssRules.length);
+            this.styleSheet.insertRule(".cp" + cpsVisited[cp] + " { fill-opacity: .15; }", this.styleSheet.cssRules.length);
         }
     },
     adjustSize: function () {
@@ -115,12 +115,21 @@ var MapSvgView = MapBaseView.extend({
         //get outlines
         this.mapPathFinder.getAllOutlines();
         //console.log(this.mapPathFinder.outlines);
-        console.log("Found Outlines");
-        console.log(this.model.get("id"));
+        //console.log("Found Outlines");
+        //console.log(this.model.get("id"));
 
         //render paths
+        //make sure to render "road" first so it does not cover cps
+        var path = this.mapPathFinder.getSvgPathFromOutlines(this.mapPathFinder.outlines["O"], this.fieldSize);
+        var fieldClass = this.model.FIELDS["O"];
+        var p = this.makeSVG("path", {
+            d: path,
+            class: fieldClass
+        })
+        $paths[0].appendChild(p);
+
         for (var char in this.mapPathFinder.outlines) {
-            if (char !== mainchar) {
+            if (char !== mainchar && char !== "O") {
                 //console.log("Path for ",char);
                 var path = this.mapPathFinder.getSvgPathFromOutlines(this.mapPathFinder.outlines[char], this.fieldSize);
                 var fieldClass = this.model.FIELDS[char];
