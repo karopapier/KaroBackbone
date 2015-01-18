@@ -27,7 +27,7 @@ p {
 }
 
 select, textarea, input {
-    font-size: 0.8em;
+    /* font-size: 0.8em;*/
     background-color: #CCCCCC;
     color: #000000;
     border: 1px solid #999999
