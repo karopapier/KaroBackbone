@@ -71,6 +71,21 @@ module.exports = function (grunt) {
                     livereload: true
                 }
             }
+        },
+        jsdoc: {
+            dist: {
+                src: [
+                    'js/app/**/*.js',
+                    'js/collection/**/*.js',
+                    'js/layout/**/*.js',
+                    'js/model/**/*.js',
+                    'js/router/**/*.js',
+                    'js/view/**/*.js',
+                ],
+                options: {
+                    destination: 'doc'
+                }
+            }
         }
     });
 
@@ -78,6 +93,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jst');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-jsdoc');
 
     // Default task(s).
     grunt.registerTask('default', ['uglify', 'jst', 'watch']);
