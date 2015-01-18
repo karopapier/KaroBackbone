@@ -6,6 +6,7 @@
         <script src="js/libs/underscore-min.js"></script>
         <script src="js/libs/backbone-min.js"></script>
         <script src="js/libs/backbone.marionette.min.js"></script>
+        <script src="js/templates/JST.js"></script>
 
         <script src="js/model/Map.js"></script>
         <script src="js/view/MapBaseView.js"></script>
@@ -15,8 +16,6 @@
         <script src="js/view/MapImageView.js"></script>
         <script src="js/view/MapSvgView.js"></script>
         <script src="js/model/MapPathFinder.js"></script>
-        <script src="js/templates/ajst.js"></script>
-        <script src="js/templates/MapTemplate.js"></script>
     </head>
     <body>
         <div id="content"></div>
@@ -142,6 +141,10 @@
                 var mc = mapCodeView.getCode();
                 map.set({id: 0,mapcode:mc});
             })
+
+            if (!/karopapier/.test(window.location.hostname)) {
+                document.write('<scr' + 'ipt src="http://localhost:35729/livereload.js"></scr' + 'ipt>');
+            }
         </script>
     </body>
 </html>

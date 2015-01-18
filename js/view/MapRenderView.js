@@ -15,20 +15,20 @@ var MapRenderView = MapBaseView.extend({
         this.constructor.__super__.initialize.apply(this, arguments);
         _.bindAll(this, "render", "drawBorder", "drawField", "drawFlagField", "drawStandardField", "drawStartField");
         this.model.bind("change:mapcode", this.render);
-        this.mapViewSettings.bind("change", this.render);
+        this.settings.bind("change", this.render);
         this.palette = new MapRenderPalette();
     },
     render: function () {
         var map = this.model;
-        this.size = this.mapViewSettings.get("size");
-        this.border = this.mapViewSettings.get("border");
+        this.size = this.settings.get("size");
+        this.border = this.settings.get("border");
         this.el.width = map.get("cols") * (this.fieldSize);
         this.el.height = map.get("rows") * (this.fieldSize);
 
         this.ctx = this.el.getContext("2d");
 
         this.ctx.fillStyle = this.palette.getRGB("offroad");
-        this.ctx.lineWidth = this.mapViewSettings.get("size");
+        this.ctx.lineWidth = this.settings.get("size");
 
         this.ctx.fillRect(0, 0, this.el.width, this.el.height);
         for (var r = 0; r < map.get("rows"); r++) {

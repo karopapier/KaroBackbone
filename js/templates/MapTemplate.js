@@ -138,7 +138,7 @@ function MapTemplate(pathOnly) {
     tplt += '            >';
     tplt += '        </pattern>';
     tplt += '        <pattern id="cp1pattern" patternUnits="userSpaceOnUse" width="12" height="12" x="0" y="0">';
-    tplt += '            <rect x="0" y="0" width="12" height="12" class="cp1color"></rect>';
+    tplt += '            <rect x="1" y="0" width="12" height="12" class="cp1color"></rect>';
     tplt += '            <path d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"';
     tplt += '                  fill="black"></path>';
     tplt += '            <path d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"';

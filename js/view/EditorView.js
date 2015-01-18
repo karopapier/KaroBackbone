@@ -6,7 +6,7 @@ var EditorView = Backbone.View.extend({
 
         this.map = new Map();
         this.mapView = new MapRenderView({ model: this.map});
-        this.settings = this.mapView.mapViewSettings;
+        this.settings = this.mapView.settings;
         this.model = new Backbone.Model({
             buttonDown: 0
         });
@@ -38,7 +38,7 @@ var EditorView = Backbone.View.extend({
         //editorview needs to include a PLAIN MapRenderView and a MapCodeView
         //the EDITOR needs to handle mouse events and send draw commands to the mapview
 
-        //the EDIOTR needs to init a EditorToolsView and listen on changes of the settings, passing them to the MapView.mapViewSettings
+        //the EDIOTR needs to init a EditorToolsView and listen on changes of the settings, passing them to the MapView.settings
 
         //this.$el.append($('<input type="button" class="loadMapcode" value="Load" />'));
         this.map.bind("change:cps", function (e, cps) {

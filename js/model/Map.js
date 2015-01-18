@@ -1,10 +1,15 @@
-var Map = Backbone.Model.extend({
+var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
     defaults: {
         id: 0,
         cps: [],
         rows: 0,
         cols: 0
     },
+    /**
+     * Represents the map and its code
+     * @constructor Map
+     * @class Map
+     */
     initialize: function () {
         _.bindAll(this, "updateMapcode", "updateSize", "updateStarties", "updateCpList", "setFieldAtRowCol", "getFieldAtRowCol", "getPosFromRowCol");
         this.bind("change:mapcode", this.updateMapcode);

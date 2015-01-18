@@ -43,7 +43,7 @@ module.exports = function (grunt) {
         watch: {
             scripts: {
                 files: ['js/**/*.js', '!js/<%= pkg.name %>*.js'],
-                tasks: ['uglify'],
+                tasks: ['uglify', 'jsdoc'],
                 options: {
                     interrupt: true,
                     livereload: true
@@ -58,7 +58,7 @@ module.exports = function (grunt) {
                 }
             },
             statics: {
-                files: ['**/*.html', 'css/**/*', 'images/**/*'],
+                files: ['**/*.html', 'css/**/*', 'images/**/*', '!docs'],
                 options: {
                     interrupt: true,
                     livereload: true
