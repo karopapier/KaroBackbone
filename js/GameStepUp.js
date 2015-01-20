@@ -25,7 +25,8 @@ var svgView = new MapSvgView({
 
 var GameRouter = Backbone.Router.extend({
     routes: {
-        "game.html?GID=:gameId": "showGame"
+        "game.html?GID=:gameId": "showGame",
+        "newshowmap.php?GID=:gameId": "showGame"
     },
     showGame: function(gameId) {
         if (gameId) {
@@ -46,3 +47,4 @@ Backbone.history.start({
     pushState: true
 });
 
+console.log("Da");
