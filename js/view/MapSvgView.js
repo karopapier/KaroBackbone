@@ -93,8 +93,9 @@ var MapSvgView = MapBaseView.extend({
         var svgDOM = new DOMParser().parseFromString(svgSrcCode, "text/xml");
         this.SVG = svgDOM.documentElement;
         this.$SVG = $(this.SVG);
-        this.$el.empty();
-        this.el.appendChild(this.SVG);
+        var $old=this.$el;
+        this.setElement(this.SVG);
+        $old.replaceWith(this.$SVG);
         this.adjustSize();
     },
     renderFromPathFinder: function () {

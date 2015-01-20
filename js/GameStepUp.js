@@ -16,11 +16,9 @@ var gtv = new GameTitleView({
     model: game
 });
 
-var m = new Map();
-m.set("mapcode","XOSOFOX\nXO123OO\n45678OO\nOOOOOOO");
 var svgView = new MapSvgView({
-    el: "#mapImage",
-    model: m,
+    el: "#mapSvgView",
+    model: game.map,
     size: 11,
     border: 1
 })
