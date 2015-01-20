@@ -38,14 +38,14 @@ var Game = Backbone.Model.extend({
             data.game.completed = true;
             return data.game;
         } else {
-            console.warning("Dropped response for " + data.game.id);
+            console.warn("Dropped response for "+ data.game.id);
         }
     },
 
     load: function (id) {
         //silently set the id, events trigger after data is here
         this.set({"id": id, completed: false}, {silent: true});
-        console.info("Fetching for " + id);
+        console.info("Fetching game details for " + id);
         this.fetch();
     }
 });

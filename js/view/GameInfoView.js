@@ -21,6 +21,7 @@ var GameInfoView = Backbone.View.extend({
         }
     },
     render: function () {
+        //console.log("Render infos for ", this.model.get("name"));
         if (!this.model.get("completed")) {
             //console.log("Skip rendering, game not complete");
             return false;

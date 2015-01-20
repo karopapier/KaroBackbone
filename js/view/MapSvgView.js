@@ -5,14 +5,13 @@ var MapSvgView = MapBaseView.extend({
     initialize: function () {
         //init MapBaseView with creation of a settings model
         this.constructor.__super__.initialize.apply(this, arguments);
-        _.bindAll(this, "adjustSize", "render", "initSvg");
+        _.bindAll(this, "adjustSize", "render", "initSvg", "renderFromPathStore");
         this.initSvg();
 
-        this.settings.bind("change", this.adjustSize);
-        this.model.bind("change:rows change:cols", this.adjustSize);
-        this.model.bind("change:mapcode", this.render);
+        this.listenTo(this.settings, "change", this.adjustSize);
+        this.listenTo(this.model, "change:rows change:cols", this.adjustSize);
+        this.listenTo(this.model, "change:mapcode", this.render);
         this.listenTo(this.settings, "change:cpsVisited", this.updateCheckpoints);
-        this.model.bind("")
         this.paths = [];
 
         this.initCss();
@@ -93,7 +92,7 @@ var MapSvgView = MapBaseView.extend({
         var svgDOM = new DOMParser().parseFromString(svgSrcCode, "text/xml");
         this.SVG = svgDOM.documentElement;
         this.$SVG = $(this.SVG);
-        var $old=this.$el;
+        var $old = this.$el;
         this.setElement(this.SVG);
         $old.replaceWith(this.$SVG);
         this.adjustSize();
@@ -116,7 +115,7 @@ var MapSvgView = MapBaseView.extend({
         //get outlines
         this.mapPathFinder.getAllOutlines();
         //console.log(this.mapPathFinder.outlines);
-        //console.log("Found Outlines");
+        console.warn("Rendered using Outlines");
         //console.log(this.model.get("id"));
 
         //render paths
@@ -150,10 +149,35 @@ var MapSvgView = MapBaseView.extend({
             el.setAttribute(k, attrs[k]);
         return el;
     },
+    renderFromPathStore: function () {
+        var mps = new MapPathStore();
+        var me=this;
+        mps.getPath(this.model.get("id"), function (map) {
+            //get the map (from store or via request) and inject it via callback
+            //console.log("Ich hab ne Karte", map);
+            var parser = new DOMParser();
+            //parse the path, check if it is compressed
+            var path = map.p;
+            if (path.charAt(0) != "<") {
+                path = LZString.decompress(path);
+            }
+            //console.log("Path uncompressed: ",path);
+            var doc = parser.parseFromString(path, "image/svg+xml");
+            var mapNode = me.$SVG.find("#paths")[0];
+            while (mapNode.childNodes.length > 0) {
+                var f = mapNode.firstChild;
+                mapNode.removeChild(f);
+            }
+            //console.log("Jetzt einfug");
+            //console.log(doc.getElementById("mapSvgView"));
+            mapNode.appendChild(document.importNode(doc.getElementById("mapSvgView"), true));
+            //console.log("Gefugt");
+            document.getElementById('mapSvgView').setAttribute("viewBox", "0 0 " + (map.c * 12) + " " + (map.r * 12));
+        });
+    },
     render: function () {
         if (this.model.get("id") !== 0) {
-            //alert("Über Id");
-            this.renderFromPathFinder();
+            this.renderFromPathStore();
         } else {
             this.renderFromPathFinder();
         }

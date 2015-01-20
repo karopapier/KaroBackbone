@@ -1,5 +1,3 @@
-var Path = Backbone.Model.extend({});
-var PathCollection = Backbone.Collection.extend({model: Path})
 var MapPathFinder = Backbone.Model.extend({
         initialize: function (map) {
             if (typeof map === "undefined") {

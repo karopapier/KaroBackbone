@@ -62,7 +62,7 @@
 
         <script type="text/javascript">
             function chatlog() {
-                var chatfenster = window.open("chat.php?GID=$GID", "Fenster1", "width=800,height=500,left=100,top=100,scrollbars=yes,resizable=yes");
+                var chatfenster = window.open("chat.php?GID=" + game.get("id"), "Fenster1", "width=800,height=500,left=100,top=100,scrollbars=yes,resizable=yes");
             }
         </script>
 
@@ -79,19 +79,7 @@
 
                         <div class="mapvote" id="mapvote"></div>
                     </div>
-                    <div id=gameInfoOrig style="float: left">
-                        <B>Spielinfos:</B>
-                        <ul>
-                            <li>Game ID: 78483</li>
-                            <li>Karte: 96 - &quot;Wheel&quot; von Madeleine
-                            <li>Richtungsmodus <B>klassisch</B>, erst weg vom Ziel</li>
-                            <li>ZZZ steht auf 1.</li>
-                            <li>Checkpoints sind aktiviert
-                            <li>Taktisches Crashen ist <B>nicht erlaubt</B></li>
-                        </ul>
-                        &Uuml;brigens wurde das Spiel am 06.09.2013 um 22:46 von Madeleine gestartet
-                    </div>
-                    <div id=gameInfo style="float: left">asdf</div>
+                    <div id=gameInfo style="float: left"></div>
                     <div class="clearer"></div>
                 </td>
             </tr>
@@ -102,8 +90,9 @@
             Details <a href="http://www.karopapier.de/showthread.php?forumid=1&thread=960">hier</a></div>
 
 
-        <div id="mapImage" style="width:1380px; height: 1380px; position: relative;">
-            <IMG id=fgImg SRC=http://www.karopapier.de/imgenerateFG.php?GID=78483&pixel=11&karoborder=1&limit=2 usemap="#moves" BORDER=0 style="position: absolute; top:0; left:0; z-index:4">
+        <div id="mapImage" style="position: relative;">
+            <svg id="mapSvgView"></svg>
+            <img id="fgImg" src="http://www.karopapier.de/imgenerateFG.php?GID=78483&pixel=11&karoborder=1&limit=2" style="position: absolute; top:0; left:0; z-index:4">
         </div>
         <div class="clearer"></div>
 
