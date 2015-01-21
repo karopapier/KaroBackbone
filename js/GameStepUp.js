@@ -33,7 +33,7 @@ var GameRouter = Backbone.Router.extend({
             game.load(gameId);
         }
     }
-})
+});
 
 var mpl = new MapPlayerLayer({
     el: '#fgImg',
@@ -41,10 +41,14 @@ var mpl = new MapPlayerLayer({
 });
 mpl.render();
 
+var possView = new PossiblesView({
+    el: "#mapView",
+    game: game,
+    mapView: svgView
+});
+
 gr = new GameRouter();
 
 Backbone.history.start({
     pushState: true
 });
-
-console.log("Da");

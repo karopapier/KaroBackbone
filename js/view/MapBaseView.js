@@ -33,7 +33,7 @@ var MapBaseView = Backbone.View.extend(/** @lends MapBaseView.prototype */
             _.bindAll(this, "updateFieldSize", "getRowColFromXY", "getRowFromY", "getColFromX", "getXYFromRowCol", "getXFromCol", "getYFromRow", "getFieldAtXY", "setFieldAtXY", "setFieldAtRowCol");
             _.defaults(options, this.optionDefaults);
             this.settings = new Backbone.Model(options);
-            this.settings.bind("change:size change:border", this.updateFieldSize)
+            this.settings.bind("change:size change:border", this.updateFieldSize);
             this.updateFieldSize();
         },
         updateFieldSize: function () {
@@ -52,12 +52,11 @@ var MapBaseView = Backbone.View.extend(/** @lends MapBaseView.prototype */
             return {
                 "r": this.getRowFromY(y),
                 "c": this.getColFromX(x)
-            }
+            };
         },
         getRowFromY: function (y) {
             return Math.floor(y / this.fieldSize);
-        }
-        ,
+        },
         getColFromX: function (x) {
             return Math.floor(x / this.fieldSize);
         },
@@ -72,15 +71,15 @@ var MapBaseView = Backbone.View.extend(/** @lends MapBaseView.prototype */
             return {
                 "x": this.getXFromCol(c),
                 "y": this.getYFromRow(r)
-            }
+            };
         },
 
         getXFromCol: function (c) {
-            return (c + .5) * this.fieldSize;
+            return (c + 0.5) * this.fieldSize;
         },
 
         getYFromRow: function (r) {
-            return (r + .5) * this.fieldSize;
+            return (r + 0.5) * this.fieldSize;
         },
 
         getFieldAtXY: function (x, y) {
