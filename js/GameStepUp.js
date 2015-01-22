@@ -46,7 +46,7 @@ var mpl = new MapPlayerLayer({
 mpl.render();
 
 var possView = new PossiblesView({
-    el: "#mapView",
+    el: "#mapImage",
     game: game,
     mapView: svgView
 });
