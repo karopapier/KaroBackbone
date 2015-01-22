@@ -1,7 +1,7 @@
 var GameTitleView = Backbone.View.extend({
     template: window.JST["game/gameTitle"],
     initialize:function() {
-        this.listenTo(this.model,"change",this.render)
+        this.listenTo(this.model,"change:title",this.render)
     },
     render: function() {
         var $old=this.$el;

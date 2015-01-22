@@ -1,5 +1,43 @@
 <svg height="10" width="10" id="mapSvgView" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg">
     <defs>
+        <pattern y="0" x="0" height="24" width="24" patternUnits="userSpaceOnUse" id="grassPattern">
+            <rect class="grasscolor" height="24" width="24" y="0" x="0"></rect>
+            <rect class="grassspeclecolor" height="1" width="1" x="1" y="5"></rect>
+            <rect class="grassspeclecolor" height="1" width="1" x="1" y="5"></rect>
+            <rect class="grassspeclecolor" height="1" width="1" x="3" y="5"></rect>
+            <rect class="grassspeclecolor" height="1" width="1" x="6" y="7"></rect>
+            <rect class="grassspeclecolor" height="1" width="1" x="6" y="17"></rect>
+            <rect class="grassspeclecolor" height="1" width="1" x="8" y="21"></rect>
+            <rect class="grassspeclecolor" height="1" width="1" x="9" y="2"></rect>
+            <rect class="grassspeclecolor" height="1" width="1" x="12" y="4"></rect>
+            <rect class="grassspeclecolor" height="1" width="1" x="13" y="15"></rect>
+            <rect class="grassspeclecolor" height="1" width="1" x="14" y="4"></rect>
+            <rect class="grassspeclecolor" height="1" width="1" x="14" y="19"></rect>
+            <rect class="grassspeclecolor" height="1" width="1" x="17" y="7"></rect>
+            <rect class="grassspeclecolor" height="1" width="1" x="17" y="12"></rect>
+            <rect class="grassspeclecolor" height="1" width="1" x="18" y="23"></rect>
+            <rect class="grassspeclecolor" height="1" width="1" x="21" y="16"></rect>
+            <rect class="grassspeclecolor" height="1" width="1" x="23" y="12"></rect>
+        </pattern>
+        <pattern y="0" x="0" height="24" width="24" patternUnits="userSpaceOnUse" id="roadPattern">
+            <rect class="roadcolor" height="24" width="24" y="0" x="0"></rect>
+            <rect class="roadspeclecolor" height="1" width="1" x="1" y="5"></rect>
+            <rect class="roadspeclecolor" height="1" width="1" x="1" y="5"></rect>
+            <rect class="roadspeclecolor" height="1" width="1" x="3" y="5"></rect>
+            <rect class="roadspeclecolor" height="1" width="1" x="6" y="7"></rect>
+            <rect class="roadspeclecolor" height="1" width="1" x="6" y="17"></rect>
+            <rect class="roadspeclecolor" height="1" width="1" x="8" y="21"></rect>
+            <rect class="roadspeclecolor" height="1" width="1" x="9" y="2"></rect>
+            <rect class="roadspeclecolor" height="1" width="1" x="12" y="4"></rect>
+            <rect class="roadspeclecolor" height="1" width="1" x="13" y="15"></rect>
+            <rect class="roadspeclecolor" height="1" width="1" x="14" y="4"></rect>
+            <rect class="roadspeclecolor" height="1" width="1" x="14" y="19"></rect>
+            <rect class="roadspeclecolor" height="1" width="1" x="17" y="7"></rect>
+            <rect class="roadspeclecolor" height="1" width="1" x="17" y="12"></rect>
+            <rect class="roadspeclecolor" height="1" width="1" x="18" y="23"></rect>
+            <rect class="roadspeclecolor" height="1" width="1" x="21" y="16"></rect>
+            <rect class="roadspeclecolor" height="1" width="1" x="23" y="12"></rect>
+        </pattern>
         <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="grid">
             <line stroke-width="1" stroke="black" y2="12" x2="12" y1="0" x1="12"></line>
             <line stroke-width="1" stroke="black" y2="12" x2="12" y1="12" x1="0"></line>
@@ -12,7 +50,7 @@
         <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="startPattern">
             <rect fill="rgb(100,100,100)" height="12" width="12" y="0" x="0"></rect>
             <rect stroke-width="1" stroke="rgb(200,200,200)" fill="none" height="5" width="5" y="3.5" x="3.5"></rect>
-            &gt; </pattern>
+        </pattern>
         <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp1pattern">
             <rect class="cp1color" height="12" width="12" y="0" x="0"></rect>
             <path fill="black" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>

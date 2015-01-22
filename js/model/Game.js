@@ -44,7 +44,8 @@ var Game = Backbone.Model.extend({
 
     load: function (id) {
         //silently set the id, events trigger after data is here
-        this.set({"id": id, completed: false}, {silent: true});
+        //this.set({"id": id, completed: false}, {silent: true});
+        this.set({"id": id, completed: false});
         console.info("Fetching game details for " + id);
         this.fetch();
     }

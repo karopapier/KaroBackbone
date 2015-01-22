@@ -14,8 +14,8 @@ var MapRenderView = MapBaseView.extend({
         //init MapBaseView with creation of a settings model
         this.constructor.__super__.initialize.apply(this, arguments);
         _.bindAll(this, "render", "drawBorder", "drawField", "drawFlagField", "drawStandardField", "drawStartField");
-        this.model.bind("change:mapcode", this.render);
-        this.settings.bind("change", this.render);
+        this.listenTo(this.model, "change:mapcode", this.render);
+        this.listenTo(this.settings, "change", this.render);
         this.palette = new MapRenderPalette();
     },
     render: function () {

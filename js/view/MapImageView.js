@@ -5,8 +5,8 @@ var MapImageView = MapBaseView.extend({
         //init MapBaseView with creation of a settings model
         this.constructor.__super__.initialize.apply(this, arguments);
         _.bindAll(this, "render");
-        this.model.bind("change:id", this.render);
-        this.settings.bind("change", this.render);
+        this.listenTo(this.model, "change:id", this.render);
+        this.listenTo(this.settings, "change", this.render);
     },
     render: function () {
         var mapid = this.model.get("id");
