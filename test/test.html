@@ -4,20 +4,32 @@
         <meta charset="utf-8">
         <title>QUnit Example</title>
         <link rel="stylesheet" href="qunit-1.14.0.css">
+        <script>
+            var Karopapier = {};
+        </script>
 
         <script src="../js/libs/jquery-1.11.0.min.js"></script>
         <script src="../js/libs/underscore-min.js"></script>
         <script src="../js/libs/backbone-min.js"></script>
+        <script src="../js/libs/backbone-model-factory-min.js"></script>
         <script src="../js/libs/backbone.marionette.min.js"></script>
+        <script src="../js/templates/JST.js"></script>
         <script src="../js/model/Map.js"></script>
         <script src="../js/model/MapPathFinder.js"></script>
+        <script src="../js/model/Vector.js"></script>
 
     </head>
     <body>
         <div id="qunit"></div>
         <div id="qunit-fixture"></div>
         <script src="qunit-1.14.0.js"></script>
+        <script src="VectorTest.js"></script>
         <script src="MapTest.js"></script>
         <script src="MapPathFinderTest.js"></script>
+        <script>
+            if (!/karopapier/.test(window.location.hostname)) {
+                document.write('<scr' + 'ipt src="http://localhost:35729/livereload.js"></scr' + 'ipt>');
+            }
+        </script>
     </body>
 </html>

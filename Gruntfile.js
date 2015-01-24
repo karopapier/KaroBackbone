@@ -42,7 +42,7 @@ module.exports = function (grunt) {
         },
         watch: {
             scripts: {
-                files: ['js/**/*.js', '!js/<%= pkg.name %>*.js'],
+                files: ['js/**/*.js', '!js/<%= pkg.name %>*.js', 'test/**/*.js'],
                 tasks: ['uglify'],
                 options: {
                     interrupt: true,
