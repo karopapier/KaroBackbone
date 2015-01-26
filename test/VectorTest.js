@@ -1,6 +1,6 @@
 test("Vector tests", function () {
     var v;
-    expect(8);
+    expect(10);
     v = new Vector({x: -5, y: 7});
     equal(v.toString(), '(-5|7)', '->toString returns (|)');
 
@@ -34,4 +34,8 @@ test("Vector tests", function () {
     v = new Vector(-2,-7);
     v.decelerate();
     equal(v.toString(), "(-1|-6)", "->decelerate without param decelerates both when negative");
+
+    var v2 = v.clone();
+    equal(v.toString(),v2.toString(),"clones have same values");
+    notDeepEqual(v,v2,"clones should not be deep equal but have different ids");
 });

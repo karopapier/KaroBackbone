@@ -1,15 +1,30 @@
-/**
- * A Motion consists of a Position and a Vector. The Vector represents the current momentum, being the vector that "brought the Player here"
- * This means, the Position of a Motion represents the "target" or end point of the motion - NOT THE SOURCE (can be obtained with getSourcePosition() )
- *
- */
-var Motion = Backbone.Model.extend({
+var Motion = Backbone.Model.extend(/** @lends Motion.prototype*/{
     defaults: {
         position: new Position({x: 0, y: 0}),
         vector: new Vector({x: 0, y: 0})
     },
+    /**
+     * @constructor Motion
+     * @class Motion
+     * A Motion consists of a Position and a Vector. The Vector represents the current momentum, being the vector that "brought the Player here"
+     * This means, the Position of a Motion represents the "target" or end point of the motion - NOT THE SOURCE (can be obtained with getSourcePosition() )
+     *
+     */
     initialize: function () {
 
+    },
+    setXY1toXY2: function (x1, y1, x2, y2) {
+        var pos = new Position({x: x2, y: y2});
+        var vec = new Vector({x: x2 - x1, y: y2 - y1});
+        this.set("position", pos);
+        this.set("vector", vec);
+        return this;
+    },
+    clone: function () {
+        return new Motion({
+            position: this.get("position").clone(),
+            vector: this.get("vector").clone()
+        });
     },
     toString: function () {
         return this.get("position").toString() + " " + this.get("vector").toString();
@@ -48,10 +63,11 @@ var Motion = Backbone.Model.extend({
 
     /**
      * returns an array of the 9 theoretically possible motions, indexed by position
-     * @return array
+     * @return array(Motion)
      */
     /*
-     public function getNextMotionsPositionIndex()
+     getPossibles: function() {
+     }NextMotionsPositionIndex()
      {
      $nm=Array();
      #walk the 9 possibilities to have them arranged like
@@ -74,25 +90,28 @@ var Motion = Backbone.Model.extend({
      }
      */
 
-    /*
-     public function getNextMotions() {
-     $nm=Array();
-     #walk the 9 possibilities to have them arranged like
-     # 1 2 3
-     # 4 5 6
-     # 7 8 9
-     $tcount=1;
-     for ($tY=-1;$tY<=1;$tY++) {
-     for ($tX=-1;$tX<=1;$tX++) {
-     $nm[$tcount]=clone $this;
-     $nm[$tcount]->getVector()->setX($nm[$tcount]->getVector()->getX()+$tX);
-     $nm[$tcount]->getVector()->setY($nm[$tcount]->getVector()->getY()+$tY);
-     $tcount++;
-     }
-     }
-     return $nm;
-     }
+    getPossibles: function () {
+        var possibles = [];
+        //#walk the 9 possibilities to have them arranged like
+        //# 0 1 2
+        //# 3 4 5
+        //# 6 7 8
+        for (var iY = -1; iY <= 1; iY++) {
+            for (var iX = -1; iX <= 1; iX++) {
+                var v = new Vector({
+                    x: this.get("vector").get("x") + iX,
+                    y: this.get("vector").get("y") + iY
+                });
+                possibles.push(this.clone().move(v));
+            }
+        }
+        return possibles;
+    },
 
+    getPassedPositions: function () {
+        return this.getSourcePosition().getPassedPositionsTo(this.get("position"));
+    },
+    /*
      public function getNextMotionsSortedByLength() {
      $nm=$this->getNextMotions();
      $nml=Array();
@@ -116,6 +135,7 @@ var Motion = Backbone.Model.extend({
     move: function (v) {
         this.get("position").move(v);
         this.set("vector", v);
+        return this;
     }
 
     /*

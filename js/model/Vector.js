@@ -23,6 +23,9 @@ var Vector = Backbone.Model.extend({
         //console.log("X", this.get("x"));
         //console.log("Y", this.get("y"));
     },
+    clone: function() {
+        return new Vector(this.attributes);
+    },
     toString: function () {
         return '(' + this.get("x") + '|' + this.get("y") + ")";
     },
