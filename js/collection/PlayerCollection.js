@@ -3,7 +3,7 @@ var PlayerCollection = Backbone.Collection.extend({
 
     initialize: function(models, options) {
         this.moveMessages=options.moveMessages;
-        this.bind("reset",function(o,id) {
+        this.listenTo(this, "reset",function(o,id) {
             console.info("Init Players");
             //Look for messages
 

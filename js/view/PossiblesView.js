@@ -61,23 +61,21 @@ var PossiblesView = Backbone.View.extend({
         var lastmove = currentPlayer.get("lastmove");
         var mo = lastmove.getMotion();
         var possibles = mo.getPossibles();
-        console.log(possibles);
-        console.log(possibles.length);
-        var me = this;
-        var classes="possibleMove";
+        //console.log(possibles);
+        var classes = "possibleMove";
 
         for (var i = 0; i < 9; i++) {
             var possible = possibles[i];
             if (k.isPossible(possible)) {
-                console.log("Der is möglich", possible);
-                if (k.willCrash(possible,5)) {
-                    classes+=" willCrash";
-                    console.info("ABer crasht");
+                //console.log("Der is möglich", possible);
+                if (k.willCrash(possible, 5)) {
+                    classes += " willCrash";
+                    //console.info("ABer crasht");
                 }
                 var html = '<div class="' + classes + '" style="position: absolute; left: ' + possible.get("position").get("x") * 12 + 'px; top: ' + possible.get("position").get("y") * 12 + 'px; data-dirtyIndex="' + i + '"></div>';
                 this.$el.append(html);
             } else {
-                console.warn("Geht net", possible)
+                //console.warn("Geht net", possible)
             }
         }
         //check my turn add links

@@ -21,8 +21,6 @@ var Game = Backbone.Model.extend({
 
     parse: function (data) {
         //make sure data is matching current gameId (delayed responses get dropped)
-
-
         if (data.game.id == this.id) {
             //pass checkpoint info to map as "cpsActive" // map has cps attr as well, array of avail cps
             this.map.set({"cpsActive": data.game.cps}, {silent: true});

@@ -46,6 +46,11 @@ var GameRouter = Backbone.Router.extend({
     }
 });
 
+var pt = new PlayerTable({
+    collection: game.players,
+    el: "#playerTable"
+});
+
 var mpl = new MapPlayerLayer({
     el: '#fgImg',
     model: game
