@@ -93,7 +93,12 @@ var MapPathFinder = Backbone.Model.extend({
             while (r < rows) {
                 c = 0;
                 while (c < cols) {
-                    char = this.map.getFieldAtRowCol(r, c);
+                    if (this.map.withinBounds({row: r, col: c})) {
+                        char = this.map.getFieldAtRowCol(r, c);
+                    } else {
+                        char = "_";
+                    }
+
                     //if (char == "O") {
                     if (char in this.map.FIELDS) {
                         this.getFieldOutlines(r, c);
@@ -207,7 +212,11 @@ var MapPathFinder = Backbone.Model.extend({
                 var testR = r + mod.r;
                 var testC = c + mod.c;
 
-                testField = this.map.getFieldAtRowCol(testR, testC)
+                if (this.map.withinBounds({row: testR, col: testC})) {
+                    testField = this.map.getFieldAtRowCol(testR, testC)
+                } else {
+                    testField="_";
+                }
                 //if (this.WILDCARD_FIELDS.indexOf(testField) >= 0) {
                 ////no need to draw the outline here
                 //return true;

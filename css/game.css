@@ -1,9 +1,24 @@
 #gameTitle {
-    text-shadow: 2px 2px 0px rgba(100,100,200,0.5);
+    text-shadow: 2px 2px 0px rgba(100, 100, 200, 0.5);
 }
 
 #moveMessages {
     max-height: 140px;
     overflow-y: scroll;
     display: inline-block;
+}
+
+.possibleMove {
+    position: absolute;
+    margin: 1px;
+    width: 9px;
+    height: 9px;
+    background-color: lightgray;
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 50%;
+}
+
+.possibleMove.willCrash {
+    background-color: red;
 }

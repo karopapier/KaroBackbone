@@ -1,7 +1,7 @@
 var Motion = Backbone.Model.extend(/** @lends Motion.prototype*/{
     defaults: {
-        position: new Position({x: 0, y: 0}),
-        vector: new Vector({x: 0, y: 0})
+        position: {x:0,y:0},
+        vector: {x:0,y:0}
     },
     /**
      * @constructor Motion
