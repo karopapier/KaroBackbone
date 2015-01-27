@@ -51,6 +51,12 @@ var pt = new PlayerTable({
     el: "#playerTable"
 });
 
+var mpm = new MapPlayerMoves({
+    model: game,
+    collection: game.players,
+    el: '#mapPlayerMoves'
+})
+
 var mpl = new MapPlayerLayer({
     el: '#fgImg',
     model: game

@@ -32,6 +32,14 @@ var Motion = Backbone.Model.extend(/** @lends Motion.prototype*/{
     toKeyString: function () {
         return this.get("position").toString();
     },
+    toMove: function() {
+        return {
+            x: this.get("position").get("x"),
+            y: this.get("position").get("y"),
+            xv: this.get("vector").get("x"),
+            yv: this.get("vector").get("y")
+        }
+    },
     /**
      * @return Position
      */

@@ -54,7 +54,6 @@ var PlayerTable = Backbone.View.extend({
 	},
 
 	render: function() {
-		console.log("Ich rednere", this.collection);
 		var html = this.template({
 			items: this.collection /* a collection */,
 			playerTemplate: this.playerTemplate
