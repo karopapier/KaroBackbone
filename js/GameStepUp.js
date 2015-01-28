@@ -71,6 +71,18 @@ var possView = new PossiblesView({
     mapView: svgView
 });
 
+Karopapier.listenTo(possView,"game:player:move", function(playerId, mo) {
+    var player = game.players.get(playerId);
+    var move = new Move(mo.toMove());
+    move.set("t", Date());
+    player.set("lastmove", move);
+    player.get("moves").add(move);
+    console.warn(player);
+    mpm.render();
+    possView.render();
+
+});
+
 gr = new GameRouter();
 
 Backbone.history.start({

@@ -23,20 +23,22 @@ var PossiblesView = Backbone.View.extend({
         this.$('.possibleMove').remove();
     },
     checkMove: function (e) {
+        var dranId = this.game.get("dranId");
         console.log(e.currentTarget);
         var i = e.currentTarget.getAttribute("data-dirtyIndex");
-        if (Karopapier.User.get("id") !== this.game.get("dranId")) {
+        if (Karopapier.User.get("id") !== dranId) {
             alert("Du bist ja gar nicht dran");
             e.preventDefaults();
             return false;
         }
-        console.log(i);
-        console.log(this.possibles);
-        console.log(this.possibles[i]);
+        //console.log(i);
+        //console.log(this.possibles);
+        //console.log(this.possibles[i]);
         var p = this.possibles[i];
+        this.trigger("game:player:move", dranId, p);
         //http://www.karopapier.de/move.php?GID=83790&xpos=76&ypos=28&xvec=-2&yvec=2
-        var url = "http://www.karopapier.de/move.php?GID=" + this.game.get("id") + "&xpos=" + p.get("position").get("x") + "&ypos=" + p.get("position").get("y") + "&xvec=" + p.get("vector").get("x") + "&yvec=" + p.get("vector").get("y");
-        alert(url);
+        //var url = "http://www.karopapier.de/move.php?GID=" + this.game.get("id") + "&xpos=" + p.get("position").get("x") + "&ypos=" + p.get("position").get("y") + "&xvec=" + p.get("vector").get("x") + "&yvec=" + p.get("vector").get("y");
+        //alert(url);
 
     },
     hoverMove: function (e, a, b) {
