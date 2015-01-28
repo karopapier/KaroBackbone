@@ -5,7 +5,7 @@ var MapPlayerMoves = Backbone.View.extend({
         border: 1,
         limit: 2
     },
-    initialize: function(options) {
+    initialize: function (options) {
         if (!this.collection) {
             console.error("Missing Collection");
             return false;
@@ -13,15 +13,15 @@ var MapPlayerMoves = Backbone.View.extend({
         _.bindAll(this, "render");
         _.defaults(options, this.optionDefaults);
         this.settings = new Backbone.Model(options);
-        this.listenTo(this.settings, "change:size change:border", this.render);
+        this.listenTo(this.settings, "change:size change:border change:limit", this.render);
         this.listenTo(this.collection, "change", this.render);
         this.listenTo(this.collection, "reset", this.render);
     },
-    adjustSize: function() {
+    adjustSize: function () {
         //console.log(this.model.get("cols"));
         //console.log(this.fieldSize);
-        var w = this.model.map.get("cols") * this.settings.get("size");
-        var h = this.model.map.get("rows") * this.settings.get("size");
+        var w = this.model.map.get("cols") * (this.settings.get("size") + this.settings.get("border"));
+        var h = this.model.map.get("rows") * (this.settings.get("size") + this.settings.get("border") );
         this.$el.css({
             width: w,
             height: h
@@ -31,7 +31,7 @@ var MapPlayerMoves = Backbone.View.extend({
             height: h
         });
     },
-    render: function() {
+    render: function () {
         this.adjustSize();
         var gameId = this.model.get("id");
         if (gameId === 0) {
@@ -45,16 +45,47 @@ var MapPlayerMoves = Backbone.View.extend({
             }
         }
 
-        var me = this;
-        this.collection.each(function(player, i) {
+        //clear this el
+        while (this.el.childNodes.length > 0) {
+            var f = this.el.firstChild;
+            this.el.removeChild(f);
+        }
+
+        this.collection.each(function (player, i) {
             //console.info(player);
-            var moves = player.get("moves").last(4);
+            var limit = this.settings.get("limit");
+            if (Karopapier.User.get("id") === player.get("id")) {
+                //alle eigenen
+                limit = 0;
+            }
+            var moves = player.get("moves").toArray();
+            if (limit > 0) {
+                moves = player.get("moves").last(this.settings.get("limit") + 1);
+            }
+            //console.log(moves);
+            //console.log(player.attributes);
+            if (player.get("position") > 0) {
+                //finish, don't draw last line
+                moves.pop();
+                //console.log(moves);
+            }
             console.info(moves);
             var color = "#" + player.get("color");
-            var pathCode = "M" + (parseInt(moves[0].get("x")*12)+6) + "," +  (parseInt(moves[0].get("y")*12)+6);
-            moves.forEach(function(m, i) {
-                pathCode += "L" + (parseInt(m.get("x")*12)+6) + "," + (parseInt(m.get("y")*12)+6);
-            });
+            var pathCode = "M" + (parseInt(moves[0].get("x") * 12) + 6) + "," + (parseInt(moves[0].get("y") * 12) + 6);
+            moves.forEach(function (m, i) {
+                var x = parseInt(m.get("x"));
+                var y = parseInt(m.get("y"));
+                pathCode += "L" + (x * 12 + 6) + "," + (y * 12 + 6);
+                var square = Karopapier.Util.createSvg("rect",{
+                    x: x*12+4,
+                    y:y*12+4,
+                    width: 4,
+                    height: 4,
+                    fill: color
+                })
+                this.el.appendChild(square);
+                console.log(square);
+            }.bind(this));
             console.log(pathCode);
             var p = Karopapier.Util.createSvg("path", {
                 d: pathCode,
@@ -72,7 +103,7 @@ var MapPlayerMoves = Backbone.View.extend({
                 cy: m.get("y") * 12 + 5.5,
                 r: 4,
                 //stroke: "black",
-                fill: "#" + player.get("color")
+                fill: color
             });
             this.el.appendChild(currentPosition);
         }.bind(this));

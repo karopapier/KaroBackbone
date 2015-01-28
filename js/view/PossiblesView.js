@@ -80,7 +80,7 @@ var PossiblesView = Backbone.View.extend({
                 //console.log("Der is möglich", possible);
                 var div = $('<div class="possibleMove" style="left: ' + possible.get("position").get("x") * 12 + 'px; top: ' + possible.get("position").get("y") * 12 + 'px;" data-dirtyIndex="' + i + '"></div>');
                 var me=this;
-                setTimeout(this.checkWillCrash.bind(this,div, k, possible, i),0);
+                setTimeout(this.checkWillCrash.bind(this,div, k, possible, i),100+i);
                 this.$el.append(div);
             } else {
                 //console.warn("Geht net", possible);
