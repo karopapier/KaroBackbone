@@ -2,7 +2,8 @@ var MapPlayerMoves = Backbone.View.extend({
     tag: "svg",
     optionDefaults: {
         size: 11,
-        border: 1
+        border: 1,
+        limit: 2
     },
     initialize: function(options) {
         if (!this.collection) {

@@ -77,7 +77,7 @@ Karopapier.listenTo(possView,"game:player:move", function(playerId, mo) {
     move.set("t", Date());
     player.set("lastmove", move);
     player.get("moves").add(move);
-    console.warn(player);
+    //console.warn(player);
     mpm.render();
     possView.render();
 

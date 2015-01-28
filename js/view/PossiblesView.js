@@ -50,7 +50,7 @@ var PossiblesView = Backbone.View.extend({
     checkWillCrash: function(div, k, mo, i) {
         //console.info("Crash check");
         //console.log(mo.toString());
-        if (k.willCrash(mo, 5)) {
+        if (k.willCrash(mo, 9)) {
             //console.warn("Das kracht",mo);
             div.addClass("willCrash");
         }

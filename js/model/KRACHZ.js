@@ -22,6 +22,7 @@ var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
             console.error("No map provided to KRACHZ");
             return false;
         }
+        this.cache={};
     },
     getPassedFields: function (mo) {
         if (!mo) console.error("No motion given");
@@ -57,7 +58,10 @@ var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
     willCrash: function (mo, depth) {
         if (depth===0) return false;
         if (depth===1) return !this.isPossible(mo);
-        //console.log("starting",mo.toString(), depth);
+        if (mo.get("vector").toString() == "(0|0)") {
+            return false;
+        }
+        console.warn("starting",mo.toString(), depth);
         if (!depth) depth = 8;
         var possibles = mo.getPossibles();
         //console.log(possibles);
@@ -66,10 +70,17 @@ var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
         var crashes = 0;
         for (var p = 0; p < possibles.length; p++) {
             //console.info(possibles[p],"now")
-            if (this.isPossible(possibles[p])) {
-                //console.log("is possible, go deeper");
+            var possible = possibles[p];
+            if (this.isPossible(possible)) {
+                var moString = possible.toString();
+                console.log(moString, "is possible, go deeper");
                 if (depth>=1) {
-                    var wc = this.willCrash(possibles[p], depth - 1);
+                    if (moString in this.cache) {
+                        console.info("Cached",moString);
+                        return this.cache[moString];
+                    }
+                    var wc = this.willCrash(possible, depth - 1);
+                    this.cache[moString]=wc;
                     if (wc) crashes++;
                 }
             } else {
