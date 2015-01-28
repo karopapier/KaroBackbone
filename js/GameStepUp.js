@@ -1,8 +1,8 @@
 Karopapier.User = new User({});
 //make this user refer to "check" for loging in
 Karopapier.User.url = function () {
-    return "http://www.karopapier.de/api/user/check.json?callback=?"
-}
+    return "http://www.karopapier.de/api/user/check.json?callback=?";
+};
 Karopapier.User.fetch();
 
 var game = new Game();
@@ -55,13 +55,15 @@ var mpm = new MapPlayerMoves({
     model: game,
     collection: game.players,
     el: '#mapPlayerMoves'
-})
+});
 
+/*
 var mpl = new MapPlayerLayer({
     el: '#fgImg',
     model: game
 });
 mpl.render();
+*/
 
 var possView = new PossiblesView({
     el: "#mapImage",
@@ -74,3 +76,4 @@ gr = new GameRouter();
 Backbone.history.start({
     pushState: true
 });
+console.info("Stepup done");

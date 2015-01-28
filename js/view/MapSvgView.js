@@ -179,6 +179,7 @@ var MapSvgView = MapBaseView.extend({
             //console.log("Gefugt");
             document.getElementById('mapSvgView').setAttribute("viewBox", "0 0 " + (map.c * 12) + " " + (map.r * 12));
         });
+        console.info("path render done");
     },
     render: function () {
         if (this.model.get("id") !== 0) {

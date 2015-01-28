@@ -45,6 +45,14 @@ var PossiblesView = Backbone.View.extend({
     unhoverMove: function (e, a, b) {
         //console.log(e);
     },
+    checkWillCrash: function(div, k, mo, i) {
+        //console.info("Crash check");
+        //console.log(mo.toString());
+        if (k.willCrash(mo, 5)) {
+            //console.warn("Das kracht",mo);
+            div.addClass("willCrash");
+        }
+    },
     render: function (a, b, c) {
         if (!this.game.get("completed")) return true;
         this.clearPossibles();
@@ -62,19 +70,18 @@ var PossiblesView = Backbone.View.extend({
         this.possibles = mo.getPossibles();
         //console.log(possibles);
         var classes = "possibleMove";
+        this.$(".possibleMove").remove();
 
         for (var i = 0; i < 9; i++) {
             var possible = this.possibles[i];
             if (k.isPossible(possible)) {
                 //console.log("Der is möglich", possible);
-                if (k.willCrash(possible, 5)) {
-                    classes += " willCrash";
-                    //console.info("ABer crasht");
-                }
-                var html = '<div class="' + classes + '" style="left: ' + possible.get("position").get("x") * 12 + 'px; top: ' + possible.get("position").get("y") * 12 + 'px;" data-dirtyIndex="' + i + '"></div>';
-                this.$el.append(html);
+                var div = $('<div class="possibleMove" style="left: ' + possible.get("position").get("x") * 12 + 'px; top: ' + possible.get("position").get("y") * 12 + 'px;" data-dirtyIndex="' + i + '"></div>');
+                var me=this;
+                setTimeout(this.checkWillCrash.bind(this,div, k, possible, i),0);
+                this.$el.append(div);
             } else {
-                //console.warn("Geht net", possible)
+                //console.warn("Geht net", possible);
             }
         }
         //check my turn add links
