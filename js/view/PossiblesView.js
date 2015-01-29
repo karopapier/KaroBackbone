@@ -76,6 +76,7 @@ var PossiblesView = Backbone.View.extend({
         var classes = "possibleMove";
         this.$(".possibleMove").remove();
 
+        console.warn("#TODO: Need to check current player positions");
         for (var i = 0; i < this.possibles.length; i++) {
             var possible = this.possibles[i];
             if (k.isPossible(possible)) {

@@ -81,7 +81,85 @@ Karopapier.listenTo(possView,"game:player:move", function(playerId, mo) {
     mpm.render();
     possView.render();
 
+    //build move url
+    //http://www.karopapier.de/move.php?GID=83790&xpos=76&ypos=28&xvec=-2&yvec=2
+    var m = mo.toMove();
+    var moveUrl = "http://www.karopapier.de/move.php?GID=" + game.get("id") + "&xpos=" + m.x + "&ypos=" + m.y + "&xvec=" + m.xv + "&yvec=" + m.yv;
+    console.log(moveUrl);
+
+    myTextGet(moveUrl, function(text) {
+        parseMoveResponse(text);
+    });
+
+    //send
+    //check response
+    //load next
+
 });
+
+/*
+setTimeout(function() {
+$.get("/moveresponse.txt",function(data) {
+    parseMoveResponse(data);
+});
+},500);
+*/
+function parseMoveResponse(text) {
+    //indexOf Danke ==ok
+    if (text.indexOf("Danke.")>=0) {
+        console.log("GUT");
+        //<B>Didi</B> kommt als n&auml;chstes dran
+        var hits =  text.match(/<B>(.*?)<\/B> kommt als n/);
+        var nextPlayer="Unknown";
+        if (hits.length>1) {
+            nextPlayer = hits[1];
+        }
+        console.log("Next",nextPlayer);
+        //Didi == me => nochmal
+        console.log("ME",Karopapier.User.get("login"));
+        if (nextPlayer == Karopapier.User.get("login")) {
+            console.info("NOMMAL DRAN");
+            game.load(game.get("id"));
+            return true;
+        }
+
+        //<A HREF=showmap.php?GID=82749> -> folge id
+        var gids = text.match(/showmap.php\?GID=(\d*?)>Du bist/);
+        console.log(gids);
+        if (gids.length>1) {
+            console.log(gids[1]);
+            gr.navigate("game.html?GID=" + gids[1],{trigger: true });
+        }
+    } else {
+        alert("KEIN DANKE!!!");
+        console.log(text);
+    }
+}
+
+function myTextGet(url, cb, errcb) {
+    var request = new XMLHttpRequest();
+    request.withCredentials = true;
+    request.open('GET', url, true);
+    request.onload = function() {
+        if (request.status >= 200 && request.status < 400) {
+            // Success!
+            //console.log(request.responseText);
+            cb(request.responseText);
+            //console.log("Success: ",request.responseText.indexOf("Danke.") >=0);
+        } else {
+            // We reached our target server, but it returned an error
+            cb(request.responseText);
+            //console.log("doof",request);
+        }
+    };
+
+    request.onerror = function() {
+        // There was a connection error of some sort
+    };
+
+    request.send();
+};
+
 
 gr = new GameRouter();
 
