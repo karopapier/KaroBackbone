@@ -2,11 +2,11 @@ var User = Backbone.ModelFactory({
     defaults: {
         id: 0,
         login: "Gast",
-        dran: 0
+        dran: -1
     },
     initialize: function() {
-        _.bindAll(this, "increaseDran", "decreaseDran")
-        //console.log("I am ", this);
+        _.bindAll(this, "increaseDran", "decreaseDran");
+        this.url= "http://www.karopapier.de/api/user/"+ this.get("id")+"/info.json?callback=?";
     },
     increaseDran: function() {
         this.set("dran", this.get("dran")+1);

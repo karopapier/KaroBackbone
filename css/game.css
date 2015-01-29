@@ -22,3 +22,9 @@
 .possibleMove.willCrash {
     background-color: red;
 }
+
+.playerInfo {
+    width: 200px;
+    height: 150px;
+    background-color: rgba(200,200,200,.9);
+}

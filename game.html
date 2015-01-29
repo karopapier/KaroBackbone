@@ -24,13 +24,13 @@
         <script type="text/javascript" src="js/templates/JST.js"></script>
         <script type="text/javascript" src="js/KaroBackbone.js"></script>
 
-        <link id="favicon" rel="shortcut icon" href="favicon.ico" />
+        <link id="favicon" rel="shortcut icon" href="favicon.ico"/>
 
-        <link rel="stylesheet" href="css/main.css" />
-        <link rel="stylesheet" href="css/global.css" />
-        <link rel="stylesheet" href="css/game.css" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-        <meta charset="utf-8" />
+        <link rel="stylesheet" href="css/main.css"/>
+        <link rel="stylesheet" href="css/global.css"/>
+        <link rel="stylesheet" href="css/game.css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+        <meta charset="utf-8"/>
     </head>
     <BODY BACKGROUND="/images/karolight.gif" BGCOLOR=#FFFFFF TEXT=#333399 LINK=#3333FF VLINK=#3333EE ALINK=#0000FF>
         <script type="text/javascript" src="http://www.karopapier.de/js/jquery.tablesorter.min.js"></script>
@@ -85,23 +85,76 @@
             </tr>
         </table>
 
-        <div style="position:absolute;right:0;top:0; font-size: 8pt">Experiment:<br />
-            <img src="/images/loading.gif" id="pinstatus" style="height: 30px" /><br />
+        <div style="position:absolute;right:0;top:0; font-size: 8pt">Experiment:<br/>
+            <img src="/images/loading.gif" id="pinstatus" style="height: 30px"/><br/>
             Details <a href="http://www.karopapier.de/showthread.php?forumid=1&thread=960">hier</a></div>
 
 
-        <div id="mapImage" style="position: relative;">
-            <svg id="mapSvgView"></svg>
-            <svg id="mapPlayerMoves" style="position: absolute; top:0; left:0; z-index: 5"></svg>
-        </div>
+        <!--<div id="mapImageContainer" style="position: relative; width: 400px; height:400px; overflow: hidden"> -->
+            <div id="mapImage" style="position: relative;">
+                <svg id="mapSvgView"></svg>
+                <svg id="mapPlayerMoves" style="position: absolute; top:0; left:0; z-index: 5"></svg>
+            </div>
+        <!--</div> -->
         <div class="clearer"></div>
+        <script>
+            /*
+            $(document).ready(function () {
+                var $dragging = null;
+                var oX = 0;
+                var oY = 0;
+                var x = 0;
+                var y = 0;
+                var scale = 1;
+                var $target = $('#mapImage')
+                function trans() {
+                    $target.css({
+                        transform: "translate(" + x + "px, " + y + "px) scale(" + scale + ")"
+                    });
+
+                }
+
+                $(document.body).on("mousemove", function (e) {
+                    if ($dragging) {
+                        console.log(e);
+                        console.log(oX, oY);
+                        x = e.pageX - oX;
+                        y = e.pageY - oY;
+                        trans()
+                        e.preventDefault();
+                    }
+                });
+                $(document.body).on("mousewheel", "#mapImageContainer", function (e) {
+                    var dir = e.originalEvent.wheelDelta;
+                    if (dir>0) {
+                        scale *=1.1
+                    } else {
+                        scale /=1.1
+                    }
+                    trans();
+                    e.preventDefault();
+                });
+
+                $(document.body).on("mousedown", "#mapImageContainer", function (e) {
+                    console.log(e);
+                    oX = e.offsetX;
+                    oY = e.offsetY;
+                    $dragging = true;
+                });
+
+                $(document.body).on("mouseup", function (e) {
+                    $dragging = null;
+                });
+            });
+            */
+        </script>
 
         Mitfahrer-Z&uuml;ge anzeigen: <a href="#" data-limit="0" class="drawLimiter">&nbsp;Alle&nbsp;</a>,
         <a href="#" data-limit="2" class="drawLimiter">&nbsp;2&nbsp;</a>,
         <a href="#" data-limit="5" class="drawLimiter">&nbsp;5&nbsp;</a>,
         <a href="#" data-limit="10" class="drawLimiter">&nbsp;10&nbsp;</a>
         - Dauerhafte &Auml;nderung <a href="/karte.php">hier</a>
-        <br />
+        <br/>
         <BR>
 
         Du bist dran, bitte mach Deinen Zug<BR>
@@ -130,7 +183,8 @@
         <BR>
 
         <div id="moveMessagesView">
-            <b>Bordfunk</b><br />
+            <b>Bordfunk</b><br/>
+
             <div id="moveMessages">
                 <small>MrMM (14.10.2014): &quot;<i>Ich bin ausgestiegen</i>&quot;</small>
                 <BR>
@@ -139,164 +193,166 @@
                 <small>Stickerle (18.11.2013): &quot;<i>Ich werde 1 Z&uuml;ge zur&uuml;ckgesetzt</i>&quot;</small>
             </div>
         </div>
-        <br />
+        <br/>
 
         <div id="playerTable"></div>
         <TABLE BORDER=1 id="tabspielinfo">
             <thead>
-                <TR>
-                    <TH style="min-width: 80px">Farbe</TH>
-                    <TH style="min-width:100px">Spieler</TH>
-                    <TH>Z&uuml;ge</TH>
-                    <TH>Runde</TH>
+            <TR>
+                <TH style="min-width: 80px">Farbe</TH>
+                <TH style="min-width:100px">Spieler</TH>
+                <TH>Z&uuml;ge</TH>
+                <TH>Runde</TH>
 
-                    <TH>Checkpoints</TH>
-                    <TH>Letzter Zug</TH>
-                    <TH>Bedenkzeit</TH>
-                    <TD>Kick</TD>
-                    <TD>BE!</TD>
-                </TR>
+                <TH>Checkpoints</TH>
+                <TH>Letzter Zug</TH>
+                <TH>Bedenkzeit</TH>
+                <TD>Kick</TD>
+                <TD>BE!</TD>
+            </TR>
             </thead>
             <tbody>
-                <TR>
-                    <TD BGCOLOR=#ffea00>&nbsp</TD>
-                    <TD>aristarch</TD>
-                    <TD ALIGN=CENTER>46</TD>
-                    <TD>&nbsp;<FONT COLOR=#00CC00>kommt noch</FONT></TD>
-                    <TD ALIGN=CENTER>1/8</TD>
-                    <TD>2015-01-09 23:48:37</TD>
-                    <TD>2 Tage, 10:36:33</TD>
-                    <TD><A HREF=kickplayer.php?GID=78483&UID=2231>Kicken</A></TD>
-                    <TD><A HREF=beplayer.php?GID=78483&UID=2231>BE!</A></TD>
-                </TR>
-                <TR>
-                    <TD BGCOLOR=#ffffff>&nbsp</TD>
-                    <TD>Didi</TD>
-                    <TD ALIGN=CENTER>46</TD>
-                    <TD>&nbsp;<B>dran</B></TD>
-                    <TD ALIGN=CENTER>1/8</TD>
-                    <TD>2015-01-09 20:46:48</TD>
-                    <TD>151 Tage, 16:38:54</TD>
-                    <TD><A HREF=kickplayer.php?GID=78483&UID=1>Kicken</A></TD>
-                    <TD><A HREF=beplayer.php?GID=78483&UID=1>BE!</A></TD>
-                </TR>
-                <TR>
-                    <TD BGCOLOR=#FF0000>&nbsp</TD>
-                    <TD>hasi</TD>
-                    <TD ALIGN=CENTER>47</TD>
-                    <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
-                    <TD ALIGN=CENTER>1/8</TD>
-                    <TD>2015-01-13 11:48:07</TD>
-                    <TD>19 Tage, 04:03:10</TD>
-                    <TD><A HREF=kickplayer.php?GID=78483&UID=2226>Kicken</A></TD>
-                    <TD><A HREF=beplayer.php?GID=78483&UID=2226>BE!</A></TD>
-                </TR>
-                <TR>
-                    <TD BGCOLOR=#CCFF00>&nbsp</TD>
-                    <TD>JokerHF</TD>
-                    <TD ALIGN=CENTER>47</TD>
-                    <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
-                    <TD ALIGN=CENTER>1/8</TD>
-                    <TD>2015-01-13 23:05:49</TD>
-                    <TD>6 Tage, 09:02:25</TD>
-                    <TD><A HREF=kickplayer.php?GID=78483&UID=2492>Kicken</A></TD>
-                    <TD><A HREF=beplayer.php?GID=78483&UID=2492>BE!</A></TD>
-                </TR>
-                <TR>
-                    <TD BGCOLOR=#F0F0F0>&nbsp</TD>
-                    <TD>kili</TD>
-                    <TD ALIGN=CENTER>47</TD>
-                    <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
-                    <TD ALIGN=CENTER>1/8</TD>
-                    <TD>2015-01-14 09:07:46</TD>
-                    <TD>2 Tage, 13:22:28</TD>
-                    <TD><A HREF=kickplayer.php?GID=78483&UID=210>Kicken</A></TD>
-                    <TD><A HREF=beplayer.php?GID=78483&UID=210>BE!</A></TD>
-                </TR>
-                <TR>
-                    <TD BGCOLOR=#F7C9A3>&nbsp</TD>
-                    <TD>Madeleine</TD>
-                    <TD ALIGN=CENTER>46</TD>
-                    <TD>&nbsp;<FONT COLOR=#00CC00>kommt noch</FONT></TD>
-                    <TD ALIGN=CENTER>1/8</TD>
-                    <TD>2015-01-02 17:11:15</TD>
-                    <TD>30 Tage, 06:23:45</TD>
-                    <TD><A HREF=kickplayer.php?GID=78483&UID=563>Kicken</A></TD>
-                    <TD><A HREF=beplayer.php?GID=78483&UID=563>BE!</A></TD>
-                </TR>
-                <TR>
-                    <TD BGCOLOR=#000066>&nbsp</TD>
-                    <TD>Michael</TD>
-                    <TD ALIGN=CENTER>46</TD>
-                    <TD>&nbsp;<FONT COLOR=#00CC00>kommt noch</FONT></TD>
-                    <TD ALIGN=CENTER>1/8</TD>
-                    <TD>2015-01-13 10:23:23</TD>
-                    <TD>91 Tage, 15:15:45</TD>
-                    <TD><A HREF=kickplayer.php?GID=78483&UID=2411>Kicken</A></TD>
-                    <TD><A HREF=beplayer.php?GID=78483&UID=2411>BE!</A></TD>
-                </TR>
-                <TR>
-                    <TD BGCOLOR=#FF6600>&nbsp</TD>
-                    <TD>mr-burns123</TD>
-                    <TD ALIGN=CENTER>47</TD>
-                    <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
-                    <TD ALIGN=CENTER>1/8</TD>
-                    <TD>2015-01-13 19:00:30</TD>
-                    <TD>10 Tage, 14:37:12</TD>
-                    <TD><A HREF=kickplayer.php?GID=78483&UID=2265>Kicken</A></TD>
-                    <TD><A HREF=beplayer.php?GID=78483&UID=2265>BE!</A></TD>
-                </TR>
-                <TR>
-                    <TD BGCOLOR=#99FF33>&nbsp</TD>
-                    <TD>MrMM</TD>
-                    <TD ALIGN=CENTER>31</TD>
-                    <TD>&nbsp;ausgestiegen</TD>
-                    <TD ALIGN=CENTER>0/8</TD>
-                    <TD>2014-10-14 21:22:27</TD>
-                    <TD>150 Tage, 03:19:57</TD>
-                    <TD><A HREF=kickplayer.php?GID=78483&UID=2118>Kicken</A></TD>
-                    <TD><A HREF=beplayer.php?GID=78483&UID=2118>BE!</A></TD>
-                </TR>
-                <TR>
-                    <TD BGCOLOR=#63B8FF>&nbsp</TD>
-                    <TD>recke</TD>
-                    <TD ALIGN=CENTER>47</TD>
-                    <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
-                    <TD ALIGN=CENTER>1/8</TD>
-                    <TD>2015-01-14 06:13:56</TD>
-                    <TD>10 Tage, 01:18:14</TD>
-                    <TD><A HREF=kickplayer.php?GID=78483&UID=1989>Kicken</A></TD>
-                    <TD><A HREF=beplayer.php?GID=78483&UID=1989>BE!</A></TD>
-                </TR>
-                <TR>
-                    <TD BGCOLOR=#FFFFCC>&nbsp</TD>
-                    <TD>Schattenparker</TD>
-                    <TD ALIGN=CENTER>22</TD>
-                    <TD>&nbsp;ausgestiegen</TD>
-                    <TD ALIGN=CENTER>0/8</TD>
-                    <TD>2014-03-17 16:08:37</TD>
-                    <TD>13 Tage, 19:12:02</TD>
-                    <TD><A HREF=kickplayer.php?GID=78483&UID=2486>Kicken</A></TD>
-                    <TD><A HREF=beplayer.php?GID=78483&UID=2486>BE!</A></TD>
-                </TR>
-                <TR>
-                    <TD BGCOLOR=#006600>&nbsp</TD>
-                    <TD>Stickerle</TD>
-                    <TD ALIGN=CENTER>47 + 2 Crash</TD>
-                    <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
-                    <TD ALIGN=CENTER>1/8</TD>
-                    <TD>2015-01-14 09:10:17</TD>
-                    <TD>5 Tage, 17:13:46</TD>
-                    <TD><A HREF=kickplayer.php?GID=78483&UID=2270>Kicken</A></TD>
-                    <TD><A HREF=beplayer.php?GID=78483&UID=2270>BE!</A></TD>
-                </TR>
+            <TR>
+                <TD BGCOLOR=#ffea00>&nbsp</TD>
+                <TD>aristarch</TD>
+                <TD ALIGN=CENTER>46</TD>
+                <TD>&nbsp;<FONT COLOR=#00CC00>kommt noch</FONT></TD>
+                <TD ALIGN=CENTER>1/8</TD>
+                <TD>2015-01-09 23:48:37</TD>
+                <TD>2 Tage, 10:36:33</TD>
+                <TD><A HREF=kickplayer.php?GID=78483&UID=2231>Kicken</A></TD>
+                <TD><A HREF=beplayer.php?GID=78483&UID=2231>BE!</A></TD>
+            </TR>
+            <TR>
+                <TD BGCOLOR=#ffffff>&nbsp</TD>
+                <TD>Didi</TD>
+                <TD ALIGN=CENTER>46</TD>
+                <TD>&nbsp;<B>dran</B></TD>
+                <TD ALIGN=CENTER>1/8</TD>
+                <TD>2015-01-09 20:46:48</TD>
+                <TD>151 Tage, 16:38:54</TD>
+                <TD><A HREF=kickplayer.php?GID=78483&UID=1>Kicken</A></TD>
+                <TD><A HREF=beplayer.php?GID=78483&UID=1>BE!</A></TD>
+            </TR>
+            <TR>
+                <TD BGCOLOR=#FF0000>&nbsp</TD>
+                <TD>hasi</TD>
+                <TD ALIGN=CENTER>47</TD>
+                <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
+                <TD ALIGN=CENTER>1/8</TD>
+                <TD>2015-01-13 11:48:07</TD>
+                <TD>19 Tage, 04:03:10</TD>
+                <TD><A HREF=kickplayer.php?GID=78483&UID=2226>Kicken</A></TD>
+                <TD><A HREF=beplayer.php?GID=78483&UID=2226>BE!</A></TD>
+            </TR>
+            <TR>
+                <TD BGCOLOR=#CCFF00>&nbsp</TD>
+                <TD>JokerHF</TD>
+                <TD ALIGN=CENTER>47</TD>
+                <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
+                <TD ALIGN=CENTER>1/8</TD>
+                <TD>2015-01-13 23:05:49</TD>
+                <TD>6 Tage, 09:02:25</TD>
+                <TD><A HREF=kickplayer.php?GID=78483&UID=2492>Kicken</A></TD>
+                <TD><A HREF=beplayer.php?GID=78483&UID=2492>BE!</A></TD>
+            </TR>
+            <TR>
+                <TD BGCOLOR=#F0F0F0>&nbsp</TD>
+                <TD>kili</TD>
+                <TD ALIGN=CENTER>47</TD>
+                <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
+                <TD ALIGN=CENTER>1/8</TD>
+                <TD>2015-01-14 09:07:46</TD>
+                <TD>2 Tage, 13:22:28</TD>
+                <TD><A HREF=kickplayer.php?GID=78483&UID=210>Kicken</A></TD>
+                <TD><A HREF=beplayer.php?GID=78483&UID=210>BE!</A></TD>
+            </TR>
+            <TR>
+                <TD BGCOLOR=#F7C9A3>&nbsp</TD>
+                <TD>Madeleine</TD>
+                <TD ALIGN=CENTER>46</TD>
+                <TD>&nbsp;<FONT COLOR=#00CC00>kommt noch</FONT></TD>
+                <TD ALIGN=CENTER>1/8</TD>
+                <TD>2015-01-02 17:11:15</TD>
+                <TD>30 Tage, 06:23:45</TD>
+                <TD><A HREF=kickplayer.php?GID=78483&UID=563>Kicken</A></TD>
+                <TD><A HREF=beplayer.php?GID=78483&UID=563>BE!</A></TD>
+            </TR>
+            <TR>
+                <TD BGCOLOR=#000066>&nbsp</TD>
+                <TD>Michael</TD>
+                <TD ALIGN=CENTER>46</TD>
+                <TD>&nbsp;<FONT COLOR=#00CC00>kommt noch</FONT></TD>
+                <TD ALIGN=CENTER>1/8</TD>
+                <TD>2015-01-13 10:23:23</TD>
+                <TD>91 Tage, 15:15:45</TD>
+                <TD><A HREF=kickplayer.php?GID=78483&UID=2411>Kicken</A></TD>
+                <TD><A HREF=beplayer.php?GID=78483&UID=2411>BE!</A></TD>
+            </TR>
+            <TR>
+                <TD BGCOLOR=#FF6600>&nbsp</TD>
+                <TD>mr-burns123</TD>
+                <TD ALIGN=CENTER>47</TD>
+                <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
+                <TD ALIGN=CENTER>1/8</TD>
+                <TD>2015-01-13 19:00:30</TD>
+                <TD>10 Tage, 14:37:12</TD>
+                <TD><A HREF=kickplayer.php?GID=78483&UID=2265>Kicken</A></TD>
+                <TD><A HREF=beplayer.php?GID=78483&UID=2265>BE!</A></TD>
+            </TR>
+            <TR>
+                <TD BGCOLOR=#99FF33>&nbsp</TD>
+                <TD>MrMM</TD>
+                <TD ALIGN=CENTER>31</TD>
+                <TD>&nbsp;ausgestiegen</TD>
+                <TD ALIGN=CENTER>0/8</TD>
+                <TD>2014-10-14 21:22:27</TD>
+                <TD>150 Tage, 03:19:57</TD>
+                <TD><A HREF=kickplayer.php?GID=78483&UID=2118>Kicken</A></TD>
+                <TD><A HREF=beplayer.php?GID=78483&UID=2118>BE!</A></TD>
+            </TR>
+            <TR>
+                <TD BGCOLOR=#63B8FF>&nbsp</TD>
+                <TD>recke</TD>
+                <TD ALIGN=CENTER>47</TD>
+                <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
+                <TD ALIGN=CENTER>1/8</TD>
+                <TD>2015-01-14 06:13:56</TD>
+                <TD>10 Tage, 01:18:14</TD>
+                <TD><A HREF=kickplayer.php?GID=78483&UID=1989>Kicken</A></TD>
+                <TD><A HREF=beplayer.php?GID=78483&UID=1989>BE!</A></TD>
+            </TR>
+            <TR>
+                <TD BGCOLOR=#FFFFCC>&nbsp</TD>
+                <TD>Schattenparker</TD>
+                <TD ALIGN=CENTER>22</TD>
+                <TD>&nbsp;ausgestiegen</TD>
+                <TD ALIGN=CENTER>0/8</TD>
+                <TD>2014-03-17 16:08:37</TD>
+                <TD>13 Tage, 19:12:02</TD>
+                <TD><A HREF=kickplayer.php?GID=78483&UID=2486>Kicken</A></TD>
+                <TD><A HREF=beplayer.php?GID=78483&UID=2486>BE!</A></TD>
+            </TR>
+            <TR>
+                <TD BGCOLOR=#006600>&nbsp</TD>
+                <TD>Stickerle</TD>
+                <TD ALIGN=CENTER>47 + 2 Crash</TD>
+                <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
+                <TD ALIGN=CENTER>1/8</TD>
+                <TD>2015-01-14 09:10:17</TD>
+                <TD>5 Tage, 17:13:46</TD>
+                <TD><A HREF=kickplayer.php?GID=78483&UID=2270>Kicken</A></TD>
+                <TD><A HREF=beplayer.php?GID=78483&UID=2270>BE!</A></TD>
+            </TR>
             </tbody>
         </TABLE>
         <FORM>
             Link zur <A HREF=logs/78483.log>Logdatei</A>
         </FORM>
         <BR>
-        <FONT SIZE=+2 COLOR=RED>Support Karopapier!!!!!</FONT>Nein, ich will mit Karopapier nicht Geld verdienen - wenn Ihr trotzdem an mich denken w&uuml;rdet, w&auml;re ich Euch zu tiefst verbunden. Einfach vor jedem Kauf/Besuch bei Amazon &uuml;ber
+        <FONT SIZE=+2 COLOR=RED>Support Karopapier!!!!!</FONT>Nein, ich will mit Karopapier nicht Geld verdienen - wenn
+        Ihr trotzdem an mich denken w&uuml;rdet, w&auml;re ich Euch zu tiefst verbunden. Einfach vor jedem Kauf/Besuch
+        bei Amazon &uuml;ber
         <A HREF=http://www.karopapier.de/support.php>Support Karopapier</A> dort hingehen und schon ist Didi fr&ouml;hlicher...
 
 
@@ -386,9 +442,9 @@
         </script>
 
         <HR WIDTH=75%>
-        <br />
-        Letzter Satz im <a href="realchatframe.php">Chat</a>:<br />
-        <B>Madeleine</B> (13:58): Oder Autokorrektur hat ihr dazwischengefunkt <BR><br />
+        <br/>
+        Letzter Satz im <a href="realchatframe.php">Chat</a>:<br/>
+        <B>Madeleine</B> (13:58): Oder Autokorrektur hat ihr dazwischengefunkt <BR><br/>
 
         <script src="/js/GameStepUp.js"></script>
 
@@ -397,14 +453,14 @@
                 document.write('<scr' + 'ipt src="http://localhost:35729/livereload.js"></scr' + 'ipt>');
             }
             /*
-            var styleEl = document.createElement("style");
-            styleEl.appendChild(document.createTextNode(""));
-            document.head.appendChild(styleEl);
-            styleSheet = styleEl.sheet;
-            styleSheet.insertRule(".road {fill: rgb(128, 128, 128)}",0);
-            styleSheet.insertRule(".start {fill: url(#startPattern)}",1);
-            //styleSheet.insertRule(".grass {fill: url(#startPattern) !important}",1);
-            */
+             var styleEl = document.createElement("style");
+             styleEl.appendChild(document.createTextNode(""));
+             document.head.appendChild(styleEl);
+             styleSheet = styleEl.sheet;
+             styleSheet.insertRule(".road {fill: rgb(128, 128, 128)}",0);
+             styleSheet.insertRule(".start {fill: url(#startPattern)}",1);
+             //styleSheet.insertRule(".grass {fill: url(#startPattern) !important}",1);
+             */
 
         </script>
     </BODY>

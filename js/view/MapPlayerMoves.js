@@ -5,6 +5,10 @@ var MapPlayerMoves = Backbone.View.extend({
         border: 1,
         limit: 2
     },
+    events: {
+        "mouseenter .playerPosition": "showPlayerInfo",
+        "mouseleave .playerPosition": "hidePlayerInfo"
+    },
     initialize: function (options) {
         if (!this.collection) {
             console.error("Missing Collection");
@@ -30,6 +34,17 @@ var MapPlayerMoves = Backbone.View.extend({
             width: w,
             height: h
         });
+    },
+    showPlayerInfo: function(e) {
+        var playerId = e.currentTarget.getAttribute("data-playerId");
+        var pi = new PlayerInfo({
+            model: this.collection.get(playerId)
+        });
+        pi.render();
+        this.$el.parent().append(pi.el);
+    },
+    hidePlayerInfo: function(e) {
+        $('.playerInfo').hide();
     },
     render: function () {
         this.adjustSize();
@@ -102,7 +117,9 @@ var MapPlayerMoves = Backbone.View.extend({
                 cy: m.get("y") * 12 + 5.5,
                 r: 4,
                 //stroke: "black",
-                fill: color
+                fill: color,
+                class:"playerPosition",
+                "data-playerId": player.get("id")
             });
             this.el.appendChild(currentPosition);
             //console.log("RENDERTE moves for", player.get("name"));
