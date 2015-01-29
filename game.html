@@ -149,12 +149,15 @@
             */
         </script>
 
+        <!--
         Mitfahrer-Z&uuml;ge anzeigen: <a href="#" data-limit="0" class="drawLimiter">&nbsp;Alle&nbsp;</a>,
         <a href="#" data-limit="2" class="drawLimiter">&nbsp;2&nbsp;</a>,
         <a href="#" data-limit="5" class="drawLimiter">&nbsp;5&nbsp;</a>,
         <a href="#" data-limit="10" class="drawLimiter">&nbsp;10&nbsp;</a>
         - Dauerhafte &Auml;nderung <a href="/karte.php">hier</a>
+        -->
         <br/>
+        <label for="testmode">Testmode: </label><input type="checkbox" id="testmode" checked="checked" /> Züge werden NICHT an den Server geschickt
         <BR>
 
         Du bist dran, bitte mach Deinen Zug<BR>
@@ -196,159 +199,7 @@
         <br/>
 
         <div id="playerTable"></div>
-        <TABLE BORDER=1 id="tabspielinfo">
-            <thead>
-            <TR>
-                <TH style="min-width: 80px">Farbe</TH>
-                <TH style="min-width:100px">Spieler</TH>
-                <TH>Z&uuml;ge</TH>
-                <TH>Runde</TH>
-
-                <TH>Checkpoints</TH>
-                <TH>Letzter Zug</TH>
-                <TH>Bedenkzeit</TH>
-                <TD>Kick</TD>
-                <TD>BE!</TD>
-            </TR>
-            </thead>
-            <tbody>
-            <TR>
-                <TD BGCOLOR=#ffea00>&nbsp</TD>
-                <TD>aristarch</TD>
-                <TD ALIGN=CENTER>46</TD>
-                <TD>&nbsp;<FONT COLOR=#00CC00>kommt noch</FONT></TD>
-                <TD ALIGN=CENTER>1/8</TD>
-                <TD>2015-01-09 23:48:37</TD>
-                <TD>2 Tage, 10:36:33</TD>
-                <TD><A HREF=kickplayer.php?GID=78483&UID=2231>Kicken</A></TD>
-                <TD><A HREF=beplayer.php?GID=78483&UID=2231>BE!</A></TD>
-            </TR>
-            <TR>
-                <TD BGCOLOR=#ffffff>&nbsp</TD>
-                <TD>Didi</TD>
-                <TD ALIGN=CENTER>46</TD>
-                <TD>&nbsp;<B>dran</B></TD>
-                <TD ALIGN=CENTER>1/8</TD>
-                <TD>2015-01-09 20:46:48</TD>
-                <TD>151 Tage, 16:38:54</TD>
-                <TD><A HREF=kickplayer.php?GID=78483&UID=1>Kicken</A></TD>
-                <TD><A HREF=beplayer.php?GID=78483&UID=1>BE!</A></TD>
-            </TR>
-            <TR>
-                <TD BGCOLOR=#FF0000>&nbsp</TD>
-                <TD>hasi</TD>
-                <TD ALIGN=CENTER>47</TD>
-                <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
-                <TD ALIGN=CENTER>1/8</TD>
-                <TD>2015-01-13 11:48:07</TD>
-                <TD>19 Tage, 04:03:10</TD>
-                <TD><A HREF=kickplayer.php?GID=78483&UID=2226>Kicken</A></TD>
-                <TD><A HREF=beplayer.php?GID=78483&UID=2226>BE!</A></TD>
-            </TR>
-            <TR>
-                <TD BGCOLOR=#CCFF00>&nbsp</TD>
-                <TD>JokerHF</TD>
-                <TD ALIGN=CENTER>47</TD>
-                <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
-                <TD ALIGN=CENTER>1/8</TD>
-                <TD>2015-01-13 23:05:49</TD>
-                <TD>6 Tage, 09:02:25</TD>
-                <TD><A HREF=kickplayer.php?GID=78483&UID=2492>Kicken</A></TD>
-                <TD><A HREF=beplayer.php?GID=78483&UID=2492>BE!</A></TD>
-            </TR>
-            <TR>
-                <TD BGCOLOR=#F0F0F0>&nbsp</TD>
-                <TD>kili</TD>
-                <TD ALIGN=CENTER>47</TD>
-                <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
-                <TD ALIGN=CENTER>1/8</TD>
-                <TD>2015-01-14 09:07:46</TD>
-                <TD>2 Tage, 13:22:28</TD>
-                <TD><A HREF=kickplayer.php?GID=78483&UID=210>Kicken</A></TD>
-                <TD><A HREF=beplayer.php?GID=78483&UID=210>BE!</A></TD>
-            </TR>
-            <TR>
-                <TD BGCOLOR=#F7C9A3>&nbsp</TD>
-                <TD>Madeleine</TD>
-                <TD ALIGN=CENTER>46</TD>
-                <TD>&nbsp;<FONT COLOR=#00CC00>kommt noch</FONT></TD>
-                <TD ALIGN=CENTER>1/8</TD>
-                <TD>2015-01-02 17:11:15</TD>
-                <TD>30 Tage, 06:23:45</TD>
-                <TD><A HREF=kickplayer.php?GID=78483&UID=563>Kicken</A></TD>
-                <TD><A HREF=beplayer.php?GID=78483&UID=563>BE!</A></TD>
-            </TR>
-            <TR>
-                <TD BGCOLOR=#000066>&nbsp</TD>
-                <TD>Michael</TD>
-                <TD ALIGN=CENTER>46</TD>
-                <TD>&nbsp;<FONT COLOR=#00CC00>kommt noch</FONT></TD>
-                <TD ALIGN=CENTER>1/8</TD>
-                <TD>2015-01-13 10:23:23</TD>
-                <TD>91 Tage, 15:15:45</TD>
-                <TD><A HREF=kickplayer.php?GID=78483&UID=2411>Kicken</A></TD>
-                <TD><A HREF=beplayer.php?GID=78483&UID=2411>BE!</A></TD>
-            </TR>
-            <TR>
-                <TD BGCOLOR=#FF6600>&nbsp</TD>
-                <TD>mr-burns123</TD>
-                <TD ALIGN=CENTER>47</TD>
-                <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
-                <TD ALIGN=CENTER>1/8</TD>
-                <TD>2015-01-13 19:00:30</TD>
-                <TD>10 Tage, 14:37:12</TD>
-                <TD><A HREF=kickplayer.php?GID=78483&UID=2265>Kicken</A></TD>
-                <TD><A HREF=beplayer.php?GID=78483&UID=2265>BE!</A></TD>
-            </TR>
-            <TR>
-                <TD BGCOLOR=#99FF33>&nbsp</TD>
-                <TD>MrMM</TD>
-                <TD ALIGN=CENTER>31</TD>
-                <TD>&nbsp;ausgestiegen</TD>
-                <TD ALIGN=CENTER>0/8</TD>
-                <TD>2014-10-14 21:22:27</TD>
-                <TD>150 Tage, 03:19:57</TD>
-                <TD><A HREF=kickplayer.php?GID=78483&UID=2118>Kicken</A></TD>
-                <TD><A HREF=beplayer.php?GID=78483&UID=2118>BE!</A></TD>
-            </TR>
-            <TR>
-                <TD BGCOLOR=#63B8FF>&nbsp</TD>
-                <TD>recke</TD>
-                <TD ALIGN=CENTER>47</TD>
-                <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
-                <TD ALIGN=CENTER>1/8</TD>
-                <TD>2015-01-14 06:13:56</TD>
-                <TD>10 Tage, 01:18:14</TD>
-                <TD><A HREF=kickplayer.php?GID=78483&UID=1989>Kicken</A></TD>
-                <TD><A HREF=beplayer.php?GID=78483&UID=1989>BE!</A></TD>
-            </TR>
-            <TR>
-                <TD BGCOLOR=#FFFFCC>&nbsp</TD>
-                <TD>Schattenparker</TD>
-                <TD ALIGN=CENTER>22</TD>
-                <TD>&nbsp;ausgestiegen</TD>
-                <TD ALIGN=CENTER>0/8</TD>
-                <TD>2014-03-17 16:08:37</TD>
-                <TD>13 Tage, 19:12:02</TD>
-                <TD><A HREF=kickplayer.php?GID=78483&UID=2486>Kicken</A></TD>
-                <TD><A HREF=beplayer.php?GID=78483&UID=2486>BE!</A></TD>
-            </TR>
-            <TR>
-                <TD BGCOLOR=#006600>&nbsp</TD>
-                <TD>Stickerle</TD>
-                <TD ALIGN=CENTER>47 + 2 Crash</TD>
-                <TD>&nbsp;<FONT COLOR=#CC0000>war schon</FONT></TD>
-                <TD ALIGN=CENTER>1/8</TD>
-                <TD>2015-01-14 09:10:17</TD>
-                <TD>5 Tage, 17:13:46</TD>
-                <TD><A HREF=kickplayer.php?GID=78483&UID=2270>Kicken</A></TD>
-                <TD><A HREF=beplayer.php?GID=78483&UID=2270>BE!</A></TD>
-            </TR>
-            </tbody>
-        </TABLE>
-        <FORM>
-            Link zur <A HREF=logs/78483.log>Logdatei</A>
-        </FORM>
+        Link zur <A HREF=logs/78483.log>Logdatei</A>
         <BR>
         <FONT SIZE=+2 COLOR=RED>Support Karopapier!!!!!</FONT>Nein, ich will mit Karopapier nicht Geld verdienen - wenn
         Ihr trotzdem an mich denken w&uuml;rdet, w&auml;re ich Euch zu tiefst verbunden. Einfach vor jedem Kauf/Besuch

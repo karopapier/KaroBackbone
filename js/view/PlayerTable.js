@@ -2,7 +2,7 @@ var PlayerTable = Backbone.View.extend({
 	className: "playerCollection",
 	template: _.template([
 		"<table class='playerList thin'>",
-		'<tr><th>Spieler</th><th>Farbe</th><th>Züge</th><th>letzter Zug</th><th>Runde</th></tr>',
+		'<tr><th>Spieler</th><th>Farbe</th><th>Züge</th><th>Runde</th><th>Checkpoints</th><th>letzter Zug</th><th>Bedenkzeit</th></tr>',
 		"<% items.each(function(player) { %>",
 		"<%= playerTemplate(player.attributes) %>",
 		"<% }); %>",
@@ -17,14 +17,9 @@ var PlayerTable = Backbone.View.extend({
 		html+='<td><img src="images/car.png" />'+player.moveCount;
 		html+= player.crashCount > 0 ? ' <img src="images/crash.png" /> ' + player.crashCount : "";
 		html+='</td>';
-		var lastmovetime = player.lastmove.get("t");
-		if (!lastmovetime) {
-			lastmovetime="-";
-		}
-		html+='<td>' + lastmovetime +  '</td>';
 		html+='<td>';
 		if (player.status =="kicked") {
-			html+="rausgeworfen";
+			html+="<span class='kicked'>rausgeworfen</span>";
 		}
 		if (player.status == "left") {
 			html+="ausgestiegen";
@@ -34,17 +29,24 @@ var PlayerTable = Backbone.View.extend({
 		}
 		if (player.status=="ok") {
 			if (player.dran) {
-				html+="dran";
+				html+='<span class="dran">dran FETT</span>';
 			} else {
 				if (player.position != 0) {
 					html+="wurde "+player.position+".";
 				} else {
-					html+=player.moved ? "war schon" : "kommt noch";
+					html+=player.moved ? "war schon GRÜN" : "kommt noch ROT";
 				}
 			}
 
 		}
 		html+="</td>";
+		html+="<td>kommt noch</td>";
+		var lastmovetime = player.lastmove.get("t");
+		if (!lastmovetime) {
+			lastmovetime="-";
+		}
+		html+='<td>' + lastmovetime +  '</td>';
+		html+='<td> kommt noch </td>';
 		html+='</tr>';
 		return html;
 	},

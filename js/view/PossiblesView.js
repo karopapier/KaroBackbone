@@ -58,7 +58,7 @@ var PossiblesView = Backbone.View.extend({
         //console.info("Crash check");
         //console.log(mo.toString());
         //TAKES=0;
-        if (k.willCrash(mo, 16)) {
+        if (k.willCrash(mo, 6)) {
             //console.warn("Das kracht",mo);
             div.addClass("willCrash");
         }
@@ -92,7 +92,7 @@ var PossiblesView = Backbone.View.extend({
             var possible = this.possibles[i];
             if (occupiedPositionStrings.indexOf(possible.toKeyString())<0) {
                 //console.log("Der is möglich", possible);
-                var div = $('<div title="' + mo.get("vector").toString() + '" class="possibleMove" style="left: ' + possible.get("position").get("x") * 12 + 'px; top: ' + possible.get("position").get("y") * 12 + 'px;" data-dirtyIndex="' + i + '"></div>');
+                var div = $('<div title="' + possible.get("vector").toString() + '" class="possibleMove" style="left: ' + possible.get("position").get("x") * 12 + 'px; top: ' + possible.get("position").get("y") * 12 + 'px;" data-dirtyIndex="' + i + '"></div>');
                 var me=this;
                 setTimeout(this.checkWillCrash.bind(this,div, k, possible, i),i);
                 this.$el.append(div);

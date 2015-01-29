@@ -36,13 +36,13 @@ var GameRouter = Backbone.Router.extend({
         "newshowmap.php?GID=:gameId": "showGame",
         "game.html": "defaultRoute"
     },
-    showGame: function(gameId) {
+    showGame: function (gameId) {
         if (gameId) {
             game.load(gameId);
         }
     },
-    defaultRoute: function() {
-        this.navigate("game.html?GID=81111", {trigger:true});
+    defaultRoute: function () {
+        this.navigate("game.html?GID=81111", {trigger: true});
     }
 });
 
@@ -58,12 +58,12 @@ var mpm = new MapPlayerMoves({
 });
 
 /*
-var mpl = new MapPlayerLayer({
-    el: '#fgImg',
-    model: game
-});
-mpl.render();
-*/
+ var mpl = new MapPlayerLayer({
+ el: '#fgImg',
+ model: game
+ });
+ mpl.render();
+ */
 
 var possView = new PossiblesView({
     el: "#mapImage",
@@ -71,47 +71,51 @@ var possView = new PossiblesView({
     mapView: svgView
 });
 
-Karopapier.listenTo(possView,"game:player:move", function(playerId, mo) {
-    var player = game.players.get(playerId);
-    var move = new Move(mo.toMove());
-    move.set("t", Date());
-    player.set("lastmove", move);
-    player.get("moves").add(move);
-    //console.warn(player);
-    mpm.render();
-    possView.render();
+Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
+    var testmode = $('#testmode').is(":checked");
+    if (testmode) {
 
-    //build move url
-    //http://www.karopapier.de/move.php?GID=83790&xpos=76&ypos=28&xvec=-2&yvec=2
-    var m = mo.toMove();
-    var moveUrl = "http://www.karopapier.de/move.php?GID=" + game.get("id") + "&xpos=" + m.x + "&ypos=" + m.y + "&xvec=" + m.xv + "&yvec=" + m.yv;
-    //console.log(moveUrl);
 
-    myTextGet(moveUrl, function(text) {
-        parseMoveResponse(text);
-    });
+        var player = game.players.get(playerId);
+        var move = new Move(mo.toMove());
+        move.set("t", Date());
+        player.set("lastmove", move);
+        player.get("moves").add(move);
+        //console.warn(player);
+        mpm.render();
+        possView.render();
+    } else {
+        //build move url
+        //http://www.karopapier.de/move.php?GID=83790&xpos=76&ypos=28&xvec=-2&yvec=2
+        var m = mo.toMove();
+        var moveUrl = "http://www.karopapier.de/move.php?GID=" + game.get("id") + "&xpos=" + m.x + "&ypos=" + m.y + "&xvec=" + m.xv + "&yvec=" + m.yv;
+        //console.log(moveUrl);
 
-    //send
-    //check response
-    //load next
+        myTextGet(moveUrl, function (text) {
+            parseMoveResponse(text);
+        });
 
+        //send
+        //check response
+        //load next
+    }
 });
 
 /*
-setTimeout(function() {
-$.get("/moveresponse.txt",function(data) {
-    parseMoveResponse(data);
-});
-},500);
-*/
+ setTimeout(function() {
+ $.get("/moveresponse.txt",function(data) {
+ parseMoveResponse(data);
+ });
+ },500);
+ */
 function parseMoveResponse(text) {
     //indexOf Danke ==ok
-    if (text.indexOf("Danke.")>=0) {
+    if (text.indexOf("Danke.") >= 0) {
         //console.log("GUT");
         //<B>Didi</B> kommt als n&auml;chstes dran
-        var hits =  text.match(/<B>(.*?)<\/B> kommt als n/);
-        var nextPlayer="Unknown";
-        if (hits.length>1) {
+        var hits = text.match(/<B>(.*?)<\/B> kommt als n/);
+        var nextPlayer = "Unknown";
+        if (hits.length > 1) {
             nextPlayer = hits[1];
         }
         //console.log("Next",nextPlayer);
@@ -125,10 +129,10 @@ function parseMoveResponse(text) {
 
         //<A HREF=showmap.php?GID=82749> -> folge id
         var gids = text.match(/showmap.php\?GID=(\d*?)>Du bist/);
-        console.log(gids);
-        if (gids.length>1) {
-            console.log(gids[1]);
-            gr.navigate("game.html?GID=" + gids[1],{trigger: true });
+        //console.log(gids);
+        if (gids.length > 1) {
+            //console.log(gids[1]);
+            gr.navigate("game.html?GID=" + gids[1], {trigger: true});
         }
     } else {
         alert("KEIN DANKE!!!");
@@ -140,7 +144,7 @@ function myTextGet(url, cb, errcb) {
     var request = new XMLHttpRequest();
     request.withCredentials = true;
     request.open('GET', url, true);
-    request.onload = function() {
+    request.onload = function () {
         if (request.status >= 200 && request.status < 400) {
             // Success!
             //console.log(request.responseText);
@@ -153,7 +157,7 @@ function myTextGet(url, cb, errcb) {
         }
     };
 
-    request.onerror = function() {
+    request.onerror = function () {
         // There was a connection error of some sort
     };
 

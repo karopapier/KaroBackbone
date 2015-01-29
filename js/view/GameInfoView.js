@@ -17,7 +17,8 @@ var GameInfoView = Backbone.View.extend({
         }
 
         this.tcMeaning = {
-            "forbidden": "nicht erlaubt"
+            "forbidden": "nicht erlaubt",
+            "allowed": "erlaubt"
         }
     },
     render: function () {
@@ -44,6 +45,7 @@ var GameInfoView = Backbone.View.extend({
             }
         }
         data.cpStatus = cpStatus;
+        console.warn(this.model.get("tcrash"));
         data.tcMeaning = this.tcMeaning[this.model.get("tcrash")];
 
         this.$el.html(this.template(data));
