@@ -85,7 +85,7 @@ Karopapier.listenTo(possView,"game:player:move", function(playerId, mo) {
     //http://www.karopapier.de/move.php?GID=83790&xpos=76&ypos=28&xvec=-2&yvec=2
     var m = mo.toMove();
     var moveUrl = "http://www.karopapier.de/move.php?GID=" + game.get("id") + "&xpos=" + m.x + "&ypos=" + m.y + "&xvec=" + m.xv + "&yvec=" + m.yv;
-    console.log(moveUrl);
+    //console.log(moveUrl);
 
     myTextGet(moveUrl, function(text) {
         parseMoveResponse(text);
@@ -107,18 +107,18 @@ $.get("/moveresponse.txt",function(data) {
 function parseMoveResponse(text) {
     //indexOf Danke ==ok
     if (text.indexOf("Danke.")>=0) {
-        console.log("GUT");
+        //console.log("GUT");
         //<B>Didi</B> kommt als n&auml;chstes dran
         var hits =  text.match(/<B>(.*?)<\/B> kommt als n/);
         var nextPlayer="Unknown";
         if (hits.length>1) {
             nextPlayer = hits[1];
         }
-        console.log("Next",nextPlayer);
+        //console.log("Next",nextPlayer);
         //Didi == me => nochmal
-        console.log("ME",Karopapier.User.get("login"));
+        //console.log("ME",Karopapier.User.get("login"));
         if (nextPlayer == Karopapier.User.get("login")) {
-            console.info("NOMMAL DRAN");
+            //console.info("NOMMAL DRAN");
             game.load(game.get("id"));
             return true;
         }

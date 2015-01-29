@@ -44,10 +44,12 @@ var PossiblesView = Backbone.View.extend({
     hoverMove: function (e, a, b) {
         var i = e.currentTarget.getAttribute("data-dirtyIndex");
         var mo = this.possibles[i];
-        console.log(mo);
-        var stop = mo.getStopPosition();
-        var div = $('<div class="stopPosition" style="left: ' + stop.get("x") * 12 + 'px; top: ' + stop.get("y") * 12 + 'px;"></div>');
-        this.$el.append(div);
+        if (mo.get("vector").getLength()>3) {
+            //console.log(mo);
+            var stop = mo.getStopPosition();
+            var div = $('<div class="stopPosition" style="left: ' + stop.get("x") * 12 + 'px; top: ' + stop.get("y") * 12 + 'px;"></div>');
+            this.$el.append(div);
+        }
     },
     unhoverMove: function (e, a, b) {
         this.$('.stopPosition').remove();
@@ -62,9 +64,9 @@ var PossiblesView = Backbone.View.extend({
         }
         //console.warn("FINISHED",mo.toString(),TAKES);
     },
-    render: function (a, b, c) {
-        if (!this.game.get("completed")) return true;
+    render: function () {
         this.clearPossibles();
+        if (!this.game.get("completed")) return true;
         if (this.game.get("finished")) return true;
 
         var k = new KRACHZ({
@@ -73,25 +75,29 @@ var PossiblesView = Backbone.View.extend({
 
         var dranId = this.game.get("dranId");
         var currentPlayer = this.game.players.get(dranId);
-        //var possibles = this.possibles = currentPlayer.get("possibles");
         var lastmove = currentPlayer.get("lastmove");
         var mo = lastmove.getMotion();
-        this.possibles = mo.getPossibles();
-        //console.log(possibles);
-        var classes = "possibleMove";
-        this.$(".possibleMove").remove();
 
-        console.warn("#TODO: Need to check current player positions");
+        //reduce possibles with map
+        this.possibles = k.verifiedPossibles(mo.getPossibles());
+
+        //check occupied
+        var occupiedPositions = this.game.players.getOccupiedPositions();
+        var occupiedPositionStrings = occupiedPositions.map(function(e) {
+            return e.toString();
+        });
+        //console.log(occupiedPositionStrings);
+
         for (var i = 0; i < this.possibles.length; i++) {
             var possible = this.possibles[i];
-            if (k.isPossible(possible)) {
+            if (occupiedPositionStrings.indexOf(possible.toKeyString())<0) {
                 //console.log("Der is möglich", possible);
-                var div = $('<div class="possibleMove" style="left: ' + possible.get("position").get("x") * 12 + 'px; top: ' + possible.get("position").get("y") * 12 + 'px;" data-dirtyIndex="' + i + '"></div>');
+                var div = $('<div title="' + mo.get("vector").toString() + '" class="possibleMove" style="left: ' + possible.get("position").get("x") * 12 + 'px; top: ' + possible.get("position").get("y") * 12 + 'px;" data-dirtyIndex="' + i + '"></div>');
                 var me=this;
                 setTimeout(this.checkWillCrash.bind(this,div, k, possible, i),i);
                 this.$el.append(div);
             } else {
-                //console.warn("Geht net", possible);
+                //console.warn("Geht net", possible, "is belegt");
             }
         }
         //check my turn add links

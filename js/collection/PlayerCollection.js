@@ -23,5 +23,25 @@ var PlayerCollection = Backbone.Collection.extend({
             },this)
             this.moveMessages.trigger("change");
         });
+    },
+    /**
+     * positions, where all players currently stand that alrady moves this round
+     */
+    getOccupiedPositions: function() {
+        var blockers = _.where(this.toJSON(),{
+            position: 0,
+            status: "ok",
+            moved: true
+        });
+
+        var blockMoves = _.pluck(blockers,"lastmove");
+        var positions=[];
+        _.each(blockMoves, function(e) {
+            positions.push(new Position({
+                x: e.attributes.x,
+                y: e.attributes.y
+            }));
+        })
+        return positions;
     }
 });

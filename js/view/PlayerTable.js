@@ -17,15 +17,11 @@ var PlayerTable = Backbone.View.extend({
 		html+='<td><img src="images/car.png" />'+player.moveCount;
 		html+= player.crashCount > 0 ? ' <img src="images/crash.png" /> ' + player.crashCount : "";
 		html+='</td>';
-		var lm=moment(player.lastmove.get("t"),"YYYY-MM-DD HH:mm:ss").toDate();
-		html+='<td><span title="' + moment(lm).format("DD.MM.YY H:mm") + '">';
-		if (moment(lm).diff(new Date(),"days")<-1) {
-			html+="vor "+Math.abs(moment(lm).diff(new Date(),"days"))+" Tagen";
-		} else {
-			//only for short timeframes <24h
-			html+=moment(lm).fromNow();
+		var lastmovetime = player.lastmove.get("t");
+		if (!lastmovetime) {
+			lastmovetime="-";
 		}
-		html+='</span></td>';
+		html+='<td>' + lastmovetime +  '</td>';
 		html+='<td>';
 		if (player.status =="kicked") {
 			html+="rausgeworfen";

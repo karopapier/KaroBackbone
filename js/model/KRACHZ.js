@@ -76,7 +76,7 @@ var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
         //console.log(mo.toString(), "is possible");
         return true;
     },
-    verifyPossibles: function (possibles) {
+    verifiedPossibles: function (possibles) {
         var remaining = [];
         for (var p = 0; p < possibles.length; p++) {
             var possible = possibles[p];
@@ -103,7 +103,7 @@ var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
         }
         var possibles = mo.getPossibles();
         //console.log(possibles);
-        possibles = this.verifyPossibles(possibles);
+        possibles = this.verifiedPossibles(possibles);
         if (possibles.length == 0) {
             //console.warn("Nothin left");
             return true;
