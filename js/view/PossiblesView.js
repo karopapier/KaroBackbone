@@ -24,12 +24,12 @@ var PossiblesView = Backbone.View.extend({
     },
     checkMove: function (e) {
         var dranId = this.game.get("dranId");
-        console.log(e.currentTarget);
+        //console.log(e.currentTarget);
         var i = e.currentTarget.getAttribute("data-dirtyIndex");
         if (Karopapier.User.get("id") !== dranId) {
-            alert("Du bist ja gar nicht dran");
-            e.preventDefaults();
-            return false;
+            //alert("Du bist ja gar nicht dran");
+            //e.preventDefaults();
+            //return false;
         }
         //console.log(i);
         //console.log(this.possibles);
@@ -50,10 +50,12 @@ var PossiblesView = Backbone.View.extend({
     checkWillCrash: function(div, k, mo, i) {
         //console.info("Crash check");
         //console.log(mo.toString());
-        if (k.willCrash(mo, 9)) {
+        //TAKES=0;
+        if (k.willCrash(mo, 16)) {
             //console.warn("Das kracht",mo);
             div.addClass("willCrash");
         }
+        //console.warn("FINISHED",mo.toString(),TAKES);
     },
     render: function (a, b, c) {
         if (!this.game.get("completed")) return true;
@@ -74,13 +76,13 @@ var PossiblesView = Backbone.View.extend({
         var classes = "possibleMove";
         this.$(".possibleMove").remove();
 
-        for (var i = 0; i < 9; i++) {
+        for (var i = 0; i < this.possibles.length; i++) {
             var possible = this.possibles[i];
             if (k.isPossible(possible)) {
                 //console.log("Der is möglich", possible);
                 var div = $('<div class="possibleMove" style="left: ' + possible.get("position").get("x") * 12 + 'px; top: ' + possible.get("position").get("y") * 12 + 'px;" data-dirtyIndex="' + i + '"></div>');
                 var me=this;
-                setTimeout(this.checkWillCrash.bind(this,div, k, possible, i),100+i);
+                setTimeout(this.checkWillCrash.bind(this,div, k, possible, i),i);
                 this.$el.append(div);
             } else {
                 //console.warn("Geht net", possible);

@@ -1,3 +1,4 @@
+module("KRACHZ");
 test("KRACHZ tests", function () {
     expect(1);
 
@@ -16,7 +17,7 @@ test("KRACHZ tests", function () {
     deepEqual(k.getPassedFields(mo), expected, "getPassedFields");
 });
 
-test("passed fields", function() {
+test("passed fields", function () {
     expect(3);
     //isPossible
     var map = new Map();
@@ -45,7 +46,7 @@ test("passed fields", function() {
 
 })
 
-test("willCrash", function() {
+test("willCrash", function () {
     expect(8);
     //willCrash
     var mo = new Motion();
@@ -56,19 +57,19 @@ test("willCrash", function() {
         map: map
     });
 
-    mo.setXY1toXY2(1,1,2,1);
+    mo.setXY1toXY2(1, 1, 2, 1);
     equal(k.willCrash(mo, 1), false, mo.toString() + " will not crash in 1");
     equal(k.willCrash(mo, 7), false, mo.toString() + " will not crash in 7");
 
-    mo.setXY1toXY2(1,1,3,1);
+    mo.setXY1toXY2(1, 1, 3, 1);
     equal(k.willCrash(mo, 1), false, mo.toString() + " will not crash in 1");
     equal(k.willCrash(mo, 7), false, mo.toString() + " will not crash in 7");
 
-    mo.setXY1toXY2(1,1,4,1);
+    mo.setXY1toXY2(1, 1, 4, 1);
     equal(k.willCrash(mo, 1), false, mo.toString() + " will not crash in 1");
     equal(k.willCrash(mo, 7), true, mo.toString() + " will crash in 7");
 
-    mo.setXY1toXY2(1,1,6,1);
+    mo.setXY1toXY2(1, 1, 6, 1);
     equal(k.willCrash(mo, 1), true, mo.toString() + " will crash in 1");
     equal(k.willCrash(mo, 7), true, mo.toString() + " will crash in 7");
 

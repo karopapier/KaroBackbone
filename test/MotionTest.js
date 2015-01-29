@@ -1,6 +1,6 @@
-test("Motion tests", function () {
-    expect(6);
-
+module("Motion");
+test("basic", function () {
+    expect(5);
 
     var mo = new Motion();
     mo.setXY1toXY2(1, 1, 4, 2);
@@ -20,6 +20,19 @@ test("Motion tests", function () {
     equal(mo.getSourcePosition().toString(), p1.toString(), '->getSourcePosition() returns correct origin');
 
     var p = new Position({x: 2, y: 1});
+    var v = new Vector({x: -3, y: -1});
+    var m = new Motion({
+        "position": p,
+        "vector": v
+    });
+    equal(m.getSourcePosition().toString(), "[5|2]", "getSourcePosition");
+});
+
+
+test("Possibles", function () {
+    expect(2);
+
+    var p = new Position({x: 2, y: 1});
     var v = new Vector({x: 3, y: 1});
     var m = new Motion({
         "position": p,
@@ -36,14 +49,23 @@ test("Motion tests", function () {
     });
     deepEqual(stringArray, expected, "->getPossibles returns 9 correct values");
 
-
-    var p = new Position({x: 2, y: 1});
-    var v = new Vector({x: -3, y: -1});
-    var m = new Motion({
-        "position": p,
-        "vector": v
+    var m = new Motion();
+    m.setXY1toXY2(4,3,3,3);
+    var expected = [
+        "[1|2]","[2|2]","[3|2]",
+        "[1|3]","[2|3]",
+        "[1|4]","[2|4]","[3|4]"
+    ]
+    var possibles = m.getPossibles();
+    var stringArray = possibles.map(function (poss, i, possibles) {
+        return poss.toKeyString();
     });
-    equal(m.getSourcePosition().toString(), "[5|2]", "getSourcePosition");
+    deepEqual(stringArray, expected, "->getPossibles does not returns 0|0");
+
+})
+
+
+//test("Illumination", function () {
 
     /*
      //create 9 array keys
@@ -93,4 +115,4 @@ test("Motion tests", function () {
      $t->is($mo->getIlluminatedPositions()->getArray(),$illu->getArray(),'->getIlluminatedPositions() returns right Positions');
 
      */
-});
+//});

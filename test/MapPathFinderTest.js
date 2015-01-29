@@ -1,3 +1,4 @@
+module("MapPathFinder");
 var PathCollection = function () {
     this.add = function () {
     };

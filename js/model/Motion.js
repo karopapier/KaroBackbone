@@ -106,11 +106,15 @@ var Motion = Backbone.Model.extend(/** @lends Motion.prototype*/{
         //# 6 7 8
         for (var iY = -1; iY <= 1; iY++) {
             for (var iX = -1; iX <= 1; iX++) {
-                var v = new Vector({
-                    x: this.get("vector").get("x") + iX,
-                    y: this.get("vector").get("y") + iY
-                });
-                possibles.push(this.clone().move(v));
+                var x = this.get("vector").get("x") + iX;
+                var y = this.get("vector").get("y") + iY;
+                if ((x!==0) || (y!==0)) {
+                    var v = new Vector({
+                        x: this.get("vector").get("x") + iX,
+                        y: this.get("vector").get("y") + iY
+                    });
+                    possibles.push(this.clone().move(v));
+                }
             }
         }
         return possibles;

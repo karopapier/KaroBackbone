@@ -1,3 +1,4 @@
+module("Map");
 test("Map pos calculations", function () {
     expect(3);
     var map = new Map();

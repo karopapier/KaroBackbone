@@ -1,3 +1,4 @@
+module("Position");
 test("Position tests", function () {
     var v;
     expect(4);

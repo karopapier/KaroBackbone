@@ -40,7 +40,7 @@ var Vector = Backbone.Model.extend({
     getYDirection: function () {
         return this.getDirection("y");
     },
-    getLenth: function () {
+    getLength: function () {
         return Math.sqrt(Math.pow(this.get("x"), 2) + Math.pow(this.get("y"), 2));
     },
     decelerate: function (xy) {

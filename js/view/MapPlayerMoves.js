@@ -69,7 +69,7 @@ var MapPlayerMoves = Backbone.View.extend({
                 moves.pop();
                 //console.log(moves);
             }
-            console.info(moves);
+            //console.info(moves);
             var color = "#" + player.get("color");
             var pathCode = "M" + (parseInt(moves[0].get("x") * 12) + 6) + "," + (parseInt(moves[0].get("y") * 12) + 6);
             moves.forEach(function (m, i) {
@@ -84,9 +84,8 @@ var MapPlayerMoves = Backbone.View.extend({
                     fill: color
                 })
                 this.el.appendChild(square);
-                console.log(square);
             }.bind(this));
-            console.log(pathCode);
+            //console.log(pathCode);
             var p = Karopapier.Util.createSvg("path", {
                 d: pathCode,
                 stroke: color,
@@ -106,7 +105,7 @@ var MapPlayerMoves = Backbone.View.extend({
                 fill: color
             });
             this.el.appendChild(currentPosition);
+            //console.log("RENDERTE moves for", player.get("name"));
         }.bind(this));
-        console.log("RENDERTE");
     }
 });
