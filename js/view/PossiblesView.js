@@ -42,10 +42,15 @@ var PossiblesView = Backbone.View.extend({
 
     },
     hoverMove: function (e, a, b) {
-        //console.log(e);
+        var i = e.currentTarget.getAttribute("data-dirtyIndex");
+        var mo = this.possibles[i];
+        console.log(mo);
+        var stop = mo.getStopPosition();
+        var div = $('<div class="stopPosition" style="left: ' + stop.get("x") * 12 + 'px; top: ' + stop.get("y") * 12 + 'px;"></div>');
+        this.$el.append(div);
     },
     unhoverMove: function (e, a, b) {
-        //console.log(e);
+        this.$('.stopPosition').remove();
     },
     checkWillCrash: function(div, k, mo, i) {
         //console.info("Crash check");

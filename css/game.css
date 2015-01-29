@@ -28,3 +28,13 @@
     height: 150px;
     background-color: rgba(200,200,200,.9);
 }
+
+.stopPosition{
+    position: absolute;
+    margin: 1px;
+    width: 9px;
+    height: 9px;
+    background-color: red;
+    z-index: 10;
+    border: 1px solid orange;
+}
