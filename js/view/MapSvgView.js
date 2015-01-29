@@ -158,6 +158,10 @@ var MapSvgView = MapBaseView.extend({
         var mps = new MapPathStore();
         var me=this;
         mps.getPath(this.model.get("id"), function (map) {
+            if (map===false) {
+                me.renderFromPathFinder();
+                return false;
+            }
             //get the map (from store or via request) and inject it via callback
             //console.log("Ich hab ne Karte", map);
             var parser = new DOMParser();

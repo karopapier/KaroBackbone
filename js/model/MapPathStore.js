@@ -8,6 +8,10 @@ var MapPathStore = Backbone.Model.extend({
             //console.log("check if finished");
             //we should have the path and dimensions here
             //console.log(path);
+            if (path===false) {
+                cb(false);
+                return false;
+            }
             if (rows != 0 && cols != 0 && path != "") {
                 var m = {};
                 m.r = rows;
@@ -32,6 +36,10 @@ var MapPathStore = Backbone.Model.extend({
             $.get("/paths/" + mapid + ".svg", function (data) {
                 //console.debug(data);
                 path = data.getElementById("mapSvgView");
+                amifinished();
+            }).fail(function(err) {
+                console.error(err);
+                path = false;
                 amifinished();
             });
             $.getJSON("http://www.karopapier.de/api/map/" + mapid + ".json?callback=?", function (data) {
