@@ -74,7 +74,7 @@ var MapPlayerMoves = Backbone.View.extend({
                 limit = 0;
             }
             var moves = player.get("moves").toArray();
-            if (moves.length==0) return false;
+            if (moves.length<=1) return false;
             if (limit > 0) {
                 moves = player.get("moves").last(this.settings.get("limit") + 1);
             }

@@ -51,10 +51,10 @@ var YOUTUBE_CACHE = {};
                     });
                 }
             } else if (url.match('.*\.(jpg|gif|png)')) {
-                console.log("Handling jpg url", url);
+                //console.log("Handling jpg url", url);
                 linktext = '<img src="' + url + '" height="20" />';
             } else {
-                console.log("Handling default url", url, text);
+                //console.log("Handling default url", url, text);
                 if (url.match('^https?:\/\/')) {
                     linktext = linktext.replace(/^https?:\/\//i, '')
                     linktext = linktext.replace(/^www./i, '')

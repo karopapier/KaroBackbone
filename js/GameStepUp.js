@@ -129,11 +129,16 @@ function parseMoveResponse(text) {
 
         //<A HREF=showmap.php?GID=82749> -> folge id
         var gids = text.match(/showmap.php\?GID=(\d*?)>Du bist/);
-        //console.log(gids);
-        if (gids.length > 1) {
-            //console.log(gids[1]);
-            gr.navigate("game.html?GID=" + gids[1], {trigger: true});
-        }
+        console.log(gids);
+		if (gids) {
+			if (gids.length > 1) {
+				//console.log(gids[1]);
+				var pathname = window.location.pathname.substr(1);
+				gr.navigate(pathname + "?GID=" + gids[1], {trigger: true});
+			}
+		} else {
+			window.location.href = "http://www.karopapier.de/dran";
+		}
     } else {
         alert("KEIN DANKE!!!");
         console.log(text);
