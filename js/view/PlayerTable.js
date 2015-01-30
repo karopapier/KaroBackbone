@@ -14,7 +14,7 @@ var PlayerTable = Backbone.View.extend({
 		html+= '<tr>';
 		html+='<td>'+player.name+'</td>';
 		html+='<td style="background-color: #'+player.color+'; border-radius: 4px; box-shadow: 1px 2px rgba(0,0,0,.4)">&nbsp; &nbsp;</td>';
-		html+='<td><img src="images/car.png" />'+player.moveCount;
+		html+='<td><img src="images/car.png" />'+player.moves.length;
 		html+= player.crashCount > 0 ? ' <img src="images/crash.png" /> ' + player.crashCount : "";
 		html+='</td>';
 		html+='<td>';
@@ -53,7 +53,7 @@ var PlayerTable = Backbone.View.extend({
 
 	render: function() {
 		var html = this.template({
-			items: this.collection /* a collection */,
+			items: this.collection,
 			playerTemplate: this.playerTemplate
 		});
 
