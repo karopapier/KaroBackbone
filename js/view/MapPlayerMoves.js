@@ -18,7 +18,7 @@ var MapPlayerMoves = Backbone.View.extend({
         _.defaults(options, this.optionDefaults);
         this.settings = new Backbone.Model(options);
         this.listenTo(this.settings, "change:size change:border change:limit", this.render);
-        this.listenTo(this.collection, "change", this.render);
+        this.listenTo(this.collection, "add remove", this.render);
         this.listenTo(this.collection, "reset", this.render);
     },
     adjustSize: function () {
