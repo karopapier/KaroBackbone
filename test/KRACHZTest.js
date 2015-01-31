@@ -59,18 +59,18 @@ test("willCrash", function () {
 
     mo.setXY1toXY2(1, 1, 2, 1);
     equal(k.willCrash(mo, 1), false, mo.toString() + " will not crash in 1");
-    equal(k.willCrash(mo, 7), false, mo.toString() + " will not crash in 7");
+    equal(k.willCrash(mo, 3), false, mo.toString() + " will not crash in 3");
 
     mo.setXY1toXY2(1, 1, 3, 1);
     equal(k.willCrash(mo, 1), false, mo.toString() + " will not crash in 1");
-    equal(k.willCrash(mo, 7), false, mo.toString() + " will not crash in 7");
+    equal(k.willCrash(mo, 3), false, mo.toString() + " will not crash in 3");
 
     mo.setXY1toXY2(1, 1, 4, 1);
     equal(k.willCrash(mo, 1), false, mo.toString() + " will not crash in 1");
-    equal(k.willCrash(mo, 7), true, mo.toString() + " will crash in 7");
+    equal(k.willCrash(mo, 3), true, mo.toString() + " will crash in 3");
 
     mo.setXY1toXY2(1, 1, 6, 1);
     equal(k.willCrash(mo, 1), true, mo.toString() + " will crash in 1");
-    equal(k.willCrash(mo, 7), true, mo.toString() + " will crash in 7");
+    equal(k.willCrash(mo, 2), true, mo.toString() + " will crash in 2");
 
 });

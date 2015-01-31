@@ -29,6 +29,17 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
     updateStarties: function () {
         this.set("starties", (this.get("mapcode").match(/S/g) || []).length);
     },
+    getStartPositions: function() {
+        var starts=[];
+        var startSearch = /S/g;
+        var code = this.get("mapcode");
+        var hit;
+        while (hit = startSearch.exec(code)) {
+            var strPos = hit.index
+            starts.push(new Position(this.getRowColFromPos(strPos)));
+        }
+        return starts;
+    },
     updateCpList: function () {
         this.set("cps", (this.get("mapcode").match(/\d/g) || []).sort().filter(function (el, i, a) {
             if (i == a.indexOf(el))return 1;
@@ -85,6 +96,12 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
     getPosFromRowCol: function (r, c) {
         var pos = ( r * (this.get("cols") + 1)) + c;
         return pos;
+    },
+    getRowColFromPos: function(pos) {
+        var cols = this.get("cols") +1;
+        var c = pos % cols;
+        var r = Math.floor(pos/cols)
+        return {row: r, col: c, x: c, y: r};
     },
     FIELDS: {
         "F": "finish",
