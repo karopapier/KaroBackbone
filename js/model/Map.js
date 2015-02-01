@@ -14,7 +14,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         _.bindAll(this, "updateMapcode", "updateSize", "updateStarties", "updateCpList", "setFieldAtRowCol", "getFieldAtRowCol", "getPosFromRowCol");
         this.bind("change:mapcode", this.updateMapcode);
     },
-    setMapcode: function(mapcode) {
+    setMapcode: function (mapcode) {
         //make sure we don't have CR in there and make it all UPPERCASE
         var trimcode = mapcode.toUpperCase();
         trimcode = trimcode.replace(/\r/g, "");
@@ -29,8 +29,8 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
     updateStarties: function () {
         this.set("starties", (this.get("mapcode").match(/S/g) || []).length);
     },
-    getStartPositions: function() {
-        var starts=[];
+    getStartPositions: function () {
+        var starts = [];
         var startSearch = /S/g;
         var code = this.get("mapcode");
         var hit;
@@ -52,21 +52,21 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         var line = lines[0].trim();
         this.set("cols", line.length);
     },
-    withinBounds: function(opt) {
+    withinBounds: function (opt) {
         if ((opt.hasOwnProperty("row")) && opt.hasOwnProperty("col")) {
             var x = opt.col;
-            var y= opt.row;
+            var y = opt.row;
         } else if ((opt.hasOwnProperty("x")) && (opt.hasOwnProperty("y"))) {
             var x = opt.x;
-            var y= opt.y;
+            var y = opt.y;
         } else {
             console.error(opt)
             throw "param for withinBounds unclear";
         }
         if (x < 0) return false;
         if (y < 0) return false;
-        if (x > this.get("cols")-1) return false;
-        if (y > this.get("rows")-1) return false;
+        if (x > this.get("cols") - 1) return false;
+        if (y > this.get("rows") - 1) return false;
         return true;
     },
     setFieldAtRowCol: function (r, c, field) {
@@ -85,7 +85,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
     getFieldAtRowCol: function (r, c) {
         //console.log(r, c);
         if (!this.withinBounds({row: r, col: c})) {
-            console.error(r,c);
+            console.error(r, c);
             throw  "Row " + r + ", Col " + c + " not within bounds";
             return false;
         }
@@ -97,10 +97,10 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         var pos = ( r * (this.get("cols") + 1)) + c;
         return pos;
     },
-    getRowColFromPos: function(pos) {
-        var cols = this.get("cols") +1;
+    getRowColFromPos: function (pos) {
+        var cols = this.get("cols") + 1;
         var c = pos % cols;
-        var r = Math.floor(pos/cols)
+        var r = Math.floor(pos / cols)
         return {row: r, col: c, x: c, y: r};
     },
     FIELDS: {
@@ -123,5 +123,45 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         "7": "cp7",
         "8": "cp8",
         "9": "cp9"
+    },
+    getPassedFields: function (mo) {
+        if (!mo) console.error("No motion given");
+        var positions = mo.getPassedPositions();
+        //console.log(positions);
+        var fields = [];
+        for (var posKey in positions) {
+            var pos = positions[posKey];
+            var x = pos.get("x");
+            var y = pos.get("y");
+            if (this.withinBounds({x: x, y: y})) {
+                fields.push(this.getFieldAtRowCol(y, x));
+            } else {
+                fields.push("_");
+            }
+        }
+        return fields;
+    },
+    isPossible: function (mo) {
+        var fields = this.getPassedFields(mo);
+        //console.log(fields);
+        if (fields.indexOf(undefined) >= 0) return false;
+        if (fields.indexOf("X") >= 0) return false;
+        if (fields.indexOf("Y") >= 0) return false;
+        if (fields.indexOf("Z") >= 0) return false;
+        if (fields.indexOf("V") >= 0) return false;
+        if (fields.indexOf("W") >= 0) return false;
+        if (fields.indexOf("_") >= 0) return false;
+        //console.log(mo.toString(), "is possible");
+        return true;
+    },
+    verifiedMotions: function (motions) {
+        var remaining = [];
+        for (var p = 0; p < motions.length; p++) {
+            var mo= motions[p];
+            if (this.isPossible(mo)) {
+                remaining.push(mo);
+            }
+        }
+        return remaining;
     }
 });

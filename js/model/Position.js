@@ -1,8 +1,14 @@
-var Position = Backbone.Model.extend({
+var Position = Backbone.Model.extend(/** @lends Position.prototype */{
     defaults: {
         x: 0,
         y: 0
     },
+    /**
+     * @construcor Position
+     * @class Position
+     * @param x {interger} or {Object} either x or x/y map
+     * @param y {integer} optional y
+     */
     initialize: function (x, y) {
         //check if first arg is an object with x and y or if we have two numeric args
         if (typeof x === "object") {

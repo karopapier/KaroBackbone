@@ -44,8 +44,8 @@ var Motion = Backbone.Model.extend(/** @lends Motion.prototype*/{
      * @return Position
      */
     getStopPosition: function () {
-        var pos = new Position(this.getSourcePosition().toJSON());
-        var vec = new Vector(this.get("vector").toJSON());
+        var pos = this.getSourcePosition();
+        var vec = this.get("vector").clone();
 
         while (vec.getLength() > 0) {
             pos.move(vec);

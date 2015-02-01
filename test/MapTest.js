@@ -64,3 +64,43 @@ test("Map getStartPositions", function() {
     deepEqual(map.getStartPositions().map(function(p) {return p.toString() }),expected, "returns correct Start Positions");
 
 });
+
+test("isPossible", function () {
+    expect(3);
+    //isPossible
+    var map = new Map();
+    map.setMapcode("XXXXXXX\nXOSOFX1\nXXXXXXX");
+    var mo = new Motion();
+    mo.setXY1toXY2(1, 1, 6, 1);
+
+    equal(map.isPossible(mo), false, "motion not possible");
+
+    var mo = new Motion();
+    mo.setXY1toXY2(1, 1, 4, 2);
+    var map = new Map();
+    map.setMapcode("XXXXXX\nXOOXXX\nXXXOOO\nXXXXXX");
+
+    equal(map.isPossible(mo), true, "move through dot is possible");
+
+    mo.setXY1toXY2(1, 1, 5, 2);
+    equal(map.isPossible(mo), false, "not possible");
+
+})
+
+test("getPassedFields", function () {
+    expect(1);
+
+    //getPassedFields
+    var pos = new Position({x: 6, y: 1});
+    var vec = new Vector({x: 5, y: 0});
+    var mo = new Motion({position: pos, vector: vec});
+    var map = new Map();
+    map.setMapcode("XXXXXXX\nXOSOFX1\nXXXXXXX");
+
+    var k = new KRACHZ({
+        map: map
+    });
+
+    var expected = ["O", "S", "O", "F", "X", "1"];
+    deepEqual(map.getPassedFields(mo), expected, "getPassedFields");
+});

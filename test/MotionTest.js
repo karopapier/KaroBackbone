@@ -28,6 +28,22 @@ test("basic", function () {
     equal(m.getSourcePosition().toString(), "[5|2]", "getSourcePosition");
 });
 
+test("getStopPosition", function() {
+    expect(3);
+
+    var mo = new Motion();
+    mo.setXY1toXY2(2,2,2,2);
+    equal(mo.getStopPosition().toString(),"[2|2]",mo.toString() + " stops at 2|2")
+
+    var mo = new Motion();
+    mo.setXY1toXY2(0,0,2,2);
+    equal(mo.getStopPosition().toString(),"[3|3]",mo.toString() + " stops at 3|3")
+
+    var mo = new Motion();
+    mo.setXY1toXY2(9,4,6,2)
+    equal(mo.getStopPosition().toString(),"[3|1]",mo.toString() + " stops at 0|0")
+})
+
 
 test("Possibles", function () {
     expect(2);

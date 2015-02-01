@@ -45,49 +45,11 @@ var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
         }
         this.cache = {};
     },
-    getPassedFields: function (mo) {
-        if (!mo) console.error("No motion given");
-        var map = this.get("map");
-        var positions = mo.getPassedPositions();
-        //console.log(positions);
-        var fields = [];
-        for (var posKey in positions) {
-            var pos = positions[posKey];
-            var x = pos.get("x");
-            var y = pos.get("y");
-            if (map.withinBounds({x: x, y: y})) {
-                fields.push(map.getFieldAtRowCol(y, x));
-            } else {
-                fields.push("_");
-            }
-        }
-        return fields;
-    },
-    isPossible: function (mo) {
-        var fields = this.getPassedFields(mo);
-        //console.log(fields);
-        if (fields.indexOf(undefined) >= 0) return false;
-        if (fields.indexOf("X") >= 0) return false;
-        if (fields.indexOf("Y") >= 0) return false;
-        if (fields.indexOf("Z") >= 0) return false;
-        if (fields.indexOf("V") >= 0) return false;
-        if (fields.indexOf("W") >= 0) return false;
-        if (fields.indexOf("_") >= 0) return false;
-        //console.log(mo.toString(), "is possible");
-        return true;
-    },
-    verifiedPossibles: function (possibles) {
-        var remaining = [];
-        for (var p = 0; p < possibles.length; p++) {
-            var possible = possibles[p];
-            if (this.isPossible(possible)) {
-                remaining.push(possible);
-            }
-        }
-        return remaining;
-    },
+
+
     willCrash: function (mo, depth) {
         //console.warn("starting", mo.toString(), depth);
+        var map = this.get("map");
         if (!depth) depth = 8;
         //crazyHelperFunction(mo, depth);
         //TAKES++;
@@ -95,7 +57,7 @@ var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
         if (depth === 1) {
             //console.warn("TIEF 1", mo);
             //crazyHelperFunction(mo, 0);
-            return !this.isPossible(mo);
+            return !map.isPossible(mo);
         }
         if (mo.get("vector").toString() == "(0|0)") {
             //console.log("NULLER");
@@ -103,7 +65,7 @@ var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
         }
         var possibles = mo.getPossibles();
         //console.log(possibles);
-        possibles = this.verifiedPossibles(possibles);
+        possibles = map.verifiedMotions(possibles);
         if (possibles.length == 0) {
             //console.warn("Nothin left");
             return true;
@@ -134,12 +96,5 @@ var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
         }
         //console.info(crashes, possibles.length);
         return crashes == possibles.length;
-    },
-    /**
-     *
-     * @param mo Motion
-     */
-    isValid: function (mo) {
-        var passed = mo.getPassedFields();
     }
 });

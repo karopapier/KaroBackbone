@@ -4,7 +4,7 @@ var Game = Backbone.Model.extend({
         completed: false
     },
     initialize: function () {
-        _.bindAll(this, "parse", "load");
+        _.bindAll(this, "parse", "load", "updatePossibles");
         this.map = new Map();
         this.moveMessages = new MoveMessageCollection();
         //pass the MoveMessage collection into it to have the messages ready in one go when walking the moves
@@ -12,7 +12,11 @@ var Game = Backbone.Model.extend({
             [{id: 0}],
             {
                 "moveMessages": this.moveMessages
-            });
+            }
+        );
+        this.possibles = new MotionCollection();
+        this.listenTo(this,"change:completed", this.updatePossibles);
+        this.listenTo(this.players,"change", this.updatePossibles);
     },
 
     url: function () {
@@ -46,5 +50,45 @@ var Game = Backbone.Model.extend({
         this.set({"id": id, completed: false});
         console.info("Fetching game details for " + id);
         this.fetch();
+    },
+
+    updatePossibles: function() {
+        if (!(this.get("completed"))) return false;
+        if (this.get("finished")) {
+            this.possibles.reset([]);
+            return true;
+        }
+        console.log("Update possibles");
+
+        var dranId = this.get("dranId");
+        var currentPlayer = this.players.get(dranId);
+        var lastmove = currentPlayer.get("lastmove");
+
+        //TODO if no last move but dran and active, return starties
+        //TODO if no last move but dran and active, return starties
+        //TODO if no last move but dran and active, return starties
+        //TODO if no last move but dran and active, return starties
+        var mo = lastmove.getMotion();
+
+        //get theoretic motions
+        //reduce possibles with map
+        var theoreticals = mo.getPossibles();
+        theoreticals = this.map.verifiedMotions(theoreticals);
+
+
+        var occupiedPositions = this.players.getOccupiedPositions();
+        var occupiedPositionStrings = occupiedPositions.map(function(e) {
+            return e.toString();
+        });
+
+        var possibles = [];
+        for (var i = 0; i < theoreticals.length; i++) {
+            var possible = theoreticals[i];
+            if (occupiedPositionStrings.indexOf(possible.toKeyString())<0) {
+                possibles.push(possible);
+                console.info(mo.toString());
+            }
+        }
+        this.possibles.reset(possibles);
     }
 });
