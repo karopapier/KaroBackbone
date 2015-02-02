@@ -74,10 +74,29 @@ var MapPlayerMoves = Backbone.View.extend({
                 limit = 0;
             }
             var moves = player.get("moves").toArray();
+
+            //if no move, nothing to draw, stop
+            if (moves.length<1) return false;
+
+            var m = player.get("lastmove");
+            var currentPosition = Karopapier.Util.createSvg("circle", {
+                cx: m.get("x") * 12 + 5.5,
+                cy: m.get("y") * 12 + 5.5,
+                r: 4,
+                //stroke: "black",
+                fill: color,
+                class:"playerPosition",
+                "data-playerId": player.get("id")
+            });
+            this.el.appendChild(currentPosition);
+
+            //if only one move, stop here
             if (moves.length<=1) return false;
+
             if (limit > 0) {
                 moves = player.get("moves").last(this.settings.get("limit") + 1);
             }
+
             //console.log(moves);
             //console.log(player.attributes);
             if (player.get("position") > 0) {
@@ -111,18 +130,6 @@ var MapPlayerMoves = Backbone.View.extend({
             this.el.appendChild(p);
 
 
-            var m = player.get("lastmove");
-            //console.log(m.attributes);
-            var currentPosition = Karopapier.Util.createSvg("circle", {
-                cx: m.get("x") * 12 + 5.5,
-                cy: m.get("y") * 12 + 5.5,
-                r: 4,
-                //stroke: "black",
-                fill: color,
-                class:"playerPosition",
-                "data-playerId": player.get("id")
-            });
-            this.el.appendChild(currentPosition);
             //console.log("RENDERTE moves for", player.get("name"));
         }.bind(this));
     }
