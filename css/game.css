@@ -23,6 +23,10 @@
     background-color: red;
 }
 
+.possibleMove.isStart {
+    background-color: rgba(200,255,200,.3);
+}
+
 .playerInfo {
     width: 200px;
     height: 150px;

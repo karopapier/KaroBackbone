@@ -98,6 +98,10 @@ var Motion = Backbone.Model.extend(/** @lends Motion.prototype*/{
      }
      */
 
+    /**
+     *
+     * @returns {Array} Motion
+     */
     getPossibles: function () {
         var possibles = [];
         //#walk the 9 possibilities to have them arranged like

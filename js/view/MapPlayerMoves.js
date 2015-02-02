@@ -78,6 +78,7 @@ var MapPlayerMoves = Backbone.View.extend({
             //if no move, nothing to draw, stop
             if (moves.length<1) return false;
 
+            var color = "#" + player.get("color");
             var m = player.get("lastmove");
             var currentPosition = Karopapier.Util.createSvg("circle", {
                 cx: m.get("x") * 12 + 5.5,
@@ -105,7 +106,6 @@ var MapPlayerMoves = Backbone.View.extend({
                 //console.log(moves);
             }
             //console.info(moves);
-            var color = "#" + player.get("color");
             var pathCode = "M" + (parseInt(moves[0].get("x") * 12) + 6) + "," + (parseInt(moves[0].get("y") * 12) + 6);
             moves.forEach(function (m, i) {
                 var x = parseInt(m.get("x"));
