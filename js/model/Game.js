@@ -15,8 +15,8 @@ var Game = Backbone.Model.extend({
             }
         );
         this.possibles = new MotionCollection();
-        this.listenTo(this,"change:completed", this.updatePossibles);
-        this.listenTo(this.players,"change", this.updatePossibles);
+        this.listenTo(this, "change:completed", this.updatePossibles);
+        this.listenTo(this.players, "change", this.updatePossibles);
     },
 
     url: function () {
@@ -40,7 +40,7 @@ var Game = Backbone.Model.extend({
             data.game.completed = true;
             return data.game;
         } else {
-            console.warn("Dropped response for "+ data.game.id);
+            console.warn("Dropped response for " + data.game.id);
         }
     },
 
@@ -52,7 +52,7 @@ var Game = Backbone.Model.extend({
         this.fetch();
     },
 
-    updatePossibles: function() {
+    updatePossibles: function () {
         if (!(this.get("completed"))) return false;
         if (this.get("finished")) {
             this.possibles.reset([]);
@@ -64,27 +64,37 @@ var Game = Backbone.Model.extend({
         var currentPlayer = this.players.get(dranId);
         var lastmove = currentPlayer.get("lastmove");
 
-        //TODO if no last move but dran and active, return starties
-        //TODO if no last move but dran and active, return starties
-        //TODO if no last move but dran and active, return starties
-        //TODO if no last move but dran and active, return starties
-        var mo = lastmove.getMotion();
 
-        //get theoretic motions
-        //reduce possibles with map
-        var theoreticals = mo.getPossibles();
-        theoreticals = this.map.verifiedMotions(theoreticals);
+        //FIXME
 
+        //TODO if no moves but dran and active, return starties
+        var movesCount = currentPlayer.get("moves").length;
+        if ((movesCount == 0) && (currentPlayer.get("status") == "ok")) {
+            var theoreticals = new MotionCollection(this.map.getStartPositions().map(function (e) {
+                var v = new Vector({x: 0, y: 0});
+                return new Motion({
+                    position: e,
+                    vector: v
+                })
+            }));
+        } else {
+            var mo = lastmove.getMotion();
+            //get theoretic motions
+            //reduce possibles with map
+            var theoreticals = mo.getPossibles();
+            theoreticals = this.map.verifiedMotions(theoreticals);
+        }
+        console.log(theoreticals);
 
         var occupiedPositions = this.players.getOccupiedPositions();
-        var occupiedPositionStrings = occupiedPositions.map(function(e) {
+        var occupiedPositionStrings = occupiedPositions.map(function (e) {
             return e.toString();
         });
 
         var possibles = [];
         for (var i = 0; i < theoreticals.length; i++) {
             var possible = theoreticals[i];
-            if (occupiedPositionStrings.indexOf(possible.toKeyString())<0) {
+            if (occupiedPositionStrings.indexOf(possible.toKeyString()) < 0) {
                 possibles.push(possible);
                 console.info(mo.toString());
             }

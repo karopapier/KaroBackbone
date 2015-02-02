@@ -70,7 +70,7 @@ var PossiblesView = Backbone.View.extend({
     render: function () {
         this.clearPossibles();
         var possibles = this.game.possibles;
-        console.log(possibles);
+        //console.log(possibles);
         //var k = new KRACHZ({
         //map: this.map
         //});
