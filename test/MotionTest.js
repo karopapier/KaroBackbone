@@ -46,7 +46,7 @@ test("getStopPosition", function() {
 
 
 test("Possibles", function () {
-    expect(2);
+    expect(4);
 
     var p = new Position({x: 2, y: 1});
     var v = new Vector({x: 3, y: 1});
@@ -64,6 +64,12 @@ test("Possibles", function () {
         return poss.toString();
     });
     deepEqual(stringArray, expected, "->getPossibles returns 9 correct values");
+
+    m.setXY1toXY2(5,5,3,3);
+    var possibles = m.getPossiblesByLength();
+    console.log(possibles);
+    equal(possibles[0].toString(), "[2|2] (-1|-1)", "shortest first");
+    equal(possibles[8].toString(), "[0|0] (-3|-3)", "longest last");
 
     var m = new Motion();
     m.setXY1toXY2(4,3,3,3);

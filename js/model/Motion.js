@@ -1,7 +1,7 @@
 var Motion = Backbone.Model.extend(/** @lends Motion.prototype*/{
     defaults: {
-        position: {x:0,y:0},
-        vector: {x:0,y:0}
+        position: {x: 0, y: 0},
+        vector: {x: 0, y: 0}
     },
     /**
      * @constructor Motion
@@ -32,7 +32,7 @@ var Motion = Backbone.Model.extend(/** @lends Motion.prototype*/{
     toKeyString: function () {
         return this.get("position").toString();
     },
-    toMove: function() {
+    toMove: function () {
         return {
             x: this.get("position").get("x"),
             y: this.get("position").get("y"),
@@ -112,7 +112,7 @@ var Motion = Backbone.Model.extend(/** @lends Motion.prototype*/{
             for (var iX = -1; iX <= 1; iX++) {
                 var x = this.get("vector").get("x") + iX;
                 var y = this.get("vector").get("y") + iY;
-                if ((x!==0) || (y!==0)) {
+                if ((x !== 0) || (y !== 0)) {
                     var v = new Vector({
                         x: this.get("vector").get("x") + iX,
                         y: this.get("vector").get("y") + iY
@@ -123,7 +123,13 @@ var Motion = Backbone.Model.extend(/** @lends Motion.prototype*/{
         }
         return possibles;
     },
-
+    getPossiblesByLength: function () {
+        var possibles = this.getPossibles();
+        possibles = _.sortBy(possibles, function (m) {
+            return m.get("vector").getLength();
+        });
+        return possibles;
+    },
     getPassedPositions: function () {
         return this.getSourcePosition().getPassedPositionsTo(this.get("position"));
     },

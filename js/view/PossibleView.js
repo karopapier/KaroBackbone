@@ -4,10 +4,11 @@ var PossibleView = Backbone.View.extend({
     events: {
         "click": "checkMove",
         "mouseenter": "hoverMove",
-        "mouseleave": "unhoverMove"
+        "mouseleave": "unhoverMove",
+        "remove": "selfdestruct"
     },
     initialize: function (options) {
-        _.bindAll(this, "checkMove", "hoverMove", "unhoverMove", "render");
+        _.bindAll(this, "checkMove", "hoverMove", "unhoverMove", "render", "cleanup");
         if (!options.hasOwnProperty("mapView")) {
             console.error("No mapView for PossiblesView");
         }
@@ -17,7 +18,7 @@ var PossibleView = Backbone.View.extend({
         this.listenTo(this.model, "change", this.render);
     },
     checkMove: function (e) {
-        console.log("trigger", this.model);
+        //console.log("trigger", this.model);
         this.trigger("clicked", this.model);
     },
     hoverMove: function (e, a, b) {
@@ -25,12 +26,16 @@ var PossibleView = Backbone.View.extend({
         if (mo.get("vector").getLength() > 3) {
             //console.log(mo);
             var stop = mo.getStopPosition();
-            var div = $('<div class="stopPosition" style="left: ' + stop.get("x") * 12 + 'px; top: ' + stop.get("y") * 12 + 'px;"></div>');
-            this.$el.append(div);
+            this.stopDiv = $('<div class="stopPosition" style="left: ' + stop.get("x") * 12 + 'px; top: ' + stop.get("y") * 12 + 'px;"></div>');
+            this.$el.parent().append(this.stopDiv);
         }
     },
-    unhoverMove: function (e, a, b) {
-        this.$('.stopPosition').remove();
+    unhoverMove: function () {
+        if (this.stopDiv) this.stopDiv.remove();
+    },
+    cleanup: function() {
+        this.unhoverMove();
+        return this;
     },
     render: function () {
         var v = this.model.get("vector");
@@ -39,11 +44,14 @@ var PossibleView = Backbone.View.extend({
             left: p.get("x") * 12,
             top: p.get("y") * 12
         }).attr({
-            title: this.model.toString(),
+            title: this.model.get("vector").toString(),
             "data-motionString": this.model.toString()
         });
         //if vector = (0|0], mark as start
-        console.log(v.toString());
+        //console.log(v.toString());
+        if (this.model.get("willCrash")) {
+            this.$el.addClass("willCrash");
+        }
         if (v.toString()==="(0|0)") {
             this.$el.attr("title", "Start: " + this.model.toKeyString());
             this.$el.addClass("isStart");

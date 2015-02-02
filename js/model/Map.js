@@ -154,6 +154,10 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         //console.log(mo.toString(), "is possible");
         return true;
     },
+    /**
+     * @param motions
+     * @returns {Array} Motions
+     */
     verifiedMotions: function (motions) {
         var remaining = [];
         for (var p = 0; p < motions.length; p++) {

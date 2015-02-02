@@ -1,24 +1,24 @@
 /*
- var crazyHelperFunction = function (mo, depth) {
- var pos1 = mo.getSourcePosition();
- var pos2 = mo.get("position");
- var x1 = parseInt(pos1.get("x") * 12 + 6)
- var x2 = parseInt(pos2.get("x") * 12 + 6)
- var y1 = parseInt(pos1.get("y") * 12 + 6)
- var y2 = parseInt(pos2.get("y") * 12 + 6)
- var f = depth * 16 - 1;
+var crazyHelperFunction = function (mo, depth) {
+    var pos1 = mo.getSourcePosition();
+    var pos2 = mo.get("position");
+    var x1 = parseInt(pos1.get("x") * 12 + 6)
+    var x2 = parseInt(pos2.get("x") * 12 + 6)
+    var y1 = parseInt(pos1.get("y") * 12 + 6)
+    var y2 = parseInt(pos2.get("y") * 12 + 6)
+    var f = depth * 16 - 1;
 
- var l = Karopapier.Util.createSvg("line", {
- x1: x1,
- x2: x2,
- y1: y1,
- y2: y2,
- stroke: "rgb(" + f + ",0,0)" //+f+","+f+")"
- })
- document.getElementById("mapPlayerMoves").appendChild(l);
- };
- var TAKES = 0;
- */
+    var l = Karopapier.Util.createSvg("line", {
+        x1: x1,
+        x2: x2,
+        y1: y1,
+        y2: y2,
+        stroke: "rgb(" + f + ",0,0)" //+f+","+f+")"
+    })
+    document.getElementById("mapPlayerMoves").appendChild(l);
+};
+*/
+
 var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
     /**
      * @constructor KRACHZ
@@ -32,20 +32,19 @@ var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
      * Züge
      *
      * aka "Crash Detection"
-     * Considers map and checks motions vs mapcode
      */
 
     //map
     //motion
     //calc with depth
     initialize: function (options) {
-        if (!options.hasOwnProperty("map")) {
+        _.bindAll(this, "willCrash");
+        if (!options.hasOwnProperty("map") || (typeof options.map === "undefined")) {
             console.error("No map provided to KRACHZ");
             return false;
         }
         this.cache = {};
     },
-
 
     willCrash: function (mo, depth) {
         //console.warn("starting", mo.toString(), depth);
@@ -63,8 +62,7 @@ var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
             //console.log("NULLER");
             return false;
         }
-        var possibles = mo.getPossibles();
-        //console.log(possibles);
+        var possibles = mo.getPossiblesByLength();
         possibles = map.verifiedMotions(possibles);
         if (possibles.length == 0) {
             //console.warn("Nothin left");
