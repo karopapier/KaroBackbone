@@ -10,6 +10,7 @@ var PlayerTable = Backbone.View.extend({
 	].join('')),
 
 	playerTemplate: function(player) {
+		console.info(player);
 		var html="";
 		html+= '<tr>';
 		html+='<td>'+player.name+'</td>';
@@ -29,24 +30,24 @@ var PlayerTable = Backbone.View.extend({
 		}
 		if (player.status=="ok") {
 			if (player.dran) {
-				html+='<span class="dran">dran FETT</span>';
+				html+='<span class="dran">dran</span>';
 			} else {
 				if (player.position != 0) {
 					html+="wurde "+player.position+".";
 				} else {
-					html+=player.moved ? "war schon GRÜN" : "kommt noch ROT";
+					html+=player.moved ? '<span class="moved">war schon</span>' : '<span class="tomove">kommt noch</span>';
 				}
 			}
 
 		}
 		html+="</td>";
-		html+="<td>kommt noch</td>";
+		html+="<td>fehlt: " + player.missingCps + "</td>";
 		var lastmovetime = player.lastmove.get("t");
 		if (!lastmovetime) {
 			lastmovetime="-";
 		}
 		html+='<td>' + lastmovetime +  '</td>';
-		html+='<td> kommt noch </td>';
+		html+='<td> kommt später </td>';
 		html+='</tr>';
 		return html;
 	},

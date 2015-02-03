@@ -42,3 +42,19 @@
     z-index: 10;
     border: 1px solid orange;
 }
+
+span.moved {
+    color: red;
+}
+
+span.dran {
+    font-weight: bold;
+}
+
+span.tomove {
+    color: red
+}
+
+span.kicked {
+    font-style: italic;
+}
