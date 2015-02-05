@@ -1,3 +1,3 @@
 var MoveCollection = Backbone.Collection.extend({
-	model: Move
+    model: Move
 });

@@ -73,13 +73,13 @@ var MapPlayerMoves = Backbone.View.extend({
                 //alle eigenen
                 limit = 0;
             }
-            var moves = player.get("moves").toArray();
+            var moves = player.moves.toArray();
 
             //if no move, nothing to draw, stop
             if (moves.length<1) return false;
 
             var color = "#" + player.get("color");
-            var m = player.get("lastmove");
+            var m = player.getLastMove();
             var currentPosition = Karopapier.Util.createSvg("circle", {
                 cx: m.get("x") * 12 + 5.5,
                 cy: m.get("y") * 12 + 5.5,
@@ -95,7 +95,7 @@ var MapPlayerMoves = Backbone.View.extend({
             if (moves.length<=1) return false;
 
             if (limit > 0) {
-                moves = player.get("moves").last(this.settings.get("limit") + 1);
+                moves = player.moves.last(this.settings.get("limit") + 1);
             }
 
             //console.log(moves);

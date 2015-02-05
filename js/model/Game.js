@@ -25,23 +25,22 @@ var Game = Backbone.Model.extend({
 
     parse: function (data) {
         //make sure data is matching current gameId (delayed responses get dropped)
-        if (data.game.id == this.id) {
-            //pass checkpoint info to map as "cpsActive" // map has cps attr as well, array of avail cps
-            this.map.set({"cpsActive": data.game.cps}, {silent: true});
-            this.map.set(data.map);
-            playersData = data.players;
-            _.each(playersData, function (playerData) {
-                var lastmove = new Move(playerData.lastmove);
-                playerData.lastmove = lastmove;
-                var moves = new MoveCollection(playerData.moves);
-                playerData.moves = moves;
-            });
-            this.players.reset(data.players);
-            data.game.completed = true;
-            return data.game;
-        } else {
-            console.warn("Dropped response for " + data.game.id);
+        if (this.get("id") !== 0) {
+            //check if this is a details.json
+            if (data.game) {
+                if (data.game.id == this.id) {
+                    //pass checkpoint info to map as "cpsActive" // map has cps attr as well, array of avail cps
+                    this.map.set({"cpsActive": data.game.cps}, {silent: true});
+                    this.map.set(data.map);
+                    this.players.reset(data.players, {parse: true});
+                    data.game.completed = true;
+                    return data.game;
+                } else {
+                    console.warn("Dropped response for " + data.game.id);
+                }
+            }
         }
+        return data;
     },
 
     load: function (id) {
@@ -53,22 +52,23 @@ var Game = Backbone.Model.extend({
     },
 
     updatePossibles: function () {
+        console.info("Call to  update possibles");
         if (!(this.get("completed"))) return false;
         if (this.get("finished")) {
             this.possibles.reset([]);
             return true;
         }
-        console.info("Update possibles");
+        console.info("DO Update possibles");
 
         var dranId = this.get("dranId");
         var currentPlayer = this.players.get(dranId);
-        var lastmove = currentPlayer.get("lastmove");
+        var movesCount = currentPlayer.moves.length;
 
 
         //FIXME
 
         //TODO if no moves but dran and active, return starties
-        var movesCount = currentPlayer.get("moves").length;
+        console.log("MOVESCOUNT", movesCount);
         if ((movesCount == 0) && (currentPlayer.get("status") == "ok")) {
             var theoreticals = this.map.getStartPositions().map(function (e) {
                 var v = new Vector({x: 0, y: 0});
@@ -76,14 +76,16 @@ var Game = Backbone.Model.extend({
                     position: e,
                     vector: v
                 })
-                mo.set("isStart",true);
+                mo.set("isStart", true);
                 return mo;
             });
         } else {
+            var lastmove = currentPlayer.getLastMove();
             var mo = lastmove.getMotion();
             //get theoretic motions
             //reduce possibles with map
             var theoreticals = mo.getPossibles();
+            console.log("THEO", theoreticals);
             theoreticals = this.map.verifiedMotions(theoreticals);
         }
 

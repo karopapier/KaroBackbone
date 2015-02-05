@@ -79,8 +79,10 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
         var move = new Move(mo.toMove());
         move.set("t", Date());
 		move.set("test", true);
-        player.set("lastmove", move);
-        player.get("moves").add(move);
+        console.log("Add move");
+        player.moves.add(move);
+        console.log("Added move");
+        console.log(player.moves.length);
         //console.warn(player);
         mpm.render();
         possView.render();
@@ -101,13 +103,6 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
     }
 });
 
-/*
- setTimeout(function() {
- $.get("/moveresponse.txt",function(data) {
- parseMoveResponse(data);
- });
- },500);
- */
 function parseMoveResponse(text) {
     //indexOf Danke ==ok
     if (text.indexOf("Danke.") >= 0) {
@@ -168,6 +163,17 @@ function myTextGet(url, cb, errcb) {
 
     request.send();
 };
+
+var dranQueue = new GameCollection();
+dranQueue.url =  function()   {
+    return "http://www.karopapier.de/api/user/1/dran.json?callback=?"
+};
+dranQueue.parse = function(data) { return data.games };
+dranQueue.fetch({
+    success: function() {
+        game.load(dranQueue.first().get("id"));
+    }
+} );
 
 
 gr = new GameRouter();

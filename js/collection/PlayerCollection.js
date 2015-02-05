@@ -3,6 +3,8 @@ var PlayerCollection = Backbone.Collection.extend({
 
     initialize: function(models, options) {
         this.moveMessages=options.moveMessages;
+
+        /* re-read movemessages */
         this.listenTo(this, "reset",function(o,id) {
             console.info("Init Players");
             //Look for messages
@@ -11,7 +13,7 @@ var PlayerCollection = Backbone.Collection.extend({
             this.moveMessages.reset();
             this.each(function(player) {
                 //parse player moves for messages
-                player.get("moves").each(function(move){
+                player.moves.each(function(move){
                     if (move.get("msg")) {
                         mm=new MoveMessage({
                             "move": move,
@@ -20,28 +22,34 @@ var PlayerCollection = Backbone.Collection.extend({
                         this.moveMessages.add(mm,{silent:true});
                     }
                 },this);
-            },this)
+            },this);
             this.moveMessages.trigger("change");
         });
     },
+
     /**
-     * positions, where all players currently stand that alrady moves this round
+     * positions, where all players currently stand that already moved this round
      */
     getOccupiedPositions: function() {
-        var blockers = _.where(this.toJSON(),{
+        var blockers = this.where({
             position: 0,
             status: "ok",
             moved: true
         });
 
-        var blockMoves = _.pluck(blockers,"lastmove");
+        console.log("NOW BLOCERS");
+        console.log(blockers);
         var positions=[];
-        _.each(blockMoves, function(e) {
-            positions.push(new Position({
-                x: e.attributes.x,
-                y: e.attributes.y
-            }));
-        })
+        for (var i = 0, l=blockers.length;i<l; i++) {
+            var mos =blockers[i].moves;
+            if (mos.length>0) {
+                var mo = mos.at(mos.length-1);
+                positions.push(new Position({
+                    x: mo.attributes.x,
+                    y: mo.attributes.y
+                }))
+            };
+        }
         return positions;
     }
 });
