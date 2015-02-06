@@ -37,8 +37,6 @@ var PlayerCollection = Backbone.Collection.extend({
             moved: true
         });
 
-        console.log("NOW BLOCERS");
-        console.log(blockers);
         var positions=[];
         for (var i = 0, l=blockers.length;i<l; i++) {
             var mos =blockers[i].moves;

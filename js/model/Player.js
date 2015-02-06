@@ -4,9 +4,18 @@ var Player = Backbone.Model.extend({
     },
     initialize: function() {
         _.bindAll(this, "parse", "getLastMove");
+        if (!this.moves) {
+            this.moves=new MoveCollection();
+        }
+        this.listenTo(this.moves, "add remove change reset", this.triggerChange);
+    },
+    triggerChange: function() {
+        this.trigger("change");
     },
     parse: function(data) {
-        this.moves=new MoveCollection();
+        if (!this.moves) {
+            this.moves=new MoveCollection();
+        }
         this.moves.reset(data.moves);
         delete data.moves;
         return data;

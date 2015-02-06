@@ -77,12 +77,12 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
     if (testmode) {
         var player = game.players.get(playerId);
         var move = new Move(mo.toMove());
-        move.set("t", Date());
+        move.set("t", new Date());
 		move.set("test", true);
-        console.log("Add move");
+        //console.log("Add move");
         player.moves.add(move);
-        console.log("Added move");
-        console.log(player.moves.length);
+        //console.log("Added move");
+        //console.log(player.moves.length);
         //console.warn(player);
         mpm.render();
         possView.render();
@@ -124,7 +124,7 @@ function parseMoveResponse(text) {
 
         //<A HREF=showmap.php?GID=82749> -> folge id
         var gids = text.match(/showmap.php\?GID=(\d*?)>Du bist/);
-        console.log(gids);
+        //console.log(gids);
 		if (gids) {
 			if (gids.length > 1) {
 				//console.log(gids[1]);

@@ -52,13 +52,11 @@ var Game = Backbone.Model.extend({
     },
 
     updatePossibles: function () {
-        console.info("Call to  update possibles");
         if (!(this.get("completed"))) return false;
         if (this.get("finished")) {
             this.possibles.reset([]);
             return true;
         }
-        console.info("DO Update possibles");
 
         var dranId = this.get("dranId");
         var currentPlayer = this.players.get(dranId);
@@ -68,7 +66,6 @@ var Game = Backbone.Model.extend({
         //FIXME
 
         //TODO if no moves but dran and active, return starties
-        console.log("MOVESCOUNT", movesCount);
         if ((movesCount == 0) && (currentPlayer.get("status") == "ok")) {
             var theoreticals = this.map.getStartPositions().map(function (e) {
                 var v = new Vector({x: 0, y: 0});
@@ -85,7 +82,6 @@ var Game = Backbone.Model.extend({
             //get theoretic motions
             //reduce possibles with map
             var theoreticals = mo.getPossibles();
-            console.log("THEO", theoreticals);
             theoreticals = this.map.verifiedMotions(theoreticals);
         }
 

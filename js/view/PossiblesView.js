@@ -19,7 +19,7 @@ var PossiblesView = Backbone.View.extend({
     },
     clearPossibles: function () {
         _.each(this.views, function(v) {
-            console.log("Ich entferne nen alten possible");
+            //console.log("Ich entferne nen alten possible");
             v.cleanup().remove();
         })
         this.views=[];
