@@ -88,10 +88,16 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
         possView.render();
     } else {
         //build move url
-        //http://www.karopapier.de/move.php?GID=83790&xpos=76&ypos=28&xvec=-2&yvec=2
+        var moveUrl = "http://www.karopapier.de/move.php?GID=" + game.get("id");
         var m = mo.toMove();
-        var moveUrl = "http://www.karopapier.de/move.php?GID=" + game.get("id") + "&xpos=" + m.x + "&ypos=" + m.y + "&xvec=" + m.xv + "&yvec=" + m.yv;
-        //console.log(moveUrl);
+        if (mo.get("vector").getLength()==0) {
+            //http://www.karopapier.de/move.php?GID=84078&startx=8&starty=29
+            alert ("Start");
+            moveUrl+="&startx=" + m.x + "&starty=" + m.y;
+        } else {
+            //http://www.karopapier.de/move.php?GID=83790&xpos=76&ypos=28&xvec=-2&yvec=2
+            moveUrl+= "&xpos=" + m.x + "&ypos=" + m.y + "&xvec=" + m.xv + "&yvec=" + m.yv;
+        }
 
         myTextGet(moveUrl, function (text) {
             parseMoveResponse(text);
@@ -169,11 +175,11 @@ dranQueue.url =  function()   {
     return "http://www.karopapier.de/api/user/1/dran.json?callback=?"
 };
 dranQueue.parse = function(data) { return data.games };
-dranQueue.fetch({
-    success: function() {
-        game.load(dranQueue.first().get("id"));
-    }
-} );
+dranQueue.fetch();
+
+var dran= function() {
+    game.load(dranQueue.first().get("id"));
+}
 
 
 gr = new GameRouter();

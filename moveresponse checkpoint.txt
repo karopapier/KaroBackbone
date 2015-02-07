@@ -1,0 +1,20 @@
+<tbody><tr> 
+	<td width="20" height="20" valign="TOP" align="LEFT"><img src="/bilder/box/tl.gif" width="20" height="20"></td><td background="/bilder/box/tm.gif" height="20" width="100%"><img src="/bilder/trans.png"></td><td width="20" height="20" valign="TOP" align="LEFT"><img src="/bilder/box/tr.gif" width="20" height="20"></td> 
+	</tr> 
+
+	<tr> 
+	<td width="20" background="/bilder/box/ml.gif"><img src="/bilder/trans.png"></td>
+<td>
+Du hast gerade Checkpoint 3 überfahren!<br><br>Danke. <b>phiurr</b> kommt als nächstes dran<br><br>
+<a href="showmap.php?GID=83170">Zum Spiel zurück</a><br>
+<a href="showgames.php?dranbin=1">Du bist bei keinem anderen Spiel dran... Trotzdem hin?</a><br><a href="realchatframe.php">Oder lieber zum Chat?</a><br>
+<a href="http://www.karopapier.de" target="_top">Zur Hauptseite</a><br><br>Wenn Du aus diesem Spiel aussteigen willst, <a href="kickplayer.php?UID=1&amp;GID=83170">hier klicken</a><br><br>
+	</td> 
+	<td width="20" background="/bilder/box/mr.gif"><img src="/bilder/trans.png"></td> 
+	</tr> 
+	<tr> 
+	<td width="20" height="20"><img src="/bilder/box/bl.gif" width="20" height="20"></td> 
+	<td background="/bilder/box/bm.gif" height="20"><img src="/bilder/trans.png"></td> 
+	<td height="20" width="20"><img src="/bilder/box/br.gif" width="20" height="20"></td> 
+	</tr> 
+</tbody>
