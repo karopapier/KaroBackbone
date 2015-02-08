@@ -6,17 +6,13 @@ var Game = Backbone.Model.extend({
     initialize: function () {
         _.bindAll(this, "parse", "load", "updatePossibles");
         this.map = new Map();
-        this.moveMessages = new MoveMessageCollection();
+        this.set("moveMessages", new MoveMessageCollection());
         //pass the MoveMessage collection into it to have the messages ready in one go when walking the moves
-        this.players = new PlayerCollection(
-            [{id: 0}],
-            {
-                "moveMessages": this.moveMessages
-            }
-        );
+        this.set("players", new PlayerCollection());
+        this.listenTo(this.get("players"),"reset", this.get("moveMessages").updateFromPlayers);
         this.possibles = new MotionCollection();
         this.listenTo(this, "change:completed", this.updatePossibles);
-        this.listenTo(this.players, "change", this.updatePossibles);
+        this.listenTo(this.get("players"), "change", this.updatePossibles);
     },
 
     url: function () {
@@ -32,7 +28,7 @@ var Game = Backbone.Model.extend({
                     //pass checkpoint info to map as "cpsActive" // map has cps attr as well, array of avail cps
                     this.map.set({"cpsActive": data.game.cps}, {silent: true});
                     this.map.set(data.map);
-                    this.players.reset(data.players, {parse: true});
+                    this.get("players").reset(data.players, {parse: true});
                     data.game.completed = true;
                     return data.game;
                 } else {
@@ -59,7 +55,7 @@ var Game = Backbone.Model.extend({
         }
 
         var dranId = this.get("dranId");
-        var currentPlayer = this.players.get(dranId);
+        var currentPlayer = this.get("players").get(dranId);
         var movesCount = currentPlayer.moves.length;
 
 
@@ -85,7 +81,7 @@ var Game = Backbone.Model.extend({
             theoreticals = this.map.verifiedMotions(theoreticals);
         }
 
-        var occupiedPositions = this.players.getOccupiedPositions();
+        var occupiedPositions = this.get("players").getOccupiedPositions();
         var occupiedPositionStrings = occupiedPositions.map(function (e) {
             return e.toString();
         });

@@ -10,7 +10,7 @@ var game = new Game();
 
 var mmv = new MoveMessageView({
     el: '#moveMessages',
-    collection: game.moveMessages
+    collection: game.get("moveMessages")
 });
 
 var giv = new GameInfoView({
@@ -47,13 +47,13 @@ var GameRouter = Backbone.Router.extend({
 });
 
 var pt = new PlayerTable({
-    collection: game.players,
+    collection: game.get("players"),
     el: "#playerTable"
 });
 
 var mpm = new MapPlayerMoves({
     model: game,
-    collection: game.players,
+    collection: game.get("players"),
     el: '#mapPlayerMoves'
 });
 
@@ -71,11 +71,11 @@ var possView = new PossiblesView({
     mapView: svgView
 });
 
-//testmode reset: game.players.get(Karopapier.User).get("moves").reset(game.players.get(Karopapier.User).get("moves").where({"test": undefined}));
+//testmode reset: game.get("players").get(Karopapier.User).get("moves").reset(game.get("players").get(Karopapier.User).get("moves").where({"test": undefined}));
 Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
     var testmode = $('#testmode').is(":checked");
     if (testmode) {
-        var player = game.players.get(playerId);
+        var player = game.get("players").get(playerId);
         var move = new Move(mo.toMove());
         move.set("t", new Date());
 		move.set("test", true);
@@ -180,7 +180,6 @@ dranQueue.fetch();
 var dran= function() {
     game.load(dranQueue.first().get("id"));
 }
-
 
 gr = new GameRouter();
 

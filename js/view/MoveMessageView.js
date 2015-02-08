@@ -4,7 +4,7 @@ var MoveMessageView = Backbone.View.extend({
     initialize: function (options) {
         options = options || {};
 
-        this.listenTo(this.collection, "change", this.render);
+        this.listenTo(this.collection, "reset change", this.render);
         _.bindAll(this, "render");
         //check statusmeldung add small
         //this.template = _.template('<small><%= name %> (<%= date %>): &quot;<%= text %>&quot;<br /></small>\n');
@@ -15,6 +15,7 @@ var MoveMessageView = Backbone.View.extend({
         }
     },
     render: function () {
+        console.log("Rendere Movemessages");
         var html = '';
         var filtered = this.collection.models;
         if (this.filter) {
@@ -22,15 +23,15 @@ var MoveMessageView = Backbone.View.extend({
         }
 
         _.each(filtered, function (e) {
-            var txt = e.get("move").get("msg");
+            var txt = e.get("msg");
             var tpl = this.template;
             if (txt.startsWith("-:K")) {
                 tpl = this.statusTemplate;
             }
             html += tpl({
                 name: e.get("player").get("name"),
-                text: Karopapier.Util.linkify(e.get("move").get("msg")),
-                date: moment(e.get("move").get("t"), "YYYY-MM-dd hh:mm:ss").format("YYYY-MM-DD")
+                text: Karopapier.Util.linkify(e.get("msg")),
+                date: moment(e.get("t"), "YYYY-MM-dd hh:mm:ss").format("YYYY-MM-DD")
             });
         }, this);
 

@@ -13,7 +13,7 @@ var GameView = Backbone.View.extend({
 		});
 
 		this.playersView=new PlayerCollectionView({
-			model:this.model.players,
+			model:this.model.get("players"),
 			settings: this.settings,
 			el: $('#playersView',this.$el)
 		});
