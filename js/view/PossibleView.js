@@ -4,8 +4,7 @@ var PossibleView = Backbone.View.extend({
     events: {
         "click": "checkMove",
         "mouseenter": "hoverMove",
-        "mouseleave": "unhoverMove",
-        "remove": "selfdestruct"
+        "mouseleave": "unhoverMove"
     },
     initialize: function (options) {
         _.bindAll(this, "checkMove", "hoverMove", "unhoverMove", "render", "cleanup");

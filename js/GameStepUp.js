@@ -196,15 +196,15 @@ var checkTestmode = function () {
         $('#mapImage').addClass("testmode");
     } else {
         $('#mapImage').removeClass("testmode");
-        var myPlayer = game.get("players").get(Karopapier.User);
-        //var myMoves = myPlayer.get("moves"); #FIXME
-        var myMoves = myPlayer.moves;
+        var dranId = game.get("dranId");
+        var dranPlayer = game.get("players").get(dranId);
+        //var dranMoves = myPlayer.get("moves"); #FIXME
+        var dranMoves = dranPlayer.moves;
 
-
-        console.log(myMoves);
-        var noTestMoves = myMoves.where({"test": undefined});
-        console.log(noTestMoves);
-        myMoves.reset(noTestMoves);
+        var noTestMoves = dranMoves.where({"test": undefined});
+        dranPlayer.moves.set(noTestMoves);
+        mpm.render();
+        possView.render();
     }
 }
 
