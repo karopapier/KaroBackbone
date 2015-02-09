@@ -66,6 +66,8 @@ var MapPlayerMoves = Backbone.View.extend({
             this.el.removeChild(f);
         }
 
+        var movesFragment = document.createDocumentFragment();
+        var posFragment = document.createDocumentFragment();
         this.collection.each(function (player, i) {
             //console.info(player);
             var limit = this.settings.get("limit");
@@ -89,7 +91,7 @@ var MapPlayerMoves = Backbone.View.extend({
                 class:"playerPosition",
                 "data-playerId": player.get("id")
             });
-            this.el.appendChild(currentPosition);
+            posFragment.appendChild(currentPosition);
 
             //if only one move, stop here
             if (moves.length<=1) return false;
@@ -118,7 +120,7 @@ var MapPlayerMoves = Backbone.View.extend({
                     height: 4,
                     fill: color
                 })
-                this.el.appendChild(square);
+                movesFragment.appendChild(square);
             }.bind(this));
             //console.log(pathCode);
             var p = Karopapier.Util.createSvg("path", {
@@ -127,10 +129,13 @@ var MapPlayerMoves = Backbone.View.extend({
                 "stroke-width": 1,
                 fill: "none"
             });
-            this.el.appendChild(p);
+            movesFragment.appendChild(p);
+
 
 
             //console.log("RENDERTE moves for", player.get("name"));
         }.bind(this));
+        this.el.appendChild(movesFragment);
+        this.el.appendChild(posFragment);
     }
 });

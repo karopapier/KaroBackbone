@@ -78,7 +78,7 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
         var player = game.get("players").get(playerId);
         var move = new Move(mo.toMove());
         move.set("t", new Date());
-		move.set("test", true);
+        move.set("test", true);
         //console.log("Add move");
         player.moves.add(move);
         //console.log("Added move");
@@ -92,14 +92,15 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
         var m = mo.toMove();
         if (mo.get("vector").getLength()==0) {
             //http://www.karopapier.de/move.php?GID=84078&startx=8&starty=29
-            alert ("Start");
             moveUrl+="&startx=" + m.x + "&starty=" + m.y;
         } else {
             //http://www.karopapier.de/move.php?GID=83790&xpos=76&ypos=28&xvec=-2&yvec=2
             moveUrl+= "&xpos=" + m.x + "&ypos=" + m.y + "&xvec=" + m.xv + "&yvec=" + m.yv;
         }
 
+        console.log("Send move");
         myTextGet(moveUrl, function (text) {
+            console.log("Parse move response");
             parseMoveResponse(text);
         });
 
@@ -131,15 +132,15 @@ function parseMoveResponse(text) {
         //<A HREF=showmap.php?GID=82749> -> folge id
         var gids = text.match(/showmap.php\?GID=(\d*?)>Du bist/);
         //console.log(gids);
-		if (gids) {
-			if (gids.length > 1) {
-				//console.log(gids[1]);
-				var pathname = window.location.pathname.substr(1);
-				gr.navigate(pathname + "?GID=" + gids[1], {trigger: true});
-			}
-		} else {
-			window.location.href = "http://www.karopapier.de/dran";
-		}
+        if (gids) {
+            if (gids.length > 1) {
+                //console.log(gids[1]);
+                var pathname = window.location.pathname.substr(1);
+                gr.navigate(pathname + "?GID=" + gids[1], {trigger: true});
+            }
+        } else {
+            window.location.href = "http://www.karopapier.de/dran";
+        }
     } else {
         alert("KEIN DANKE!!!");
         console.log(text);
@@ -188,12 +189,12 @@ Backbone.history.start({
 });
 
 var checkTestmode = function() {
-	console.log("Checking");
-	if ($('#testmode').is(":checked")) {
-		$('#mapImage').addClass("testmode");
-	} else {
-		$('#mapImage').removeClass("testmode");
-	}
+    console.log("Checking");
+    if ($('#testmode').is(":checked")) {
+        $('#mapImage').addClass("testmode");
+    } else {
+        $('#mapImage').removeClass("testmode");
+    }
 }
 
 $('#testmode').click(checkTestmode);
