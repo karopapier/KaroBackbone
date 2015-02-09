@@ -2,11 +2,16 @@ var PossibleView = Backbone.View.extend({
     tagName: "div",
     className: "possibleMove",
     events: {
+        "touchstart": "wasTouch",
         "click": "checkMove",
         "mouseenter": "hoverMove",
-        "mouseleave": "unhoverMove"
+        "mouseleave": "unhoverMove",
+    },
+    NOWAY: function() {
+        alert("YES");
     },
     initialize: function (options) {
+        this.mouseOrTouch = "mouse";
         _.bindAll(this, "checkMove", "hoverMove", "unhoverMove", "render", "cleanup");
         if (!options.hasOwnProperty("mapView")) {
             console.error("No mapView for PossiblesView");
@@ -15,10 +20,24 @@ var PossibleView = Backbone.View.extend({
         //grabbing settings from the mapview to listen to size change
         this.settings = this.mapView.settings;
         this.listenTo(this.model, "change", this.render);
+
+        this.$confirmer = $('<div style="position: fixed; bottom: 20px; right:20px; width: 50px; height: 50px; background-color: red">' + this.model.get("vector").toString() + '</div>');
+        this.$el.append(this.$confirmer.hide());
+
+    },
+    wasTouch: function() {
+        this.mouseOrTouch="touch";
     },
     checkMove: function (e) {
-        //console.log("trigger", this.model);
-        this.trigger("clicked", this.model);
+        console.log("Click by ", this.mouseOrTouch);
+        if (this.mouseOrTouch=="touch") {
+            this.model.set("highlight", true);
+            this.$confirmer.show();
+        } else {
+            //console.log("trigger", this.model);
+            this.trigger("clicked", this.model);
+        }
+        this.mouseOrTouch="mouse";
     },
     hoverMove: function (e, a, b) {
         var mo = this.model;
@@ -46,6 +65,12 @@ var PossibleView = Backbone.View.extend({
             title: this.model.get("vector").toString(),
             "data-motionString": this.model.toString()
         });
+
+        if (this.model.get("highlight")) {
+            this.$el.addClass("highlight");
+        } else {
+            this.$el.removeClass("highlight");
+        }
         //if vector = (0|0], mark as start
         //console.log(v.toString());
         var willCrash = this.model.get("willCrash");

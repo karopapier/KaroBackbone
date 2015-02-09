@@ -37,6 +37,10 @@
     background-color: rgba(200,255,200,.3);
 }
 
+.possibleMove.highlight {
+    border-radius: 0;
+}
+
 .testmode .possibleMove {
 	border: 2px solid green;
 	margin: -1px;
