@@ -186,4 +186,18 @@ gr = new GameRouter();
 Backbone.history.start({
     pushState: true
 });
+
+var checkTestmode = function() {
+	console.log("Checking");
+	if ($('#testmode').is(":checked")) {
+		$('#mapImage').addClass("testmode");
+	} else {
+		$('#mapImage').removeClass("testmode");
+	}
+}
+
+$('#testmode').click(checkTestmode);
+checkTestmode();
+
 console.info("Stepup done");
+

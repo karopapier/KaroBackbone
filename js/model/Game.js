@@ -21,6 +21,7 @@ var Game = Backbone.Model.extend({
 
     parse: function (data) {
         //make sure data is matching current gameId (delayed responses get dropped)
+        console.info("Parsing game data");
         if (this.get("id") !== 0) {
             //check if this is a details.json
             if (data.game) {

@@ -27,6 +27,11 @@
     background-color: rgba(200,255,200,.3);
 }
 
+.testmode .possibleMove {
+	border: 2px solid green;
+	margin: -1px;
+}
+
 .playerInfo {
     width: 200px;
     height: 150px;
