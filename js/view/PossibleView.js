@@ -49,8 +49,13 @@ var PossibleView = Backbone.View.extend({
         });
         //if vector = (0|0], mark as start
         //console.log(v.toString());
-        if (this.model.get("willCrash")) {
-            this.$el.addClass("willCrash");
+        var willCrash = this.model.get("willCrash");
+        if (willCrash !== undefined) {
+            if (this.model.get("willCrash")) {
+                this.$el.addClass("willCrash");
+            } else {
+                this.$el.addClass("noCrash");
+            }
         }
         if (v.toString()==="(0|0)") {
             this.$el.attr("title", "Start: " + this.model.toKeyString());

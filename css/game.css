@@ -10,17 +10,27 @@
 
 .possibleMove {
     position: absolute;
-    margin: 1px;
-    width: 9px;
-    height: 9px;
-    background-color: lightgray;
+    margin: 3px;
+    width: 5px;
+    height: 5px;
+    background-color: white;
     cursor: pointer;
     z-index: 10;
     border-radius: 50%;
 }
 
+.possibleMove.noCrash {
+    background-color: lightgray;
+    width: 9px;
+    height: 9px;
+    margin: 1px;
+}
+
 .possibleMove.willCrash {
-    background-color: red;
+    background-color: red !important;
+    width: 9px;
+    height: 9px;
+    margin: 1px;
 }
 
 .possibleMove.isStart {
@@ -30,6 +40,7 @@
 .testmode .possibleMove {
 	border: 2px solid green;
 	margin: -1px;
+    background-color: lightgreen;
 }
 
 .playerInfo {

@@ -90,12 +90,12 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
         //build move url
         var moveUrl = "http://www.karopapier.de/move.php?GID=" + game.get("id");
         var m = mo.toMove();
-        if (mo.get("vector").getLength()==0) {
+        if (mo.get("vector").getLength() == 0) {
             //http://www.karopapier.de/move.php?GID=84078&startx=8&starty=29
-            moveUrl+="&startx=" + m.x + "&starty=" + m.y;
+            moveUrl += "&startx=" + m.x + "&starty=" + m.y;
         } else {
             //http://www.karopapier.de/move.php?GID=83790&xpos=76&ypos=28&xvec=-2&yvec=2
-            moveUrl+= "&xpos=" + m.x + "&ypos=" + m.y + "&xvec=" + m.xv + "&yvec=" + m.yv;
+            moveUrl += "&xpos=" + m.x + "&ypos=" + m.y + "&xvec=" + m.xv + "&yvec=" + m.yv;
         }
 
         console.log("Send move");
@@ -172,13 +172,15 @@ function myTextGet(url, cb, errcb) {
 };
 
 var dranQueue = new GameCollection();
-dranQueue.url =  function()   {
+dranQueue.url = function () {
     return "http://www.karopapier.de/api/user/1/dran.json?callback=?"
 };
-dranQueue.parse = function(data) { return data.games };
+dranQueue.parse = function (data) {
+    return data.games;
+};
 dranQueue.fetch();
 
-var dran= function() {
+var dran = function () {
     game.load(dranQueue.first().get("id"));
 }
 
@@ -188,7 +190,7 @@ Backbone.history.start({
     pushState: true
 });
 
-var checkTestmode = function() {
+var checkTestmode = function () {
     console.log("Checking");
     if ($('#testmode').is(":checked")) {
         $('#mapImage').addClass("testmode");

@@ -20,6 +20,7 @@ var MapPlayerMoves = Backbone.View.extend({
         this.listenTo(this.settings, "change:size change:border change:limit", this.render);
         this.listenTo(this.collection, "add remove", this.render);
         this.listenTo(this.collection, "reset", this.render);
+        this.listenTo(this.model, "change:completed", this.render);
     },
     adjustSize: function () {
         //console.log(this.model.get("cols"));
@@ -47,14 +48,15 @@ var MapPlayerMoves = Backbone.View.extend({
         $('.playerInfo').hide();
     },
     render: function () {
+        //NOTE: when this render fires after first reset, not all game properties might be set yet
+        if (!this.model.get("completed")) return false;
         this.adjustSize();
         var gameId = this.model.get("id");
         if (gameId === 0) {
             this.$el.hide();
         } else {
             this.$el.show();
-            //http://www.karopapier.de/imgenerateFG.php?GID=78483&pixel=11&karoborder=1&limit=2
-            var limit = 2;
+            var limit = this.settings.get("limit");
             if (this.model.get("finished")) {
                 limit = 0;
             }
@@ -70,7 +72,6 @@ var MapPlayerMoves = Backbone.View.extend({
         var posFragment = document.createDocumentFragment();
         this.collection.each(function (player, i) {
             //console.info(player);
-            var limit = this.settings.get("limit");
             if (Karopapier.User.get("id") === player.get("id")) {
                 //alle eigenen
                 limit = 0;
