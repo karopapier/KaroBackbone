@@ -194,6 +194,15 @@ var checkTestmode = function() {
         $('#mapImage').addClass("testmode");
     } else {
         $('#mapImage').removeClass("testmode");
+        var myPlayer = game.get("players").get(Karopapier.User);
+        //var myMoves = myPlayer.get("moves"); #FIXME
+        var myMoves = myPlayer.moves;
+
+
+        console.log(myMoves);
+        var noTestMoves = myMoves.where({"test": undefined});
+        console.log(noTestMoves);
+        myMoves.reset(noTestMoves);
     }
 }
 
