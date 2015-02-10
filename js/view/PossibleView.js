@@ -6,6 +6,7 @@ var PossibleView = Backbone.View.extend({
         "click": "checkMove",
         "mouseenter": "hoverMove",
         "mouseleave": "unhoverMove",
+        "click .confirmer": "confirmMove"
     },
     NOWAY: function() {
         alert("YES");
@@ -22,12 +23,17 @@ var PossibleView = Backbone.View.extend({
         this.settings = this.mapView.settings;
         this.listenTo(this.model, "change", this.render);
 
-        this.$confirmer = $('<div style="position: fixed; bottom: 20px; right:20px; width: 50px; height: 50px; background-color: red">' + this.model.get("vector").toString() + '</div>');
+        this.$confirmer = $('<div class="confirmer" style="position: fixed; bottom: 20px; right:20px; width: 50px; height: 50px; background-color: red">' + this.model.get("vector").toString() + '</div>');
         this.$el.append(this.$confirmer.hide());
 
     },
     wasTouch: function() {
         this.mouseOrTouch="touch";
+    },
+    confirmMove: function (e) {
+        this.trigger("clicked", this.model);
+        this.mouseOrTouch="mouse";
+        e.stopPropagation();
     },
     checkMove: function (e) {
         console.log("Click by ", this.mouseOrTouch);
