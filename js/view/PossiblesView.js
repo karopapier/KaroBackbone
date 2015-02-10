@@ -1,6 +1,6 @@
 var PossiblesView = Backbone.View.extend({
     events: {
-        "clicked": "clickMove"
+        "clicked": "clickMove",
     },
     initialize: function (options) {
         console.warn("I AM THE POSSIBLES VIEW");
@@ -16,12 +16,14 @@ var PossiblesView = Backbone.View.extend({
         //grabbing settings from the mapview to listen to size change
         this.settings = this.mapView.settings;
         this.listenTo(this.game, "change", this.render);
+        this.listenTo(this, "changeHighlight", this.checkHighlight);
+        this.highlight = false;
     },
     clearPossibles: function () {
         _.each(this.views, function(v) {
             //console.log("Ich entferne nen alten possible");
             v.cleanup().remove();
-        })
+        });
         this.views=[];
         //this.$('.possibleMove').remove();
     },
@@ -31,6 +33,14 @@ var PossiblesView = Backbone.View.extend({
     },
     checkWillCrash: function(k, possible) {
         possible.set("willCrash", k.willCrash(possible, 16));
+    },
+    checkHighlight: function(e, a, b) {
+        console.log("Triggered");
+        if (this.highlight) {
+            this.highlight.model.set("highlight", false);
+        }
+        e.model.set("highlight",true);
+        this.highlight = e;
     },
     render: function () {
         this.clearPossibles();
@@ -44,7 +54,8 @@ var PossiblesView = Backbone.View.extend({
         this.game.possibles.each(function (possible) {
             var posView = new PossibleView({
                 mapView: this.mapView,
-                model: possible
+                model: possible,
+                parent: this
             }).render();
             setTimeout(this.checkWillCrash.bind(this, k, possible),0);
             //console.log(posView.el);

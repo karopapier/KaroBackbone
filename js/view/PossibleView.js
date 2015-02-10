@@ -17,6 +17,7 @@ var PossibleView = Backbone.View.extend({
             console.error("No mapView for PossiblesView");
         }
         this.mapView = options.mapView;
+        this.parent = options.parent;
         //grabbing settings from the mapview to listen to size change
         this.settings = this.mapView.settings;
         this.listenTo(this.model, "change", this.render);
@@ -32,7 +33,7 @@ var PossibleView = Backbone.View.extend({
         console.log("Click by ", this.mouseOrTouch);
         if (this.mouseOrTouch=="touch") {
             this.model.set("highlight", true);
-            this.$confirmer.show();
+            this.parent.trigger("changeHighlight", this);
         } else {
             //console.log("trigger", this.model);
             this.trigger("clicked", this.model);
@@ -68,8 +69,10 @@ var PossibleView = Backbone.View.extend({
 
         if (this.model.get("highlight")) {
             this.$el.addClass("highlight");
+            this.$confirmer.show();
         } else {
             this.$el.removeClass("highlight");
+            this.$confirmer.hide();
         }
         //if vector = (0|0], mark as start
         //console.log(v.toString());
