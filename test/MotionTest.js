@@ -67,7 +67,6 @@ test("Possibles", function () {
 
     m.setXY1toXY2(5,5,3,3);
     var possibles = m.getPossiblesByLength();
-    console.log(possibles);
     equal(possibles[0].toString(), "[2|2] (-1|-1)", "shortest first");
     equal(possibles[8].toString(), "[0|0] (-3|-3)", "longest last");
 

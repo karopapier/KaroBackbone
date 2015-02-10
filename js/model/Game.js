@@ -55,20 +55,22 @@ var Game = Backbone.Model.extend({
         }
 
         var dranId = this.get("dranId");
+        if (this.get("players").length<1) return false;
         var currentPlayer = this.get("players").get(dranId);
         var movesCount = currentPlayer.moves.length;
 
 
         //FIXME
+        var theoreticals;
 
         //TODO if no moves but dran and active, return starties
-        if ((movesCount == 0) && (currentPlayer.get("status") == "ok")) {
-            var theoreticals = this.map.getStartPositions().map(function (e) {
+        if ((movesCount === 0) && (currentPlayer.get("status") == "ok")) {
+            theoreticals = this.map.getStartPositions().map(function (e) {
                 var v = new Vector({x: 0, y: 0});
                 var mo = new Motion({
                     position: e,
                     vector: v
-                })
+                });
                 mo.set("isStart", true);
                 return mo;
             });
@@ -77,7 +79,7 @@ var Game = Backbone.Model.extend({
             var mo = lastmove.getMotion();
             //get theoretic motions
             //reduce possibles with map
-            var theoreticals = mo.getPossibles();
+            theoreticals = mo.getPossibles();
             theoreticals = this.map.verifiedMotions(theoreticals);
         }
 
