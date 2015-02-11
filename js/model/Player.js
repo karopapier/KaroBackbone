@@ -26,6 +26,11 @@ var Player = Backbone.Model.extend({
         } else {
             return false;
         }
+    },
+    toJSON: function() {
+        var modelJSON= Backbone.Model.prototype.toJSON.call(this);
+        modelJSON.moves = this.moves.toJSON();
+        return modelJSON;
     }
 
 });

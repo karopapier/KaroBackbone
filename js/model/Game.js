@@ -9,7 +9,7 @@ var Game = Backbone.Model.extend({
         this.set("moveMessages", new MoveMessageCollection());
         //pass the MoveMessage collection into it to have the messages ready in one go when walking the moves
         this.set("players", new PlayerCollection());
-        this.listenTo(this.get("players"),"reset", this.get("moveMessages").updateFromPlayers);
+        this.listenTo(this.get("players"), "reset", this.get("moveMessages").updateFromPlayers);
         this.possibles = new MotionCollection();
         this.listenTo(this, "change:completed", this.updatePossibles);
         this.listenTo(this.get("players"), "change", this.updatePossibles);
@@ -55,10 +55,10 @@ var Game = Backbone.Model.extend({
         }
 
         var dranId = this.get("dranId");
-        if (this.get("players").length<1) return false;
+        if (this.get("players").length < 1) return false;
         var currentPlayer = this.get("players").get(dranId);
+        if (!currentPlayer) return false;
         var movesCount = currentPlayer.moves.length;
-
 
         //FIXME
         var theoreticals;
@@ -96,5 +96,23 @@ var Game = Backbone.Model.extend({
             }
         }
         this.possibles.reset(possibles);
+    },
+    /**
+     * Set all nested parameters from other games data, keeping references intact
+     * @param othergame
+     */
+    setFrom: function (othergame) {
+        _.each(othergame.attributes, function (att, i) {
+            if (typeof att !== "object") {
+                console.log("Setting ", i, "to", att);
+                this.set(i, att);
+            }
+        }, this);
+        this.map.set(othergame.map.toJSON());
+        console.log(othergame.get("players").toJSON());
+        this.get("players").reset(othergame.get("players").toJSON(), {parse: true});
+        othergame.get("players").each(function (p, i) {
+
+        })
     }
 });

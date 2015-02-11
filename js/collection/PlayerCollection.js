@@ -5,6 +5,14 @@ var PlayerCollection = Backbone.Collection.extend({
 
     },
 
+    toJSON: function () {
+        var modelJSON=[];
+        this.each(function(e,i) {
+            modelJSON.push(e.toJSON())
+        })
+        return modelJSON;
+    },
+
     /**
      * positions, where all players currently stand that already moved this round
      */
