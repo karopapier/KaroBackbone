@@ -157,14 +157,15 @@ function myTextGet(url, cb, errcb) {
 
 var dranQueue = new GameCollection();
 dranQueue.url = function () {
-    return "http://www.karopapier.de/api/user/1/dran.json?callback=?"
+    return "http://www.karopapier.de/api/user/" + Karopapier.User.get("id") + "/dran.json?callback=?"
 };
 dranQueue.parse = function (data) {
     return data.games;
 };
 
 //inital load via reset
-dranQueue.fetch({reset: true});
+dranQueue.listenTo(Karopapier.User,"change:id", dranQueue.fetch.bind(dranQueue, {reset: true}));
+//dranQueue.fetch({reset: true});
 
 gr = new GameRouter();
 
