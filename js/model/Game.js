@@ -12,7 +12,10 @@ var Game = Backbone.Model.extend({
         this.listenTo(this.get("players"), "reset", this.get("moveMessages").updateFromPlayers);
         this.possibles = new MotionCollection();
         this.listenTo(this, "change:completed", this.updatePossibles);
-        this.listenTo(this.get("players"), "change", this.updatePossibles);
+        this.listenTo(this.get("players"), "movechange", function() {
+            console.log("movechange");
+            this.updatePossibles();
+        });
     },
 
     url: function () {
@@ -40,6 +43,7 @@ var Game = Backbone.Model.extend({
     },
 
     load: function (id) {
+        if (!id) return false;
         //silently set the id, events trigger after data is here
         //this.set({"id": id, completed: false}, {silent: true});
         this.set({"id": id, completed: false});
@@ -48,6 +52,7 @@ var Game = Backbone.Model.extend({
     },
 
     updatePossibles: function () {
+        console.warn("Recalc possibles for",this.get("id"));
         if (!(this.get("completed"))) return false;
         if (this.get("finished")) {
             this.possibles.reset([]);
@@ -104,7 +109,7 @@ var Game = Backbone.Model.extend({
     setFrom: function (othergame) {
         _.each(othergame.attributes, function (att, i) {
             if (typeof att !== "object") {
-                console.log("Setting ", i, "to", att);
+                //console.log("Setting ", i, "to", att);
                 this.set(i, att);
             }
         }, this);
@@ -114,5 +119,6 @@ var Game = Backbone.Model.extend({
         othergame.get("players").each(function (p, i) {
 
         })
+        this.updatePossibles();
     }
 });

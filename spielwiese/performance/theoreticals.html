@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title></title>
+    </head>
+    <body>
+
+        <script>
+
+            var expect = [
+                {x: -1, y: -1},
+                {x: -1, y: 0},
+                {x: -1, y: 1},
+                {x: 0, y: -1},
+                {x: 0, y: 0},
+                {x: 0, y: 1},
+                {x: 1, y: -1},
+                {x: 1, y: 0},
+                {x: 1, y: 1}
+            ]
+
+            var didipush=[];
+            for (var x=-1; x<=1; x++) {
+                for (var y=-1; y<=01; y++) {
+                    didipush.push({x: x, y:y});
+                }
+            }
+
+            var i=0;
+            var ulli = [];
+            while (i<9) {
+                ulli[i] = {
+                    x: parseInt(i/3)-1,
+                    y: parseInt(i%3)-1
+                }
+                i++;
+            }
+
+            console.log(didipush);
+            console.log(ulli);
+
+        </script>
+
+    </body>
+</html>

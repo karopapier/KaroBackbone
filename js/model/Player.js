@@ -7,10 +7,8 @@ var Player = Backbone.Model.extend({
         if (!this.moves) {
             this.moves=new MoveCollection();
         }
-        this.listenTo(this.moves, "add remove change reset", this.triggerChange);
-    },
-    triggerChange: function() {
-        this.trigger("change");
+        //this.listenTo(this.moves, "add remove change", this.trigger.bind(this,"movechange"));
+        //this.listenTo(this.moves, "reset", this.trigger.bind(this,"movereset"));
     },
     parse: function(data) {
         if (!this.moves) {

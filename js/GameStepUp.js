@@ -79,13 +79,9 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
         var move = new Move(mo.toMove());
         move.set("t", new Date());
         move.set("test", true);
-        //console.log("Add move");
         player.moves.add(move);
-        //console.log("Added move");
-        //console.log(player.moves.length);
-        //console.warn(player);
+        game.updatePossibles();
         mpm.render();
-        possView.render();
     } else {
         //build move url
         var moveUrl = "http://www.karopapier.de/move.php?GID=" + game.get("id");
@@ -103,6 +99,7 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
             console.log("Parse move response");
             parseMoveResponse(text);
         });
+        next();
 
         //send
         //check response
@@ -125,21 +122,8 @@ function parseMoveResponse(text) {
         //console.log("ME",Karopapier.User.get("login"));
         if (nextPlayer == Karopapier.User.get("login")) {
             //console.info("NOMMAL DRAN");
-            game.load(game.get("id"));
+            //game.load(game.get("id"));
             return true;
-        }
-
-        //<A HREF=showmap.php?GID=82749> -> folge id
-        var gids = text.match(/showmap.php\?GID=(\d*?)>Du bist/);
-        //console.log(gids);
-        if (gids) {
-            if (gids.length > 1) {
-                //console.log(gids[1]);
-                var pathname = window.location.pathname.substr(1);
-                gr.navigate(pathname + "?GID=" + gids[1], {trigger: true});
-            }
-        } else {
-            window.location.href = "http://www.karopapier.de/dran";
         }
     } else {
         alert("KEIN DANKE!!!");
@@ -178,11 +162,9 @@ dranQueue.url = function () {
 dranQueue.parse = function (data) {
     return data.games;
 };
-dranQueue.fetch();
 
-var dran = function () {
-    game.load(dranQueue.first().get("id"));
-}
+//inital load via reset
+dranQueue.fetch({reset: true});
 
 gr = new GameRouter();
 
@@ -204,12 +186,50 @@ var checkTestmode = function () {
         var noTestMoves = dranMoves.where({"test": undefined});
         dranPlayer.moves.set(noTestMoves);
         mpm.render();
-        possView.render();
+        game.updatePossibles();
     }
 }
 
 $('#testmode').click(checkTestmode);
 checkTestmode();
 
-console.info("Stepup done");
+var nextGame = new Game();
 
+dranQueue.on("add remove reset", function() {
+    preloadNext();
+})
+
+var nextId = function () {
+    if (dranQueue.length < 1) return false;
+    return dranQueue.at(0).get("id");
+}
+var preloadNext = function () {
+    console.info("Preload",nextId());
+    if (nextId()==game.get("id")) {
+        console.info("Binnich doch grad");
+        dranQueue.shift();
+        return preloadNext();
+    }
+    if (nextId()==nextGame.get("id")) {
+        console.info("Habbich schon");
+        return true;
+    }
+    nextGame.load(nextId());
+    return true;
+}
+
+var next = function () {
+    var nId = nextId();
+    if (!nId) return false;
+    if (nId == game.get("id")) return false;
+
+    if (nextGame.get("completed")) {
+        console.log("setting from preload");
+        game.setFrom(nextGame);
+    } else {
+        game.load(nId)
+    }
+    dranQueue.shift();
+}
+
+console.info("Stepup done");

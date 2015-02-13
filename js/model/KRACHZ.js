@@ -1,23 +1,23 @@
 /*
-var crazyHelperFunction = function (mo, depth) {
-    var pos1 = mo.getSourcePosition();
-    var pos2 = mo.get("position");
-    var x1 = parseInt(pos1.get("x") * 12 + 6)
-    var x2 = parseInt(pos2.get("x") * 12 + 6)
-    var y1 = parseInt(pos1.get("y") * 12 + 6)
-    var y2 = parseInt(pos2.get("y") * 12 + 6)
-    var f = depth * 16 - 1;
+ var crazyHelperFunction = function (mo, depth) {
+ var pos1 = mo.getSourcePosition();
+ var pos2 = mo.get("position");
+ var x1 = parseInt(pos1.get("x") * 12 + 6)
+ var x2 = parseInt(pos2.get("x") * 12 + 6)
+ var y1 = parseInt(pos1.get("y") * 12 + 6)
+ var y2 = parseInt(pos2.get("y") * 12 + 6)
+ var f = depth * 16 - 1;
 
-    var l = Karopapier.Util.createSvg("line", {
-        x1: x1,
-        x2: x2,
-        y1: y1,
-        y2: y2,
-        stroke: "rgb(" + f + ",0,0)" //+f+","+f+")"
-    })
-    document.getElementById("mapPlayerMoves").appendChild(l);
-};
-*/
+ var l = Karopapier.Util.createSvg("line", {
+ x1: x1,
+ x2: x2,
+ y1: y1,
+ y2: y2,
+ stroke: "rgb(" + f + ",0,0)" //+f+","+f+")"
+ })
+ document.getElementById("mapPlayerMoves").appendChild(l);
+ };
+ */
 
 var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
     /**
@@ -52,6 +52,7 @@ var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
         if (!depth) depth = 8;
         //crazyHelperFunction(mo, depth);
         //TAKES++;
+
         if (depth === 0) return false;
         if (depth === 1) {
             //console.warn("TIEF 1", mo);
@@ -61,6 +62,12 @@ var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
         if (mo.get("vector").toString() == "(0|0)") {
             //console.log("NULLER");
             return false;
+        }
+
+        var stop = mo.getStopPosition();
+        if (!(map.withinBounds({ x:stop.get("x"), y: stop.get("y")}))) {
+            this.cache[mo.toString()] = true;
+            return true;
         }
         var possibles = mo.getPossiblesByLength();
         possibles = map.verifiedMotions(possibles);
@@ -73,7 +80,8 @@ var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
         if ((mo.get("vector").getLength() == 1) && (possibles.length == 8)) return false;
 
         var crashes = 0;
-        for (var p = 0; p < possibles.length; p++) {
+        var plen = possibles.length;
+        for (var p = 0; p < plen; p++) {
             //console.info(possibles[p],"now")
             var possible = possibles[p];
             var moString = possible.toString();

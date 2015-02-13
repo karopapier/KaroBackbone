@@ -20,6 +20,13 @@ var Motion = Backbone.Model.extend(/** @lends Motion.prototype*/{
         this.set("vector", vec);
         return this;
     },
+    setXYXvYv: function (x, y, xv, yv) {
+        var pos = new Position({x: x, y: y});
+        var vec = new Vector({x: xv, y: yv});
+        this.set("position", pos);
+        this.set("vector", vec);
+        return this;
+    },
     clone: function () {
         return new Motion({
             position: this.get("position").clone(),
@@ -108,16 +115,20 @@ var Motion = Backbone.Model.extend(/** @lends Motion.prototype*/{
         //# 0 1 2
         //# 3 4 5
         //# 6 7 8
+        var i = 0;
+        var posx = this.get("position").get("x");
+        var posy = this.get("position").get("y");
+        var baseX = this.get("vector").get("x");
+        var baseY = this.get("vector").get("y");
         for (var iY = -1; iY <= 1; iY++) {
             for (var iX = -1; iX <= 1; iX++) {
-                var x = this.get("vector").get("x") + iX;
-                var y = this.get("vector").get("y") + iY;
+                var x = baseX + iX;
+                var y = baseY + iY;
                 if ((x !== 0) || (y !== 0)) {
-                    var v = new Vector({
-                        x: this.get("vector").get("x") + iX,
-                        y: this.get("vector").get("y") + iY
-                    });
-                    possibles.push(this.clone().move(v));
+                    var xv = baseX + iX;
+                    var yv = baseY + iY;
+                    possibles[i] = new Motion().setXYXvYv(posx + xv, posy + yv, xv, yv);
+                    i++;
                 }
             }
         }
