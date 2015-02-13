@@ -78,7 +78,6 @@ var MapPlayerMoves = Backbone.View.extend({
                 limit = 0;
             }
             var moves = player.moves.toArray();
-            console.log("Dann limit", limit);
 
             //if no move, nothing to draw, stop
             if (moves.length<1) return false;
