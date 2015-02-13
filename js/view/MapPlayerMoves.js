@@ -56,9 +56,9 @@ var MapPlayerMoves = Backbone.View.extend({
             this.$el.hide();
         } else {
             this.$el.show();
-            var limit = this.settings.get("limit");
+            var defaultLimit = this.settings.get("limit");
             if (this.model.get("finished")) {
-                limit = 0;
+                defaultLimit = 0;
             }
         }
 
@@ -72,11 +72,13 @@ var MapPlayerMoves = Backbone.View.extend({
         var posFragment = document.createDocumentFragment();
         this.collection.each(function (player, i) {
             //console.info(player);
+            var limit = defaultLimit;
             if (Karopapier.User.get("id") === player.get("id")) {
                 //alle eigenen
                 limit = 0;
             }
             var moves = player.moves.toArray();
+            console.log("Dann limit", limit);
 
             //if no move, nothing to draw, stop
             if (moves.length<1) return false;

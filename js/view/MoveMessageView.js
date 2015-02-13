@@ -15,7 +15,7 @@ var MoveMessageView = Backbone.View.extend({
         }
     },
     render: function () {
-        console.log("Rendere Movemessages");
+        console.log("Rendere Movemessages, derer", this.length);
         var html = '';
         var filtered = this.collection.models;
         if (this.filter) {
@@ -35,9 +35,11 @@ var MoveMessageView = Backbone.View.extend({
             });
         }, this);
 
-        if (html) {
-            this.$el.html(html);
-            this.$el[0].scrollTop = this.$el[0].scrollHeight;
+        if (!html) {
+            html = "--------- Keiner spricht, hier herrscht höchste Konzentration --------"
         }
+
+        this.$el.html(html);
+        this.$el[0].scrollTop = this.$el[0].scrollHeight;
     }
 });
