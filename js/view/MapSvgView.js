@@ -186,7 +186,7 @@ var MapSvgView = MapBaseView.extend({
         console.info("path render done");
     },
     render: function () {
-        if (this.model.get("id") !== 0) {
+        if ((this.model.get("id") !== 0) && (this.model.get("id")<1000)) {
             this.renderFromPathStore();
         } else {
             this.renderFromPathFinder();
