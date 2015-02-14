@@ -71,7 +71,6 @@ var possView = new PossiblesView({
     mapView: svgView
 });
 
-//testmode reset: game.get("players").get(Karopapier.User).get("moves").reset(game.get("players").get(Karopapier.User).get("moves").where({"test": undefined}));
 Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
     var testmode = $('#testmode').is(":checked");
     if (testmode) {
@@ -99,11 +98,8 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
             console.log("Parse move response");
             parseMoveResponse(text);
         });
+        //always jump to next game in queue
         next();
-
-        //send
-        //check response
-        //load next
     }
 });
 
@@ -126,7 +122,7 @@ function parseMoveResponse(text) {
             return true;
         }
     } else {
-        alert("KEIN DANKE!!!");
+        alert("KEIN DANKE!!! Da hat wohl was nicht gepasst");
         console.log(text);
     }
 }
