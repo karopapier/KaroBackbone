@@ -150,6 +150,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         if (fields.indexOf("Z") >= 0) return false;
         if (fields.indexOf("V") >= 0) return false;
         if (fields.indexOf("W") >= 0) return false;
+        if (fields.indexOf("P") >= 0) return false;
         if (fields.indexOf("_") >= 0) return false;
         //console.log(mo.toString(), "is possible");
         return true;
