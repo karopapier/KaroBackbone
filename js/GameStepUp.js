@@ -49,7 +49,7 @@ var GameRouter = Backbone.Router.extend({
         }
     },
     defaultRoute: function () {
-        this.navigate("game.html?GID=81111", {trigger: true});
+        this.navigate("game.html?GID=57655", {trigger: true});
     }
 });
 

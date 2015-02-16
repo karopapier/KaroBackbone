@@ -40,7 +40,11 @@ var PlayerTable = Backbone.View.extend({
 
         }
         html += "</td>";
-        html += "<td>fehlt: " + player.get("missingCps") + "</td>";
+        html += "<td>";
+         _.each(player.get("checkedCps"), function(e) {
+             html += '<img class="icon-' + e + '">';
+         });
+        html+="</td>";
         var lastmovetime = player.getLastMove() ? player.getLastMove().get("t") : "-";
         if (!lastmovetime) {
             lastmovetime = "-";

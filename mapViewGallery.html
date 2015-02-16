@@ -93,9 +93,8 @@
                     });
 
             function encode_as_img_and_link() {
-                var svg = $("#mapSvgView").html().trim();
+                var svg = $("#mapSvgView")[0].outerHTML.trim();
                 var b64 = btoa(svg);
-                console.log("Ich hab ein b64, batchMode ist",batchMode);
 				if (batchMode) {
                     console.log("Jetzt send");
 					sendToServer(b64);

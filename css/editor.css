@@ -14,7 +14,7 @@
 .fieldSelector {
     width: 20px;
     height: 20px;
-    background-image: url('images/mapfields.png');
+    background-image: url('mapfields/mapfields.png');
     float: left;
     margin: 2px;
     border: 2px solid #333;

@@ -41,6 +41,9 @@ module.exports = function (grunt) {
 
         },
         cssmin: {
+            options: {
+                rebase: false
+            },
             target: {
                 files: {
                     "css/Karopapier.min.css": ["css/*.css", "!css/*.min.css"]
@@ -101,6 +104,13 @@ module.exports = function (grunt) {
                     destination: 'doc'
                 }
             }
+        },
+        sprite: {
+            all: {
+                src: "css/mapfields/*.png",
+                dest: "css/images/mapfields.png",
+                destCss: "css/mapfields.css"
+            }
         }
     });
 
@@ -109,6 +119,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jst');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-spritesmith');
     grunt.loadNpmTasks('grunt-jsdoc');
 
     // Default task(s).
