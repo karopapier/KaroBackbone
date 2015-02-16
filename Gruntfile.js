@@ -40,6 +40,13 @@ module.exports = function (grunt) {
             }
 
         },
+        cssmin: {
+            target: {
+                files: {
+                    "css/Karopapier.min.css": ["css/*.css", "!css/*.min.css"]
+                }
+            }
+        },
         watch: {
             scripts: {
                 files: ['js/**/*.js', '!js/<%= pkg.name %>*.js', 'test/**/*.js'],
@@ -58,7 +65,15 @@ module.exports = function (grunt) {
                 }
             },
             statics: {
-                files: ['**/*.html', 'css/**/*', 'images/**/*', '!docs'],
+                files: ['**/*.html', 'images/**/*', '!docs'],
+                options: {
+                    interrupt: true,
+                    livereload: true
+                }
+            },
+            css: {
+                files: ['css/**/*', '!css/**/*.min.css'],
+                tasks: ["cssmin"],
                 options: {
                     interrupt: true,
                     livereload: true
@@ -93,10 +108,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jst');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-jsdoc');
 
     // Default task(s).
-    grunt.registerTask('default', ['uglify', 'jst', 'watch']);
+    grunt.registerTask('default', ['uglify', 'jst', 'cssmin', 'watch']);
     //grunt.registerTask('guck', ['watch']);
     grunt.registerTask('spielwiese', ['spielwiese']);
 

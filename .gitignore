@@ -3,5 +3,6 @@
 node_modules
 js/KaroBackbone.*
 js/templates/JST.js
+*.min.css
 doc
 
