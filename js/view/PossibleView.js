@@ -48,7 +48,7 @@ var PossibleView = Backbone.View.extend({
     },
     hoverMove: function (e, a, b) {
         var mo = this.model;
-        if (mo.get("vector").getLength() > 3) {
+        if (mo.get("vector").getLength() > 2.8) {
             //console.log(mo);
             var stop = mo.getStopPosition();
             this.stopDiv = $('<div class="stopPosition" style="left: ' + stop.get("x") * 12 + 'px; top: ' + stop.get("y") * 12 + 'px;"></div>');

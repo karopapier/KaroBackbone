@@ -1,1 +1,101 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="mapSvgView" width="204" height="408"> <rect id="mainfill" class="road" x="0" y="0" width="100%" height="100%"></rect> <g id="paths"><path d="M24,120L24,120L36,120L36,156L24,156Z" class="cp1"></path><path d="M168,120L168,120L180,120L180,156L168,156Z" class="cp2"></path><path d="M24,240L24,240L36,240L36,276L24,276Z" class="cp3"></path><path d="M168,240L168,240L180,240L180,276L168,276Z" class="cp4"></path><path d="M24,384L24,384L36,384L36,396L24,396L24,384M48,384L48,384L60,384L60,396L48,396L48,384M72,384L72,384L84,384L84,396L72,396Z" class="cp5"></path><path d="M120,384L120,384L132,384L132,396L120,396L120,384M144,384L144,384L156,384L156,396L144,396L144,384M168,384L168,384L180,384L180,396L168,396Z" class="cp6"></path><path d="M0,0L0,0L12,0L12,72L0,72Z" class="parc"></path><path d="M12,0L12,0L204,0L204,408L0,408L0,72L12,72L12,60L24,60L24,72L60,72L60,60L72,60L72,48L84,48L84,36L96,36L96,12L12,12L12,0M120,12L120,12L108,12L108,36L96,36L96,48L84,48L84,60L72,60L72,72L60,72L60,84L24,84L24,96L12,96L12,180L24,180L24,192L60,192L60,180L72,180L72,168L84,168L84,156L96,156L96,120L84,120L84,108L72,108L72,96L60,96L60,84L72,84L72,96L84,96L84,108L96,108L96,120L108,120L108,108L120,108L120,96L132,96L132,84L144,84L144,72L132,72L132,60L120,60L120,48L108,48L108,36L120,36L120,48L132,48L132,60L144,60L144,72L180,72L180,60L192,60L192,12L120,12M156,84L156,84L144,84L144,96L132,96L132,108L120,108L120,120L108,120L108,156L96,156L96,168L84,168L84,180L72,180L72,192L60,192L60,204L24,204L24,216L12,216L12,300L24,300L24,312L60,312L60,300L72,300L72,288L84,288L84,276L96,276L96,240L84,240L84,228L72,228L72,216L60,216L60,204L72,204L72,216L84,216L84,228L96,228L96,240L108,240L108,228L120,228L120,216L132,216L132,204L144,204L144,192L132,192L132,180L120,180L120,168L108,168L108,156L120,156L120,168L132,168L132,180L144,180L144,192L180,192L180,180L192,180L192,96L180,96L180,84L156,84M156,204L156,204L144,204L144,216L132,216L132,228L120,228L120,240L108,240L108,276L96,276L96,288L84,288L84,300L72,300L72,312L60,312L60,324L24,324L24,336L12,336L12,396L96,396L96,360L84,360L84,348L72,348L72,336L60,336L60,324L72,324L72,336L84,336L84,348L96,348L96,360L108,360L108,348L120,348L120,336L132,336L132,324L144,324L144,312L132,312L132,300L120,300L120,288L108,288L108,276L120,276L120,288L132,288L132,300L144,300L144,312L180,312L180,300L192,300L192,216L180,216L180,204L156,204M156,324L156,324L144,324L144,336L132,336L132,348L120,348L120,360L108,360L108,396L192,396L192,336L180,336L180,324Z" class="grass"></path><path d="M24,12L24,12L36,12L36,24L24,24L24,12M48,12L48,12L60,12L60,24L48,24L48,12M72,12L72,12L84,12L84,24L72,24L72,12M120,12L120,12L132,12L132,24L120,24L120,12M144,12L144,12L156,12L156,24L144,24L144,12M168,12L168,12L180,12L180,24L168,24Z" class="start"></path><path d="M96,180L96,180L108,180L108,192L120,192L120,204L108,204L108,216L96,216L96,204L84,204L84,192L96,192Z" class="finish"></path></g></svg>
+<defs>
+ <pattern y="0" x="0" height="24" width="24" patternUnits="userSpaceOnUse" id="grassPattern">
+ <rect class="grasscolor" height="24" width="24" y="0" x="0"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="1" y="5"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="1" y="5"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="3" y="5"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="6" y="7"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="6" y="17"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="8" y="21"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="9" y="2"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="12" y="4"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="13" y="15"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="14" y="4"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="14" y="19"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="17" y="7"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="17" y="12"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="18" y="23"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="21" y="16"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="23" y="12"></rect>
+ </pattern>
+ <pattern y="0" x="0" height="24" width="24" patternUnits="userSpaceOnUse" id="roadPattern">
+ <rect class="roadcolor" height="24" width="24" y="0" x="0"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="1" y="5"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="1" y="5"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="3" y="5"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="6" y="7"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="6" y="17"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="8" y="21"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="9" y="2"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="12" y="4"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="13" y="15"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="14" y="4"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="14" y="19"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="17" y="7"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="17" y="12"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="18" y="23"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="21" y="16"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="23" y="12"></rect>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="grid">
+ <line stroke-width="1" stroke="black" y2="12" x2="12" y1="0" x1="12"></line>
+ <line stroke-width="1" stroke="black" y2="12" x2="12" y1="12" x1="0"></line>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="finishPattern">
+ <rect fill="black" height="12" width="12" y="0" x="0"></rect>
+ <path fill="white" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="white" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="startPattern">
+ <rect fill="rgb(100,100,100)" height="12" width="12" y="0" x="0"></rect>
+ <rect stroke-width="1" stroke="rgb(200,200,200)" fill="none" height="5" width="5" y="3.5" x="3.5"></rect>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp1pattern">
+ <rect class="cp1color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="black" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="black" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp2pattern">
+ <rect class="cp2color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="white" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="white" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp3pattern">
+ <rect class="cp3color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="black" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="black" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp4pattern">
+ <rect class="cp4color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="white" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="white" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp5pattern">
+ <rect class="cp5color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="black" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="black" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp6pattern">
+ <rect class="cp6color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="white" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="white" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp7pattern">
+ <rect class="cp7color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="black" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="black" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp8pattern">
+ <rect class="cp8color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="white" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="white" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp9pattern">
+ <rect class="cp9color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="black" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="black" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ </defs>
+ <rect height="100%" width="100%" y="0" x="0" class="road" id="mainfill"></rect>
+ <g id="paths"><path d="M12,12L12,12L96,12L96,36L84,36L84,48L72,48L72,60L60,60L60,72L24,72L24,60L12,60L12,12M108,12L108,12L192,12L192,60L180,60L180,72L144,72L144,60L132,60L132,48L120,48L120,36L108,36L108,12M96,36L96,36L108,36L108,48L120,48L120,60L132,60L132,72L144,72L144,84L132,84L132,96L120,96L120,108L108,108L108,120L96,120L96,108L84,108L84,96L72,96L72,84L60,84L60,72L72,72L72,60L84,60L84,48L96,48L96,36M60,84L60,84L60,96L72,96L72,108L84,108L84,120L96,120L96,156L84,156L84,168L72,168L72,180L60,180L60,192L24,192L24,180L12,180L12,96L24,96L24,84L60,84M144,84L144,84L180,84L180,96L192,96L192,180L180,180L180,192L144,192L144,180L132,180L132,168L120,168L120,156L108,156L108,120L120,120L120,108L132,108L132,96L144,96L144,84M96,156L96,156L108,156L108,168L120,168L120,180L132,180L132,192L144,192L144,204L132,204L132,216L120,216L120,228L108,228L108,240L96,240L96,228L84,228L84,216L72,216L72,204L60,204L60,192L72,192L72,180L84,180L84,168L96,168L96,156M60,204L60,204L60,216L72,216L72,228L84,228L84,240L96,240L96,276L84,276L84,288L72,288L72,300L60,300L60,312L24,312L24,300L12,300L12,216L24,216L24,204L60,204M144,204L144,204L180,204L180,216L192,216L192,300L180,300L180,312L144,312L144,300L132,300L132,288L120,288L120,276L108,276L108,240L120,240L120,228L132,228L132,216L144,216L144,204M96,276L96,276L108,276L108,288L120,288L120,300L132,300L132,312L144,312L144,324L132,324L132,336L120,336L120,348L108,348L108,360L96,360L96,348L84,348L84,336L72,336L72,324L60,324L60,312L72,312L72,300L84,300L84,288L96,288L96,276M60,324L60,324L60,336L72,336L72,348L84,348L84,360L96,360L96,396L12,396L12,336L24,336L24,324L60,324M144,324L144,324L180,324L180,336L192,336L192,396L108,396L108,360L120,360L120,348L132,348L132,336L144,336Z" class="road"></path><path d="M24,120L24,120L36,120L36,156L24,156Z" class="cp1"></path><path d="M168,120L168,120L180,120L180,156L168,156Z" class="cp2"></path><path d="M24,240L24,240L36,240L36,276L24,276Z" class="cp3"></path><path d="M168,240L168,240L180,240L180,276L168,276Z" class="cp4"></path><path d="M24,384L24,384L36,384L36,396L24,396L24,384M48,384L48,384L60,384L60,396L48,396L48,384M72,384L72,384L84,384L84,396L72,396Z" class="cp5"></path><path d="M120,384L120,384L132,384L132,396L120,396L120,384M144,384L144,384L156,384L156,396L144,396L144,384M168,384L168,384L180,384L180,396L168,396Z" class="cp6"></path><path d="M0,0L0,0L12,0L12,72L0,72Z" class="parc"></path><path d="M12,0L12,0L204,0L204,408L0,408L0,72L12,72L12,60L24,60L24,72L60,72L60,60L72,60L72,48L84,48L84,36L96,36L96,12L12,12L12,0M120,12L120,12L108,12L108,36L96,36L96,48L84,48L84,60L72,60L72,72L60,72L60,84L24,84L24,96L12,96L12,180L24,180L24,192L60,192L60,180L72,180L72,168L84,168L84,156L96,156L96,120L84,120L84,108L72,108L72,96L60,96L60,84L72,84L72,96L84,96L84,108L96,108L96,120L108,120L108,108L120,108L120,96L132,96L132,84L144,84L144,72L132,72L132,60L120,60L120,48L108,48L108,36L120,36L120,48L132,48L132,60L144,60L144,72L180,72L180,60L192,60L192,12L120,12M156,84L156,84L144,84L144,96L132,96L132,108L120,108L120,120L108,120L108,156L96,156L96,168L84,168L84,180L72,180L72,192L60,192L60,204L24,204L24,216L12,216L12,300L24,300L24,312L60,312L60,300L72,300L72,288L84,288L84,276L96,276L96,240L84,240L84,228L72,228L72,216L60,216L60,204L72,204L72,216L84,216L84,228L96,228L96,240L108,240L108,228L120,228L120,216L132,216L132,204L144,204L144,192L132,192L132,180L120,180L120,168L108,168L108,156L120,156L120,168L132,168L132,180L144,180L144,192L180,192L180,180L192,180L192,96L180,96L180,84L156,84M156,204L156,204L144,204L144,216L132,216L132,228L120,228L120,240L108,240L108,276L96,276L96,288L84,288L84,300L72,300L72,312L60,312L60,324L24,324L24,336L12,336L12,396L96,396L96,360L84,360L84,348L72,348L72,336L60,336L60,324L72,324L72,336L84,336L84,348L96,348L96,360L108,360L108,348L120,348L120,336L132,336L132,324L144,324L144,312L132,312L132,300L120,300L120,288L108,288L108,276L120,276L120,288L132,288L132,300L144,300L144,312L180,312L180,300L192,300L192,216L180,216L180,204L156,204M156,324L156,324L144,324L144,336L132,336L132,348L120,348L120,360L108,360L108,396L192,396L192,336L180,336L180,324Z" class="grass"></path><path d="M24,12L24,12L36,12L36,24L24,24L24,12M48,12L48,12L60,12L60,24L48,24L48,12M72,12L72,12L84,12L84,24L72,24L72,12M120,12L120,12L132,12L132,24L120,24L120,12M144,12L144,12L156,12L156,24L144,24L144,12M168,12L168,12L180,12L180,24L168,24Z" class="start"></path><path d="M96,180L96,180L108,180L108,192L120,192L120,204L108,204L108,216L96,216L96,204L84,204L84,192L96,192Z" class="finish"></path></g>
+ <rect opacity=".3" fill="url(#grid)" height="100%" width="100%" y="0" x="0"></rect>

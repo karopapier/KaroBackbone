@@ -2,7 +2,7 @@ var MapSvgView = MapBaseView.extend({
     tagName: "div",
     template: window.JST["map/svg"],
     className: "mapSvgView",
-    initialize: function () {
+    initialize: function (options) {
         //init MapBaseView with creation of a settings model
         this.constructor.__super__.initialize.apply(this, arguments);
         _.bindAll(this, "adjustSize", "render", "initSvg", "renderFromPathStore");
@@ -12,6 +12,7 @@ var MapSvgView = MapBaseView.extend({
         this.listenTo(this.model, "change:rows change:cols", this.adjustSize);
         this.listenTo(this.model, "change:mapcode", this.render);
         this.listenTo(this.settings, "change:cpsVisited", this.updateCheckpoints);
+        this.forceMapPathFinder = options.forceMapPathFinder||false;
         this.paths = [];
 
         this.initCss();
@@ -146,6 +147,10 @@ var MapSvgView = MapBaseView.extend({
                 $paths[0].appendChild(p);
             }
         }
+        var map = this.model;
+        //console.log(map.attributes);
+        document.getElementById('mapSvgView').setAttribute("viewBox", "0 0 " + (map.get("cols") * 12) + " " + (map.get("rows") * 12));
+        console.log("Render triggered");
         this.trigger("rendered");
     },
     makeSVG: function (tag, attrs) {
@@ -155,10 +160,13 @@ var MapSvgView = MapBaseView.extend({
         return el;
     },
     renderFromPathStore: function () {
+        //console.log("Render from pathstore");
         var mps = new MapPathStore();
         var me=this;
         mps.getPath(this.model.get("id"), function (map) {
+            //console.log("Look at getPath Response", map)
             if (map===false) {
+                //console.log("Trigger pathFinder from failed getPath");
                 me.renderFromPathFinder();
                 return false;
             }
@@ -180,15 +188,15 @@ var MapSvgView = MapBaseView.extend({
             //console.log("Jetzt einfug");
             //console.log(doc.getElementById("mapSvgView"));
             mapNode.appendChild(document.importNode(doc.getElementById("mapSvgView"), true));
-            //console.log("Gefugt");
+            //console.info("path render done");
             document.getElementById('mapSvgView').setAttribute("viewBox", "0 0 " + (map.c * 12) + " " + (map.r * 12));
         });
-        console.info("path render done");
     },
     render: function () {
-        if ((this.model.get("id") !== 0) && (this.model.get("id")<1000)) {
+        if ((this.model.get("id") !== 0) && (this.model.get("id")<1000) && (!(this.forceMapPathFinder))) {
             this.renderFromPathStore();
         } else {
+            //console.log("Trigger PathFinder from id being 0 or >1000");
             this.renderFromPathFinder();
         }
     }

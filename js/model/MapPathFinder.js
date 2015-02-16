@@ -81,6 +81,7 @@ var MapPathFinder = Backbone.Model.extend({
             return mostChar;
         },
         getAllOutlines: function () {
+            console.info("Start number crunching");
             this.reset();
             var char;
             var mapcode = this.map.get("mapcode");

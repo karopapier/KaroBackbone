@@ -9,6 +9,7 @@ var MapPathStore = Backbone.Model.extend({
             //we should have the path and dimensions here
             //console.log(path);
             if (path===false) {
+                //console.warn("I stop this!!!")
                 cb(false);
                 return false;
             }

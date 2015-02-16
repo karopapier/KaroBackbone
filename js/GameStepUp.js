@@ -8,6 +8,13 @@ Karopapier.User.fetch();
 var game = new Game();
 //game.load(GameId);
 
+game.on("change:id", function() {
+    console.log("COmpleted",game.get("completed"));
+    if (game.get("completed")) {
+        $('#mapImage').show();
+    }
+});
+
 var mmv = new MoveMessageView({
     el: '#moveMessages',
     collection: game.get("moveMessages")
@@ -204,7 +211,7 @@ var preloadNext = function () {
     console.info("Preload",nextId());
     if (nextId()==game.get("id")) {
         console.info("Binnich doch grad");
-        dranQueue.shift();
+        dranQueue.remove(nextId());
         return preloadNext();
     }
     if (nextId()==nextGame.get("id")) {
@@ -220,13 +227,15 @@ var next = function () {
     if (!nId) return false;
     if (nId == game.get("id")) return false;
 
+    $('#mapImage').hide();
     if (nextGame.get("completed")) {
         console.log("setting from preload");
         game.setFrom(nextGame);
     } else {
         game.load(nId)
     }
-    dranQueue.shift();
+    dranQueue.remove(nId);
+    gr.navigate(window.location.pathname.substr(1) + "?GID=" + nId);
 }
 
 console.info("Stepup done");

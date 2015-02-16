@@ -1,6 +1,7 @@
 //container for rendered map and players
 var GameView = Backbone.View.extend({
 	initialize: function() {
+        alert("I have been used!!!");
 		this.game=this.model;
 		this.template= _.template('<div id="mapImageView"></div><div id="playersView"></div>');
 		this.$el.html(this.template);

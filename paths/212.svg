@@ -1,1 +1,101 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="mapSvgView" width="276" height="528"> <rect id="mainfill" class="grass" x="0" y="0" width="100%" height="100%"></rect> <g id="paths"><path d="M120,444L120,444L156,444L156,456L120,456Z" class="cp1"></path><path d="M0,0L0,0L12,0L12,60L0,60Z" class="parc"></path><path d="M60,12L60,12L72,12L72,36L84,36L84,48L108,48L108,60L96,60L96,72L84,72L84,84L72,84L72,96L60,96L60,480L84,480L84,468L96,468L96,456L108,456L108,444L120,444L120,432L156,432L156,444L120,444L120,456L156,456L156,444L168,444L168,456L180,456L180,468L192,468L192,480L216,480L216,96L204,96L204,84L192,84L192,72L180,72L180,60L168,60L168,48L180,48L180,36L168,36L168,12L192,12L192,24L180,24L180,36L192,36L192,24L204,24L204,12L216,12L216,36L228,36L228,48L240,48L240,60L252,60L252,72L264,72L264,516L180,516L180,504L168,504L168,492L156,492L156,480L144,480L144,468L132,468L132,480L120,480L120,492L108,492L108,504L96,504L96,516L12,516L12,72L24,72L24,60L36,60L36,48L48,48L48,36L60,36L60,12M84,12L84,12L108,12L108,36L96,36L96,24L84,24Z" class="road"></path><path d="M72,12L72,12L84,12L84,24L96,24L96,36L108,36L108,48L84,48L84,36L72,36Z" class="start"></path><path d="M192,12L192,12L204,12L204,24L192,24L192,12M192,24L192,24L192,36L180,36L180,24L192,24M180,36L180,36L180,48L168,48L168,36Z" class="finish"></path></g></svg>
+<defs>
+ <pattern y="0" x="0" height="24" width="24" patternUnits="userSpaceOnUse" id="grassPattern">
+ <rect class="grasscolor" height="24" width="24" y="0" x="0"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="1" y="5"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="1" y="5"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="3" y="5"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="6" y="7"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="6" y="17"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="8" y="21"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="9" y="2"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="12" y="4"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="13" y="15"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="14" y="4"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="14" y="19"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="17" y="7"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="17" y="12"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="18" y="23"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="21" y="16"></rect>
+ <rect class="grassspeclecolor" height="1" width="1" x="23" y="12"></rect>
+ </pattern>
+ <pattern y="0" x="0" height="24" width="24" patternUnits="userSpaceOnUse" id="roadPattern">
+ <rect class="roadcolor" height="24" width="24" y="0" x="0"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="1" y="5"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="1" y="5"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="3" y="5"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="6" y="7"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="6" y="17"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="8" y="21"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="9" y="2"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="12" y="4"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="13" y="15"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="14" y="4"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="14" y="19"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="17" y="7"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="17" y="12"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="18" y="23"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="21" y="16"></rect>
+ <rect class="roadspeclecolor" height="1" width="1" x="23" y="12"></rect>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="grid">
+ <line stroke-width="1" stroke="black" y2="12" x2="12" y1="0" x1="12"></line>
+ <line stroke-width="1" stroke="black" y2="12" x2="12" y1="12" x1="0"></line>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="finishPattern">
+ <rect fill="black" height="12" width="12" y="0" x="0"></rect>
+ <path fill="white" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="white" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="startPattern">
+ <rect fill="rgb(100,100,100)" height="12" width="12" y="0" x="0"></rect>
+ <rect stroke-width="1" stroke="rgb(200,200,200)" fill="none" height="5" width="5" y="3.5" x="3.5"></rect>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp1pattern">
+ <rect class="cp1color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="black" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="black" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp2pattern">
+ <rect class="cp2color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="white" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="white" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp3pattern">
+ <rect class="cp3color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="black" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="black" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp4pattern">
+ <rect class="cp4color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="white" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="white" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp5pattern">
+ <rect class="cp5color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="black" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="black" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp6pattern">
+ <rect class="cp6color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="white" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="white" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp7pattern">
+ <rect class="cp7color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="black" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="black" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp8pattern">
+ <rect class="cp8color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="white" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="white" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ <pattern y="0" x="0" height="12" width="12" patternUnits="userSpaceOnUse" id="cp9pattern">
+ <rect class="cp9color" height="12" width="12" y="0" x="0"></rect>
+ <path fill="black" d="M0,0L3,0L3,3L0,3L0,0M6,0L9,0L9,3L6,3L6,0M3,3L6,3L6,6L3,6L3,3M9,3L12,3L12,6L9,6L9,3"></path>
+ <path fill="black" d="M0,6L3,6L3,9L0,9L0,6M6,6L9,6L9,9L6,9L6,6M3,9L6,9L6,12L3,12L3,9M9,9L12,9L12,12L9,12L9,9"></path>
+ </pattern>
+ </defs>
+ <rect height="100%" width="100%" y="0" x="0" class="grass" id="mainfill"></rect>
+ <g id="paths"><path d="M60,12L60,12L108,12L108,60L96,60L96,72L84,72L84,84L72,84L72,96L60,96L60,480L84,480L84,468L96,468L96,456L108,456L108,444L120,444L120,432L156,432L156,444L168,444L168,456L180,456L180,468L192,468L192,480L216,480L216,96L204,96L204,84L192,84L192,72L180,72L180,60L168,60L168,12L216,12L216,36L228,36L228,48L240,48L240,60L252,60L252,72L264,72L264,516L180,516L180,504L168,504L168,492L156,492L156,480L144,480L144,468L132,468L132,480L120,480L120,492L108,492L108,504L96,504L96,516L12,516L12,72L24,72L24,60L36,60L36,48L48,48L48,36L60,36Z" class="road"></path><path d="M120,444L120,444L156,444L156,456L120,456Z" class="cp1"></path><path d="M0,0L0,0L12,0L12,60L0,60Z" class="parc"></path><path d="M72,12L72,12L84,12L84,24L96,24L96,36L108,36L108,48L84,48L84,36L72,36Z" class="start"></path><path d="M192,12L192,12L204,12L204,24L192,24L192,12M192,24L192,24L192,36L180,36L180,24L192,24M180,36L180,36L180,48L168,48L168,36Z" class="finish"></path></g>
+ <rect opacity=".3" fill="url(#grid)" height="100%" width="100%" y="0" x="0"></rect>

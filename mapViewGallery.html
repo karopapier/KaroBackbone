@@ -2,20 +2,28 @@
 <html>
     <head>
         <title></title>
+        <script>var Karopapier={};</script>
+        <script src="js/model/Util.js"></script>
         <script type="text/javascript" src="js/libs/jquery-1.11.0.min.js"></script>
         <script src="js/libs/underscore-min.js"></script>
         <script src="js/libs/backbone-min.js"></script>
         <script src="js/libs/backbone.marionette.min.js"></script>
+        <script type="text/javascript" src="http://www.karopapier.de/js/libs/json2.min.js"></script>
+        <script type="text/javascript" src="http://www.karopapier.de/js/libs/store.min.js"></script>
+        <script type="text/javascript" src="http://www.karopapier.de/js/libs/lz-string.min.js"></script>
+
         <script src="js/templates/JST.js"></script>
 
+
         <script src="js/model/Map.js"></script>
+        <script src="js/model/MapRenderPalette.js"></script>
+        <script src="js/model/MapPathFinder.js"></script>
+        <script src="js/model/MapPathStore.js"></script>
         <script src="js/view/MapBaseView.js"></script>
         <script src="js/view/MapCodeView.js"></script>
-        <script src="js/model/MapRenderPalette.js"></script>
         <script src="js/view/MapRenderView.js"></script>
         <script src="js/view/MapImageView.js"></script>
         <script src="js/view/MapSvgView.js"></script>
-        <script src="js/model/MapPathFinder.js"></script>
     </head>
     <body>
         <div id="content"></div>
@@ -77,15 +85,19 @@
             var mapSvgView = new MapSvgView({
                 el: '#svgcontainer',
                 model: map,
-                size: 11
+                size: 11,
+                forceMapPathFinder: true
             }).on("rendered", function () {
+                        console.log("Render was triggered");
                         encode_as_img_and_link();
                     });
 
             function encode_as_img_and_link() {
-                var svg = $("#svgcontainer").html().trim();
+                var svg = $("#mapSvgView").html().trim();
                 var b64 = btoa(svg);
+                console.log("Ich hab ein b64, batchMode ist",batchMode);
 				if (batchMode) {
+                    console.log("Jetzt send");
 					sendToServer(b64);
 				}
                 $("#svgCopy").attr("src", "data:image/svg+xml;base64,\n" + b64);
