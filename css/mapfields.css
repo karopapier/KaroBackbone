@@ -11,103 +11,103 @@ Icon classes can be used entirely standalone. They are named after their origina
 */
 .icon-1 {
   background-image: url(images/mapfields.png);
-  background-position: -21px 0px;
-  width: 21px;
-  height: 21px;
+  background-position: -12px 0px;
+  width: 12px;
+  height: 12px;
 }
 .icon-2 {
   background-image: url(images/mapfields.png);
-  background-position: -42px -42px;
-  width: 21px;
-  height: 21px;
+  background-position: -24px -24px;
+  width: 12px;
+  height: 12px;
 }
 .icon-3 {
   background-image: url(images/mapfields.png);
-  background-position: 0px -21px;
-  width: 21px;
-  height: 21px;
+  background-position: 0px -12px;
+  width: 12px;
+  height: 12px;
 }
 .icon-4 {
   background-image: url(images/mapfields.png);
-  background-position: -21px -21px;
-  width: 21px;
-  height: 21px;
+  background-position: -12px -12px;
+  width: 12px;
+  height: 12px;
 }
 .icon-5 {
   background-image: url(images/mapfields.png);
-  background-position: 0px -42px;
-  width: 21px;
-  height: 21px;
+  background-position: 0px -24px;
+  width: 12px;
+  height: 12px;
 }
 .icon-6 {
   background-image: url(images/mapfields.png);
-  background-position: -42px 0px;
-  width: 21px;
-  height: 21px;
+  background-position: -24px 0px;
+  width: 12px;
+  height: 12px;
 }
 .icon-7 {
   background-image: url(images/mapfields.png);
-  background-position: -42px -21px;
-  width: 21px;
-  height: 21px;
+  background-position: -24px -12px;
+  width: 12px;
+  height: 12px;
 }
 .icon-8 {
   background-image: url(images/mapfields.png);
-  background-position: -21px -42px;
-  width: 21px;
-  height: 21px;
+  background-position: -12px -24px;
+  width: 12px;
+  height: 12px;
 }
 .icon-9 {
   background-image: url(images/mapfields.png);
   background-position: 0px 0px;
-  width: 21px;
-  height: 21px;
+  width: 12px;
+  height: 12px;
 }
 .icon-F {
   background-image: url(images/mapfields.png);
-  background-position: -63px 0px;
-  width: 21px;
-  height: 21px;
+  background-position: -36px 0px;
+  width: 12px;
+  height: 12px;
 }
 .icon-O {
   background-image: url(images/mapfields.png);
-  background-position: 0px -63px;
-  width: 21px;
-  height: 21px;
+  background-position: 0px -36px;
+  width: 12px;
+  height: 12px;
 }
 .icon-P {
   background-image: url(images/mapfields.png);
-  background-position: -21px -63px;
-  width: 21px;
-  height: 21px;
+  background-position: -12px -36px;
+  width: 12px;
+  height: 12px;
 }
 .icon-S {
   background-image: url(images/mapfields.png);
-  background-position: -63px -21px;
-  width: 22px;
-  height: 21px;
+  background-position: -48px 0px;
+  width: 12px;
+  height: 11px;
 }
 .icon-W {
   background-image: url(images/mapfields.png);
-  background-position: -63px -42px;
-  width: 21px;
-  height: 21px;
+  background-position: -36px -24px;
+  width: 12px;
+  height: 12px;
 }
 .icon-X {
   background-image: url(images/mapfields.png);
-  background-position: -42px -63px;
-  width: 21px;
-  height: 21px;
+  background-position: -24px -36px;
+  width: 12px;
+  height: 12px;
 }
 .icon-Y {
   background-image: url(images/mapfields.png);
-  background-position: 0px -84px;
-  width: 21px;
-  height: 21px;
+  background-position: -36px -12px;
+  width: 12px;
+  height: 12px;
 }
 .icon-Z {
   background-image: url(images/mapfields.png);
-  background-position: -84px 0px;
-  width: 21px;
-  height: 21px;
+  background-position: 0px -48px;
+  width: 12px;
+  height: 12px;
 }
