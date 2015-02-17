@@ -52,12 +52,14 @@ var Game = Backbone.Model.extend({
     },
 
     updatePossibles: function () {
-        console.warn("Recalc possibles for",this.get("id"));
+        console.warn("Start Recalc possibles for",this.get("id"));
         if (!(this.get("completed"))) return false;
+        if (this.get("moved")) return false;
         if (this.get("finished")) {
             this.possibles.reset([]);
             return true;
         }
+        console.warn("Really DO recalc possibles for",this.get("id"));
 
         var dranId = this.get("dranId");
         if (this.get("players").length < 1) return false;

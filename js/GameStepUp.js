@@ -8,7 +8,7 @@ Karopapier.User.fetch();
 var game = new Game();
 //game.load(GameId);
 
-game.on("change:id", function() {
+game.on("change:completed", function() {
     console.log("COmpleted",game.get("completed"));
     if (game.get("completed")) {
         $('#mapImage').show();
@@ -105,8 +105,10 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
             console.log("Parse move response");
             parseMoveResponse(text);
         });
-        //always jump to next game in queue
-        next();
+        console.log("Now HIDING");
+        $('#mapImage').hide();
+        game.set({"completed": false, "moved": true});
+        console.log("Done with this game");
     }
 });
 
@@ -158,24 +160,6 @@ function myTextGet(url, cb, errcb) {
     request.send();
 };
 
-var dranQueue = new GameCollection();
-dranQueue.url = function () {
-    return "http://www.karopapier.de/api/user/" + Karopapier.User.get("id") + "/dran.json?callback=?"
-};
-dranQueue.parse = function (data) {
-    return data.games;
-};
-
-//inital load via reset
-dranQueue.listenTo(Karopapier.User,"change:id", dranQueue.fetch.bind(dranQueue, {reset: true}));
-//dranQueue.fetch({reset: true});
-
-gr = new GameRouter();
-
-Backbone.history.start({
-    pushState: true
-});
-
 var checkTestmode = function () {
     console.log("Checking");
     if ($('#testmode').is(":checked")) {
@@ -197,45 +181,98 @@ var checkTestmode = function () {
 $('#testmode').click(checkTestmode);
 checkTestmode();
 
+
+
+var dranQueue = new GameCollection();
+dranQueue.url = function () {
+    return "http://www.karopapier.de/api/user/" + Karopapier.User.get("id") + "/dran.json?callback=?"
+};
+dranQueue.parse = function (data) {
+    return data.games;
+};
+
+//inital load via reset
+dranQueue.listenTo(Karopapier.User,"change:id", dranQueue.fetch.bind(dranQueue, {reset: true}));
+//dranQueue.fetch({reset: true});
+
 var nextGame = new Game();
 
-dranQueue.on("add remove reset", function() {
-    preloadNext();
+var prepareBuffer = function() {
+    console.log("Preparing buffer");
+    if (dranQueue.length>0) {
+        console.log("DQ len",dranQueue.length);
+        var nextId = dranQueue.at(0).get("id");
+        console.log("Next ID", nextId);
+
+        if (nextId == game.get("id")) {
+            console.log("next == current, kicking from queue");
+            dranQueue.shift();
+            prepareBuffer();
+        }
+
+        if (nextGame.get("id")==0) {
+            nextGame.set("id",nextId);
+            setTimeout(function() {nextGame.load(nextId)},0);
+        }
+    } else {
+        console.log("DQ empty");
+    }
+}
+
+nextGame.on("change:completed", function() {
+    if (nextGame.get("completed")) {
+        console.log("Next game is completed. Wanna have it?");
+        checkNextGame();
+    }
+});
+
+dranQueue.on("reset", function(q, e) {
+    console.info("DranQueue reset");
+    prepareBuffer();
+});
+
+dranQueue.on("add", function(g, q, e) {
+    console.info("DranQueue add");
+    checkNextGame();
+    prepareBuffer();
 })
 
-var nextId = function () {
-    if (dranQueue.length < 1) return false;
-    return dranQueue.at(0).get("id");
-}
-var preloadNext = function () {
-    console.info("Preload",nextId());
-    if (nextId()==game.get("id")) {
-        console.info("Binnich doch grad");
-        dranQueue.remove(nextId());
-        return preloadNext();
-    }
-    if (nextId()==nextGame.get("id")) {
-        console.info("Habbich schon");
-        return true;
-    }
-    nextGame.load(nextId());
-    return true;
-}
+dranQueue.on("remove", function(g, q, e) {
+    console.info("DranQueue remove");
+    prepareBuffer();
+})
 
-var next = function () {
-    var nId = nextId();
-    if (!nId) return false;
-    if (nId == game.get("id")) return false;
+game.on("change:moved", function() {
+    console.log("Game changed moved to ", game.get("moved"));
+    if (game.get("moved")) {
+        checkNextGame();
+    }
+});
 
-    $('#mapImage').hide();
-    if (nextGame.get("completed")) {
-        console.log("setting from preload");
+var checkNextGame = function() {
+    console.log("checking next game:");
+    console.log("Game moved:", game.get("moved"));
+    console.log("NextGame completed:", nextGame.get("completed"));
+
+    if (game.get("moved") && nextGame.get("completed")) {
+        console.log("Setting game from next");
+        nextGame.set("moved",false);
         game.setFrom(nextGame);
+        gr.navigate(window.location.pathname.substr(1) + "?GID=" + nextGame.get("id"));
+        console.log("Now showing");
+        $('#mapImage').show();
+        nextGame.set({id: 0, completed: false}, {silent: true});
+        prepareBuffer();
     } else {
-        game.load(nId)
+        console.log("not completed yet or not moved yet");
     }
-    dranQueue.remove(nId);
-    gr.navigate(window.location.pathname.substr(1) + "?GID=" + nId);
 }
+
+gr = new GameRouter();
+
+Backbone.history.start({
+    pushState: true
+});
+
 
 console.info("Stepup done");
