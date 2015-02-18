@@ -1,4 +1,5 @@
-<defs>
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" height="528" width="276" id="mapSvgView" version="1.1" style="width: 276px; height: 528px;" viewBox="0 0 276 528">
+ <defs>
  <pattern y="0" x="0" height="24" width="24" patternUnits="userSpaceOnUse" id="grassPattern">
  <rect class="grasscolor" height="24" width="24" y="0" x="0"></rect>
  <rect class="grassspeclecolor" height="1" width="1" x="1" y="5"></rect>
@@ -99,3 +100,4 @@
  <rect height="100%" width="100%" y="0" x="0" class="grass" id="mainfill"></rect>
  <g id="paths"><path d="M60,12L60,12L108,12L108,60L96,60L96,72L84,72L84,84L72,84L72,96L60,96L60,480L84,480L84,468L96,468L96,456L108,456L108,444L120,444L120,432L156,432L156,444L168,444L168,456L180,456L180,468L192,468L192,480L216,480L216,96L204,96L204,84L192,84L192,72L180,72L180,60L168,60L168,12L216,12L216,36L228,36L228,48L240,48L240,60L252,60L252,72L264,72L264,516L180,516L180,504L168,504L168,492L156,492L156,480L144,480L144,468L132,468L132,480L120,480L120,492L108,492L108,504L96,504L96,516L12,516L12,72L24,72L24,60L36,60L36,48L48,48L48,36L60,36Z" class="road"></path><path d="M120,444L120,444L156,444L156,456L120,456Z" class="cp1"></path><path d="M0,0L0,0L12,0L12,60L0,60Z" class="parc"></path><path d="M72,12L72,12L84,12L84,24L96,24L96,36L108,36L108,48L84,48L84,36L72,36Z" class="start"></path><path d="M192,12L192,12L204,12L204,24L192,24L192,12M192,24L192,24L192,36L180,36L180,24L192,24M180,36L180,36L180,48L168,48L168,36Z" class="finish"></path></g>
  <rect opacity=".3" fill="url(#grid)" height="100%" width="100%" y="0" x="0"></rect>
+</svg>
