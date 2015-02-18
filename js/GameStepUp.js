@@ -95,9 +95,10 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
         }
 
         console.log("Send move");
+        var movedGID=game.get("id");
         myTextGet(moveUrl, function (text) {
             console.log("Parse move response");
-            parseMoveResponse(text);
+            parseMoveResponse(text, movedGID);
         });
         dranQueue.remove(game.get("id"));
         console.log("Now HIDING");
@@ -107,23 +108,36 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
     }
 });
 
-function parseMoveResponse(text) {
+function parseMoveResponse(text, movedGID) {
     //indexOf Danke ==ok
-    if (text.indexOf("Danke.") >= 0) {
-        //console.log("GUT");
+    if ((text.indexOf("Danke.") >= 0) || (text.indexOf("Spiel beendet") >=0)) {
         //<B>Didi</B> kommt als n&auml;chstes dran
         var hits = text.match(/<B>(.*?)<\/B> kommt als n/);
         var nextPlayer = "Unknown";
-        if (hits.length > 1) {
-            nextPlayer = hits[1];
+        if (hits) {
+            if (hits.length > 1) {
+                nextPlayer = hits[1];
+            }
         }
-        //console.log("Next",nextPlayer);
-        //Didi == me => nochmal
-        //console.log("ME",Karopapier.User.get("login"));
         if (nextPlayer == Karopapier.User.get("login")) {
             //console.info("NOMMAL DRAN");
-            //game.load(game.get("id"));
-            return true;
+            dranQueue.addId(game.get("id"));
+        }
+
+        //check listed next games and add them to queue as well, excluding moved one
+        var gids = text.match(/GID=(\d*)/g);
+        var currentGID = game.get("id");
+        if (gids.length > 0) {
+            for (var i=0;i<gids.length;i++) {
+                var s = gids[i].split("=");
+                if (s) {
+                    var gid = s[1];
+                    console.log(gid);
+                    if (gid!=movedGID) {
+                        dranQueue.addId(gid);
+                    }
+                }
+            }
         }
     } else {
         alert("KEIN DANKE!!! Da hat wohl was nicht gepasst");
@@ -153,7 +167,7 @@ function myTextGet(url, cb, errcb) {
     };
 
     request.send();
-};
+}
 
 var checkTestmode = function () {
     console.log("Checking");

@@ -1,0 +1,19 @@
+<table width=100% border=0 cellspacing=0 cellpadding=0>
+	<tr> 
+	<td width=20 height=20 VALIGN=TOP ALIGN=LEFT><img src=/bilder/box/tl.gif width=20 height=20></td><td background=/bilder/box/tm.gif height=20 WIDTH=100%><IMG SRC=/bilder/trans.png></td><td width=20 height=20 VALIGN=TOP ALIGN=LEFT><img src=/bilder/box/tr.gif width=20 height=20></td> 
+	</tr> 
+
+	<tr> 
+	<td width=20 background=/bilder/box/ml.gif><IMG SRC=/bilder/trans.png></td>
+<td>
+<H1 style="text-shadow: 2px 2px 0px rgba(100,100,200,0.5)">ZIEL</H1>Mit diesem Zug wirst Du 2.<BR>So, mit diesem Zug ist das Spiel beendet!!!<BR><BR><A HREF=showmap.php?GID=78512>Zum Spiel zur&uuml;ck</A><BR>
+<A HREF=http://www.karopapier.de TARGET=_top>Zur Hauptseite</A><br /><A HREF=http://www.karopapier.de/dran TARGET=_top>Oder zum BART</A>
+	</td> 
+	<td width=20 background=/bilder/box/mr.gif><IMG SRC=/bilder/trans.png></td> 
+	</tr> 
+	<tr> 
+	<td width=20 height=20><img src=/bilder/box/bl.gif width=20 height=20></td> 
+	<td background=/bilder/box/bm.gif height=20><IMG SRC=/bilder/trans.png></td> 
+	<td height=20 width=20><img src=/bilder/box/br.gif width=20 height=20></td> 
+	</tr> 
+</table>
