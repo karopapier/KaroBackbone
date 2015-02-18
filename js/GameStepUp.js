@@ -96,6 +96,7 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
 
         console.log("Send move");
         var movedGID=game.get("id");
+        console.warn("I just moved",movedGID);
         myTextGet(moveUrl, function (text) {
             console.log("Parse move response");
             parseMoveResponse(text, movedGID);
@@ -132,8 +133,9 @@ function parseMoveResponse(text, movedGID) {
                 var s = gids[i].split("=");
                 if (s) {
                     var gid = s[1];
-                    console.log(gid);
+                    console.log("Compare found",gid,"with",movedGID);
                     if (gid!=movedGID) {
+                        console.log(gid,"!=",movedGID,", so add it to queue");
                         dranQueue.addId(gid);
                     }
                 }

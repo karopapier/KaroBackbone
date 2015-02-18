@@ -5,7 +5,7 @@ var MapSvgView = MapBaseView.extend({
     initialize: function (options) {
         //init MapBaseView with creation of a settings model
         this.constructor.__super__.initialize.apply(this, arguments);
-        _.bindAll(this, "adjustSize", "render", "initSvg", "renderFromPathStore");
+        _.bindAll(this, "adjustSize", "render", "initSvg", "renderFromPathStore", "renderFromPathFinder");
         this.initSvg();
 
         this.listenTo(this.settings, "change", this.adjustSize);
@@ -21,8 +21,10 @@ var MapSvgView = MapBaseView.extend({
         this.render();
     },
     initCss: function () {
+        $('#mapSvgStyle').remove();
         var styleEl = document.createElement("style");
         styleEl.appendChild(document.createTextNode("")); //webkit fix
+        styleEl.id="mapSvgStyle";
         document.head.appendChild(styleEl);
         this.styleSheet = styleEl.sheet;
         styleSheet = this.styleSheet;
@@ -150,6 +152,7 @@ var MapSvgView = MapBaseView.extend({
         var map = this.model;
         //console.log(map.attributes);
         document.getElementById('mapSvgView').setAttribute("viewBox", "0 0 " + (map.get("cols") * 12) + " " + (map.get("rows") * 12));
+        this.initCss();
         console.log("Render triggered");
         this.trigger("rendered");
     },
@@ -190,6 +193,7 @@ var MapSvgView = MapBaseView.extend({
             mapNode.appendChild(document.importNode(doc.getElementById("mapSvgView"), true));
             //console.info("path render done");
             document.getElementById('mapSvgView').setAttribute("viewBox", "0 0 " + (map.c * 12) + " " + (map.r * 12));
+            me.initCss();
         });
     },
     render: function () {
