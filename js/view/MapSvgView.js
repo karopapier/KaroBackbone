@@ -7,11 +7,10 @@ var MapSvgView = MapBaseView.extend({
         this.constructor.__super__.initialize.apply(this, arguments);
         _.bindAll(this, "adjustSize", "render", "initSvg", "renderFromPathStore", "renderFromPathFinder");
         this.initSvg();
-
-        this.listenTo(this.settings, "change", this.adjustSize);
         this.listenTo(this.model, "change:rows change:cols", this.adjustSize);
         this.listenTo(this.model, "change:mapcode", this.render);
         this.listenTo(this.settings, "change:cpsVisited", this.updateCheckpoints);
+        this.listenTo(this.settings, "change:cpsActive", this.hideCheckpoints);
         this.forceMapPathFinder = options.forceMapPathFinder||false;
         this.paths = [];
 
@@ -79,10 +78,19 @@ var MapSvgView = MapBaseView.extend({
     updateCheckpoints: function () {
         this.clearCheckpointRules();
         var cpsVisited = this.settings.get("cpsVisited");
-        if (cpsVisited.length == 0) return true;
+        if (cpsVisited.length === 0) return true;
         for (var cp = 0; cp < cpsVisited.length; cp++) {
             //console.log("CP",cpsVisited[cp]);
             this.styleSheet.insertRule(".cp" + cpsVisited[cp] + " { fill-opacity: .15; }", this.styleSheet.cssRules.length);
+        }
+    },
+    hideCheckpoints: function () {
+        console.log("clear CP Rules", this.settings.get("cpsActive"));
+        this.clearCheckpointRules();
+        var cps = this.model.get("cps");
+        if (this.settings.get("cpsActive") !== false) return true;
+        for (var cp = 0; cp < cps.length; cp++) {
+            this.styleSheet.insertRule(".cp" + cps[cp] + " { fill-opacity: 0; }", this.styleSheet.cssRules.length);
         }
     },
     adjustSize: function () {
