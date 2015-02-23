@@ -35,7 +35,7 @@ var svgView = new MapSvgView({
     border: 1
 });
 game.on("change:completed", function() {
-    svgView.settings.set("cpsActive", game.get("cpsActive"));
+    svgView.settings.set("cpsActive", game.get("cps"));
 });
 
 var GameRouter = Backbone.Router.extend({
