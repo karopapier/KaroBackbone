@@ -13,6 +13,11 @@ var mmv = new MoveMessageView({
     collection: game.get("moveMessages")
 });
 
+var lmmv = new LastMoveMessageView({
+    el: '#lastMoveMessages',
+    collection: game.get("moveMessages"),
+});
+
 var giv = new GameInfoView({
     model: game,
     el: "#gameInfo"
@@ -89,7 +94,7 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
         //build move url
         var moveUrl = "http://www.karopapier.de/move.php?GID=" + game.get("id");
         var m = mo.toMove();
-        if (mo.get("vector").getLength() == 0) {
+        if (mo.get("vector").getLength() === 0) {
             //http://www.karopapier.de/move.php?GID=84078&startx=8&starty=29
             moveUrl += "&startx=" + m.x + "&starty=" + m.y;
         } else {
@@ -190,7 +195,7 @@ var checkTestmode = function () {
         mpm.render();
         game.updatePossibles();
     }
-}
+};
 
 $('#testmode').click(checkTestmode);
 checkTestmode();
@@ -199,7 +204,7 @@ checkTestmode();
 
 var dranQueue = new GameCollection();
 dranQueue.url = function () {
-    return "http://www.karopapier.de/api/user/" + Karopapier.User.get("id") + "/dran.json?callback=?"
+    return "http://www.karopapier.de/api/user/" + Karopapier.User.get("id") + "/dran.json?callback=?";
 };
 dranQueue.parse = function (data) {
     return data.games;
@@ -216,10 +221,27 @@ var nextGame = new Game();
 /////////////////////////////////////////////////////////////////////////////
 
 game.on("change:completed", function() {
-    console.log("COmpleted",game.get("completed"));
+    console.log("Completed",game.get("completed"));
     if (game.get("completed")) {
         $('#mapImage').show();
     }
+
+    //set limit for "LastMoveMessages"
+    var userId = Karopapier.User.get("id");
+    var dranId = game.get("dranId");
+    var ts = false;
+    if (dranId) {
+        var p = game.get("players").get(dranId);
+        if (p) {
+            var lastmove = p.moves.last();
+            if (lastmove) {
+                ts = new Date(lastmove.get("t"));
+            }
+        }
+    }
+
+
+    lmmv.settings.set("timestamp",ts);
 });
 
 game.on("change:moved", function() {
@@ -246,12 +268,12 @@ dranQueue.on("add", function(g, q, e) {
     console.info("DranQueue add",g.get("id"));
     checkNextGame();
     checkPreload();
-})
+});
 
 dranQueue.on("remove", function(g, q, e) {
     console.info("DranQueue remove",g.get("id"));
     checkPreload();
-})
+});
 
 /////////////////////////////////////////////////////////////////////////////
 var checkPreload = function() {
@@ -268,17 +290,17 @@ var checkPreload = function() {
             //checkPreload(); //will be triggered by "remove"
         }
 
-        if (nextGame.get("id")==0) {
+        if (nextGame.get("id")===0) {
             console.log("Trigger preload of",nextId);
             nextGame.set("id",nextId);
-            setTimeout(function() {nextGame.load(nextId)},50);
+            setTimeout(function() {nextGame.load(nextId);},50);
         } else {
             console.log("Preload already in progress");
         }
     } else {
         console.log("DQ empty");
     }
-}
+};
 
 var checkNextGame = function() {
     console.log("checking next game:");
@@ -297,7 +319,7 @@ var checkNextGame = function() {
     } else {
         console.log("not completed yet or not moved yet");
     }
-}
+};
 
 gr = new GameRouter();
 

@@ -1,0 +1,47 @@
+var LastMoveMessageView = Backbone.View.extend({
+    initialize: function (options) {
+        options = options || {};
+
+        this.listenTo(this.collection, "reset change", this.render);
+        _.bindAll(this, "render");
+        this.template = _.template('<small><%= name %> (<%= date %>): &quot;<%= text %>&quot;<br /></small>\n');
+        this.settings=new Backbone.Model();
+        this.settings.set("timestamp",false);
+        this.listenTo(this.settings, "change:timestamp", this.render);
+    },
+    render: function () {
+        var html = '';
+        var ts = this.settings.get("timestamp");
+        if ((this.collection.length>0) && ts) {
+            var filter = function(m) {
+                d = moment(m.get("t"), "YYYY-MM-dd hh:mm:ss");
+                return d >ts;
+            };
+
+
+            filtered = this.collection.filter(filter);
+            _.each(filtered, function (e) {
+                var txt = e.get("msg");
+                var tpl = this.template;
+                if (!txt.startsWith("-:K")) {
+                    html += tpl({
+                        name: e.get("player").get("name"),
+                        text: Karopapier.Util.linkify(e.get("msg")),
+                        date: moment(e.get("t"), "YYYY-MM-dd hh:mm:ss").format("YYYY-MM-DD")
+                    });
+                }
+            }, this);
+        }
+
+        if (!html) {
+            this.$el.hide();
+            html = "";
+        } else {
+            html = '<b>Bordfunk seit Deinem letzten Zug:</b><br>' + html;
+            this.$el.show();
+        }
+
+        this.$el.html(html);
+        //this.$el[0].scrollTop = this.$el[0].scrollHeight;
+    }
+});

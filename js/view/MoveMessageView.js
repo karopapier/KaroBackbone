@@ -36,7 +36,7 @@ var MoveMessageView = Backbone.View.extend({
         }, this);
 
         if (!html) {
-            html = "--------- Keiner spricht, hier herrscht höchste Konzentration --------"
+            html = "--------- Keiner spricht, hier herrscht höchste Konzentration --------";
         }
 
         this.$el.html(html);

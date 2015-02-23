@@ -85,7 +85,6 @@ var MapSvgView = MapBaseView.extend({
         }
     },
     hideCheckpoints: function () {
-        console.log("clear CP Rules", this.settings.get("cpsActive"));
         this.clearCheckpointRules();
         var cps = this.model.get("cps");
         if (this.settings.get("cpsActive") !== false) return true;
