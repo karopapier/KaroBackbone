@@ -37,7 +37,7 @@ var LastMoveMessageView = Backbone.View.extend({
             this.$el.hide();
             html = "";
         } else {
-            html = '<b>Bordfunk seit Deinem letzten Zug:</b><br>' + html;
+            html = '<small><b>Bordfunk seit Deinem letzten Zug:</b></small><br>' + html;
             this.$el.show();
         }
 
