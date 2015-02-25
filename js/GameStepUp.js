@@ -240,7 +240,6 @@ game.on("change:completed", function() {
         }
     }
 
-
     lmmv.settings.set("timestamp",ts);
 });
 
