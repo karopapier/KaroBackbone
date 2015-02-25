@@ -20,6 +20,7 @@ var MapPlayerMoves = Backbone.View.extend({
         this.listenTo(this.settings, "change:size change:border change:limit", this.render);
         this.listenTo(this.collection, "add remove", this.render);
         this.listenTo(this.collection, "reset", this.render);
+        this.listenTo(this.collection, "change", this.render);
         this.listenTo(this.model, "change:completed", this.render);
     },
     adjustSize: function () {
@@ -38,14 +39,15 @@ var MapPlayerMoves = Backbone.View.extend({
     },
     showPlayerInfo: function(e) {
         var playerId = e.currentTarget.getAttribute("data-playerId");
-        var pi = new PlayerInfo({
-            model: this.collection.get(playerId)
+        var p = this.collection.get(playerId);
+        this.activePi = new PlayerInfo({
+            model: p
         });
-        pi.render();
-        this.$el.parent().append(pi.el);
+        this.activePi.render();
+        this.$el.parent().append(this.activePi.el);
     },
     hidePlayerInfo: function(e) {
-        $('.playerInfo').hide();
+        this.activePi.remove();
     },
     render: function () {
         //NOTE: when this render fires after first reset, not all game properties might be set yet
@@ -77,6 +79,7 @@ var MapPlayerMoves = Backbone.View.extend({
                 //alle eigenen
                 limit = 0;
             }
+            if (player.get("highlighted")) limit = 0;
             var moves = player.moves.toArray();
 
             //if no move, nothing to draw, stop
@@ -121,7 +124,7 @@ var MapPlayerMoves = Backbone.View.extend({
                     width: 4,
                     height: 4,
                     fill: color
-                })
+                });
                 movesFragment.appendChild(square);
             }.bind(this));
             //console.log(pathCode);
