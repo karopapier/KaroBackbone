@@ -104,6 +104,12 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
             moveUrl += "&xpos=" + m.x + "&ypos=" + m.y + "&xvec=" + m.xv + "&yvec=" + m.yv;
         }
 
+        var moveMsg = $('#movemessage').val();
+        if (moveMsg!=="") {
+            moveUrl += "&movemessage="+moveMsg;
+        }
+
+
         console.log("Send move");
         var movedGID=game.get("id");
         console.warn("I just moved",movedGID);
