@@ -3,7 +3,7 @@ var MapPlayerMoves = Backbone.View.extend({
     optionDefaults: {
         size: 11,
         border: 1,
-        limit: 2
+        drawMoveLimit: 2
     },
     events: {
         "mouseenter .playerPosition": "showPlayerInfo",
@@ -14,10 +14,16 @@ var MapPlayerMoves = Backbone.View.extend({
             console.error("Missing Collection");
             return false;
         }
+
+        if (!options.settings) {
+            console.error("No settings passed into MapPlayerMoves");
+            this.settings = new Backbone.Model(options);
+        } else {
+            this.settings = options.settings;
+        }
         _.bindAll(this, "render");
         _.defaults(options, this.optionDefaults);
-        this.settings = new Backbone.Model(options);
-        this.listenTo(this.settings, "change:size change:border change:limit", this.render);
+        this.listenTo(this.settings, "change:size change:border change:drawMoveLimit", this.render);
         this.listenTo(this.collection, "add remove", this.render);
         this.listenTo(this.collection, "reset", this.render);
         this.listenTo(this.collection, "change", this.render);
@@ -58,7 +64,7 @@ var MapPlayerMoves = Backbone.View.extend({
             this.$el.hide();
         } else {
             this.$el.show();
-            var defaultLimit = this.settings.get("limit");
+            var defaultLimit = this.settings.get("drawMoveLimit");
             if (this.model.get("finished")) {
                 defaultLimit = 0;
             }
@@ -102,7 +108,7 @@ var MapPlayerMoves = Backbone.View.extend({
             if (moves.length<=1) return false;
 
             if (limit > 0) {
-                moves = player.moves.last(this.settings.get("limit") + 1);
+                moves = player.moves.last(this.settings.get("drawMoveLimit") + 1);
             }
 
             //console.log(moves);

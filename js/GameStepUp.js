@@ -6,6 +6,7 @@ Karopapier.User.url = function () {
 Karopapier.User.fetch();
 
 var game = new Game();
+var mvs = new MapViewSettings();
 //game.load(GameId);
 
 var mmv = new MoveMessageView({
@@ -63,6 +64,7 @@ var pt = new PlayerTable({
 var mpm = new MapPlayerMoves({
     model: game,
     collection: game.get("players"),
+    settings: mvs,
     el: '#mapPlayerMoves'
 });
 

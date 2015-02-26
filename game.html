@@ -160,6 +160,18 @@
         -->
         <label for="testmode">Testmode: </label><input type="checkbox" id="testmode" checked="checked" /> Züge werden NICHT an den Server geschickt
         <BR>
+        Zuganzeige: 
+        <span class="drawMoveLimit" data-limit="2">2</span>
+        <span class="drawMoveLimit" data-limit="5">5</span>
+        <span class="drawMoveLimit" data-limit="10">10</span>
+        <span class="drawMoveLimit" data-limit="Alle">Alle</span>
+        <script>
+            $('.drawMoveLimit').click(function(e) {
+                var l = $(e.currentTarget).data("limit");
+                mvs.set("drawMoveLimit",l);
+            });
+        </script>
+        <br />
         <span id="statusinfo">Du bist dran, bitte mach Deinen Zug</span>
 
         <form id="moveMsgForm">
