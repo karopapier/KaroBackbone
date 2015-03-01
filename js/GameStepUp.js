@@ -32,8 +32,7 @@ var gtv = new GameTitleView({
 var svgView = new MapSvgView({
     el: "#mapSvgView",
     model: game.map,
-    size: 11,
-    border: 1
+    settings: mvs
 });
 game.on("change:completed", function() {
     svgView.settings.set("cpsActive", game.get("cps"));
@@ -232,9 +231,9 @@ var nextGame = new Game();
 
 game.on("change:completed", function() {
     console.log("Completed",game.get("completed"));
-    if (game.get("completed")) {
-        $('#mapImage').show();
-    }
+    if (!(game.get("completed"))) return false;
+
+    $('#mapImage').show();
 
     //set limit for "LastMoveMessages"
     var userId = Karopapier.User.get("id");
@@ -251,6 +250,7 @@ game.on("change:completed", function() {
     }
 
     lmmv.settings.set("timestamp",ts);
+    console.log("Setting lastmove message filter to ", ts);
 });
 
 game.on("change:moved", function() {

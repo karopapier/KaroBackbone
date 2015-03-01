@@ -5,7 +5,9 @@ var MapViewSettings= Backbone.Model.extend({
 		fillBorder: true,
 		specles: false,
         drawMoveLimit: 2,
-        hidePassedCPs: true
+        hidePassedCPs: true,
+        cpsActive: true,
+        cpsVisited: []
 	}
 });
 

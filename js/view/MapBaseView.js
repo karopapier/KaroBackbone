@@ -32,8 +32,12 @@ var MapBaseView = Backbone.View.extend(/** @lends MapBaseView.prototype */
         initialize: function (options) {
             _.bindAll(this, "updateFieldSize", "getRowColFromXY", "getRowFromY", "getColFromX", "getXYFromRowCol", "getXFromCol", "getYFromRow", "getFieldAtXY", "setFieldAtXY", "setFieldAtRowCol");
             _.defaults(options, this.optionDefaults);
-            this.settings = new Backbone.Model(options);
-            this.settings.bind("change:size change:border", this.updateFieldSize);
+            if (options.settings) {
+                this.settings = options.settings;
+            } else {
+                this.settings = new Backbone.Model(options);
+            }
+            this.listenTo(this.settings, "change:size change:border", this.updateFieldSize);
             this.updateFieldSize();
         },
         updateFieldSize: function () {

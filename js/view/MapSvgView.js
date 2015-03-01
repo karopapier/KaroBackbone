@@ -10,7 +10,6 @@ var MapSvgView = MapBaseView.extend({
         this.listenTo(this.model, "change:rows change:cols", this.adjustSize);
         this.listenTo(this.model, "change:mapcode", this.render);
         this.listenTo(this.settings, "change:cpsVisited", this.updateCheckpoints);
-        this.listenTo(this.settings, "change:cpsActive", this.hideCheckpoints);
         this.forceMapPathFinder = options.forceMapPathFinder||false;
         this.paths = [];
 
@@ -62,6 +61,8 @@ var MapSvgView = MapBaseView.extend({
         styleSheet.insertRule(".cp3 { fill: url(#cp3pattern); }", 0);
         styleSheet.insertRule(".cp2 { fill: url(#cp2pattern); }", 0);
         styleSheet.insertRule(".cp1 { fill: url(#cp1pattern); }", 0);
+
+        this.updateCheckpoints();
     },
     clearCheckpointRules: function () {
         for (var r = 0; r < this.styleSheet.cssRules.length; r++) {
@@ -77,19 +78,22 @@ var MapSvgView = MapBaseView.extend({
     },
     updateCheckpoints: function () {
         this.clearCheckpointRules();
+        var cps = this.model.get("cps");
+        if (this.settings.get("cpsActive") === false) {
+            //no checkpoints required, hide them
+            for (var cp = 0; cp < cps.length; cp++) {
+                this.styleSheet.insertRule(".cp" + cps[cp] + " { fill-opacity: 0; }", this.styleSheet.cssRules.length);
+            }
+            return true;
+        }
+
+        //no, looks like cps are active
         var cpsVisited = this.settings.get("cpsVisited");
+        if (!cpsVisited) return true;
         if (cpsVisited.length === 0) return true;
         for (var cp = 0; cp < cpsVisited.length; cp++) {
             //console.log("CP",cpsVisited[cp]);
             this.styleSheet.insertRule(".cp" + cpsVisited[cp] + " { fill-opacity: .15; }", this.styleSheet.cssRules.length);
-        }
-    },
-    hideCheckpoints: function () {
-        this.clearCheckpointRules();
-        var cps = this.model.get("cps");
-        if (this.settings.get("cpsActive") !== false) return true;
-        for (var cp = 0; cp < cps.length; cp++) {
-            this.styleSheet.insertRule(".cp" + cps[cp] + " { fill-opacity: 0; }", this.styleSheet.cssRules.length);
         }
     },
     adjustSize: function () {
