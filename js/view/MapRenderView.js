@@ -15,11 +15,17 @@ var MapRenderView = MapBaseView.extend({
         this.constructor.__super__.initialize.apply(this, arguments);
         _.bindAll(this, "render", "drawBorder", "drawField", "drawFlagField", "drawStandardField", "drawStartField");
         this.listenTo(this.model, "change:mapcode", this.render);
+        this.listenTo(this.model, "change:field", this.renderFieldChange);
         this.listenTo(this.settings, "change", this.render);
         this.palette = new MapRenderPalette();
     },
+    renderFieldChange: function(e, a, b) {
+        var field = e.field;
+        var r = e.r;
+        var c = e.c;
+        this.drawField(r, c, field);
+    },
     render: function () {
-        console.log(" I Render");
         var map = this.model;
         this.size = this.settings.get("size");
         this.border = this.settings.get("border");

@@ -35,7 +35,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         var code = this.get("mapcode");
         var hit;
         while (hit = startSearch.exec(code)) {
-            var strPos = hit.index
+            var strPos = hit.index;
             starts.push(new Position(this.getRowColFromPos(strPos)));
         }
         return starts;
@@ -43,7 +43,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
     updateCpList: function () {
         this.set("cps", (this.get("mapcode").match(/\d/g) || []).sort().filter(function (el, i, a) {
             if (i == a.indexOf(el))return 1;
-            return 0
+            return 0;
         }));
     },
     updateSize: function () {
@@ -53,14 +53,16 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         this.set("cols", line.length);
     },
     withinBounds: function (opt) {
+        var x;
+        var y;
         if ((opt.hasOwnProperty("row")) && opt.hasOwnProperty("col")) {
-            var x = opt.col;
-            var y = opt.row;
+            x = opt.col;
+            y = opt.row;
         } else if ((opt.hasOwnProperty("x")) && (opt.hasOwnProperty("y"))) {
-            var x = opt.x;
-            var y = opt.y;
+            x = opt.x;
+            y = opt.y;
         } else {
-            console.error(opt)
+            console.error(opt);
             throw "param for withinBounds unclear";
         }
         if (x < 0) return false;
@@ -72,9 +74,13 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
     setFieldAtRowCol: function (r, c, field) {
         var pos = this.getPosFromRowCol(r, c);
         var mapcode = this.get("mapcode");
-        var l = mapcode.length;
-        mapcode = mapcode.substr(0, pos) + field + mapcode.substr(pos + 1);
-        this.set("mapcode", mapcode);
+        //only if different
+        if (mapcode[pos]!==field) {
+            mapcode = mapcode.substr(0, pos) + field + mapcode.substr(pos + 1);
+            this.set("mapcode", mapcode, {silent: true});
+            //trigger field change instead
+            this.trigger("change:field", {r: r, c: c, field: field});
+        }
     },
     /**
      *
@@ -87,7 +93,6 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         if (!this.withinBounds({row: r, col: c})) {
             console.error(r, c);
             throw  "Row " + r + ", Col " + c + " not within bounds";
-            return false;
         }
         var pos = this.getPosFromRowCol(r, c);
         //console.log("Ich sag",pos);
@@ -100,7 +105,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
     getRowColFromPos: function (pos) {
         var cols = this.get("cols") + 1;
         var c = pos % cols;
-        var r = Math.floor(pos / cols)
+        var r = Math.floor(pos / cols);
         return {row: r, col: c, x: c, y: r};
     },
     FIELDS: {
