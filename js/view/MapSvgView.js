@@ -9,7 +9,7 @@ var MapSvgView = MapBaseView.extend({
         this.initSvg();
         this.listenTo(this.model, "change:rows change:cols", this.adjustSize);
         this.listenTo(this.model, "change:mapcode", this.render);
-        this.listenTo(this.settings, "change:cpsVisited", this.updateCheckpoints);
+        this.listenTo(this.settings, "change:cpsVisited change:cpsActive", this.updateCheckpoints);
         this.forceMapPathFinder = options.forceMapPathFinder||false;
         this.paths = [];
 

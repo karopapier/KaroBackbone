@@ -109,12 +109,15 @@ var Game = Backbone.Model.extend({
      * @param othergame
      */
     setFrom: function (othergame) {
+        console.warn("START SETTING FROM OTHER GAME");
+        var attribsToSet={};
         _.each(othergame.attributes, function (att, i) {
             if (typeof att !== "object") {
                 //console.log("Setting ", i, "to", att);
-                this.set(i, att);
+                attribsToSet[i]=att;
             }
-        }, this);
+        });
+        this.set(attribsToSet);
         this.map.set(othergame.map.toJSON());
         console.log(othergame.get("players").toJSON());
         this.get("players").reset(othergame.get("players").toJSON(), {parse: true});
@@ -122,5 +125,6 @@ var Game = Backbone.Model.extend({
 
         })
         this.updatePossibles();
+        console.warn("FINISHED SETTING FROM OTHER GAME");
     }
 });

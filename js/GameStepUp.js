@@ -35,8 +35,16 @@ var svgView = new MapSvgView({
     settings: mvs
 });
 game.on("change:completed", function() {
-    svgView.settings.set("cpsActive", game.get("cps"));
+    console.log("Adjust cp settings to", game.get("withCheckpoints"), " and BTW, gamge completed is ",game.get("completed"));
+    console.log(game.attributes);
+    svgView.settings.set("cpsActive", game.get("withCheckpoints"));
 });
+
+
+var statusView = new StatusView({
+    model: game,
+    el: "#statusinfo"
+})
 
 var GameRouter = Backbone.Router.extend({
     routes: {
@@ -50,7 +58,8 @@ var GameRouter = Backbone.Router.extend({
         }
     },
     defaultRoute: function () {
-        this.navigate("game.html?GID=81161", {trigger: true});
+        this.navigate("game.html", {trigger: true});
+        //this.navigate("game.html?GID=81161", {trigger: true});
         //this.navigate("game.html?GID=57655", {trigger: true});
     }
 });
@@ -316,7 +325,7 @@ var checkNextGame = function() {
     console.log("Game moved:", game.get("moved"));
     console.log("NextGame completed:", nextGame.get("completed"));
 
-    if (game.get("moved") && nextGame.get("completed")) {
+    if (((game.get("id")==0) || (game.get("moved"))) && nextGame.get("completed")) {
         console.log("Setting game from next");
         nextGame.set("moved",false);
         game.setFrom(nextGame);

@@ -4,6 +4,7 @@ var GameInfoView = Backbone.View.extend({
     initialize: function () {
         _.bindAll(this, "render");
         this.listenTo(this.model, "change", this.render);
+        this.listenTo(this.model.map, "change", this.render);
 
         this.dirTitle = {
             "formula1": "Formula 1",
@@ -22,7 +23,8 @@ var GameInfoView = Backbone.View.extend({
         }
     },
     render: function () {
-        //console.log("Render infos for ", this.model.get("name"));
+        console.log("Render infos for ", this.model.get("name"));
+        console.log(this.model.attributes);
         if (!this.model.get("completed")) {
             //console.log("Skip rendering, game not complete");
             return false;
@@ -37,7 +39,7 @@ var GameInfoView = Backbone.View.extend({
         data.createdTime = moment(this.model.get("created"),"YYYY-MM-DD HH:mm").format("HH:mm");
 
         var cpStatus = "aktiviert";
-        if (this.model.map.get("cps").lenght==0) {
+        if (this.model.map.get("cps").length==0) {
             cpStatus="deaktiviert, die Karte hat keine";
         } else {
             if (!this.model.get("withCheckpoints")) {
