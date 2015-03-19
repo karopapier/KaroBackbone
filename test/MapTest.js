@@ -54,14 +54,16 @@ test("Map data setter functions", function () {
     equal(map.get("mapcode"), "XXXX\nXXOX\nXXXX", "mapcode was correctly modified");
 });
 
-test("Map getStartPositions", function() {
-    expect (1);
+test("Map getStartPositions", function () {
+    expect(1);
 
     var map = new Map();
     map.setMapcode("XXXXXXX\nXOSOFOX\nXOFOSOX\nXXXXSXS");
 
-    var expected = ["[2|1]","[4|2]","[4|3]","[6|3]"];
-    deepEqual(map.getStartPositions().map(function(p) {return p.toString() }),expected, "returns correct Start Positions");
+    var expected = ["[2|1]", "[4|2]", "[4|3]", "[6|3]"];
+    deepEqual(map.getStartPositions().map(function (p) {
+        return p.toString()
+    }), expected, "returns correct Start Positions");
 
 });
 
@@ -96,10 +98,6 @@ test("getPassedFields", function () {
     var mo = new Motion({position: pos, vector: vec});
     var map = new Map();
     map.setMapcode("XXXXXXX\nXOSOFX1\nXXXXXXX");
-
-    var k = new KRACHZ({
-        map: map
-    });
 
     var expected = ["O", "S", "O", "F", "X", "1"];
     deepEqual(map.getPassedFields(mo), expected, "getPassedFields");

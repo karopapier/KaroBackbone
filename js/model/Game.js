@@ -12,7 +12,7 @@ var Game = Backbone.Model.extend({
         this.listenTo(this.get("players"), "reset", this.get("moveMessages").updateFromPlayers);
         this.possibles = new MotionCollection();
         this.listenTo(this, "change:completed", this.updatePossibles);
-        this.listenTo(this.get("players"), "movechange", function() {
+        this.listenTo(this.get("players"), "movechange", function () {
             console.log("movechange");
             this.updatePossibles();
         });
@@ -52,14 +52,14 @@ var Game = Backbone.Model.extend({
     },
 
     updatePossibles: function () {
-        console.warn("Start Recalc possibles for",this.get("id"));
+        console.warn("Start Recalc possibles for", this.get("id"));
         if (!(this.get("completed"))) return false;
         if (this.get("moved")) return false;
         if (this.get("finished")) {
             this.possibles.reset([]);
             return true;
         }
-        console.warn("Really DO recalc possibles for",this.get("id"));
+        console.warn("Really DO recalc possibles for", this.get("id"));
 
         var dranId = this.get("dranId");
         if (this.get("players").length < 1) return false;
@@ -70,7 +70,7 @@ var Game = Backbone.Model.extend({
         //FIXME
         var theoreticals;
 
-        //TODO if no moves but dran and active, return starties
+        //if no moves but dran and active, return starties
         if ((movesCount === 0) && (currentPlayer.get("status") == "ok")) {
             theoreticals = this.map.getStartPositions().map(function (e) {
                 var v = new Vector({x: 0, y: 0});
@@ -90,7 +90,7 @@ var Game = Backbone.Model.extend({
             theoreticals = this.map.verifiedMotions(theoreticals);
         }
 
-        var occupiedPositions = this.get("players").getOccupiedPositions();
+        var occupiedPositions = this.get("players").getOccupiedPositions((this.get("id")>=75000)); //only for GID > 75000 limit to those that already moved
         var occupiedPositionStrings = occupiedPositions.map(function (e) {
             return e.toString();
         });
@@ -110,11 +110,11 @@ var Game = Backbone.Model.extend({
      */
     setFrom: function (othergame) {
         console.warn("START SETTING FROM OTHER GAME");
-        var attribsToSet={};
+        var attribsToSet = {};
         _.each(othergame.attributes, function (att, i) {
             if (typeof att !== "object") {
                 //console.log("Setting ", i, "to", att);
-                attribsToSet[i]=att;
+                attribsToSet[i] = att;
             }
         });
         this.set(attribsToSet);

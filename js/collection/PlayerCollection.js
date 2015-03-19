@@ -14,14 +14,18 @@ var PlayerCollection = Backbone.Collection.extend({
     },
 
     /**
-     * positions, where all players currently stand that already moved this round
+     * positions, where all players currently stand.
+     * can be limited to those that already moved this round (according to change of rules for GID>75000)
      */
-    getOccupiedPositions: function() {
+    getOccupiedPositions: function(onlyMoved) {
         var blockers = this.where({
             position: 0,
-            status: "ok",
-            moved: true
+            status: "ok"
+            //moved: true
         });
+        if (onlyMoved) {
+            blockers.moved=true;
+        }
 
         var positions=[];
         for (var i = 0, l=blockers.length;i<l; i++) {

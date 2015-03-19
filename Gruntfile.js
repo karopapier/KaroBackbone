@@ -68,7 +68,7 @@ module.exports = function (grunt) {
                 }
             },
             statics: {
-                files: ['**/*.html', 'images/**/*', '!docs'],
+                files: ['*.html', 'images/**/*', '!docs'],
                 options: {
                     interrupt: true,
                     livereload: true
