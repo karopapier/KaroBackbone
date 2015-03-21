@@ -29,12 +29,16 @@ var ChatControlView = Backbone.View.extend({
                 success: function sendMessageSuccess(data) {
                     $('#newchatmessagesubmit').prop("disabled", false);
                     $('#newchatmessage').val("");
+                    $('#chatEnterForm').slideDown(100)
                 },
                 error: function (xhr, status) {
                     console.error(status, xhr);
+                    $('#newchatmessagesubmit').prop("disabled", false);
+                    $('#chatEnterForm').slideDown(100)
                 }
             });
             $('#newchatmessagesubmit').prop("disabled", true);
+            $('#chatEnterForm').slideUp(100)
         }
     },
     setLimit: function (e) {
