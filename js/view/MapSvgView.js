@@ -201,7 +201,7 @@ var MapSvgView = MapBaseView.extend({
             }
             //console.log("Jetzt einfug");
             //console.log(doc.getElementById("mapSvgView"));
-            mapNode.appendChild(document.importNode(doc.getElementById("mapSvgView"), true));
+            mapNode.appendChild(document.importNode(doc.getElementById("paths"), true));
             //console.info("path render done");
             document.getElementById('mapSvgView').setAttribute("viewBox", "0 0 " + (map.c * 12) + " " + (map.r * 12));
             me.initCss();
