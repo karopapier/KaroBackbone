@@ -11,9 +11,7 @@ var ChatControlView = Backbone.View.extend({
         "click .messageLimit": "setLimit"
     },
     sendMessage: function (e) {
-        console.log(e);
         e.preventDefault();
-        console.log(e);
         var msg = $('#newchatmessage').val();
         if (msg != "") {
             $.ajax({
@@ -27,18 +25,15 @@ var ChatControlView = Backbone.View.extend({
                     withCredentials: true
                 },
                 success: function sendMessageSuccess(data) {
-                    $('#newchatmessagesubmit').prop("disabled", false);
                     $('#newchatmessage').val("");
-                    $('#chatEnterForm').slideDown(100)
+                    $('#newchatmessagesubmit').prop("disabled", false).stop().animate({opacity: 1});
                 },
                 error: function (xhr, status) {
                     console.error(status, xhr);
-                    $('#newchatmessagesubmit').prop("disabled", false);
-                    $('#chatEnterForm').slideDown(100)
+                    $('#newchatmessagesubmit').prop("disabled", false).stop().animate({opacity: 1});
                 }
             });
-            $('#newchatmessagesubmit').prop("disabled", true);
-            $('#chatEnterForm').slideUp(100)
+            $('#newchatmessagesubmit').prop("disabled", true).stop().animate({opacity: 0});
         }
     },
     setLimit: function (e) {
