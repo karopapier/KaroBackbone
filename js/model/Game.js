@@ -23,16 +23,20 @@ var Game = Backbone.Model.extend({
     },
 
     parse: function (data) {
+        //console.log("PARSE");
         //make sure data is matching current gameId (delayed responses get dropped)
         if (this.get("id") !== 0) {
             //check if this is a details.json
             if (data.game) {
+                //console.log("DETAIL PARSE");
                 if (data.game.id == this.id) {
                     //pass checkpoint info to map as "cpsActive" // map has cps attr as well, array of avail cps
                     this.map.set({"cpsActive": data.game.cps}, {silent: true});
                     this.map.set(data.map);
+                    //console.log("RESET PLAYERS NOW");
                     this.get("players").reset(data.players, {parse: true});
                     data.game.completed = true;
+                    //console.log("RETURN DATA NOW");
                     return data.game;
                 } else {
                     console.warn("Dropped response for " + data.game.id);
@@ -110,6 +114,8 @@ var Game = Backbone.Model.extend({
      */
     setFrom: function (othergame) {
         console.warn("START SETTING FROM OTHER GAME");
+        this.set("completed", false);
+        othergame.set("completed", false);
         var attribsToSet = {};
         _.each(othergame.attributes, function (att, i) {
             if (typeof att !== "object") {
@@ -121,10 +127,9 @@ var Game = Backbone.Model.extend({
         this.map.set(othergame.map.toJSON());
         console.log(othergame.get("players").toJSON());
         this.get("players").reset(othergame.get("players").toJSON(), {parse: true});
-        othergame.get("players").each(function (p, i) {
-
-        })
         this.updatePossibles();
+        //now set completed, really AT THE END
+        this.set("completed",true);
         console.warn("FINISHED SETTING FROM OTHER GAME");
     }
 });

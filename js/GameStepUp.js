@@ -35,9 +35,12 @@ var svgView = new MapSvgView({
     settings: mvs
 });
 game.on("change:completed", function() {
+    if (!game.get("completed")) return false;
     console.log("Adjust cp settings to", game.get("withCheckpoints"), " and BTW, gamge completed is ",game.get("completed"));
-    console.log(game.attributes);
     svgView.settings.set("cpsActive", game.get("withCheckpoints"));
+    var cpsVisited = game.get("players").get(game.get("dranId")).get("checkedCps");
+    console.info("VISITED: ",cpsVisited);
+    svgView.settings.set("cpsVisited", cpsVisited);
 });
 
 
@@ -198,7 +201,6 @@ function myTextGet(url, cb, errcb) {
 }
 
 var checkTestmode = function () {
-    console.log("Checking");
     if ($('#testmode').is(":checked")) {
         $('#mapImage').addClass("testmode");
     } else {
@@ -278,7 +280,7 @@ nextGame.on("change:completed", function() {
 
 dranQueue.on("reset", function(q, e) {
     console.info("DranQueue INITIAL reset");
-    //make sure to remove currentlyk showing game from queue
+    //make sure to remove currently showing game from queue
     checkPreload();
 });
 

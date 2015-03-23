@@ -9,6 +9,7 @@ module.exports = function (grunt) {
                 },
                 options: {
                     sourceMap: true,
+                    sourceMapIncludeSources: true,
                     banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
                 }
             },
