@@ -260,8 +260,8 @@ game.on("change:completed", function() {
         }
     }
 
+    //console.log("Setting lastmove message filter to ", ts);
     lmmv.settings.set("timestamp",ts);
-    console.log("Setting lastmove message filter to ", ts);
 });
 
 game.on("change:moved", function() {
