@@ -8,8 +8,8 @@ var PlayerCollection = Backbone.Collection.extend({
     toJSON: function () {
         var modelJSON=[];
         this.each(function(e,i) {
-            modelJSON.push(e.toJSON())
-        })
+            modelJSON.push(e.toJSON());
+        });
         return modelJSON;
     },
 
@@ -18,14 +18,14 @@ var PlayerCollection = Backbone.Collection.extend({
      * can be limited to those that already moved this round (according to change of rules for GID>75000)
      */
     getOccupiedPositions: function(onlyMoved) {
-        var blockers = this.where({
+        var queryParams = {
             position: 0,
             status: "ok"
-            //moved: true
-        });
+        };
         if (onlyMoved) {
-            blockers.moved=true;
+            queryParams.moved=true;
         }
+        var blockers = this.where(queryParams);
 
         var positions=[];
         for (var i = 0, l=blockers.length;i<l; i++) {
@@ -35,8 +35,8 @@ var PlayerCollection = Backbone.Collection.extend({
                 positions.push(new Position({
                     x: mo.attributes.x,
                     y: mo.attributes.y
-                }))
-            };
+                }));
+            }
         }
         return positions;
     }
