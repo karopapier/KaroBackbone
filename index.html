@@ -55,13 +55,13 @@
                 Karopapier.User.fetch();
             });
 
-            vent.on("logout", function() {
+            Karopapier.vent.on("logout", function() {
                 console.log("Logging out");
                 Karopapier.User.set("id", 0);
                 console.log(Karopapier.User);
             })
 
-            vent.on("login", function() {
+            Karopapier.vent.on("login", function() {
                 console.log("Logging in");
                 $.post("http://www.karopapier.de/api/user/login.json",{"login":login, "password":pass},function(data) {
                     console.log(data);
@@ -91,33 +91,44 @@
                 Karopapier.chatApp = new ChatApp();
                 Karopapier.content.show(Karopapier.chatApp);
 
-                var favi = new FaviconView({
+                Karopapier.favi = new FaviconView({
                     model: Karopapier.User,
                     el: '#favicon'
                 })
 
-                var infoBar = new UserInfoBar({
+                Karopapier.infoBar = new UserInfoBar({
                     model: Karopapier.User
                 });
-                Karopapier.header.show(infoBar);
+                Karopapier.header.show(Karopapier.infoBar);
 
                 var turted = new TURTED("http://ape.karopapier.de/turted");
                 turted.ident(1, 'Didi', "notokenyet");
                 turted.join("karochat");
                 turted.join("livelog");
+
                 turted.on('anyOtherMoved', function (data) {
-                    //console.log("anyOtherMoved", data);
-                    var movedUser = new User({id: data.movedId, login: data.movedLogin})
-                    movedUser.decreaseDran();
-                    var nextUser = new User({id: data.nextId, login: data.nextLogin});
-                    nextUser.increaseDran();
+                    Karopapier.vent.trigger("GAME:MOVE", data)
                 });
+
                 turted.on('newChatMessage', function (data) {
+                    //TODO turn it into a App.command.execute
                     Karopapier.chatApp.chatMessageCollection.fetch();
                 });
 
 				//var rightSlide = new Sideslide(document.getElementById('chatInfo'));
             })
+
+
+            Karopapier.vent.on('GAME:MOVE', function (data) {
+                var movedUser = new User({id: data.movedId, login: data.movedLogin})
+                movedUser.decreaseDran();
+                var nextUser = new User({id: data.nextId, login: data.nextLogin});
+                nextUser.increaseDran();
+            });
+        </script>
+
+
+        <script type="text/javascript">
             if ( !/karopapier/.test(window.location.hostname) ) {
                 document.write('<scr' + 'ipt src="http://localhost:35729/livereload.js"></scr' + 'ipt>');
             }
