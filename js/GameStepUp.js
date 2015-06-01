@@ -339,7 +339,6 @@ var checkNextGame = function () {
     } else {
         if (nextGame.get("id") === 0) {
             console.log("Nixblocker");
-            alert("Nixblocker");
         } else {
             console.log("not completed yet or not moved yet");
         }
