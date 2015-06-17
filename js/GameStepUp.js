@@ -38,9 +38,11 @@ game.on("change:completed", function () {
     if (!game.get("completed")) return false;
     console.log("Adjust cp settings to", game.get("withCheckpoints"), " and BTW, gamge completed is ", game.get("completed"));
     svgView.settings.set("cpsActive", game.get("withCheckpoints"));
-    var cpsVisited = game.get("players").get(game.get("dranId")).get("checkedCps");
-    console.info("VISITED: ", cpsVisited);
-    svgView.settings.set("cpsVisited", cpsVisited);
+    var dranId = game.get("dranId");
+    if (dranId!==26) {
+        var cpsVisited = game.get("players").get(game.get("dranId")).get("checkedCps");
+        svgView.settings.set("cpsVisited", cpsVisited);
+    }
 });
 
 
@@ -48,24 +50,6 @@ var statusView = new StatusView({
     model: game,
     el: "#statusinfo"
 })
-
-var GameRouter = Backbone.Router.extend({
-    routes: {
-        "game.html?GID=:gameId": "showGame",
-        "newshowmap.php?GID=:gameId": "showGame",
-        "game.html": "defaultRoute"
-    },
-    showGame: function (gameId) {
-        if (gameId) {
-            game.load(gameId);
-        }
-    },
-    defaultRoute: function () {
-        this.navigate("game.html", {trigger: true});
-        //this.navigate("game.html?GID=81161", {trigger: true});
-        //this.navigate("game.html?GID=57655", {trigger: true});
-    }
-});
 
 var pt = new PlayerTable({
     collection: game.get("players"),
@@ -345,11 +329,10 @@ var checkNextGame = function () {
     }
 };
 
-gr = new GameRouter();
+gar = new GameAppRouter();
 
 Backbone.history.start({
     pushState: true
 });
-
 
 console.info("Stepup done");
