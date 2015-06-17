@@ -8,12 +8,19 @@
     <script type="text/javascript" src="js/libs/underscore-min.js"></script>
     <script type="text/javascript" src="js/libs/backbone-min.js"></script>
     <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
-    <script type="text/javascript" src="js/libs/backbone-model-factory-min.js"></script>
+    <script type="text/javascript" src="js/libs/backbone-model-factory.js"></script>
     <script type="text/javascript" src="js/libs/notify.js"></script>
     <script type="text/javascript" src="js/libs/jquery.notify.min.js"></script>
 
     <script type="text/javascript" src="js/libs/TURTED.js"></script>
     <script type="text/javascript" src="js/libs/sockjs-0.3.min.js"></script>
+
+    <script type="text/javascript" src="/js/templates/JST.js"></script>
+    <script type="text/javascript" src="/js/KaroBackbone.min.js"></script>
+
+    <script type="text/javascript">
+        var Karopapier = new KaropapierApp();
+    </script>
 
     <link id="favicon" rel="shortcut icon" href="favicon.ico" />
 
@@ -50,8 +57,8 @@
                 permissionCompletelyDenied();
             }
 
-
             console.log("Doc ready, start app");
+            var kevin = new KEvIn(Karopapier.User);
 
             var turted = new TURTED("http://ape.karopapier.de/turted");
             turted.ident(1, 'Didi', "notokenyet");

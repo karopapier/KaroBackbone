@@ -1,13 +1,15 @@
 var YOUTUBE_CACHE = {};
-(function (karo) {
-    karo.Util = {};
-    karo.Util.createSvg = function (tag, attrs) {
+var KaroUtil ={};
+(function (karoUtil) {
+    console.log("Add util to ",karoUtil);
+    karoUtil = karoUtil||{};
+    karoUtil.createSvg = function (tag, attrs) {
         var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
         for (var k in attrs)
             el.setAttribute(k, attrs[k]);
         return el;
     };
-    karo.Util.linkify = function (text) {
+    karoUtil.linkify = function (text) {
         if (!text) return text;
 
         //find links outside tags
@@ -56,8 +58,8 @@ var YOUTUBE_CACHE = {};
             } else {
                 //console.log("Handling default url", url, text);
                 if (url.match('^https?:\/\/')) {
-                    linktext = linktext.replace(/^https?:\/\//i, '')
-                    linktext = linktext.replace(/^www./i, '')
+                    linktext = linktext.replace(/^https?:\/\//i, '');
+                    linktext = linktext.replace(/^www./i, '');
                 }
             }
 
@@ -98,7 +100,7 @@ var YOUTUBE_CACHE = {};
 
         return text;
     };
-}(Karopapier));
+}(KaroUtil));
 
 ''.trim||(String.prototype.trim=function(){return this.replace(/^[\s\uFEFF]+|[\s\uFEFF]+$/g,'')});
 if (typeof String.prototype.startsWith != 'function') {

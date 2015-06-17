@@ -11,7 +11,7 @@ var ChatMessageView = Backbone.View.extend({
         //text = this.$el.text();
         this.$el.html(text);
         text = this.$el.text();
-        text = Karopapier.Util.linkify(text);
+        text = KaroUtil.linkify(text);
         var html ="";
         if (this.model.get("user").trim()!=="") {
             html+= "<b>" + this.model.get("user") + "</b> (" + this.model.get("time") + "): ";

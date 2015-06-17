@@ -7,7 +7,7 @@
         <script type="text/javascript" src="/js/libs/underscore-min.js"></script>
         <script type="text/javascript" src="/js/libs/backbone-min.js"></script>
         <script type="text/javascript" src="/js/libs/backbone.marionette.min.js"></script>
-        <script type="text/javascript" src="/js/libs/backbone-model-factory-min.js"></script>
+        <script type="text/javascript" src="/js/libs/backbone-model-factory.js"></script>
         <script type="text/javascript" src="/js/libs/hammer.min.js"></script>
         <!--<script type="text/javascript" src="js/libs/Sideslide.js"></script> -->
         <!--<script type="text/javascript" src="js/libs/touch-emulator.js"></script>
@@ -16,12 +16,12 @@
         <script type="text/javascript" src="/js/libs/TURTED.js"></script>
         <script type="text/javascript" src="/js/libs/sockjs-0.3.min.js"></script>
 
-        <script type="text/javascript">
-            var Karopapier = new Marionette.Application(); // currently only for Util.js to not throw an error
-        </script>
-
         <script type="text/javascript" src="/js/templates/JST.js"></script>
         <script type="text/javascript" src="/js/KaroBackbone.min.js"></script>
+
+        <script type="text/javascript">
+            var Karopapier = new KaropapierApp();
+        </script>
 
         <link id="favicon" rel="shortcut icon" href="favicon.ico" />
 
@@ -41,8 +41,6 @@
         </footer>
 
         <script type="text/javascript">
-
-            var vent = new Backbone.Wreqr.EventAggregator();
 
             Karopapier.addInitializer(function (options) {
                 // do useful stuff here

@@ -93,7 +93,7 @@ var MapPlayerMoves = Backbone.View.extend({
 
             var color = "#" + player.get("color");
             var m = player.getLastMove();
-            var currentPosition = Karopapier.Util.createSvg("circle", {
+            var currentPosition = KaroUtil.createSvg("circle", {
                 cx: m.get("x") * 12 + 5.5,
                 cy: m.get("y") * 12 + 5.5,
                 r: 4,
@@ -124,7 +124,7 @@ var MapPlayerMoves = Backbone.View.extend({
                 var x = parseInt(m.get("x"));
                 var y = parseInt(m.get("y"));
                 pathCode += "L" + (x * 12 + 6) + "," + (y * 12 + 6);
-                var square = Karopapier.Util.createSvg("rect",{
+                var square = KaroUtil.createSvg("rect",{
                     x: x*12+4,
                     y:y*12+4,
                     width: 4,
@@ -134,7 +134,7 @@ var MapPlayerMoves = Backbone.View.extend({
                 movesFragment.appendChild(square);
             }.bind(this));
             //console.log(pathCode);
-            var p = Karopapier.Util.createSvg("path", {
+            var p = KaroUtil.createSvg("path", {
                 d: pathCode,
                 stroke: color,
                 "stroke-width": 1,

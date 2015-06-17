@@ -26,7 +26,7 @@ var LastMoveMessageView = Backbone.View.extend({
                 //if (!txt.startsWith("-:K")) {  //do we want to see status messages since last move or not?
                 html += tpl({
                     name: e.get("player").get("name"),
-                    text: Karopapier.Util.linkify(e.get("msg")),
+                    text: KaroUtil.linkify(e.get("msg")),
                     date: moment(e.get("t"), "YYYY-MM-DD hh:mm:ss").format("YYYY-MM-DD")
                 });
                 //}

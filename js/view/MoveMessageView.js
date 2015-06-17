@@ -30,7 +30,7 @@ var MoveMessageView = Backbone.View.extend({
             }
             html += tpl({
                 name: e.get("player").get("name"),
-                text: Karopapier.Util.linkify(e.get("msg")),
+                text: KaroUtil.linkify(e.get("msg")),
                 date: moment(e.get("t"), "YYYY-MM-DD hh:mm:ss").format("YYYY-MM-DD")
             });
         }, this);
