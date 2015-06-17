@@ -62,6 +62,12 @@
                 */
             })
 
+            Karopapier.vent.on('CHAT:MESSAGE', function (data) {
+                console.log("vent chat message triggered");
+                //TODO turn it into a App.command.execute
+                Karopapier.chatApp.chatMessageCollection.fetch();
+            });
+
             $(document).ready(function () {
                 console.log("Doc ready, start app");
                 Karopapier.start({
@@ -88,19 +94,6 @@
                 });
                 Karopapier.header.show(Karopapier.infoBar);
 
-                var turted = new TURTED("http://ape.karopapier.de/turted");
-                turted.ident(1, 'Didi', "notokenyet");
-                turted.join("karochat");
-                turted.join("livelog");
-
-                turted.on('anyOtherMoved', function (data) {
-                    Karopapier.vent.trigger("GAME:MOVE", data)
-                });
-
-                turted.on('newChatMessage', function (data) {
-                    //TODO turn it into a App.command.execute
-                    Karopapier.chatApp.chatMessageCollection.fetch();
-                });
 
 				//var rightSlide = new Sideslide(document.getElementById('chatInfo'));
             })

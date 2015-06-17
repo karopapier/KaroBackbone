@@ -62,13 +62,8 @@
                 user: Karopapier.User
             });
 
-            console.warn("BREAK");
-            return false;
-            //var turted = new TURTED("http://ape.karopapier.de/turted");
-            console.error("WTF");
-            turted.join("karochat");
-            turted.join("livelog");
-            turted.on('anyOtherMoved', function(data)
+
+            Karopapier.vent.on('GAME:MOVE', function(data)
             {
                 console.log("anyOtherMoved", data);
 				if (document.getElementById("anyMoveNot").checked) {
@@ -89,7 +84,7 @@
 				}
 
             });
-            turted.on('newChatMessage', function(data)
+            Karopapier.vent.on('CHAT:MESSAGE', function(data)
             {
                 console.log(data);
                 msg = data.chatmsg;
@@ -108,11 +103,11 @@
 				}
             });
 
-			turted.on('yourTurn',function(data) {
+			Karopapier.vent.on('USER:DRAN',function(data) {
 				DRAN++;
 				dranNotification();
 			});
-			turted.on('youMoved',function(data) {
+			Karopapier.vent.on('USER:MOVED',function(data) {
 				DRAN--;
 				DRAN = DRAN<0?0:DRAN;
 				dranNotification();
