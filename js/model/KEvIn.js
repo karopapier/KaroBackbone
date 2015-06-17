@@ -9,14 +9,20 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
     initialize: function (options) {
         options = options||{};
         console.log("Run init on KEvIn");
-        _.bindAll(this, "start", "stop")
-        console.warn(options);
+        _.bindAll(this, "ident", "start", "stop");
         if (!options.user) {
             throw Error("KEvIn needs a user");
         }
-
+        this.user = options.user;
+        this.listenTo(this.user, "change", this.ident);
         this.turted = new TURTED("http://ape.karopapier.de/turted");
-        this.turted.ident(1, 'Didi', "notokenyet");
+        this.ident();
+    },
+    ident: function() {
+        var user = this.user;
+        console.log("Ident with user", user.get("id"));
+        if (user.get("id")===0) return false;
+        this.turted.ident(this.user.get("id"), this.user.get("login"), "KEvInLogsMeIn");
     },
     start: function() {
         this.turted.join("karochat");

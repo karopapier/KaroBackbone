@@ -42,17 +42,6 @@
 
         <script type="text/javascript">
 
-            Karopapier.addInitializer(function (options) {
-                // do useful stuff here
-                console.log("Initializer der App");
-                Karopapier.User = new User({});
-                //make this user refer to "check" for loging in
-                Karopapier.User.url = function () {
-                    return "http://www.karopapier.de/api/user/check.json?callback=?"
-                }
-                Karopapier.User.fetch();
-            });
-
             Karopapier.vent.on("logout", function() {
                 console.log("Logging out");
                 Karopapier.User.set("id", 0);

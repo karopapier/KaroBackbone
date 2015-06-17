@@ -3,11 +3,18 @@
  */
 
 
-var KaropapierApp = Backbone.Marionette.Application.extend({
+var KaropapierApp = Marionette.Application.extend({
     //global layout with regions for nav, sidebar, header and user info...
     initialize: function (options) {
-        alert("HOORAY!!! APP INIT!!!");
         console.log('APP INIT!!!!!!!!!!!');
+        // do useful stuff here
+        console.log("Initializer der App");
+        this.User = new User({});
+        //make this user refer to "check" for loging in
+        this.User.url = function () {
+            return "http://www.karopapier.de/api/user/check.json?callback=?";
+        }
+        this.User.fetch();
     }
 });
 

@@ -58,10 +58,14 @@
             }
 
             console.log("Doc ready, start app");
-            var kevin = new KEvIn(Karopapier.User);
+            var kevin = new KEvIn({
+                user: Karopapier.User
+            });
 
-            var turted = new TURTED("http://ape.karopapier.de/turted");
-            turted.ident(1, 'Didi', "notokenyet");
+            console.warn("BREAK");
+            return false;
+            //var turted = new TURTED("http://ape.karopapier.de/turted");
+            console.error("WTF");
             turted.join("karochat");
             turted.join("livelog");
             turted.on('anyOtherMoved', function(data)

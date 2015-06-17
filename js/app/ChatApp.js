@@ -1,4 +1,4 @@
-var ChatApp = Backbone.Marionette.Layout.extend({
+var ChatApp = Backbone.Marionette.LayoutView.extend({
     className: "chatApp",
     initialize: function () {
         this.layout = new ChatLayout({
