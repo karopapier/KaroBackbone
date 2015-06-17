@@ -66,6 +66,8 @@ var YOUTUBE_CACHE = {};
 
         //Thomas Anders
         text = text.replace(/\banders\b/gi, ' <img style="opacity: .3" src="http://www.karopapier.de/images/anders.jpg" alt="anders" title="anders" />');
+        //The HOFF
+        text=text.replace(/\bhoff\b/gi,' <img style="opacity: .3" src="http://www.karopapier.de/images/hoff.jpg"     alt="hoff" title="hoff" />');
         //nen -> einen
         text = text.replace(/\bnen\b/gi, 'einen');
 

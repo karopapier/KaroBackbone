@@ -17,6 +17,7 @@ var ChatControlView = Backbone.View.extend({
             $.ajax({
                 url: "http://www.karopapier.de/api/chat/message.json",
                 type: "POST",
+                method: "POST",
                 crossDomain: true,
                 data: "msg=" + msg,
                 //JSON.stringify({"msg": msg}),
