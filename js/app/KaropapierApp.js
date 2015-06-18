@@ -15,6 +15,11 @@ var KaropapierApp = Marionette.Application.extend({
             return "http://www.karopapier.de/api/user/check.json?callback=?";
         }
         this.User.fetch();
+
+        //init Karo Event Interface KEvIn
+        this.KEvIn = new KEvIn({
+            user: this.User
+        });
     }
 });
 

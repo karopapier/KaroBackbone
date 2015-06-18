@@ -22,9 +22,13 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
     ident: function () {
         var user = this.user;
         console.log("Ident with user", user.get("id"));
-        if (user.get("id") === 0) return false;
-        this.turted.ident(this.user.get("id"), this.user.get("login"), "KEvInLogsMeIn");
-        this.start();
+
+        if (user.get("id") === 0) {
+            this.stop();
+        } else {
+            this.turted.ident(this.user.get("id"), this.user.get("login"), "KEvInLogsMeIn");
+            this.start();
+        }
     },
     hook: function () {
         this.turted.on("yourTurn", function (data) {
@@ -42,11 +46,13 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
         });
     },
     start: function () {
+        console.log("KEvIn joins");
         this.turted.join("karochat");
         this.turted.join("livelog");
     },
     stop: function () {
-        this.turted.leave("karochat");
-        this.turted.leave("livelog");
+        console.log("KEvIn leaves");
+        //this.turted.leave("karochat");
+        //this.turted.leave("livelog");
     }
 });
