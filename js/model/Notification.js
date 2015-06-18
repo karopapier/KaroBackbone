@@ -4,8 +4,10 @@ var Notification = Backbone.Model.extend(/** @lends Notification.prototype*/{
         text: "Notification",
         screen: true,
         native: true,
-        class: "general",
-        timeout: 5000
+        group: "general",
+        timeout: 5000,
+        imageUrl: "",
+        clickUrl: ""
     },
     /**
      * @constructor Notification
@@ -20,7 +22,7 @@ var Notification = Backbone.Model.extend(/** @lends Notification.prototype*/{
         } else {
             _.defaults(options, this.defaults);
         }
-        console.log("Clever merge", options);
+        this.set(options);
         return this;
     }
 });

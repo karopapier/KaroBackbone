@@ -95,15 +95,16 @@
 
 
             Karopapier.vent.on('GAME:MOVE', function (data) {
+                not.show(new Notification(data.movedLogin + " moved"));
+            });
+
+            Karopapier.vent.on('GAME:MOVE', function (data) {
                 var movedUser = new User({id: data.movedId, login: data.movedLogin})
                 movedUser.decreaseDran();
                 var nextUser = new User({id: data.nextId, login: data.nextLogin});
                 nextUser.increaseDran();
             });
 
-            function a() {
-                not.show(new Notification("DADA"));
-            }
         </script>
 
 
