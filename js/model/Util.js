@@ -1,7 +1,6 @@
 var YOUTUBE_CACHE = {};
 var KaroUtil ={};
 (function (karoUtil) {
-    console.log("Add util to ",karoUtil);
     karoUtil = karoUtil||{};
     karoUtil.createSvg = function (tag, attrs) {
         var el = document.createElementNS('http://www.w3.org/2000/svg', tag);

@@ -48,12 +48,10 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
         });
     },
     start: function () {
-        console.log("KEvIn joins");
         this.turted.join("karochat");
         this.turted.join("livelog");
     },
     stop: function () {
-        console.log("KEvIn leaves");
         //this.turted.leave("karochat");
         //this.turted.leave("livelog");
     }

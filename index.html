@@ -57,11 +57,9 @@
                 })
             })
 
-            var not = new Notifier();
+            var not = new KaroNotifier();
             var notV = new NotifierView({ model: not});
             notV.render();
-            var n = new Notification("asdf");
-            not.show(n);
 
             $(document).ready(function () {
                 console.log("Doc ready, start app");
@@ -95,7 +93,7 @@
 
 
             Karopapier.vent.on('GAME:MOVE', function (data) {
-                not.show(new Notification(data.movedLogin + " moved"));
+                not.addGameMoveNotification(data);
             });
 
             Karopapier.vent.on('GAME:MOVE', function (data) {

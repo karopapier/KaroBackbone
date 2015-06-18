@@ -7,7 +7,6 @@ var NotifierView = Backbone.View.extend({
         this.listenTo(this.model.notifications, "add", this.showNotification);
     },
     showNotification: function (notification) {  //, notifications) {
-        console.log("Das N", notification);
         var nv = new NotificationView({
             model: notification
         }).render();
@@ -29,10 +28,7 @@ var NotifierView = Backbone.View.extend({
         }, notification.get("timeout"));
     },
     render: function () {
-        console.log(this.el);
         $("body").append(this.el);
-        var text = this.model.get("text");
-        this.$el.html(text);
         return this;
     }
 });
