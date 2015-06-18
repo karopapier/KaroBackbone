@@ -10,3 +10,33 @@
     margin-right: 10px;
     margin-top: 20px;
 }
+
+.error {
+    border: 1px solid orange;
+    background-color: red;
+    color: #ffffff;
+}
+
+.warn {
+    border: 1px solid orange;
+    background-color: yellow;
+    color: black;
+}
+
+.info {
+    border: 1px solid blue;
+    background-color: lightblue;
+    color: darkblue;
+}
+
+.help {
+    border: 1px solid blue;
+    background-color: lightblue;
+    color: darkblue;
+}
+
+.ok {
+    background: 1px solid green;
+    background-color: lightgreen;
+    color: green;
+}

@@ -5,6 +5,7 @@ var TURTED = function (sockjs_url) {
     this.callbackQueue = [];
     this.reconnectQueue = [];
     this.isConnected = false;
+    this.debugMode = false;
 
     this.connect = function (isReconnect) {
         var sockjs = new SockJS(sockjs_url);
@@ -26,7 +27,7 @@ var TURTED = function (sockjs_url) {
             //console.log(type, data);
             if (typeof me.callbacks[type] === "object") {
                 var l = me.callbacks[type].length;
-                console.log("Triggering callbacks on ", type);
+                if (this.debugMode) console.log("Triggering callbacks on ", type);
                 for (var i = 0; i < l; i++) {
                     me.callbacks[type][i].call(me, data);
                 }

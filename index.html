@@ -2,8 +2,8 @@
 <html>
     <head>
         <title>Karopapier 2.1</title>
-        <script type="text/javascript" src="/js/libs/jquery-1.11.0.min.js"></script>
-        <script type="text/javascript" src="/js/libs/jquery-ui-1.10.4.custom.min.js"></script>
+        <script type="text/javascript" src="/js/libs/jquery-1.11.3.min.js"></script>
+        <script type="text/javascript" src="/js/libs/jquery-ui-1.11.4.custom.min.js"></script>
         <script type="text/javascript" src="/js/libs/underscore-min.js"></script>
         <script type="text/javascript" src="/js/libs/backbone-min.js"></script>
         <script type="text/javascript" src="/js/libs/backbone.marionette.min.js"></script>
@@ -28,6 +28,7 @@
         <link rel="stylesheet" href="css/main.css" />
         <link rel="stylesheet" href="css/global.css?v=3" />
         <link rel="stylesheet" href="css/chat.css" />
+        <link rel="stylesheet" href="css/notifier.css" />
         <link rel="stylesheet" href="http://www.karopapier.de/css/quicktip/quicktip.css?v=6" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta charset="utf-8" />
@@ -54,19 +55,13 @@
                     console.log(data);
                     Karopapier.User.set(data);
                 })
-                /*
-                Karopapier.User.url = function () {
-                    return "http://www.karopapier.de/api/user/check.json?callback=?"
-                }
-                Karopapier.User.fetch();
-                */
             })
 
-            Karopapier.vent.on('CHAT:MESSAGE', function (data) {
-                console.log("vent chat message triggered");
-                //TODO turn it into a App.command.execute
-                Karopapier.chatApp.chatMessageCollection.fetch();
-            });
+            var not = new Notifier();
+            var notV = new NotifierView({ model: not});
+            notV.render();
+            var n = new Notification("asdf");
+            not.show(n);
 
             $(document).ready(function () {
                 console.log("Doc ready, start app");
@@ -105,6 +100,10 @@
                 var nextUser = new User({id: data.nextId, login: data.nextLogin});
                 nextUser.increaseDran();
             });
+
+            function a() {
+                not.show(new Notification("DADA"));
+            }
         </script>
 
 
@@ -115,3 +114,4 @@
         </script>
     </body>
 </html>
+

@@ -14,7 +14,7 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
             throw Error("KEvIn needs a user");
         }
         this.user = options.user;
-        this.listenTo(this.user, "change", this.ident);
+        this.listenTo(this.user, "change:id", this.ident);
         this.turted = new TURTED("http://ape.karopapier.de/turted");
         this.ident();
         this.hook();
@@ -32,16 +32,18 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
     },
     hook: function () {
         this.turted.on("yourTurn", function (data) {
+            console.log("KEvIn","USER:DRAN",data);
             Karopapier.vent.trigger("USER:DRAN", data);
         });
         this.turted.on('youMoved', function (data) {
+            console.log("KEvIn","USER:MOVED",data);
             Karopapier.vent.trigger("USER:MOVED", data);
         });
         this.turted.on('anyOtherMoved', function (data) {
-            Karopapier.vent.trigger("GAME:MOVE", data)
+            console.log("KEvIn","GAME:MOVE",data);
+            Karopapier.vent.trigger("GAME:MOVE", data);
         });
         this.turted.on('newChatMessage', function (data) {
-            console.log("Translate chat message");
             Karopapier.vent.trigger("CHAT:MESSAGE", data);
         });
     },
