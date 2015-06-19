@@ -19,12 +19,19 @@ var NotificationView = Backbone.View.extend({
     render: function () {
         var text = this.model.get("text");
         var html = "";
+        var hasImg = false;
+        this.el.style.position="relative";
         this.$el.addClass(this.model.get("level"));
         if (this.model.get("imgUrl")) {
-            html += '<div style="float:left"><img style="max-width: 50px; max-height: 50px" src="' + this.model.get("imgUrl") + '"></div>';
+            html += '<img style="max-width: 50px; max-height: 50px; float: left; margin: auto" src="' + this.model.get("imgUrl") + '">';
+            hasImg=true;
+            html += '<div style="float: left; max-width: 190px">' + text + '</div>';
+        } else {
+            html += '<div style="float: left">' + text + '</div>';
         }
-        html += '<div style="float: left">' + text + '</div>';
-        html += '<div stlye="clear: both"></div>';
+
+
+        //html += '<div stlye="clear: both"></div>';
         this.$el.html(html);
         return this;
     }

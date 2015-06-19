@@ -9,4 +9,6 @@
 .notification {
     list-style-type: none;
     margin-left: 0;
+    display: flex;
+    align-content: center;
 }
