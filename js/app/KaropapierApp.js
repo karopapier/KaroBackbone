@@ -23,9 +23,53 @@ var KaropapierApp = Marionette.Application.extend({
         this.notifierView = new NotifierView({model: this.notifier});
 
         var me = this;
-        this.addInitializer(function() {
+        //some initializers after the page is done
+        this.addInitializer(function () {
             me.notifierView.render();
         })
+
+        this.addInitializer(function () {
+            me.favi = new FaviconView({
+                model: me.User,
+                el: '#favicon'
+            })
+        });
+
+        this.addInitializer(function () {
+            me.addRegions({
+                header: '#header',
+                content: '#content',
+                footer: '#footer'
+            })
+        })
+
+        this.addInitializer(function () {
+            me.infoBar = new UserInfoBar({
+                model: me.User
+            });
+            me.header.show(Karopapier.infoBar);
+        })
+
+        me.vent.on('GAME:MOVE', function (data) {
+            //skip unrelated
+            if (!data.related) {
+                console.warn(data.movedLogin, "zog bei", data.gid, data.name);
+                return false;
+            }
+
+            if (me.User.get("id") == data.nextId) {
+                me.notifier.addUserDranNotification(data);
+            } else {
+                me.notifier.addGameMoveNotification(data);
+            }
+        });
+
+        me.vent.on('GAME:MOVE', function (data) {
+            var movedUser = new User({id: data.movedId, login: data.movedLogin})
+            movedUser.decreaseDran();
+            var nextUser = new User({id: data.nextId, login: data.nextLogin});
+            nextUser.increaseDran();
+        });
     }
 });
 

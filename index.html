@@ -35,14 +35,16 @@
     </head>
     <body>
         <header id="header"></header>
-        <div id="content">Content</div>
+        <div id="content">--</div>
         <footer id="footer">
+            <br>
             <a href="http://www.karopapier.de">Karopapier.de</a> is brought to you by
             <script type="text/javascript">document.write(String.fromCharCode(0x44, 0x69, 0x64, 0x69).link(String.fromCharCode(0x6d, 0x61, 0x69, 0x6c, 0x74, 0x6f, 0x3a, 0x64, 0x69, 0x64, 0x69, 0x40, 0x6b, 0x61, 0x72, 0x6f, 0x70, 0x61, 0x70, 0x69, 0x65, 0x72, 0x2e, 0x64, 0x65)));</script>
         </footer>
 
         <script type="text/javascript">
 
+            //need to get rid of that
             Karopapier.vent.on("logout", function() {
                 console.log("Logging out");
                 Karopapier.User.set("id", 0);
@@ -57,59 +59,19 @@
                 })
             })
 
-            Karopapier.vent.on('GAME:MOVE', function (data) {
-                //skip unrelated
-                if (!data.related) {
-                    console.warn(data.movedLogin, "zog bei",data.gid, data.name);
-                    return false;
-                }
-
-                if (Karopapier.User.get("id") == data.nextId) {
-                    Karopapier.notifier.addUserDranNotification(data);
-                } else {
-                    Karopapier.notifier.addGameMoveNotification(data);
-                }
-            });
-
-            Karopapier.vent.on('GAME:MOVE', function (data) {
-                var movedUser = new User({id: data.movedId, login: data.movedLogin})
-                movedUser.decreaseDran();
-                var nextUser = new User({id: data.nextId, login: data.nextLogin});
-                nextUser.increaseDran();
-            });
 
             $(document).ready(function () {
                 console.log("Doc ready, start app");
-                Karopapier.start({
-                    baseApiUrl: "http://www.karopapier.de/api/"
-                });
-
+                Karopapier.start();
                 console.log("App started");
-                Karopapier.addRegions({
-                    header: '#header',
-                    content: '#content',
-                    footer: '#footer'
-                })
 
-                Karopapier.chatApp = new ChatApp();
-                Karopapier.content.show(Karopapier.chatApp);
-
-                Karopapier.favi = new FaviconView({
-                    model: Karopapier.User,
-                    el: '#favicon'
-                })
-
-                Karopapier.infoBar = new UserInfoBar({
-                    model: Karopapier.User
+                Karopapier.router = new AppRouter();
+                Backbone.history.start({
+                    pushState: true
                 });
-                Karopapier.header.show(Karopapier.infoBar);
-
-
-				//var rightSlide = new Sideslide(document.getElementById('chatInfo'));
             })
 
         </script>
-
 
         <script type="text/javascript">
             if ( !/karopapier/.test(window.location.hostname) ) {
