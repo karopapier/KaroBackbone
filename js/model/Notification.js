@@ -5,7 +5,7 @@ var Notification = Backbone.Model.extend(/** @lends Notification.prototype*/{
         screen: true,
         native: true,
         group: "general",
-        timeout: 5000,
+        timeout: 8000,
         imageUrl: "",
         clickUrl: ""
     },

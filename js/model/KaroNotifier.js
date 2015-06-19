@@ -13,16 +13,20 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
     },
     add: function (n) {
         this.notifications.add(n);
-        var me = this;
-        setTimeout(function () {
-            me.remove(n);
-        }, n.get("timeout"));
+
+        var t = n.get("timeout");
+        if (t!==0) {
+            var me = this;
+            setTimeout(function () {
+                me.remove(n);
+            }, t);
+        }
     },
     remove: function (n) {
         this.notifications.remove(n);
     },
     addGameMoveNotification: function (data) {
-        var text = 'Bei <b><%= name %></b> hat <%= movedLogin %> gerade gezogen. Jetzt ist <%= nextLogin %> dran';
+        var text = 'Bei <b><%= name %></b> hat <%= movedLogin %> gerade <a href="http://www.brot.de">Brot</a>gezogen. Jetzt ist <%= nextLogin %> dran';
         var t = _.template(text);
         var n = new Notification({
             text: t(data),
@@ -33,7 +37,7 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
         this.add(n);
     },
     addUserDranNotification: function (data) {
-        var text = 'Du bist dran! Bei <b><%= name %></b> hat <%= movedLogin %> gerade gezogen.';
+        var text = 'Du bist dran! Bei <b><%= name %></b>  hat <%= movedLogin %> gerade gezogen.';
         var t = _.template(text);
         var n = new Notification({
             text: t(data),

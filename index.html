@@ -60,7 +60,7 @@
             Karopapier.vent.on('GAME:MOVE', function (data) {
                 //skip unrelated
                 if (!data.related) {
-                    console.log(data.movedLogin, "zog bei",data.gid, data.name);
+                    console.warn(data.movedLogin, "zog bei",data.gid, data.name);
                     return false;
                 }
 

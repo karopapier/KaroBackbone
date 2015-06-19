@@ -36,6 +36,10 @@
 }
 
 .ok {
-    background: lightgreen 1px 1px;
-    color: green;
+    background-color: lightgreen;
+    border: 1px solid green;
+}
+
+.close {
+    cursor: pointer;
 }

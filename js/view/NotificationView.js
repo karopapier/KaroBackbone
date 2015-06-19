@@ -6,6 +6,12 @@ var NotificationView = Backbone.View.extend({
         //this.render();
         this.listenTo(this.model, "remove", this.done);
     },
+    events: {
+        "click .close": "remove"
+    },
+    remove: function() {
+        this.model.destroy();
+    },
     done: function () {
         var me=this;
         this.$el.hide({
@@ -23,14 +29,11 @@ var NotificationView = Backbone.View.extend({
         this.el.style.position="relative";
         this.$el.addClass(this.model.get("level"));
         if (this.model.get("imgUrl")) {
-            html += '<img style="max-width: 50px; max-height: 50px; float: left; margin: auto" src="' + this.model.get("imgUrl") + '">';
-            hasImg=true;
-            html += '<div style="float: left; max-width: 190px">' + text + '</div>';
-        } else {
-            html += '<div style="float: left">' + text + '</div>';
+            this.$el.addClass("withImage");
+            html += '<img class="notification-image" src="' + this.model.get("imgUrl") + '">';
         }
-
-
+        html += '<div class="notification-message">' + text + '</div>';
+        html += '<img src="http://www.karopapier.de/images/x.png" class="close" style="position: absolute; right: 0px; top: 0px">';
         //html += '<div stlye="clear: both"></div>';
         this.$el.html(html);
         return this;
