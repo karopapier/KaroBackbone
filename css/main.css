@@ -36,7 +36,6 @@
 }
 
 .ok {
-    background: 1px solid green;
-    background-color: lightgreen;
+    background: lightgreen 1px 1px;
     color: green;
 }

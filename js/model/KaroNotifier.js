@@ -11,10 +11,14 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
         _.bindAll(this, "add", "addGameMoveNotification", "addUserDranNotification");
         this.notifications = new Backbone.Collection();
     },
-    add: function(n) {
+    add: function (n) {
         this.notifications.add(n);
+        var me = this;
+        setTimeout(function () {
+            me.remove(n);
+        }, n.get("timeout"));
     },
-    remove: function(n) {
+    remove: function (n) {
         this.notifications.remove(n);
     },
     addGameMoveNotification: function (data) {
@@ -27,13 +31,8 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
             imgUrl: "http://www.karopapier.de/pre/" + data.gid + ".png"
         });
         this.add(n);
-
-        var me = this;
-        setTimeout(function() {
-            me.remove(n);
-        },n.get("timeout"));
     },
-    addUserDranNotification: function(data) {
+    addUserDranNotification: function (data) {
         var text = 'Du bist dran! Bei <b><%= name %></b> hat <%= movedLogin %> gerade gezogen.';
         var t = _.template(text);
         var n = new Notification({

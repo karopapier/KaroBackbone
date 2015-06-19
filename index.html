@@ -65,10 +65,8 @@
                 }
 
                 if (Karopapier.User.get("id") == data.nextId) {
-                    console.log("ICH");
                     Karopapier.notifier.addUserDranNotification(data);
                 } else {
-                    console.log("EIn anderer");
                     Karopapier.notifier.addGameMoveNotification(data);
                 }
             });
