@@ -19,8 +19,8 @@ var ChatControlView = Backbone.View.extend({
                 type: "POST",
                 method: "POST",
                 crossDomain: true,
-                data: "msg=" + msg,
-                //JSON.stringify({"msg": msg}),
+                //better than data: "msg=" + msg as it works with ???? as well
+                data: {msg: msg},
                 dataType: "json",
                 xhrFields: {
                     withCredentials: true
