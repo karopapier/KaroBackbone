@@ -6,4 +6,10 @@
     <%= name %>
     <% } %>
 </a></td>
-<td><%= blocked %></td>
+<td>
+    <% if (typeof blocked !== "undefined") { %>
+    <%= blocked %>
+    <% } else { %>
+    <%= new Date().getHours() %>:<%= new Date().getMinutes() %>
+    <% } %>
+</td>

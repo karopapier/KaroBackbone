@@ -6,8 +6,12 @@ var DranGameCollection = Backbone.Collection.extend({
     initialize: function () {
         _.bindAll(this, "addId");
     },
-    addId: function (id) {
-        this.add(new Game({id: id}));
+    addId: function (id, name) {
+        var g = new Game({id: id});
+        if (name) {
+            g.set("name", name)
+        }
+        this.add(g);
     },
     parse: function (data) {
         return data.games;

@@ -44,11 +44,14 @@ var KaropapierApp = Marionette.Application.extend({
             this.listenTo(me.User, "change:id", refresh)
 
             me.vent.on("USER:DRAN", function (data) {
-                console.log("Da bin ich jetzt dran", data);
+                //console.log("Da bin ich jetzt dran", data);
+                me.UserDranGames.addId(data.id, data.name);
             })
 
             me.vent.on("USER:MOVED", function (data) {
+                //console.log("Ich nehms weg",data);
                 me.UserDranGames.remove(data.gid);
+                //console.log("Jetzt wär es weg");
             })
         });
 
