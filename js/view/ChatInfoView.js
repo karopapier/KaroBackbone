@@ -40,7 +40,7 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
             } else if (dran == 1) {
                 html = '<a target="ibndran" href="http://www.karopapier.de/showgames.php?dranbin=' + myId + '">Bei einem Spiel dran</a>';
             } else {
-                html = '<a href="/dran" target="ibndran">Bei <strong>' + dran + '</strong> Spielen dran</a>';
+                html = '<a href="http://www.karopapier.de/dran" target="ibndran">Bei <strong>' + dran + '</strong> Spielen dran</a> <a href="""><!--<img src="/images/arrow_right.png"></a>-->';
             }
             $('#chatInfoDran').html(html)
 

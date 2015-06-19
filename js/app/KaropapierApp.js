@@ -14,6 +14,8 @@ var KaropapierApp = Marionette.Application.extend({
         }
         this.User.fetch();
 
+        this.UserDranGames = new DranGameCollection();
+
         //init Karo Event Interface KEvIn
         this.KEvIn = new KEvIn({
             user: this.User
@@ -24,10 +26,33 @@ var KaropapierApp = Marionette.Application.extend({
 
         var me = this;
         //some initializers after the page is done
+
+        //add container for notifications
         this.addInitializer(function () {
             me.notifierView.render();
         })
 
+        //hook to events to update dran queue
+        this.addInitializer(function () {
+            //refresh function considering logout
+            function refresh() {
+                if (me.User.get("id") == 0) return false;
+                me.UserDranGames.fetch();
+            }
+            refresh();
+
+            this.listenTo(me.User, "change:id", refresh)
+
+            me.vent.on("USER:DRAN", function (data) {
+                console.log("Da bin ich jetzt dran", data);
+            })
+
+            me.vent.on("USER:MOVED", function (data) {
+                me.UserDranGames.remove(data.gid);
+            })
+        });
+
+        //init dynamic favicon
         this.addInitializer(function () {
             me.favi = new FaviconView({
                 model: me.User,
@@ -35,6 +60,7 @@ var KaropapierApp = Marionette.Application.extend({
             })
         });
 
+        //genereal page setup
         this.addInitializer(function () {
             me.addRegions({
                 header: '#header',
@@ -43,6 +69,7 @@ var KaropapierApp = Marionette.Application.extend({
             })
         })
 
+        //user info bar right top
         this.addInitializer(function () {
             me.infoBar = new UserInfoBar({
                 model: me.User
@@ -50,6 +77,15 @@ var KaropapierApp = Marionette.Application.extend({
             me.header.show(Karopapier.infoBar);
         })
 
+        //Start the router
+        this.addInitializer(function () {
+            me.router = new AppRouter();
+            Backbone.history.start({
+                pushState: true
+            });
+        })
+
+        //better place for this???
         me.vent.on('GAME:MOVE', function (data) {
             //skip unrelated
             if (!data.related) {

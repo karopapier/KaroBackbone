@@ -31,10 +31,12 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
         }
     },
     hook: function () {
-        //simple trigger for a new move
+        //simple trigger for a new move - consider skipping it for the more eloquent GAME:MOVE with my id
+        /*
         this.turted.on("yourTurn", function (data) {
             Karopapier.vent.trigger("USER:DRAN", data);
         });
+        */
 
         //simple trigger for when you moved
         this.turted.on('youMoved', function (data) {
@@ -42,9 +44,13 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
         });
 
         //detailed trigger if a game related to you saw a move
+        var me = this;
         this.turted.on('otherMoved', function (data) {
             data.related = true;
             Karopapier.vent.trigger("GAME:MOVE", data);
+            if (me.user.get("id") == data.nextId) {
+                Karopapier.vent.trigger("USER:DRAN", data);
+            }
         });
 
         //

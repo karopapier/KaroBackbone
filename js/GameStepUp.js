@@ -203,13 +203,7 @@ var checkTestmode = function () {
 $('#testmode').click(checkTestmode);
 checkTestmode();
 
-var dranQueue = new GameCollection();
-dranQueue.url = function () {
-    return "http://www.karopapier.de/api/user/" + Karopapier.User.get("id") + "/dran.json?callback=?";
-};
-dranQueue.parse = function (data) {
-    return data.games;
-};
+var dranQueue = new DranGameCollection();
 
 //inital load via reset
 dranQueue.listenTo(Karopapier.User, "change:id", dranQueue.fetch.bind(dranQueue, {reset: true}));
@@ -315,7 +309,7 @@ var checkNextGame = function () {
         console.log("Setting game from next");
         nextGame.set("moved", false);
         game.setFrom(nextGame);
-        gr.navigate(window.location.pathname.substr(1) + "?GID=" + nextGame.get("id"));
+        gar.navigate(window.location.pathname.substr(1) + "?GID=" + nextGame.get("id"));
         console.log("Now showing");
         $('#mapImage').show();
         nextGame.set({id: 0, completed: false}, {silent: true});

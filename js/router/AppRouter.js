@@ -2,6 +2,7 @@ var AppRouter = Backbone.Router.extend({
     routes: {
         "index.html": "showChat",
         "chat.html": "showChat",
+        "dran.html": "showDran",
         "game.html?GID=:gameId": "showGame",
         "newshowmap.php?GID=:gameId": "showGame",
         "game.html": "defaultRoute",
@@ -14,6 +15,13 @@ var AppRouter = Backbone.Router.extend({
             Karopapier.chatApp = new ChatApp();
         }
         Karopapier.content.show(Karopapier.chatApp);
+    },
+    showDran: function() {
+        console.log("Show Dran");
+        if (!Karopapier.dranApp) {
+            Karopapier.dranApp = new DranApp();
+        }
+        Karopapier.content.show(Karopapier.dranApp);
     },
     showGame: function (gameId) {
         if (gameId) {
