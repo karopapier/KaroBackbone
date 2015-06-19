@@ -61,7 +61,7 @@
                 //skip unrelated
                 if (!data.related) {
                     console.log(data.movedLogin, "zog bei",data.gid, data.name);
-                    //return false;
+                    return false;
                 }
 
                 if (Karopapier.User.get("id") == data.nextId) {
