@@ -31,16 +31,25 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
         }
     },
     hook: function () {
+        //simple trigger for a new move
         this.turted.on("yourTurn", function (data) {
-            console.log("KEvIn","USER:DRAN",data);
             Karopapier.vent.trigger("USER:DRAN", data);
         });
+
+        //simple trigger for when you moved
         this.turted.on('youMoved', function (data) {
-            console.log("KEvIn","USER:MOVED",data);
             Karopapier.vent.trigger("USER:MOVED", data);
         });
+
+        //detailed trigger if a game related to you saw a move
+        this.turted.on('otherMoved', function (data) {
+            data.related = true;
+            Karopapier.vent.trigger("GAME:MOVE", data);
+        });
+
+        //
         this.turted.on('anyOtherMoved', function (data) {
-            console.log("KEvIn","GAME:MOVE",data);
+            data.related = false;
             Karopapier.vent.trigger("GAME:MOVE", data);
         });
         this.turted.on('newChatMessage', function (data) {

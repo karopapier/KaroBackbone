@@ -18,6 +18,14 @@ var KaropapierApp = Marionette.Application.extend({
         this.KEvIn = new KEvIn({
             user: this.User
         });
+
+        this.notifier = new KaroNotifier();
+        this.notifierView = new NotifierView({model: this.notifier});
+
+        var me = this;
+        this.addInitializer(function() {
+            me.notifierView.render();
+        })
     }
 });
 

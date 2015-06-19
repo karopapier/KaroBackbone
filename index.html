@@ -57,9 +57,28 @@
                 })
             })
 
-            var not = new KaroNotifier();
-            var notV = new NotifierView({ model: not});
-            notV.render();
+            Karopapier.vent.on('GAME:MOVE', function (data) {
+                //skip unrelated
+                if (!data.related) {
+                    console.log(data.movedLogin, "zog bei",data.gid, data.name);
+                    //return false;
+                }
+
+                if (Karopapier.User.get("id") == data.nextId) {
+                    console.log("ICH");
+                    Karopapier.notifier.addUserDranNotification(data);
+                } else {
+                    console.log("EIn anderer");
+                    Karopapier.notifier.addGameMoveNotification(data);
+                }
+            });
+
+            Karopapier.vent.on('GAME:MOVE', function (data) {
+                var movedUser = new User({id: data.movedId, login: data.movedLogin})
+                movedUser.decreaseDran();
+                var nextUser = new User({id: data.nextId, login: data.nextLogin});
+                nextUser.increaseDran();
+            });
 
             $(document).ready(function () {
                 console.log("Doc ready, start app");
@@ -90,18 +109,6 @@
 
 				//var rightSlide = new Sideslide(document.getElementById('chatInfo'));
             })
-
-
-            Karopapier.vent.on('GAME:MOVE', function (data) {
-                not.addGameMoveNotification(data);
-            });
-
-            Karopapier.vent.on('GAME:MOVE', function (data) {
-                var movedUser = new User({id: data.movedId, login: data.movedLogin})
-                movedUser.decreaseDran();
-                var nextUser = new User({id: data.nextId, login: data.nextLogin});
-                nextUser.increaseDran();
-            });
 
         </script>
 
