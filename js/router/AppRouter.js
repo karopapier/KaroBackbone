@@ -4,7 +4,9 @@ var AppRouter = Backbone.Router.extend({
         "chat.html": "showChat",
         "game.html?GID=:gameId": "showGame",
         "newshowmap.php?GID=:gameId": "showGame",
-        "game.html": "defaultRoute"
+        "game.html": "defaultRoute",
+        "/": "showChat",
+        "": "showChat"
     },
     showChat: function () {
         console.log("Show Chat");
