@@ -44,14 +44,15 @@ var KaropapierApp = Marionette.Application.extend({
             this.listenTo(me.User, "change:id", refresh)
 
             me.vent.on("USER:DRAN", function (data) {
-                //console.log("Da bin ich jetzt dran", data);
-                me.UserDranGames.addId(data.id, data.name);
+                console.log("Da bin ich jetzt dran", data);
+                me.UserDranGames.addId(data.gid, data.name);
             })
 
             me.vent.on("USER:MOVED", function (data) {
-                //console.log("Ich nehms weg",data);
+                console.log("Ich nehms weg",data);
                 me.UserDranGames.remove(data.gid);
-                //console.log("Jetzt wär es weg");
+                console.log("Dran Q jetzt",me.UserDranGames.length);
+                console.log("Jetzt wär es weg");
             })
         });
 
@@ -66,7 +67,7 @@ var KaropapierApp = Marionette.Application.extend({
         this.addInitializer(function() {
             me.titler = new TitleView({
                 model: me.User,
-                title: "Karopapier - Autofahren wie in der Vorleseung"
+                title: "Karopapier - Autofahren wie in der Vorlesung"
             })
             me.titler.render();
         })

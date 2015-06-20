@@ -9,9 +9,11 @@ var DranGameCollection = Backbone.Collection.extend({
     addId: function (id, name) {
         var g = new Game({id: id});
         if (name) {
+            console.log("Ich setz den namen auf",name);
             g.set("name", name)
         }
         this.add(g);
+        console.log("Dran Q jetzt ", this.length);
     },
     parse: function (data) {
         return data.games;

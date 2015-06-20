@@ -20,8 +20,9 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
         this.hook();
     },
     ident: function () {
+        console.log("KEVIN IDENT");
         var user = this.user;
-        console.log("Ident with user", user.get("id"));
+        console.log("Ident with user", user.get("id"), typeof user.get("id"));
 
         if (user.get("id") === 0) {
             this.stop();
@@ -32,14 +33,15 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
     },
     hook: function () {
         //simple trigger for a new move - consider skipping it for the more eloquent GAME:MOVE with my id
-        /*
         this.turted.on("yourTurn", function (data) {
-            Karopapier.vent.trigger("USER:DRAN", data);
+            console.log("SKIPPED - youTurn not forwared")
+            //Karopapier.vent.trigger("USER:DRAN", data);
         });
-        */
 
         //simple trigger for when you moved
         this.turted.on('youMoved', function (data) {
+            console.info("USER:MOVED aus youMoved");
+            console.log(data);
             Karopapier.vent.trigger("USER:MOVED", data);
         });
 
@@ -47,8 +49,10 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
         var me = this;
         this.turted.on('otherMoved', function (data) {
             data.related = true;
+            console.info("GAME:MOVE aus otherMoved");
             Karopapier.vent.trigger("GAME:MOVE", data);
             if (me.user.get("id") == data.nextId) {
+                console.info("USER:DRAN aus otherMoved");
                 Karopapier.vent.trigger("USER:DRAN", data);
             }
         });
@@ -56,9 +60,11 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
         //
         this.turted.on('anyOtherMoved', function (data) {
             data.related = false;
+            console.info("GAME:MOVE aus anyOtherMoved");
             Karopapier.vent.trigger("GAME:MOVE", data);
         });
         this.turted.on('newChatMessage', function (data) {
+            //console.info("CHAT:MESSAGE");
             Karopapier.vent.trigger("CHAT:MESSAGE", data);
         });
     },
