@@ -63,6 +63,14 @@ var KaropapierApp = Marionette.Application.extend({
             })
         });
 
+        this.addInitializer(function() {
+            me.titler = new TitleView({
+                model: me.User,
+                title: "Karopapier - Autofahren wie in der Vorleseung"
+            })
+            me.titler.render();
+        })
+
         //genereal page setup
         this.addInitializer(function () {
             me.addRegions({
