@@ -44,15 +44,11 @@ var KaropapierApp = Marionette.Application.extend({
             this.listenTo(me.User, "change:id", refresh)
 
             me.vent.on("USER:DRAN", function (data) {
-                console.log("Da bin ich jetzt dran", data);
                 me.UserDranGames.addId(data.gid, data.name);
             })
 
             me.vent.on("USER:MOVED", function (data) {
-                console.log("Ich nehms weg",data);
                 me.UserDranGames.remove(data.gid);
-                console.log("Dran Q jetzt",me.UserDranGames.length);
-                console.log("Jetzt wär es weg");
             })
         });
 
@@ -113,6 +109,8 @@ var KaropapierApp = Marionette.Application.extend({
         });
 
         me.vent.on('GAME:MOVE', function (data) {
+            //only for unrelated moves, count up or down
+            if (data.related) return false;
             var movedUser = new User({id: data.movedId, login: data.movedLogin})
             movedUser.decreaseDran();
             var nextUser = new User({id: data.nextId, login: data.nextLogin});

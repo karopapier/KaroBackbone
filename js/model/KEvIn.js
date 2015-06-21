@@ -20,9 +20,7 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
         this.hook();
     },
     ident: function () {
-        console.log("KEVIN IDENT");
         var user = this.user;
-        console.log("Ident with user", user.get("id"), typeof user.get("id"));
 
         if (user.get("id") === 0) {
             this.stop();
@@ -34,33 +32,37 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
     hook: function () {
         //simple trigger for a new move - consider skipping it for the more eloquent GAME:MOVE with my id
         this.turted.on("yourTurn", function (data) {
-            console.log("SKIPPED - youTurn not forwared")
+            //console.log("SKIPPED - yourTurn not forwared")
             //Karopapier.vent.trigger("USER:DRAN", data);
         });
 
         //simple trigger for when you moved
         this.turted.on('youMoved', function (data) {
-            console.info("USER:MOVED aus youMoved");
-            console.log(data);
-            Karopapier.vent.trigger("USER:MOVED", data);
+            //console.info("USER:MOVED aus youMoved");
+            //console.log("SKIPPED - youMoved not forwared")
+            //Karopapier.vent.trigger("USER:MOVED", data);
         });
 
         //detailed trigger if a game related to you saw a move
         var me = this;
         this.turted.on('otherMoved', function (data) {
             data.related = true;
-            console.info("GAME:MOVE aus otherMoved");
+            //console.info("GAME:MOVE aus otherMoved");
             Karopapier.vent.trigger("GAME:MOVE", data);
             if (me.user.get("id") == data.nextId) {
-                console.info("USER:DRAN aus otherMoved");
+                //console.info("USER:DRAN aus otherMoved");
                 Karopapier.vent.trigger("USER:DRAN", data);
+            }
+            if (me.user.get("id") == data.movedId) {
+                //console.info("USER:MOVED aus otherMoved");
+                Karopapier.vent.trigger("USER:MOVED", data);
             }
         });
 
         //
         this.turted.on('anyOtherMoved', function (data) {
             data.related = false;
-            console.info("GAME:MOVE aus anyOtherMoved");
+            //console.info("GAME:MOVE aus anyOtherMoved");
             Karopapier.vent.trigger("GAME:MOVE", data);
         });
         this.turted.on('newChatMessage', function (data) {
