@@ -10,6 +10,7 @@
     <% if (typeof blocked !== "undefined") { %>
     <%= blocked %>
     <% } else { %>
-    <%= new Date().getHours() %>:<%= new Date().getMinutes() %>
+    <% d = new Date() %>
+    <%= d.getHours() %>:<%= ((d <10) ? "0" : "") + d.getMinutes() %>
     <% } %>
 </td>
