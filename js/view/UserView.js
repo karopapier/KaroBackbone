@@ -2,7 +2,8 @@ var UserView = Backbone.View.extend({
     options: {
         withAnniversary: true,
         withGames: false,
-        withDesperation: false
+        withDesperation: false,
+        withGamesLink: false
     },
     tagName: "span",
     initialize: function (options) {
@@ -21,7 +22,7 @@ var UserView = Backbone.View.extend({
     },
     dranChange: function (user, newDran) {
         var prevDran = this.model.previous("dran");
-        if (prevDran>=0) {
+        if (prevDran >= 0) {
             //console.log("Dran changed from", prevDran, " to ", newVal);
             var col = (prevDran > newDran) ? "#00ff00" : "#ff0000";
             this.$el.effect('highlight', {"color": col});
@@ -35,7 +36,21 @@ var UserView = Backbone.View.extend({
         html += '<span class="userLabel">' + this.model.get("login") + '</span>';
 
         if (this.options.withGames) {
-            html += ' <small>(' + this.model.get("dran") + '/' + this.model.get("activeGames") + ')</small>';
+            html += ' <small>(';
+            if (this.options.withGamesLink) {
+                if (Karopapier.User.get("id") == this.model.get("id")) {
+                    html += '<a href="/dran.html">';
+                } else {
+                    html+= '<a href="http://www.karopapier.de/showgames.php?spielevon=' + this.model.get("id") + '">';
+                }
+            }
+            html += this.model.get("dran");
+            if (this.options.withGamesLink) {
+                html+="</a>";
+            }
+            html += '/';
+            html += this.model.get("activeGames");
+            html += ')</small>';
         }
         this.$el.html(html);
         return this;

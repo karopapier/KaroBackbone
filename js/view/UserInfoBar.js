@@ -16,13 +16,15 @@ var UserInfoBar = Backbone.View.extend({
             model: this.model,
             withGames: true,
             withAnniversary: true,
-            withDesperation: false
+            withDesperation: false,
+            withGamesLink: true
         });
         this.listenTo(this.model, "change", this.render);
     },
     render: function() {
         if (this.model.get("id") !== 0) {
             this.$el.html(this.userView.$el);
+            this.$el.append(" ");
             this.$el.append(this.template());
         } else {
             this.$el.html('<a class="login" href="/login">Nicht angemeldet</a>');

@@ -45,11 +45,11 @@ var KaropapierApp = Marionette.Application.extend({
 
             me.vent.on("USER:DRAN", function (data) {
                 me.UserDranGames.addId(data.gid, data.name);
-            })
+            });
 
             me.vent.on("USER:MOVED", function (data) {
                 me.UserDranGames.remove(data.gid);
-            })
+            });
         });
 
         //init dynamic favicon
@@ -74,7 +74,7 @@ var KaropapierApp = Marionette.Application.extend({
                 header: '#header',
                 content: '#content',
                 footer: '#footer'
-            })
+            });
         })
 
         //user info bar right top

@@ -16,8 +16,8 @@ var Notification = Backbone.Model.extend(/** @lends Notification.prototype*/{
      *
      */
     initialize: function (options) {
-        if (typeof options==="string") {
-            this.set("text",options);
+        if (typeof options === "string") {
+            this.set("text", options);
         } else {
             _.defaults(options, this.defaults);
         }
