@@ -70,7 +70,8 @@ var KaroUtil = {};
         //The HOFF
         text = text.replace(/\bhoff\b/gi, ' <img style="opacity: .3" src="http://www.karopapier.de/images/hoff.jpg"     alt="hoff" title="hoff" />');
         //nen -> einen
-        text = text.replace(/\bnen\b/gi, 'einen');
+        text = text.replace(/(^|\s)nen(^|\s)/g, '$1einen$2');
+        text = text.replace(/(^|\s)Nen(^|\s)/g, '$1Einen$2');
 
         text = text.replace("-:K", "<i>");
         text = text.replace("K:-", "</i>");
@@ -79,7 +80,7 @@ var KaroUtil = {};
         text = text.replace(/img src="\/images\/smilies\/(.*?).gif" alt=/g, 'img src="http://www.karopapier.de/bilder/smilies/$1.gif" alt=');
 
         //GID replacement to game link
-        text = text.replace(/GID[ =]([0-9]{3,6})/gi, function (all, gid) {
+        text = text.replace(/\bGID[ =]([0-9]{3,6})\b/gi, function (all, gid) {
             $.getJSON('http://www.karopapier.de/api/game/' + gid + '/info.json?callback=?', function (gameInfo) {
                 $('a.GidLink' + gid).text(gid + ' - ' + gameInfo.game.name);
             });
