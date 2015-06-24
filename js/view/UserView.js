@@ -3,7 +3,8 @@ var UserView = Backbone.View.extend({
         withAnniversary: true,
         withGames: false,
         withDesperation: false,
-        withGamesLink: false
+        withGamesLink: false,
+        withInfoLink: false
     },
     tagName: "span",
     initialize: function (options) {
@@ -36,7 +37,15 @@ var UserView = Backbone.View.extend({
         if (this.options.withDesperation && this.model.get("desperate")) {
             html += '<img src="http://www.karopapier.de/images/spielegeil.png" alt="Spielegeil" title="Spielegeil">';
         }
-        html += '<span class="userLabel">' + this.model.get("login") + '</span>';
+        html += '<span class="userLabel">';
+        if (this.options.withInfoLink) {
+            html += '<a href="http://www.karopapier.de/userinfo.php?about=' + this.model.get("id") + '">';
+        }
+        html += this.model.get("login")
+        if (this.options.withInfoLink) {
+            html += '</a>';
+        }
+        html += '</span>';
 
         if (this.options.withGames) {
             html += ' <small>(';

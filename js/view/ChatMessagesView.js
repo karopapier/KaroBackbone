@@ -45,7 +45,6 @@ var ChatMessagesView = Backbone.View.extend({
         //setTimeout(function() {
 
             //$el.animate({ scrollTop: $el.prop('scrollHeight') }, 1000);
-            wieweitunten();
             if (options.animated) {
                 $parent.stop().animate({ scrollTop: $parent.prop("scrollHeight") }, 1000);
             } else {
@@ -60,18 +59,18 @@ var ChatMessagesView = Backbone.View.extend({
         this.$el.empty();
         var me = this;
         _.each(this.collection.last(this.message_limit), function (chatMessage) {
-            console.log("Füge");
             this.addItem(chatMessage, false);
         }.bind(this));
-        console.log("Scrolle");
         this.scrollDown({ forced: true, animated: false});
         return this;
     }
 })
 
+/*
 function wieweitunten() {
     var $c=$('#chatMessages');
     var topf=$c.prop("scrollTop");
     var hoch = $c.prop("scrollHeight");
     console.log(topf, hoch);
 }
+*/

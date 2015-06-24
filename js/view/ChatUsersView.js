@@ -14,7 +14,8 @@ var ChatUsersView = Backbone.View.extend({
             withGames: true,
             withAnniversary: true,
             withDesperation: true,
-            withGamesLink: true
+            withGamesLink: true,
+            withInfoLink: true
         });
         var li = $('<li></li>');
         li.append(chatUserView.el);

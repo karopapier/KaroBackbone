@@ -8,7 +8,6 @@ var TitleView = Backbone.View.extend({
         this.model.on("change:dran", this.render);
     },
     render: function () {
-        console.log("TITLE", this.title);
         var t = "";
         var dran = this.model.get("dran");
 
