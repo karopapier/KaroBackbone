@@ -25,6 +25,9 @@ var UserView = Backbone.View.extend({
         if (prevDran >= 0) {
             //console.log("Dran changed from", prevDran, " to ", newVal);
             var col = (prevDran > newDran) ? "#00ff00" : "#ff0000";
+
+            //gets nihilated by immediately following render
+            //this.$el.find("span.userLabel").effect('highlight', {"color": col});
             this.$el.effect('highlight', {"color": col});
         }
     },

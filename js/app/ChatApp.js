@@ -7,7 +7,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         this.layout.render();
 
         this.configuration = new Backbone.Model();
-        this.configuration.set("limit", 100);
+        this.configuration.set("limit", 20);
 
         this.chatMessageCollection = new ChatMessageCollection();
         this.chatMessagesView = new ChatMessagesView({
@@ -42,9 +42,10 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         this.layout.chatInfo.show(this.chatInfoView);
         this.layout.chatControl.show(this.chatControlView);
         var $el = this.layout.chatMessages.$el;
-        setTimeout(function () {
-            $el.animate({scrollTop: $el.prop('scrollHeight')}, 1000);
-        }, 1000);
+        //setTimeout(function () {
+            //$el.animate({scrollTop: $el.prop('scrollHeight')}, 100);
+            //$el.animate({scrollTop: $el.prop('scrollHeight')}, 10);
+        //}, 1000);
     }
 });
 

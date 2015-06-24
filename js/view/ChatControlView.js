@@ -4,6 +4,7 @@ var ChatControlView = Backbone.View.extend({
     initialize: function () {
         _.bindAll(this, "render");
         this.listenTo(Karopapier.User, "change:id", this.render);
+        this.listenTo(this.model, "change:limit", this.render);
         return this;
     },
     events: {
@@ -43,7 +44,7 @@ var ChatControlView = Backbone.View.extend({
     },
     render: function () {
         if (Karopapier.User.get("id") != 0) {
-            this.$el.html(this.template(Karopapier.User.toJSON()));
+            this.$el.html(this.template({user: Karopapier.User.toJSON(), settings: this.model.toJSON()}));
         } else {
             this.$el.html("Nicht angemeldet");
         }
