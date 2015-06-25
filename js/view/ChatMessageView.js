@@ -8,10 +8,11 @@ var ChatMessageView = Backbone.View.extend({
     },
     render: function () {
         //var text = this.model.get("text");
+        var data = this.model.toJSON();
         this.$el.html(this.model.get("text"));
-        this.model.set("text", this.$el.text());
+        data.text = this.$el.text();
         //text = KaroUtil.linkify(text);
-        this.$el.html(this.template(this.model.toJSON()));
+        this.$el.html(this.template(data));
         return this;
     }
 });
