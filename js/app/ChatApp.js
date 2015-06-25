@@ -32,10 +32,12 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         var me = this;
         Karopapier.vent.on('CHAT:MESSAGE', function (data) {
             console.log("vent CHAT:MESSAGE triggered inside ChatApp");
-            console.log(data);
-            var cm = new ChatMessage(data.chatmsg);
-            console.log(cm);
-            me.chatMessageCollection.add(cm);
+            //disable due to XSS danger
+            //console.log(data);
+            //var cm = new ChatMessage(data.chatmsg);
+            //console.log(cm);
+            //me.chatMessageCollection.add(cm);
+            me.chatMessageCollection.fetch();
         });
     },
     render: function () {
