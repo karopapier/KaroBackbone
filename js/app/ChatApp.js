@@ -34,6 +34,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
             console.log("vent CHAT:MESSAGE triggered inside ChatApp");
             console.log(data);
             var cm = new ChatMessage(data.chatmsg);
+            console.log(cm);
             me.chatMessageCollection.add(cm);
         });
     },

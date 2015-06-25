@@ -1,23 +1,17 @@
 var ChatMessageView = Backbone.View.extend({
     tagName: "div",
     className: "chatMessage",
+    template: window["JST"]["chat/chatMessage"],
     initialize: function () {
         _.bindAll(this, "render");
         this.render();
     },
     render: function () {
-        var text = this.model.get("text");
-        //this.$el.html(text);
-        //text = this.$el.text();
-        this.$el.html(text);
-        text = this.$el.text();
-        text = KaroUtil.linkify(text);
-        var html ="";
-        if (this.model.get("user").trim()!=="") {
-            html+= "<b>" + this.model.get("user") + "</b> (" + this.model.get("time") + "): ";
-        }
-        html += text;
-        this.$el.attr("id", this.model.get("id")).html(html);
+        //var text = this.model.get("text");
+        this.$el.html(this.model.get("text"));
+        this.model.set("text", this.$el.text());
+        //text = KaroUtil.linkify(text);
+        this.$el.html(this.template(this.model.toJSON()));
         return this;
     }
 });
