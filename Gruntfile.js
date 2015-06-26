@@ -59,7 +59,9 @@ module.exports = function (grunt) {
                 tasks: ['uglify'],
                 options: {
                     interrupt: true,
-                    livereload: true
+                    livereload: {
+                        port: 20000
+                    }
                 }
             },
             templates: {
@@ -67,14 +69,18 @@ module.exports = function (grunt) {
                 tasks: ['jst'],
                 options: {
                     interrupt: true,
-                    livereload: true
+                    livereload: {
+                        port: 20000
+                    }
                 }
             },
             statics: {
                 files: ['*.html', 'images/**/*', '!docs'],
                 options: {
                     interrupt: true,
-                    livereload: true
+                    livereload: {
+                        port: 20000
+                    }
                 }
             },
             css: {
@@ -82,14 +88,18 @@ module.exports = function (grunt) {
                 tasks: ["cssmin"],
                 options: {
                     interrupt: true,
-                    livereload: true
+                    livereload: {
+                        port: 20000
+                    }
                 }
             },
             spielwiese: {
                 files: ['spielwiese/**/*'],
                 options: {
                     interrupt: true,
-                    livereload: true
+                    livereload: {
+                        port: 20000
+                    }
                 }
             }
         },

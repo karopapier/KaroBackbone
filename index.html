@@ -46,15 +46,18 @@
         <script type="text/javascript">
 
             //need to get rid of that
-            Karopapier.vent.on("logout", function() {
+            Karopapier.vent.on("logout", function () {
                 console.log("Logging out");
                 Karopapier.User.set("id", 0);
                 console.log(Karopapier.User);
             })
 
-            Karopapier.vent.on("login", function() {
+            Karopapier.vent.on("login", function () {
                 console.log("Logging in");
-                $.post("http://www.karopapier.de/api/user/login.json",{"login":login, "password":pass},function(data) {
+                $.post("http://www.karopapier.de/api/user/login.json", {
+                    "login": login,
+                    "password": pass
+                }, function (data) {
                     console.log(data);
                     Karopapier.User.set(data);
                 })
@@ -69,8 +72,8 @@
         </script>
 
         <script type="text/javascript">
-            if ( !/karopapier/.test(window.location.hostname) ) {
-                document.write('<scr' + 'ipt src="http://localhost:35729/livereload.js"></scr' + 'ipt>');
+            if (!/karopapier/.test(window.location.hostname)) {
+                document.write('<scr' + 'ipt src="http://localhost:20000/livereload.js"></scr' + 'ipt>');
             }
         </script>
     </body>
