@@ -34,6 +34,12 @@ var UserView = Backbone.View.extend({
     },
     render: function () {
         var html = '';
+        if (this.options.withAnniversary && this.model.get("birthdayToday")) {
+            html += '<img src="http://www.karopapier.de/images/smilies/birthday.gif" alt="Wird immer älter" title="Wird immer älter">';
+        }
+        if (this.options.withAnniversary && this.model.get("karodayToday")) {
+            html += '<img src="http://www.karopapier.de/images/smilies/bouncy.gif" alt="Hat heute Karotag" title="Hat heute Karotag">';
+        }
         if (this.options.withDesperation && this.model.get("desperate")) {
             html += '<img src="http://www.karopapier.de/images/spielegeil.png" alt="Spielegeil" title="Spielegeil">';
         }
