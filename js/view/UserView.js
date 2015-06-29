@@ -7,6 +7,7 @@ var UserView = Backbone.View.extend({
         withInfoLink: false
     },
     tagName: "span",
+    template: window["JST"]["user/userView"],
     initialize: function (options) {
         if (!this.model) {
             console.error("No model!");
@@ -33,44 +34,12 @@ var UserView = Backbone.View.extend({
         }
     },
     render: function () {
-        var html = '';
-        if (this.options.withAnniversary && this.model.get("birthdayToday")) {
-            html += '<img src="http://www.karopapier.de/images/smilies/birthday.gif" alt="Wird immer älter" title="Wird immer älter">';
-        }
-        if (this.options.withAnniversary && this.model.get("karodayToday")) {
-            html += '<img src="http://www.karopapier.de/images/smilies/bouncy.gif" alt="Hat heute Karotag" title="Hat heute Karotag">';
-        }
-        if (this.options.withDesperation && this.model.get("desperate")) {
-            html += '<img src="http://www.karopapier.de/images/spielegeil.png" alt="Spielegeil" title="Spielegeil">';
-        }
-        html += '<span class="userLabel">';
-        if (this.options.withInfoLink) {
-            html += '<a href="http://www.karopapier.de/userinfo.php?about=' + this.model.get("id") + '">';
-        }
-        html += this.model.get("login")
-        if (this.options.withInfoLink) {
-            html += '</a>';
-        }
-        html += '</span>';
-
-        if (this.options.withGames) {
-            html += ' <small>(';
-            if (this.options.withGamesLink) {
-                if (Karopapier.User.get("id") == this.model.get("id")) {
-                    html += '<a href="/dran.html">';
-                } else {
-                    html+= '<a href="http://www.karopapier.de/showgames.php?spielevon=' + this.model.get("id") + '">';
-                }
-            }
-            html += this.model.get("dran");
-            if (this.options.withGamesLink) {
-                html+="</a>";
-            }
-            html += '/';
-            html += this.model.get("activeGames");
-            html += ')</small>';
-        }
-        this.$el.html(html);
+        var data = this.model.toJSON();
+        data.self = (this.model.get("id")==Karopapier.User.get("id"));
+        this.$el.html(this.template({
+            options: this.options,
+            data: data
+        }));
         return this;
     }
 });
