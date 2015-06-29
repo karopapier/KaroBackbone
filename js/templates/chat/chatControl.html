@@ -1,22 +1,15 @@
-<div id="chatEnter">
-    Zeilen:
+Zeilen:
 
-    <% var limits=[10,20,50,100] %>
-    <% for (var i=0; i<4; i++) { %>
-    <span class="messageLimit">
+<% var limits=[10,20,50,100] %>
+<% for (var i=0; i<4; i++) { %>
+<span class="messageLimit">
         <% if (settings.limit == limits[i]) { %><b><% } %>
-        <%= limits[i] %>
-        <% if (settings.limit == limits[i]) { %></b><% } %>
+    <%= limits[i] %>
+    <% if (settings.limit == limits[i]) { %></b><% } %>
     </span>
-    <% } %>
-    <!-- <input type="checkbox" id="autoscroll" checked="checked"> <label for="autoscroll">Scrollen?</label>
-    <input type="checkbox" id="showBotrixGames"> <label for="showBotrixGames"> Botrix Spielanfragen anzeigen</label> -->
-
-    <form id="chatEnterForm">
-        <span id="chatUserName"><b><%= user.login %></b></span> sagt: </span>
-        <input type="text" name="newchatmessage" id="newchatmessage" style="width: 300px" />
-        <input type="submit" value="Sag es" id="newchatmessagesubmit" />
-    </form>
-    <br>
-    <a href="http://smile.welcomes-you.com/">Smiley-Sammlung</a>
-</div>
+<% } %>
+<!-- <input type="checkbox" id="autoscroll" checked="checked"> <label for="autoscroll">Scrollen?</label>
+<input type="checkbox" id="showBotrixGames"> <label for="showBotrixGames"> Botrix Spielanfragen anzeigen</label> -->
+<input name="startPicker" id="startPicker" type="range" min="1" max="<%= settings.lastLineId %>" style="width: 400px">
+<input type="text" name="startLine" id="startLine" value="0" style="width: 50px">
+<button id="startLineUpdate">OK</button>

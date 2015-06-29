@@ -5,38 +5,23 @@ var ChatControlView = Backbone.View.extend({
         _.bindAll(this, "render");
         this.listenTo(Karopapier.User, "change:id", this.render);
         this.listenTo(this.model, "change:limit", this.render);
+        this.listenTo(this.model, "change:lastLineId", this.render);
         return this;
     },
     events: {
-        "submit": "sendMessage",
-        "click .messageLimit": "setLimit"
+        "click .messageLimit": "setLimit",
+        "change #startPicker": "syncStart",
+        "input #startPicker": "syncStart",
+        "click #startLineUpdate": "setStart"
     },
-    sendMessage: function (e) {
-        e.preventDefault();
-        var msg = $('#newchatmessage').val();
-        if (msg != "") {
-            $.ajax({
-                url: "http://www.karopapier.de/api/chat/message.json",
-                type: "POST",
-                method: "POST",
-                crossDomain: true,
-                //better than data: "msg=" + msg as it works with ???? as well
-                data: {msg: msg},
-                dataType: "json",
-                xhrFields: {
-                    withCredentials: true
-                },
-                success: function sendMessageSuccess(data) {
-                    $('#newchatmessage').val("");
-                    $('#newchatmessagesubmit').prop("disabled", false).stop().animate({opacity: 1});
-                },
-                error: function (xhr, status) {
-                    console.error(status, xhr);
-                    $('#newchatmessagesubmit').prop("disabled", false).stop().animate({opacity: 1});
-                }
-            });
-            $('#newchatmessagesubmit').prop("disabled", true).stop().animate({opacity: 0});
-        }
+    setStart: function(e) {
+        var start = this.$el.find("#startPicker").val();
+        this.model.set("start", start);
+    },
+    syncStart: function(e) {
+        //console.log(e);
+        var v = e.currentTarget.value;
+        $('#startLine').val(v);
     },
     setLimit: function (e) {
         var limit = parseInt($(e.currentTarget).text());
