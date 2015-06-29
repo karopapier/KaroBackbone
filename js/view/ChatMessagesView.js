@@ -5,7 +5,6 @@ var ChatMessagesView = Backbone.View.extend({
         this.collection.on("reset", this.render);
         this.collection.on("add", this.addItem)
         this.collection.on("remove", this.removeItem)
-        this.collection.fetch({reset: true});
 
         this.message_limit = this.model.get("limit");
         this.model.on("change", this.limit);
@@ -32,7 +31,7 @@ var ChatMessagesView = Backbone.View.extend({
     },
     scrollDown: function(options) {
         options = _.defaults(options||{}, { forced: false, animated: true})
-        console.log(options);
+        //console.log(options);
         //check if scrolled down
         var $parent = this.$el.parent();
         var toScrollDown =$parent.prop("scrollHeight") - $parent.prop("clientHeight") - $parent.prop("scrollTop");

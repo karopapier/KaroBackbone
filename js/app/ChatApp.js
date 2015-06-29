@@ -6,8 +6,15 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         });
         this.layout.render();
 
-        this.configuration = new Backbone.Model();
-        this.configuration.set("limit", 20);
+        this.configuration = new Backbone.Model({
+            limit: 12,
+            lastLineId: 0,
+            atEnd: true
+        });
+
+        this.chatMessageCache = new ChatMessageCache({
+        });
+        this.chatMessageCache.fetch();
 
         this.chatMessageCollection = new ChatMessageCollection();
         this.chatMessagesView = new ChatMessagesView({
@@ -23,13 +30,32 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
             model: this.configuration
         });
 
+        //wire message cache and view collection together
+        var me = this;
+        this.listenTo(this.chatMessageCache, "add", function(cm) {
+            //console.log("Added",cm, cm.get("lineId"));
+            var lastLineId = this.configuration.get("lastLineId");
+            if (cm.get("lineId")>lastLineId) {
+                this.configuration.set("lastLineId", cm.get("lineId"));
+                //console.log(cm.get("lineId"), "new last");
+            }
+        });
+
+        this.listenTo(this.chatMessageCache, "add", function(cm) {
+            //console.log("New message in Cache", cm.get("lineId"));
+            if (me.configuration.get("atEnd")) {
+                var l = me.chatMessageCache.length;
+                var lim = me.configuration.get("limit");
+                me.chatMessageCollection.set(me.chatMessageCache.slice(l-lim-1));
+            }
+        });
+
         //dirty first poor man's refresh and backup
         this.refreshMessages = setInterval(function () {
-            this.chatMessageCollection.fetch();
+            //this.chatMessageCollection.fetch();
             this.chatInfoView.updateTopBlocker();
         }.bind(this), 60000);
 
-        var me = this;
         Karopapier.vent.on('CHAT:MESSAGE', function (data) {
             console.log("vent CHAT:MESSAGE triggered inside ChatApp");
             //disable due to XSS danger
@@ -37,7 +63,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
             //var cm = new ChatMessage(data.chatmsg);
             //console.log(cm);
             //me.chatMessageCollection.add(cm);
-            me.chatMessageCollection.fetch();
+            me.chatMessageCache.cache(me.configuration.get("lastLineId"));
         });
     },
     render: function () {
