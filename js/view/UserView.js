@@ -14,12 +14,21 @@ var UserView = Backbone.View.extend({
             return false;
         }
         this.options = _.defaults(options || {}, this.options);
-        _.bindAll(this, "dranChange", "render");
+        _.bindAll(this, "dranChange", "render", "onChange");
 
         //console.log(this.model);
-        this.listenTo(this.model, "change", this.render);
-        this.listenTo(this.model, "change:dran", this.dranChange);
+        this.listenTo(this.model, "change", this.onChange);
+        //this.listenTo(this.model, "change", this.render);
+        //this.listenTo(this.model, "change:dran", this.dranChange);
 
+        this.render();
+    },
+    onChange: function(e, a, b) {
+        //if dran is the only changed property
+        if (e.changed.dran && _.size(e.changed)==1) {
+            this.dranChange(e,a);
+            return true;
+        }
         this.render();
     },
     dranChange: function (user, newDran) {
@@ -29,8 +38,8 @@ var UserView = Backbone.View.extend({
             var col = (prevDran > newDran) ? "#00ff00" : "#ff0000";
 
             //gets nihilated by immediately following render
-            //this.$el.find("span.userLabel").effect('highlight', {"color": col});
-            this.$el.effect('highlight', {"color": col});
+            this.$el.find("span.userLabel").effect('highlight', {"color": col});
+            //this.$el.effect('highlight', {"color": col});
         }
     },
     render: function () {
