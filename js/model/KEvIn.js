@@ -72,7 +72,6 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
     },
     start: function () {
         this.turted.join("karochat");
-        console.warn("GET RID OF LIVELOG");
         this.turted.join("livelog");
     },
     stop: function () {

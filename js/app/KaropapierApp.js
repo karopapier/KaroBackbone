@@ -97,7 +97,7 @@ var KaropapierApp = Marionette.Application.extend({
         me.vent.on('GAME:MOVE', function (data) {
             //skip unrelated
             if (!data.related) {
-                console.warn(data.movedLogin, "zog bei", data.gid, data.name);
+                if (Karopapier.User.get("id")==1) console.warn(data.movedLogin, "zog bei", data.gid, data.name);
                 return false;
             }
 

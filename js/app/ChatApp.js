@@ -8,7 +8,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         this.layout.render();
 
         this.configuration = new Backbone.Model({
-            limit: 10,
+            limit: 100,
             lastLineId: 0,
             atEnd: true,
             start: 0

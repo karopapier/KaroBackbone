@@ -1,1 +1,4 @@
-<b><%= user %></b> (<%= time %>): <%= text %>
+<% if (user.trim()!="") { %>
+<b><%= user %></b> (<%= time %>):
+<% } %>
+<%= text %>
