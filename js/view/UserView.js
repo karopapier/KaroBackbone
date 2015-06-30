@@ -23,16 +23,17 @@ var UserView = Backbone.View.extend({
 
         this.render();
     },
-    onChange: function(e, a, b) {
+    onChange: function(e) {
         //if dran is the only changed property
         if (e.changed.dran && _.size(e.changed)==1) {
-            this.dranChange(e,a);
+            this.dranChange(e);
             return true;
         }
         this.render();
     },
-    dranChange: function (user, newDran) {
+    dranChange: function (user) {
         var prevDran = this.model.previous("dran");
+        var newDran = this.model.get("dran");
         if (prevDran >= 0) {
             //console.log("Dran changed from", prevDran, " to ", newVal);
             var col = (prevDran > newDran) ? "#00ff00" : "#ff0000";
@@ -40,15 +41,21 @@ var UserView = Backbone.View.extend({
             //gets nihilated by immediately following render
             this.$el.find("span.userLabel").effect('highlight', {"color": col});
             //this.$el.effect('highlight', {"color": col});
+            var v = this.renderedView();
+            //console.log($(v).filter("small").html());
+            this.$el.find("small").html($(v).filter("small").html());
         }
     },
-    render: function () {
+    renderedView: function() {
         var data = this.model.toJSON();
         data.self = (this.model.get("id")==Karopapier.User.get("id"));
-        this.$el.html(this.template({
+        var view = this.template({
             options: this.options,
             data: data
-        }));
-        return this;
+        });
+        return view;
+    },
+    render: function () {
+        this.$el.html(this.renderedView());
     }
 });
