@@ -3,21 +3,37 @@ var ChatMessagesView = Backbone.View.extend({
     initialize: function () {
         _.bindAll(this, "addItem");
         this.collection.on("add", this.addItem);
+        this.currentStart = 0;
+        this.currentEnd = 0;
     },
     addItem: function (chatMessage, animated) {
         if (typeof animated === "undefined") animated = true;
         //console.log("Single chatmessage add");
         var chatMessageView = new ChatMessageView({model: chatMessage});
-        this.$el.append(chatMessageView.$el);
+
+        //find out where to insert the template
+        var lineId = parseInt(chatMessage.get("lineId"));
+
+        var previousMessage = this.$el.find("#cm"+(lineId-1));
+        //console.log("Previous", previousMessage[0]);
+        chatMessageView.$el.find("img").on("load",this.scrollDown.bind(this));
+        if (previousMessage[0]) {
+            previousMessage.after(chatMessageView.$el)
+        } else {
+            this.$el.prepend(chatMessageView.$el);
+        }
+
         if (animated) {
             //chatMessageView.$el.hide().fadeIn();
             this.scrollDown();
         }
         chatMessageView.listenTo(chatMessage, "remove", chatMessageView.remove);
     },
+    removeItem: function(cm) {
+        console.log(cm.get("lineId"),"removed");
+    },
     scrollDown: function (options) {
-        console.warn("DONT WANNA SCROLL");
-        return false;
+        var $parent = this.$el.parent();
         options = _.defaults(options || {}, {forced: false, animated: true})
         //console.log(options);
         //check if scrolled down
@@ -31,9 +47,10 @@ var ChatMessagesView = Backbone.View.extend({
         //console.log("Ich scrolle",$parent.prop('scrollHeight') );
         //setTimeout(function() {
 
+        options.animated=false;
         //$el.animate({ scrollTop: $el.prop('scrollHeight') }, 1000);
         if (options.animated) {
-            $parent.stop().animate({scrollTop: $parent.prop("scrollHeight")}, 1000);
+            $parent.stop().animate({scrollTop: $parent.prop("scrollHeight")}, 100);
         } else {
             $parent.stop().scrollTop($parent.prop("scrollHeight") - $parent.height());
         }

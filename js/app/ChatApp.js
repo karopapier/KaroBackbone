@@ -15,7 +15,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         });
 
         this.chatMessageCache = new ChatMessageCache({});
-        this.chatMessageCache.cache(0);
+        this.chatMessageCache.cache(0,10); //initial short load
 
         this.chatMessageCollection = new ChatMessageCollection();
         this.chatMessagesView = new ChatMessagesView({
@@ -53,7 +53,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         //wire message cache and view collection together
         var me = this;
         this.listenTo(this.chatMessageCache.info, "change:lastLineId", function (ll) {
-            //console.warn("Update conf ll to ", ll.get("lastLineId"));
+            console.warn("Update conf ll to ", ll.get("lastLineId"));
             this.configuration.set("lastLineId", ll.get("lastLineId"));
         });
 
@@ -66,7 +66,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
                 var oldStart = this.configuration.get("start");
                 //do this silently if start was 0
                 this.configuration.set("start", start, {
-                    silent: (oldStart == 0)
+                    //silent: (oldStart == 0)
                 });
             }
         });

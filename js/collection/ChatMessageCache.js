@@ -10,7 +10,8 @@ var ChatMessageCache = Backbone.Collection.extend({
             lastLineId: 0
         });
     },
-    cache: function (start) {
+    cache: function (start, limit) {
+        if (typeof limit==="undefined") limit = 100;
         var me = this;
         console.log("Caching", start);
         //TODO check from start to end
@@ -21,7 +22,7 @@ var ChatMessageCache = Backbone.Collection.extend({
         //return true;
         //}
         this.fetch({
-            url: this.baseUrl + "?start=" + start + "&limit=100&callback=?",
+            url: this.baseUrl + "?start=" + start + "&limit=" + limit + "&callback=?",
             remove: false,
             success: function () {
                 me.trigger("CHAT:CACHE:UPDATED");
