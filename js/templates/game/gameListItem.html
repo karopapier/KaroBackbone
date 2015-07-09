@@ -11,6 +11,6 @@
     <%= blocked %>
     <% } else { %>
     <% d = new Date() %>
-    <%= d.getHours() %>:<%= ((d <10) ? "0" : "") + d.getMinutes() %>
+    <%= d.getHours() %>:<%= ((d.getMinutes() <10) ? "0" : "") + d.getMinutes() %>
     <% } %>
 </td>
