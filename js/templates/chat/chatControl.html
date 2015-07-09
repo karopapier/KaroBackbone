@@ -10,6 +10,6 @@ Zeilen:
 <% } %>
 <!-- <input type="checkbox" id="autoscroll" checked="checked"> <label for="autoscroll">Scrollen?</label>
 <input type="checkbox" id="showBotrixGames"> <label for="showBotrixGames"> Botrix Spielanfragen anzeigen</label> -->
-<input name="startPicker" id="startPicker" type="range" min="1" max="<%= settings.lastLineId %>" style="width: 400px">
-<input type="text" name="startLine" id="startLine" value="0" style="width: 50px">
+<input name="startPicker" id="startPicker" type="range" min="1" max="<%= settings.lastLineId %>" value="<%= settings.start %>" style="width: 400px">
+<input type="text" name="startLine" id="startLine" value="<% settings.start %>" style="width: 50px">
 <button id="startLineUpdate">OK</button>

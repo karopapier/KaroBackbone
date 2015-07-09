@@ -1,7 +1,7 @@
 var ChatApp = Backbone.Marionette.LayoutView.extend({
     className: "chatApp",
     initialize: function () {
-        _.bindAll(this, "updateView","render");
+        _.bindAll(this, "updateView", "render");
         this.layout = new ChatLayout({
             el: this.el
         });
@@ -15,7 +15,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         });
 
         this.chatMessageCache = new ChatMessageCache({});
-        this.chatMessageCache.fetch();
+        this.chatMessageCache.cache(0);
 
         this.chatMessageCollection = new ChatMessageCollection();
         this.chatMessagesView = new ChatMessagesView({
@@ -37,21 +37,42 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
             this.chatMessageCache.cache(start);
         })
 
+        this.listenTo(this.chatMessageCache,"CHAT:CACHE:UPDATED", function() {
+            //chat cache was updated - filter what to view
+            var start = this.configuration.get("start");
+            var end = parseInt(start) + parseInt(this.configuration.get("limit"));
+            var toShow = this.chatMessageCache.filter(function(cm) {
+                var lineId = cm.get("lineId");
+                //console.log("Check",lineId,"to be between",start,end);
+                return ((lineId>=start) && (lineId<=end));
+            });
+            //console.log("Between",start,"and",end,"lie",toShow.length);
+            this.chatMessageCollection.set(toShow);
+        });
+
         //wire message cache and view collection together
         var me = this;
-        this.listenTo(this.chatMessageCache, "add", function (cm) {
-            var msgLineId = cm.get("lineId");
-            //console.log("Added a cm with lineId", msgLineId);
-            var lastLineId = this.configuration.get("lastLineId");
-            //console.log("Last known", lastLineId);
-            if (msgLineId > lastLineId) {
-                this.configuration.set("lastLineId", msgLineId);
-                //console.log(cm.get("lineId"), "new last");
+        this.listenTo(this.chatMessageCache.info, "change:lastLineId", function (ll) {
+            //console.warn("Update conf ll to ", ll.get("lastLineId"));
+            this.configuration.set("lastLineId", ll.get("lastLineId"));
+        });
+
+        this.listenTo(this.configuration, "change:lastLineId", function () {
+            //a change here only matters if we are "at the end"
+            var ll = this.configuration.get("lastLineId");
+            if (this.configuration.get("atEnd")) {
+                var limit = this.configuration.get("limit");
+                var start = ll - limit;
+                var oldStart = this.configuration.get("start");
+                //do this silently if start was 0
+                this.configuration.set("start", start, {
+                    silent: (oldStart == 0)
+                });
             }
         });
 
-        this.listenTo(this.chatMessageCache, "add", this.updateView);
-        this.listenTo(this.configuration,"change:limit", this.updateView);
+        //this.listenTo(this.chatMessageCache, "add", this.updateView);
+        //this.listenTo(this.configuration, "change:limit", this.updateView);
 
         //dirty first poor man's refresh and backup
         this.refreshMessages = setInterval(function () {
@@ -70,8 +91,9 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         });
     },
     updateView: function () {
-        //console.log("New message in Cache", cm.get("lineId"));
+        console.log("updateView");
         if (this.configuration.get("atEnd")) {
+            console.log("We are at the end");
             var l = this.chatMessageCache.length;
             var lim = this.configuration.get("limit");
             this.chatMessageCollection.set(this.chatMessageCache.slice(l - lim));
