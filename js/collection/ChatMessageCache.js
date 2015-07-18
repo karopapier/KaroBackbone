@@ -11,7 +11,7 @@ var ChatMessageCache = Backbone.Collection.extend({
         });
     },
     cache: function (start, limit) {
-        if (typeof limit==="undefined") limit = 100;
+        if (typeof limit === "undefined") limit = 100;
         var me = this;
         console.log("Caching", start);
         //TODO check from start to end

@@ -1,36 +1,48 @@
 var ChatMessagesView = Backbone.View.extend({
     tagName: "div",
+    id: "chatMessagesContainer",
     initialize: function () {
         _.bindAll(this, "addItem");
         this.collection.on("add", this.addItem);
         this.currentStart = 0;
         this.currentEnd = 0;
     },
+    scrollcheck: function () {
+        console.log("I scroll");
+        var $parent = this.$el.parent();
+        var toScrollDown = $parent.prop("scrollHeight") - $parent.prop("clientHeight") - $parent.prop("scrollTop");
+        var $c = $('#chatMessages');
+        var topf = $c.prop("scrollTop");
+        var hoch = $c.prop("scrollHeight");
+        console.log(topf, hoch);
+    },
     addItem: function (chatMessage, animated) {
-        if (typeof animated === "undefined") animated = true;
-        //console.log("Single chatmessage add");
         var chatMessageView = new ChatMessageView({model: chatMessage});
-
-        //find out where to insert the template
         var lineId = parseInt(chatMessage.get("lineId"));
 
-        var previousMessage = this.$el.find("#cm"+(lineId-1));
-        //console.log("Previous", previousMessage[0]);
-        chatMessageView.$el.find("img").on("load",this.scrollDown.bind(this));
+        //find out where to insert the template
+        var previousMessage = this.$el.find("#cm" + (lineId - 1));
+
+        //chatMessageView.$el.find("img").on("load", this.scrollDown.bind(this));
+
+        //keep track of scroll
+        var $parent = this.$el.parent();
+        var sh = $parent.prop("scrollHeight");
+        var st = $parent.scrollTop();
+
+        //add message at right place, either at beginning or after previous one
         if (previousMessage[0]) {
             previousMessage.after(chatMessageView.$el)
         } else {
             this.$el.prepend(chatMessageView.$el);
         }
+        var newSh = $parent.prop("scrollHeight");
 
-        if (animated) {
-            //chatMessageView.$el.hide().fadeIn();
-            this.scrollDown();
-        }
-        chatMessageView.listenTo(chatMessage, "remove", chatMessageView.remove);
+        //find how much the height changed and scroll to original position
+        $parent.scrollTop(st + newSh - sh);
     },
-    removeItem: function(cm) {
-        console.log(cm.get("lineId"),"removed");
+    removeItem: function (cm) {
+        console.log(cm.get("lineId"), "removed");
     },
     scrollDown: function (options) {
         var $parent = this.$el.parent();
@@ -47,19 +59,35 @@ var ChatMessagesView = Backbone.View.extend({
         //console.log("Ich scrolle",$parent.prop('scrollHeight') );
         //setTimeout(function() {
 
-        options.animated=false;
-        //$el.animate({ scrollTop: $el.prop('scrollHeight') }, 1000);
-        if (options.animated) {
+        /*
+         options.animated=false;
+         //$el.animate({ scrollTop: $el.prop('scrollHeight') }, 1000);
+         if (options.animated) {
+         $parent.stop().animate({scrollTop: $parent.prop("scrollHeight")}, 100);
+         } else {
+         $parent.stop().scrollTop($parent.prop("scrollHeight") - $parent.height());
+         }
+         //},100);
+         */
+        setTimeout(function () {
             $parent.stop().animate({scrollTop: $parent.prop("scrollHeight")}, 100);
-        } else {
-            $parent.stop().scrollTop($parent.prop("scrollHeight") - $parent.height());
+        }, 10);
+    },
+    scrollCheck: function () {
+        var $parent = this.$el.parent();
+        var contentHeight = $parent.prop("scrollHeight");
+        var top = $parent.prop("scrollTop"); //how much space until you reach the top
+        var viewport = $parent.prop("clientHeight");
+        var bottom = contentHeight - top - viewport; //how much space until you reach the bottom
+        console.log("We scrolled to top", top, "and bottom", bottom);
+        if (top <= 100) {
+            this.trigger("CHAT:MESSAGES:TOP");
         }
-        //},100);
-
     }
 })
 
 /*
+ #var toScrollDown = $parent.prop("scrollHeight") - $parent.prop("clientHeight") - $parent.prop("scrollTop");
  function wieweitunten() {
  var $c=$('#chatMessages');
  var topf=$c.prop("scrollTop");

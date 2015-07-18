@@ -2,12 +2,13 @@ var ChatMessageView = Backbone.View.extend({
     tagName: "div",
     className: "chatMessage",
     template: window["JST"]["chat/chatMessage"],
-    id: function() {
-        return "cm"+ this.model.get("lineId");
+    id: function () {
+        return "cm" + this.model.get("lineId");
     },
     initialize: function () {
         _.bindAll(this, "render");
         this.render();
+        this.listenTo(this.model, "remove", this.remove);
     },
     render: function () {
         //var text = this.model.get("text");

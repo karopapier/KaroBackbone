@@ -16,12 +16,11 @@ var ChatControlView = Backbone.View.extend({
         "click #startLineUpdate": "setStart"
     },
     setStart: function(e) {
-        var start = this.$el.find("#startLine").val();
+        var start = parseInt(this.$el.find("#startLine").val());
         this.model.set("start", start);
     },
     syncStart: function(e) {
-        //console.log(e);
-        var v = e.currentTarget.value;
+        var v = parseInt(e.currentTarget.value);
         $('#startLine').val(v);
     },
     setLimit: function (e) {

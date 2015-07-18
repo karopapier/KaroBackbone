@@ -39,6 +39,7 @@ var KaropapierApp = Marionette.Application.extend({
                 if (me.User.get("id") == 0) return false;
                 me.UserDranGames.fetch();
             }
+
             refresh();
 
             this.listenTo(me.User, "change:id", refresh)
@@ -60,7 +61,7 @@ var KaropapierApp = Marionette.Application.extend({
             })
         });
 
-        this.addInitializer(function() {
+        this.addInitializer(function () {
             me.titler = new TitleView({
                 model: me.User,
                 title: "Karopapier - Autofahren wie in der Vorlesung"
@@ -97,7 +98,7 @@ var KaropapierApp = Marionette.Application.extend({
         me.vent.on('GAME:MOVE', function (data) {
             //skip unrelated
             if (!data.related) {
-                if (Karopapier.User.get("id")==1) console.warn(data.movedLogin, "zog bei", data.gid, data.name);
+                if (Karopapier.User.get("id") == 1) console.warn(data.movedLogin, "zog bei", data.gid, data.name);
                 return false;
             }
 

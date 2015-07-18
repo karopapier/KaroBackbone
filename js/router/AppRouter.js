@@ -16,7 +16,7 @@ var AppRouter = Backbone.Router.extend({
         }
         Karopapier.content.show(Karopapier.chatApp);
     },
-    showDran: function() {
+    showDran: function () {
         console.log("Show Dran");
         if (!Karopapier.dranApp) {
             Karopapier.dranApp = new DranApp();
