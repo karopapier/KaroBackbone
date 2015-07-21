@@ -15,7 +15,7 @@ var ChatMessageView = Backbone.View.extend({
         var data = this.model.toJSON();
         this.$el.html(this.model.get("text"));
         data.text = this.$el.text();
-        //text = KaroUtil.linkify(text);
+        data.text = KaroUtil.linkify(data.text);
         this.$el.html(this.template(data));
         return this;
     }
