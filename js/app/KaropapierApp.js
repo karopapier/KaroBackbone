@@ -35,14 +35,13 @@ var KaropapierApp = Marionette.Application.extend({
         //hook to events to update dran queue
         this.addInitializer(function () {
             //refresh function considering logout
-            function refresh() {
+            function dranRefresh() {
                 if (me.User.get("id") == 0) return false;
                 me.UserDranGames.fetch();
             }
+            dranRefresh();
 
-            refresh();
-
-            this.listenTo(me.User, "change:id", refresh)
+            this.listenTo(me.User, "change:id", dranRefresh)
 
             me.vent.on("USER:DRAN", function (data) {
                 me.UserDranGames.addId(data.gid, data.name);
@@ -51,6 +50,19 @@ var KaropapierApp = Marionette.Application.extend({
             me.vent.on("USER:MOVED", function (data) {
                 me.UserDranGames.remove(data.gid);
             });
+        });
+
+        //hook to events to update dran queue
+        this.addInitializer(function () {
+            //refresh function considering logout
+            function loadTheme() {
+                if (me.User.get("id") == 0) return false;
+                var theme = me.User.get("theme");
+                var themeUrl = "http://www.karopapier.de/themes/" + theme + "/css/theme.css";
+                KaroUtil.lazyCss(themeUrl);
+            }
+            loadTheme();
+            this.listenTo(me.User, "change:id", loadTheme);
         });
 
         //init dynamic favicon
