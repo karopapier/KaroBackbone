@@ -4,6 +4,14 @@ var KaroUtil = {};
         karoUtil = karoUtil || {};
         karoUtil.replacements = [
             {
+                r:"<a (.*?)</a>",
+                f: function(a) {
+                    //real-link protector
+                    return a;
+                },
+                sw: "i"
+            },
+            {
                 r: "(^|\\s)nen(^|\\s|$)",
                 f: function (text) {
                     return RegExp.$1 + "einen" + RegExp.$2;
