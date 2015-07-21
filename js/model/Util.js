@@ -34,8 +34,8 @@ var KaroUtil = {};
             {
                 r: "(?:http\\:\\/\\/www.karopapier.de\\/showmap.php\\?|http:\\/\\/2.karopapier.de\\/game.html\\?|\\b)GID[ =]([0-9]{3,6})\\b",
                 f: function (all, gid) {
-                    console.log("All", all);
-                    console.log("GID", gid);
+                    //console.log("All", all);
+                    //console.log("GID", gid);
                     $.getJSON('http://www.karopapier.de/api/game/' + gid + '/info.json?callback=?', function (gameInfo) {
                         $('a.GidLink' + gid).text(gid + ' - ' + gameInfo.game.name);
                     });
@@ -46,7 +46,7 @@ var KaroUtil = {};
             {
                 r: "(?![^<]+>)((https?\\:\\/\\/|ftp\:\\/\\/)|(www\\.))(\\S+)(\\w{2,4})(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-\\/]))?",
                 f: function (url) {
-                    console.log("URL MATCH", url);
+                    //console.log("URL MATCH", url);
                     var className = "";
                     var linktext = url;
                     var linktitle = url;
@@ -59,7 +59,7 @@ var KaroUtil = {};
 
                     //special handdling: youtube
                     if (url.match('youtube.com/.*v=.*') || url.match('youtu.be/.*')) {
-                        console.log("Its a yt url", url);
+                        //console.log("Its a yt url", url);
                         try {
                             var videoid = url.split("?").filter(function (part) {
                                 return part.substr(0, 2) == "v=";
@@ -68,7 +68,7 @@ var KaroUtil = {};
                             //console.log("Try yt");
                             var videoid = url.split("tu\.be/")[1];
                         }
-                        console.log("Its a yt url", url, videoid);
+                        //console.log("Its a yt url", url, videoid);
                         className += " yt_" + videoid;
                         var yt_url = 'https://www.googleapis.com/youtube/v3/videos?id=' + videoid + '&key=AIzaSyBuMu8QDh49VqGJo4cSS4_9pTC9cqZwy98&part=snippet';
                         if (videoid in YOUTUBE_CACHE) {
@@ -85,10 +85,10 @@ var KaroUtil = {};
                             });
                         }
                     } else if (url.match('.*\.(jpg|gif|png)')) {
-                        console.log("Handling jpg url", url);
+                        //console.log("Handling jpg url", url);
                         linktext = '<img src="' + url + '" height="20" />';
                     } else {
-                        console.log("Handling default url", url, text);
+                        //console.log("Handling default url", url, text);
                         if (url.match('^https?:\/\/')) {
                             linktext = linktext.replace(/^https?:\/\//i, '');
                             linktext = linktext.replace(/^www./i, '');
@@ -124,7 +124,7 @@ var KaroUtil = {};
             {
                 r: 'img src="\\/images\\/smilies\\/(.*?).gif" alt=',
                 f: function (all, smil) {
-                    console.log(all, smil);
+                    //console.log(all, smil);
                     return 'img src="http://www.karopapier.de/bilder/smilies/' + RegExp.$1 + '.gif" alt=';
                 },
                 sw: "i"
