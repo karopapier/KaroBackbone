@@ -1,106 +1,183 @@
 var YOUTUBE_CACHE = {};
 var KaroUtil = {};
 (function (karoUtil) {
-    karoUtil = karoUtil || {};
-    karoUtil.createSvg = function (tag, attrs) {
-        var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
-        for (var k in attrs)
-            el.setAttribute(k, attrs[k]);
-        return el;
-    };
-    karoUtil.linkify = function (text) {
-        if (!text) return text;
-
-        //find links outside tags
-        //outside tag lookahead: (?![^<]+>)
-        text = text.replace(/(?![^<]+>)((https?\:\/\/|ftp\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi, function (url) {
-            var className = "";
-            var linktext = url;
-            var linktitle = url;
-            if (url.match('^https?:\/\/')) {
-                //linktext = linktext.replace(/^https?:\/\//i,'')
-                //linktext = linktext.replace(/^www./i,'')
-            } else {
-                url = 'http://' + url;
-            }
-
-            //special handdling: youtube
-            if (url.match('youtube.com/.*v=.*') || url.match('youtu.be/.*')) {
-                //console.log("Its a yt url", url);
-                try {
-                    var videoid = url.split("?").filter(function (part) {
-                        return part.substr(0, 2) == "v=";
-                    })[0].split("=")[1];
-                } catch (err) {
-                    //console.log("Try yt");
-                    var videoid = url.split("tu\.be/")[1];
+        karoUtil = karoUtil || {};
+        karoUtil.replacements = [
+            {
+                r: "(^|\\s)nen(^|\\s|$)",
+                f: function (text) {
+                    return RegExp.$1 + "einen" + RegExp.$2;
+                },
+            },
+            {
+                r: "(^|\\s)Nen(^|\\s|$)",
+                f: function () {
+                    return RegExp.$1 + "Einen" + RegExp.$2;
                 }
-                //console.log("Its a yt url", url, videoid);
-                className += " yt_" + videoid;
-                var yt_url = 'https://www.googleapis.com/youtube/v3/videos?id=' + videoid + '&key=AIzaSyBuMu8QDh49VqGJo4cSS4_9pTC9cqZwy98&part=snippet';
-                if (videoid in YOUTUBE_CACHE) {
-                    var snippet = YOUTUBE_CACHE[videoid];
-                    linktext = '<img height="20" src="' + snippet.thumbnails.default.url + '" />' + snippet.title;
-                    linktitle = snippet.description;
-                } else {
-                    //console.log(yt_url);
-                    $.getJSON(yt_url, function (data) {
-                        var snippet = data.items[0].snippet;
-                        YOUTUBE_CACHE[videoid] = snippet;
-                        linktext = '<img height="20" src="' + snippet.thumbnails.default.url + '" />' + snippet.title;
-                        $('a.yt_' + videoid).attr("title", snippet.description).html(linktext);
+            },
+            {
+                r: "\\banders\\b",
+                f: function () {
+                    //Thomas Anders
+                    return ' <img style="opacity: .3" src="http://www.karopapier.de/images/anders.jpg" alt="anders" title="anders" />';
+                },
+                sw: "i"
+            },
+            {
+                r: "\\bhoff\\b",
+                f: function () {
+                    //The HOFF
+                    return ' <img style="opacity: .3" src="http://www.karopapier.de/images/hoff.jpg"     alt="hoff" title="hoff" />';
+                },
+                sw: "i"
+            },
+            {
+                r: "(?:http\\:\\/\\/www.karopapier.de\\/showmap.php\\?|http:\\/\\/2.karopapier.de\\/game.html\\?|\\b)GID[ =]([0-9]{3,6})\\b",
+                f: function (all, gid) {
+                    console.log("All", all);
+                    console.log("GID", gid);
+                    $.getJSON('http://www.karopapier.de/api/game/' + gid + '/info.json?callback=?', function (gameInfo) {
+                        $('a.GidLink' + gid).text(gid + ' - ' + gameInfo.game.name);
                     });
-                }
-            } else if (url.match('.*\.(jpg|gif|png)')) {
-                //console.log("Handling jpg url", url);
-                linktext = '<img src="' + url + '" height="20" />';
-            } else {
-                //console.log("Handling default url", url, text);
-                if (url.match('^https?:\/\/')) {
-                    linktext = linktext.replace(/^https?:\/\//i, '');
-                    linktext = linktext.replace(/^www./i, '');
+                    return '<a class="GidLink' + gid + '" href="http://2.karopapier.de/game.html?GID=' + gid + '" target="_blank">' + gid + '</a>';
+                },
+                sw: "i"
+            },
+            {
+                r: "(?![^<]+>)((https?\\:\\/\\/|ftp\:\\/\\/)|(www\\.))(\\S+)(\\w{2,4})(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-\\/]))?",
+                f: function (url) {
+                    console.log("URL MATCH", url);
+                    var className = "";
+                    var linktext = url;
+                    var linktitle = url;
+                    if (url.match('^https?:\/\/')) {
+                        //linktext = linktext.replace(/^https?:\/\//i,'')
+                        //linktext = linktext.replace(/^www./i,'')
+                    } else {
+                        url = 'http://' + url;
+                    }
+
+                    //special handdling: youtube
+                    if (url.match('youtube.com/.*v=.*') || url.match('youtu.be/.*')) {
+                        console.log("Its a yt url", url);
+                        try {
+                            var videoid = url.split("?").filter(function (part) {
+                                return part.substr(0, 2) == "v=";
+                            })[0].split("=")[1];
+                        } catch (err) {
+                            //console.log("Try yt");
+                            var videoid = url.split("tu\.be/")[1];
+                        }
+                        console.log("Its a yt url", url, videoid);
+                        className += " yt_" + videoid;
+                        var yt_url = 'https://www.googleapis.com/youtube/v3/videos?id=' + videoid + '&key=AIzaSyBuMu8QDh49VqGJo4cSS4_9pTC9cqZwy98&part=snippet';
+                        if (videoid in YOUTUBE_CACHE) {
+                            var snippet = YOUTUBE_CACHE[videoid];
+                            linktext = '<img height="20" src="' + snippet.thumbnails.default.url + '" />' + snippet.title;
+                            linktitle = snippet.description;
+                        } else {
+                            //console.log(yt_url);
+                            $.getJSON(yt_url, function (data) {
+                                var snippet = data.items[0].snippet;
+                                YOUTUBE_CACHE[videoid] = snippet;
+                                linktext = '<img height="20" src="' + snippet.thumbnails.default.url + '" />' + snippet.title;
+                                $('a.yt_' + videoid).attr("title", snippet.description).html(linktext);
+                            });
+                        }
+                    } else if (url.match('.*\.(jpg|gif|png)')) {
+                        console.log("Handling jpg url", url);
+                        linktext = '<img src="' + url + '" height="20" />';
+                    } else {
+                        console.log("Handling default url", url, text);
+                        if (url.match('^https?:\/\/')) {
+                            linktext = linktext.replace(/^https?:\/\//i, '');
+                            linktext = linktext.replace(/^www./i, '');
+                        }
+                    }
+
+                    return '<a class="' + className + '" title="' + linktitle + '" target="_blank" rel="nofollow" href="' + url + '">' + linktext + '</a>';
+                },
+                sw: "i"
+            },
+            {
+                r: ":([a-z]*?):",
+                f: function (all, smil) {
+                    //console.log(smil);
+                    var img = document.createElement("img");
+                    img.src = "http://www.karopapier.de/bilder/smilies/" + smil + ".gif";
+                    img.onload = function () {
+                        //console.log("Ich lud");
+                        $('.smiley.' + smil).replaceWith(img);
+                    }
+                    return '<span class="smiley ' + smil + '">' + all + '</span>';
+                },
+                sw: "i"
+            },
+            {
+                r:"-:K",
+                f: "<i>"
+            },
+            {
+                r:"K:-",
+                f: "</i>"
+            },
+            {
+                r: 'img src="\\/images\\/smilies\\/(.*?).gif" alt=',
+                f: function (all, smil) {
+                    console.log(all, smil);
+                    return 'img src="http://www.karopapier.de/bilder/smilies/' + RegExp.$1 + '.gif" alt=';
+                },
+                sw: "i"
+            }
+        ];
+
+
+        karoUtil.createSvg = function (tag, attrs) {
+            var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+            for (var k in attrs)
+                el.setAttribute(k, attrs[k]);
+            return el;
+        };
+
+        karoUtil.linkify = function (text) {
+            if (!text) return text;
+
+            //console.log("Look at", text);
+            for (var i = 0, l = this.replacements.length; i < l; i++) {
+                var rpl = this.replacements[i];
+                var r = rpl.r;
+                var f = rpl.f;
+                var sw = rpl.sw || "";
+                //console.log(r, sw);
+
+                var rx = new RegExp("^(.*?)(" + r + ")(.*?)$", sw);
+                //console.log(rx);
+                var parts = rx.exec(text);
+                if (parts) {
+                    //console.log("Match for", rx, parts);
+                    var dump = parts.shift(); //whole string
+                    var before = parts.shift();
+                    var matchingText = parts.shift();
+                    var after = parts.pop(); //there can be internal submatches
+                    var textToReturn = karoUtil.linkify(before) + matchingText.replace(new RegExp(r, sw), f) + karoUtil.linkify(after);
+                    //console.info(textToReturn);
+                    return textToReturn;
                 }
             }
+            //console.log("No match, return text", text);
+            //nothing matches?
+            return text;
+        };
 
-            return '<a class="' + className + '" title="' + linktitle + '" target="_blank" rel="nofollow" href="' + url + '">' + linktext + '</a>';
-        });
+        karoUtil.oldlinkify = function (text) {
+            //smilies
 
-        //Thomas Anders
-        text = text.replace(/\banders\b/gi, ' <img style="opacity: .3" src="http://www.karopapier.de/images/anders.jpg" alt="anders" title="anders" />');
-        //The HOFF
-        text = text.replace(/\bhoff\b/gi, ' <img style="opacity: .3" src="http://www.karopapier.de/images/hoff.jpg"     alt="hoff" title="hoff" />');
-        //nen -> einen
-        text = text.replace(/(^|\s)nen(^|\s)/g, '$1einen$2');
-        text = text.replace(/(^|\s)Nen(^|\s)/g, '$1Einen$2');
-
-        text = text.replace("-:K", "<i>");
-        text = text.replace("K:-", "</i>");
-
-        //smilies
-        text = text.replace(/img src="\/images\/smilies\/(.*?).gif" alt=/g, 'img src="http://www.karopapier.de/bilder/smilies/$1.gif" alt=');
-
-        //GID replacement to game link
-        text = text.replace(/\bGID[ =]([0-9]{3,6})\b/gi, function (all, gid) {
-            $.getJSON('http://www.karopapier.de/api/game/' + gid + '/info.json?callback=?', function (gameInfo) {
-                $('a.GidLink' + gid).text(gid + ' - ' + gameInfo.game.name);
-            });
-            return '<a class="GidLink' + gid + '" href="http://www.karopapier.de/showmap.php?GID=' + gid + '" target="_blank">' + gid + '</a>';
-        });
-
-        text = text.replace(/:([a-z]*?):/g, function (all, smil) {
-            //console.log(smil);
-            var img = document.createElement("img");
-            img.src = "http://www.karopapier.de/bilder/smilies/" + smil + ".gif";
-            img.onload = function () {
-                //console.log("Ich lud");
-                $('.smiley.' + smil).replaceWith(img);
-            }
-            return '<span class="smiley ' + smil + '">' + all + '</span>';
-        });
-
-        return text;
-    };
-}(KaroUtil));
+            return text;
+        };
+    }
+    (KaroUtil)
+)
+;
 
 ''.trim || (String.prototype.trim = function () {
     return this.replace(/^[\s\uFEFF]+|[\s\uFEFF]+$/g, '')
