@@ -11,7 +11,7 @@ var KaropapierApp = Marionette.Application.extend({
         //make this user refer to "check" for loging in
         this.User.url = function () {
             return "http://www.karopapier.de/api/user/check.json?callback=?";
-        }
+        };
         this.User.fetch();
 
         this.UserDranGames = new DranGameCollection();
@@ -30,7 +30,7 @@ var KaropapierApp = Marionette.Application.extend({
         //add container for notifications
         this.addInitializer(function () {
             me.notifierView.render();
-        })
+        });
 
         //hook to events to update dran queue
         this.addInitializer(function () {
@@ -39,6 +39,7 @@ var KaropapierApp = Marionette.Application.extend({
                 if (me.User.get("id") == 0) return false;
                 me.UserDranGames.fetch();
             }
+
             dranRefresh();
 
             this.listenTo(me.User, "change:id", dranRefresh)
@@ -61,6 +62,7 @@ var KaropapierApp = Marionette.Application.extend({
                 var themeUrl = "http://www.karopapier.de/themes/" + theme + "/css/theme.css";
                 KaroUtil.lazyCss(themeUrl);
             }
+
             loadTheme();
             this.listenTo(me.User, "change:id", loadTheme);
         });
@@ -79,7 +81,7 @@ var KaropapierApp = Marionette.Application.extend({
                 title: "Karopapier - Autofahren wie in der Vorlesung"
             })
             me.titler.render();
-        })
+        });
 
         //genereal page setup
         this.addInitializer(function () {
@@ -88,7 +90,7 @@ var KaropapierApp = Marionette.Application.extend({
                 content: '#content',
                 footer: '#footer'
             });
-        })
+        });
 
         //user info bar right top
         this.addInitializer(function () {
@@ -96,7 +98,7 @@ var KaropapierApp = Marionette.Application.extend({
                 model: me.User
             });
             me.header.show(Karopapier.infoBar);
-        })
+        });
 
         //Start the router
         this.addInitializer(function () {
@@ -104,7 +106,7 @@ var KaropapierApp = Marionette.Application.extend({
             Backbone.history.start({
                 pushState: true
             });
-        })
+        });
 
         //better place for this???
         me.vent.on('GAME:MOVE', function (data) {

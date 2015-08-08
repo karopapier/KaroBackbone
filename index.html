@@ -50,7 +50,7 @@
                 console.log("Logging out");
                 Karopapier.User.set("id", 0);
                 console.log(Karopapier.User);
-            })
+            });
 
             Karopapier.vent.on("login", function () {
                 console.log("Logging in");
@@ -61,13 +61,13 @@
                     console.log(data);
                     Karopapier.User.set(data);
                 })
-            })
+            });
 
             $(document).ready(function () {
                 console.log("Doc ready, start app");
                 Karopapier.start();
                 console.log("App started");
-            })
+            });
 
         </script>
 
