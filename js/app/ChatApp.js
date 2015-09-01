@@ -63,6 +63,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
             var extender = 100;
             var start = this.configuration.get("start");
             var limit = this.configuration.get("limit");
+            if (start<=1) return true;
             start -= extender;
             this.configuration.set({
                 start: start,
