@@ -9,14 +9,15 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         this.already = true;
 
         this.configuration = new Backbone.Model({
-            limit: 100,
+            limit: 20,
             lastLineId: 0,
             atEnd: true,
-            start: 0
+            start: 0,
+            history: false
         });
 
         this.chatMessageCache = new ChatMessageCache({});
-        this.chatMessageCache.cache(0, 10); //initial short load
+        this.chatMessageCache.cache(0, 20); //initial short load
 
         this.chatMessageCollection = new ChatMessageCollection();
         this.chatMessagesView = new ChatMessagesView({
@@ -60,6 +61,11 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         });
 
         this.listenTo(this.chatMessagesView, "CHAT:MESSAGES:TOP", function () {
+            if (!this.configuration.get("history")) {
+                console.info("Not in history mode");
+                return false;
+            }
+
             var extender = 100;
             var start = this.configuration.get("start");
             var limit = this.configuration.get("limit");

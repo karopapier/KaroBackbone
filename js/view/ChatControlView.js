@@ -7,13 +7,15 @@ var ChatControlView = Backbone.View.extend({
         this.listenTo(this.model, "change:limit", this.render);
         this.listenTo(this.model, "change:start", this.render);
         this.listenTo(this.model, "change:lastLineId", this.render);
+        this.listenTo(this.model, "change:history", this.render);
         return this;
     },
     events: {
         "click .messageLimit": "setLimit",
         "change #startPicker": "syncStart",
         "input #startPicker": "syncStart",
-        "click #startLineUpdate": "setStart"
+        "click #startLineUpdate": "setStart",
+        "click .toggleTimewarp": "toggleTimewarp"
     },
     setStart: function(e) {
         var start = parseInt(this.$el.find("#startLine").val());
@@ -26,6 +28,22 @@ var ChatControlView = Backbone.View.extend({
     setLimit: function (e) {
         var limit = parseInt($(e.currentTarget).text());
         this.model.set("limit", limit);
+    },
+    toggleTimewarp: function(e) {
+        var history = this.model.get("history");
+        var settings = {};
+        settings.history = !history;
+        settings.limit = 100;
+        if (history) {
+            //switch to "normal"
+            settings.limit = 20;
+        } else {
+            //switch to history
+            settings.limit = 100;
+        }
+
+        console.log(settings);
+        this.model.set(settings);
     },
     render: function () {
         console.log("Render control view", this.model.get("start"), this.model.get("lastLineId"));
