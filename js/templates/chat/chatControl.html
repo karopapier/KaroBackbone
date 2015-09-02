@@ -1,8 +1,9 @@
 <% if (settings.history) { %>
-<input name="startPicker" id="startPicker" type="range" min="1" max="<%= (settings.lastLineId - settings.limit) %>" value="<%= settings.start %>" style="width: 400px">
-<input type="text" name="startLine" id="startLine" value="<%= settings.start %>" style="width: 50px">
-<button id="startLineUpdate">OK</button>
-<img src="/images/timewarp.png" class="toggleTimewarp spinning">
+Timewarp-Modus aktiv <img src="/images/timewarp.png" class="toggleTimewarp spinning"><br />
+<input name="startPicker" id="startPicker" type="range" min="1" max="<%= (settings.lastLineId - settings.limit) %>" value="<%= settings.start %>" style="width: 400px"><br />
+Zeile <input type="text" name="startLine" id="startLine" value="<%= settings.start %>" style="width: 50px">
+<span class="rewind clickable">-100</span> <span class="forward clickable">+100</span><br>
+<button id="startLineUpdate">Hinspringen</button>
 <% } else { %>
 Zeilen:
 <% var limits=[10,20,50,100] %>
