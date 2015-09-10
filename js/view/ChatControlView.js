@@ -17,7 +17,8 @@ var ChatControlView = Backbone.View.extend({
         "click #startLineUpdate": "setStart",
         "click .toggleTimewarp": "toggleTimewarp",
         "click span.rewind": "rewind",
-        "click span.forward": "forward"
+        "click span.forward": "forward",
+        "click #funnyChat": "setLinkifyFun"
     },
     setStart: function(e) {
         var start = parseInt(this.$el.find("#startLine").val());
@@ -62,6 +63,12 @@ var ChatControlView = Backbone.View.extend({
         console.log(settings);
         this.model.set(settings);
     },
+
+    setLinkifyFun: function(e) {
+        var funny = $(e.currentTarget).prop("checked");
+        this.model.set("funny", funny);
+    },
+
     render: function () {
         console.log("Render control view", this.model.get("start"), this.model.get("lastLineId"));
         if (Karopapier.User.get("id") != 0) {

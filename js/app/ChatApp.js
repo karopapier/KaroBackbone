@@ -13,7 +13,8 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
             lastLineId: 0,
             atEnd: true,
             start: 0,
-            history: false
+            history: false,
+            funny: true
         });
 
         this.chatMessageCache = new ChatMessageCache({});
@@ -40,12 +41,18 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
                 var start = this.configuration.get("lastLineId") - this.configuration.get("limit");
                 this.configuration.set("start", start);
             }
-        })
+        });
 
         this.listenTo(this.configuration, "change:start", function (conf, start) {
             console.log("Start changed, was ", conf.previous("start"), "now", start);
             this.chatMessageCache.cache(start);
-        })
+        });
+
+        this.listenTo(this.configuration, "change:funny", function(conf, funny) {
+            KaroUtil.setFunny(funny);
+            var l = this.configuration.get("limit");
+            this.configuration.set("limit",0);
+        });
 
         this.listenTo(this.chatMessageCache, "CHAT:CACHE:UPDATED", function () {
             //chat cache was updated - filter what to view

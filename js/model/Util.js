@@ -2,44 +2,57 @@ var YOUTUBE_CACHE = {};
 var KaroUtil = {};
 (function (karoUtil) {
         karoUtil = karoUtil || {};
-        karoUtil.replacements = [
-            {
-                r:"<a (.*?)</a>",
-                f: function(a) {
+        karoUtil.funny = true;
+        karoUtil.init = function () {
+            console.log("Do da util init");
+            karoUtil.replacements = [];
+            karoUtil.replacements.push({
+                r: "<a (.*?)</a>",
+                f: function (a) {
                     //real-link protector
                     return a;
                 },
                 sw: "i"
-            },
-            {
-                r: "(^|\\s)nen(^|\\s|$)",
-                f: function (text) {
-                    return RegExp.$1 + "einen" + RegExp.$2;
-                },
-            },
-            {
-                r: "(^|\\s)Nen(^|\\s|$)",
-                f: function () {
-                    return RegExp.$1 + "Einen" + RegExp.$2;
-                }
-            },
-            {
-                r: "\\banders\\b",
-                f: function () {
-                    //Thomas Anders
-                    return ' <img style="opacity: .3" src="http://www.karopapier.de/images/anders.jpg" alt="anders" title="anders" />';
-                },
-                sw: "i"
-            },
-            {
-                r: "\\bhoff\\b",
-                f: function () {
-                    //The HOFF
-                    return ' <img style="opacity: .3" src="http://www.karopapier.de/images/hoff.jpg"     alt="hoff" title="hoff" />';
-                },
-                sw: "i"
-            },
-            {
+            });
+
+            if (karoUtil.funny) {
+                //nen
+                karoUtil.replacements.push({
+                    r: "(^|\\s)nen(^|\\s|$)",
+                    f: function (text) {
+                        return RegExp.$1 + "einen" + RegExp.$2;
+                    },
+                });
+
+                //Nen
+                karoUtil.replacements.push({
+                    r: "(^|\\s)Nen(^|\\s|$)",
+                    f: function () {
+                        return RegExp.$1 + "Einen" + RegExp.$2;
+                    }
+                });
+
+                //Thomas Anders
+                karoUtil.replacements.push({
+                    r: "\\banders\\b",
+                    f: function () {
+                        return ' <img style="opacity: .3" src="http://www.karopapier.de/images/anders.jpg" alt="anders" title="anders" />';
+                    },
+                    sw: "i"
+                });
+
+                //The HOFF
+                karoUtil.replacements.push({
+                    r: "\\bhoff\\b",
+                    f: function () {
+                        return ' <img style="opacity: .3" src="http://www.karopapier.de/images/hoff.jpg"     alt="hoff" title="hoff" />';
+                    },
+                    sw: "i"
+                });
+            }
+
+            //GID
+            karoUtil.replacements.push({
                 r: "(?:http\\:\\/\\/www.karopapier.de\\/showmap.php\\?|http:\\/\\/2.karopapier.de\\/game.html\\?|\\b)GID[ =]([0-9]{3,6})\\b",
                 f: function (all, gid) {
                     //console.log("All", all);
@@ -50,8 +63,10 @@ var KaroUtil = {};
                     return '<a class="GidLink' + gid + '" href="http://2.karopapier.de/game.html?GID=' + gid + '" target="_blank">' + gid + '</a>';
                 },
                 sw: "i"
-            },
-            {
+            });
+
+            //Links
+            karoUtil.replacements.push({
                 r: "(?![^<]+>)((https?\\:\\/\\/|ftp\:\\/\\/)|(www\\.))(\\S+)(\\w{2,4})(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-\\/]))?",
                 f: function (url) {
                     //console.log("URL MATCH", url);
@@ -106,8 +121,10 @@ var KaroUtil = {};
                     return '<a class="' + className + '" title="' + linktitle + '" target="_blank" rel="nofollow" href="' + url + '">' + linktext + '</a>';
                 },
                 sw: "i"
-            },
-            {
+            });
+
+            //Smilies
+            karoUtil.replacements.push({
                 r: ":([a-z]*?):",
                 f: function (all, smil) {
                     //console.log(smil);
@@ -120,24 +137,25 @@ var KaroUtil = {};
                     return '<span class="smiley ' + smil + '">' + all + '</span>';
                 },
                 sw: "i"
-            },
-            {
-                r:"-:K",
+            });
+
+            karoUtil.replacements.push({
+                r: "-:K",
                 f: "<i>"
-            },
-            {
-                r:"K:-",
+            });
+            karoUtil.replacements.push({
+                r: "K:-",
                 f: "</i>"
-            },
-            {
+            });
+            karoUtil.replacements.push({
                 r: 'img src="\\/images\\/smilies\\/(.*?).gif" alt=',
                 f: function (all, smil) {
                     //console.log(all, smil);
                     return 'img src="http://www.karopapier.de/bilder/smilies/' + RegExp.$1 + '.gif" alt=';
                 },
                 sw: "i"
-            }
-        ];
+            });
+        };
 
 
         karoUtil.createSvg = function (tag, attrs) {
@@ -179,7 +197,7 @@ var KaroUtil = {};
 
         karoUtil.oldlinkify = function (text) {
             //smilies
-
+            console.warn("DEPRECATED");
             return text;
         };
 
@@ -191,19 +209,35 @@ var KaroUtil = {};
             link.href = url;
             head.appendChild(link);
         };
+
+        karoUtil.setFunny = function (tf) {
+            karoUtil.funny = tf;
+            karoUtil.init();
+        };
+
+        karoUtil.init();
     }
     (KaroUtil)
-)
-;
+);
 
-''.trim || (String.prototype.trim = function () {
-    return this.replace(/^[\s\uFEFF]+|[\s\uFEFF]+$/g, '')
-});
-if (typeof String.prototype.startsWith != 'function') {
-    String.prototype.startsWith = function (str) {
-        return this.slice(0, str.length) == str;
+//Polyfills
+if (!String.prototype.trim) {
+    (function () {
+        // Make sure we trim BOM and NBSP
+        var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+        String.prototype.trim = function () {
+            return this.replace(rtrim, '');
+        };
+    })();
+}
+
+if (!String.prototype.startsWith) {
+    String.prototype.startsWith = function (searchString, position) {
+        position = position || 0;
+        return this.indexOf(searchString, position) === position;
     };
 }
+
 if (typeof String.prototype.truncate != 'function') {
     String.prototype.truncate = function (str, c) {
         return str.substring(0, c) + "...";

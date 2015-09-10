@@ -108,6 +108,11 @@ var KaropapierApp = Marionette.Application.extend({
             });
         });
 
+        //lazy css
+        this.addInitializer(function() {
+            KaroUtil.lazyCss("http://www.karopapier.de/css/slidercheckbox/slidercheckbox.css");
+        })
+
         //better place for this???
         me.vent.on('GAME:MOVE', function (data) {
             //skip unrelated
