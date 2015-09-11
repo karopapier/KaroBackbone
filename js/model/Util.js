@@ -15,6 +15,24 @@ var KaroUtil = {};
                 sw: "i"
             });
 
+            //Formatting
+            karoUtil.replacements.push({
+                r: "-:K",
+                f: "<i>"
+            });
+            karoUtil.replacements.push({
+                r: "K:-",
+                f: "</i>"
+            });
+            karoUtil.replacements.push({
+                r: "-:F",
+                f: "<b>"
+            });
+            karoUtil.replacements.push({
+                r: "F:-",
+                f: "</b>"
+            });
+
             if (karoUtil.funny) {
                 //nen
                 karoUtil.replacements.push({
@@ -139,14 +157,6 @@ var KaroUtil = {};
                 sw: "i"
             });
 
-            karoUtil.replacements.push({
-                r: "-:K",
-                f: "<i>"
-            });
-            karoUtil.replacements.push({
-                r: "K:-",
-                f: "</i>"
-            });
             karoUtil.replacements.push({
                 r: 'img src="\\/images\\/smilies\\/(.*?).gif" alt=',
                 f: function (all, smil) {
