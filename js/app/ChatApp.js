@@ -50,8 +50,10 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
 
         this.listenTo(this.configuration, "change:funny", function(conf, funny) {
             KaroUtil.setFunny(funny);
-            var l = this.configuration.get("limit");
-            this.configuration.set("limit",0);
+            this.chatMessageCache.each(function(m) {
+                //dummy trigger change event to force re-render
+                m.set("funny", funny);
+            });
         });
 
         this.listenTo(this.chatMessageCache, "CHAT:CACHE:UPDATED", function () {
