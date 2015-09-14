@@ -1,4 +1,4 @@
 <% if (user.trim()!="") { %>
 <b><%= user %></b> <span title="Zeile <%= lineId %> im Chat">(<%= time %>)</span>:
 <% } %>
-<%= text %>
+<span class="chatText"><%= text %></span>

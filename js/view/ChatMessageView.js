@@ -9,16 +9,19 @@ var ChatMessageView = Backbone.View.extend({
         _.bindAll(this, "render");
         this.render();
         this.listenTo(this.model, "remove", this.remove);
-        this.listenTo(this.model, "change", this.render);
+        this.listenTo(this.model, "change:funny", this.updateText);
     },
-    render: function () {
-        //var text = this.model.get("text");
+    updateText: function() {
+
         var me = this;
-        var data = this.model.toJSON();
-        this.$el.html(this.model.get("text"));
-        data.text = this.$el.text();
-        data.text = KaroUtil.linkify(data.text);
-        this.$el.html(this.template(data));
+        //first parse html
+        var $dummy = $("<span>");
+        $dummy.html(this.model.get("text"));
+        var text = $dummy.text();
+
+        text = KaroUtil.linkify(text);
+        var $textSpan = this.$el.find(".chatText").first();
+        $textSpan.html(text);
         var imgs = this.$el.find("img").load(function (e) {
             var $parparent = me.$el.parent().parent();
             var newHeight = me.$el.height();
@@ -32,6 +35,15 @@ var ChatMessageView = Backbone.View.extend({
         setTimeout(function () {
             messageHeight = me.$el.height();
         }, 5);
+    },
+    render: function () {
+        //var text = this.model.get("text");
+        var me = this;
+        var data = this.model.toJSON();
+        data.text = "";
+        this.$el.html(this.template(data));
+
+        this.updateText();
         return this;
     }
 });
