@@ -14,7 +14,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
             atEnd: true,
             start: 0,
             history: false,
-            funny: true
+            funny: Karopapier.Settings.get("funny")
         });
 
         this.chatMessageCache = new ChatMessageCache({});
@@ -49,6 +49,10 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         });
 
         this.listenTo(this.configuration, "change:funny", function(conf, funny) {
+            Karopapier.Settings.set("funny", funny);
+        });
+
+        this.listenTo(Karopapier.Settings, "change:funny", function(conf, funny) {
             KaroUtil.setFunny(funny);
             this.chatMessageCache.each(function(m) {
                 //dummy trigger change event to force re-render

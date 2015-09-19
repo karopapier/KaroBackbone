@@ -8,6 +8,7 @@ var ChatControlView = Backbone.View.extend({
         this.listenTo(this.model, "change:start", this.render);
         this.listenTo(this.model, "change:lastLineId", this.render);
         this.listenTo(this.model, "change:history", this.render);
+        this.listenTo(this.model, "change:funny", this.updateFunny);
         return this;
     },
     events: {
@@ -68,7 +69,9 @@ var ChatControlView = Backbone.View.extend({
         var funny = $(e.currentTarget).prop("checked");
         this.model.set("funny", funny);
     },
-
+    updateFunny: function(e) {
+        console.warn("HIER CHECKBOX CHECK");
+    },
     render: function () {
         console.log("Render control view", this.model.get("start"), this.model.get("lastLineId"));
         if (Karopapier.User.get("id") != 0) {

@@ -21,6 +21,8 @@ var KaropapierApp = Marionette.Application.extend({
             user: this.User
         });
 
+        this.Settings = new Settings({ id: 1 });
+
         this.notifier = new KaroNotifier();
         this.notifierView = new NotifierView({model: this.notifier});
 
