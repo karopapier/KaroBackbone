@@ -17,6 +17,7 @@ test("linkify", function () {
         "Wo leitest du mich hin? http://2.karopapier.de/game.html?GID=85566 ",
         "Hier is was nettes zum angucken http://feelgrafix.com/data_images/out/12/861215-nice-wallpaper.jpg. Schön, gell?",
         "Walk off the earth rocks: https://www.youtube.com/watch?v=0RgIK36X3Tw",
+        "Vielleicht könnte man sowas ja damit verhindern? https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao",
         '<img src="/images/smilies/wavey.gif" alt="wavey" title="wavey">',
         'Didi und Stickerle fahr ich jetzt in Grund und Boden! GID=87654 <a href="http://www.karopapier.de/showmap.php?GID=87654">Direktlink_1.0</a>',
     ]
@@ -38,6 +39,7 @@ test("linkify", function () {
         'Wo leitest du mich hin? <a class="GidLink85566" href="http://2.karopapier.de/game.html?GID=85566" target="_blank">85566</a> ',
         'Hier is was nettes zum angucken <a class="" title="http://feelgrafix.com/data_images/out/12/861215-nice-wallpaper.jpg" target="_blank" rel="nofollow" href="http://feelgrafix.com/data_images/out/12/861215-nice-wallpaper.jpg"><img src="http://feelgrafix.com/data_images/out/12/861215-nice-wallpaper.jpg" height="20" /></a>. Schön, gell?',
         'Walk off the earth rocks: <a class=" yt_0RgIK36X3Tw" title="https://www.youtube.com/watch?v=0RgIK36X3Tw" target="_blank" rel="nofollow" href="https://www.youtube.com/watch?v=0RgIK36X3Tw">https://www.youtube.com/watch?v=0RgIK36X3Tw</a>',
+        'Vielleicht könnte man sowas ja damit verhindern? <a class=\" yt_Jg_K5j7_Bao\" title=\"https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao\" target=\"_blank\" rel=\"nofollow\" href=\"https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao\">https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao</a>',
         '<img src="http://www.karopapier.de/bilder/smilies/wavey.gif" alt="wavey" title="wavey">',
         'Didi und Stickerle fahr ich jetzt in Grund und Boden! <a class="GidLink87654" href="http://2.karopapier.de/game.html?GID=87654" target="_blank">87654</a> <a href="http://www.karopapier.de/showmap.php?GID=87654">Direktlink_1.0</a>',
     ];
@@ -59,6 +61,7 @@ test("linkify", function () {
         'Wo leitest du mich hin? <a class="GidLink85566" href="http://2.karopapier.de/game.html?GID=85566" target="_blank">85566</a> ',
         'Hier is was nettes zum angucken <a class="" title="http://feelgrafix.com/data_images/out/12/861215-nice-wallpaper.jpg" target="_blank" rel="nofollow" href="http://feelgrafix.com/data_images/out/12/861215-nice-wallpaper.jpg"><img src="http://feelgrafix.com/data_images/out/12/861215-nice-wallpaper.jpg" height="20" /></a>. Schön, gell?',
         'Walk off the earth rocks: <a class=" yt_0RgIK36X3Tw" title="https://www.youtube.com/watch?v=0RgIK36X3Tw" target="_blank" rel="nofollow" href="https://www.youtube.com/watch?v=0RgIK36X3Tw">https://www.youtube.com/watch?v=0RgIK36X3Tw</a>',
+        'Vielleicht könnte man sowas ja damit verhindern? <a class=\" yt_Jg_K5j7_Bao\" title=\"https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao\" target=\"_blank\" rel=\"nofollow\" href=\"https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao\">https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao</a>',
         '<img src="http://www.karopapier.de/bilder/smilies/wavey.gif" alt="wavey" title="wavey">',
         'Didi und Stickerle fahr ich jetzt in Grund und Boden! <a class="GidLink87654" href="http://2.karopapier.de/game.html?GID=87654" target="_blank">87654</a> <a href="http://www.karopapier.de/showmap.php?GID=87654">Direktlink_1.0</a>',
     ]

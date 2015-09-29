@@ -100,9 +100,9 @@ var KaroUtil = {};
 
                     //special handdling: youtube
                     if (url.match('youtube.com/.*v=.*') || url.match('youtu.be/.*')) {
-                        //console.log("Its a yt url", url);
+                        console.log("Its a yt url", url);
                         try {
-                            var videoid = url.split("?").filter(function (part) {
+                            var videoid = url.split("?")[1].split("&").filter(function (part) {
                                 return part.substr(0, 2) == "v=";
                             })[0].split("=")[1];
                         } catch (err) {
