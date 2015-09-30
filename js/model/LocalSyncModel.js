@@ -7,9 +7,9 @@ var LocalSyncModel = Backbone.Model.extend({
         $(window).bind('storage', this.onStorageEvent);
         var id = this.get("storageId");
         //console.log("INIT LOCALSYNC ON ", id);
-        var data = localStorage.getItem(id);
+        var data = store.get(id);
         //console.log("From store",data);
-        data = JSON.parse(data);
+        //data = JSON.parse(data);
         //console.log("Data now", data);
         //console.log(this.attributes);
         this.set(data);
@@ -31,6 +31,6 @@ var LocalSyncModel = Backbone.Model.extend({
     },
     directSave: function (e) {
         //console.log("Direct save", e, this.toJSON());
-        localStorage.setItem(this.get("storageId"), JSON.stringify(this.toJSON()));
+        store.set(this.get("storageId"), this.toJSON());
     }
 });
