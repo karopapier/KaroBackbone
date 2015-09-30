@@ -71,6 +71,7 @@ var ChatControlView = Backbone.View.extend({
     },
     updateFunny: function(e) {
         console.warn("HIER CHECKBOX CHECK");
+        this.$el.find("#funnyChat").prop("checked",this.model.get("funny"));
     },
     render: function () {
         console.log("Render control view", this.model.get("start"), this.model.get("lastLineId"));

@@ -9,12 +9,12 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         this.already = true;
 
         this.configuration = new Backbone.Model({
-            limit: 20,
+            limit: Karopapier.Settings.get("chat_limit"),
             lastLineId: 0,
             atEnd: true,
             start: 0,
             history: false,
-            funny: Karopapier.Settings.get("funny")
+            funny: Karopapier.Settings.get("chat_funny")
         });
 
         this.chatMessageCache = new ChatMessageCache({});
@@ -41,6 +41,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
                 var start = this.configuration.get("lastLineId") - this.configuration.get("limit");
                 this.configuration.set("start", start);
             }
+            Karopapier.Settings.set("chat_limit",limit);
         });
 
         this.listenTo(this.configuration, "change:start", function (conf, start) {
@@ -49,10 +50,16 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         });
 
         this.listenTo(this.configuration, "change:funny", function(conf, funny) {
-            Karopapier.Settings.set("funny", funny);
+            Karopapier.Settings.set("chat_funny", funny);
         });
 
-        this.listenTo(Karopapier.Settings, "change:funny", function(conf, funny) {
+        this.listenTo(Karopapier.Settings, "change:chat_limit", function(conf, limit) {
+            this.configuration.set("limit", limit);
+        });
+
+        this.listenTo(Karopapier.Settings, "change:chat_funny", function(conf, funny) {
+            //console.log("ChatApp bekommt mit, dass sich Karo.Settings -> funny geändert hat",funny);
+            this.configuration.set("funny", funny);
             KaroUtil.setFunny(funny);
             this.chatMessageCache.each(function(m) {
                 //dummy trigger change event to force re-render

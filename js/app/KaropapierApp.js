@@ -21,7 +21,14 @@ var KaropapierApp = Marionette.Application.extend({
             user: this.User
         });
 
-        this.Settings = new Settings({ id: 1 });
+        this.Settings = new LocalSyncModel({
+            id: 1,
+            storageId: "settings",
+            chat_funny: true,
+            chat_limit: 20,
+            notification_chat: true,
+            notification_dran: true
+        });
 
         this.notifier = new KaroNotifier();
         this.notifierView = new NotifierView({model: this.notifier});
@@ -111,7 +118,7 @@ var KaropapierApp = Marionette.Application.extend({
         });
 
         //lazy css
-        this.addInitializer(function() {
+        this.addInitializer(function () {
             KaroUtil.lazyCss("http://www.karopapier.de/css/slidercheckbox/slidercheckbox.css");
         })
 
