@@ -7,9 +7,23 @@ var ChatMessageView = Backbone.View.extend({
     },
     initialize: function () {
         _.bindAll(this, "render");
+
+        //check if it is a botrix game message
+        var bgreq=/Botrix, spiel mit/g;
+        var bgack=/.*fahr ich jetzt in Grund und Boden!/g;
+        var bgack2=/.*mach ich jetzt Ruehrei/g;
+        var bgack3=/.*Direktlink/g;
+        var line = this.model.get("text");
+        if (line.match(bgreq) || line.match(bgack) || line.match(bgack2) || line.match(bgack3)) {
+            this.model.set("isBotrixGameMessage",true);
+            this.$el.addClass("botrixGame");
+        }
         this.render();
+        this.checkVisible();
+
         this.listenTo(this.model, "remove", this.remove);
         this.listenTo(this.model, "change:funny", this.updateText);
+        this.listenTo(this.model, "change:showBotrix", this.checkVisible);
     },
     updateText: function() {
 
@@ -35,6 +49,15 @@ var ChatMessageView = Backbone.View.extend({
         setTimeout(function () {
             messageHeight = me.$el.height();
         }, 5);
+    },
+    checkVisible: function() {
+        var s = this.model.get("showBotrix");
+        var is = this.model.get("isBotrixGameMessage");
+        if (is && !s) {
+            this.$el.hide();
+        } else {
+            this.$el.show();
+        }
     },
     render: function () {
         //var text = this.model.get("text");

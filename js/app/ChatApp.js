@@ -14,7 +14,8 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
             atEnd: true,
             start: 0,
             history: false,
-            funny: Karopapier.Settings.get("chat_funny")
+            funny: Karopapier.Settings.get("chat_funny"),
+            showBotrix: Karopapier.Settings.get("chat_showBotrix")
         });
 
         this.chatMessageCache = new ChatMessageCache({});
@@ -49,6 +50,10 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
             this.chatMessageCache.cache(start);
         });
 
+        this.listenTo(this.configuration, "change:showBotrix", function(conf, showBotrix) {
+            Karopapier.Settings.set("chat_showBotrix", showBotrix);
+        });
+
         this.listenTo(this.configuration, "change:funny", function(conf, funny) {
             Karopapier.Settings.set("chat_funny", funny);
         });
@@ -64,6 +69,15 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
             this.chatMessageCache.each(function(m) {
                 //dummy trigger change event to force re-render
                 m.set("funny", funny);
+            });
+        });
+
+        this.listenTo(Karopapier.Settings, "change:chat_showBotrix", function(conf, showBotrix) {
+            //console.log("ChatApp bekommt mit, dass sich Karo.Settings -> showBotrix geändert hat",showBotrix);
+            this.configuration.set("showBotrix", showBotrix);
+            this.chatMessageCache.each(function(m) {
+                //dummy trigger change event to force re-render
+                m.set("showBotrix", showBotrix);
             });
         });
 

@@ -63,6 +63,13 @@ div.chatMessage {
     line-height: 18px;
 }
 
+div.chatMessage.botrixGame {
+    font-size: 8pt;
+}
+div.chatMessage.botrixGame span {
+    font-size: 8pt;
+}
+
 small.chatInfo {
     font-size: .7em;
 }

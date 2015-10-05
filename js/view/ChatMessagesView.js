@@ -79,7 +79,7 @@ var ChatMessagesView = Backbone.View.extend({
         var top = $parent.prop("scrollTop"); //how much space until you reach the top
         var viewport = $parent.prop("clientHeight");
         var bottom = contentHeight - top - viewport; //how much space until you reach the bottom
-        console.log("We scrolled to top", top, "and bottom", bottom);
+        //console.log("We scrolled to top", top, "and bottom", bottom);
         if (top <= 100) {
             this.trigger("CHAT:MESSAGES:TOP");
         }
