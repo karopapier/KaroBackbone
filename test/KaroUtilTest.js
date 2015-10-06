@@ -20,6 +20,7 @@ test("linkify", function () {
         "Vielleicht könnte man sowas ja damit verhindern? https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao",
         '<img src="/images/smilies/wavey.gif" alt="wavey" title="wavey">',
         'Didi und Stickerle fahr ich jetzt in Grund und Boden! GID=87654 <a href="http://www.karopapier.de/showmap.php?GID=87654">Direktlink_1.0</a>',
+        "das geht doch schoener: https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson's_Column,_Trafalgar_Square,_London.JPG"
     ]
 
     var expects = [
@@ -42,6 +43,7 @@ test("linkify", function () {
         'Vielleicht könnte man sowas ja damit verhindern? <a class=\" yt_Jg_K5j7_Bao\" title=\"https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao\" target=\"_blank\" rel=\"nofollow\" href=\"https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao\">https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao</a>',
         '<img src="http://www.karopapier.de/bilder/smilies/wavey.gif" alt="wavey" title="wavey">',
         'Didi und Stickerle fahr ich jetzt in Grund und Boden! <a class="GidLink87654" href="http://2.karopapier.de/game.html?GID=87654" target="_blank">87654</a> <a href="http://www.karopapier.de/showmap.php?GID=87654">Direktlink_1.0</a>',
+        'das geht doch schoener: <a class="" title="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG" target="_blank" rel="nofollow" href="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG"><img src="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG" height="20" /></a>'
     ];
 
     var expectsUnfunny = [
@@ -64,6 +66,7 @@ test("linkify", function () {
         'Vielleicht könnte man sowas ja damit verhindern? <a class=\" yt_Jg_K5j7_Bao\" title=\"https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao\" target=\"_blank\" rel=\"nofollow\" href=\"https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao\">https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao</a>',
         '<img src="http://www.karopapier.de/bilder/smilies/wavey.gif" alt="wavey" title="wavey">',
         'Didi und Stickerle fahr ich jetzt in Grund und Boden! <a class="GidLink87654" href="http://2.karopapier.de/game.html?GID=87654" target="_blank">87654</a> <a href="http://www.karopapier.de/showmap.php?GID=87654">Direktlink_1.0</a>',
+        'das geht doch schoener: <a class="" title="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG" target="_blank" rel="nofollow" href="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG"><img src="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG" height="20" /></a>'
     ]
 
     expect(inputs.length *2);

@@ -125,7 +125,7 @@ var KaroUtil = {};
                                 $('a.yt_' + videoid).attr("title", snippet.description).html(linktext);
                             });
                         }
-                    } else if (url.match('.*\.(jpg|gif|png)')) {
+                    } else if (url.match(/.*\.(jpg|gif|png)/i)) {
                         //console.log("Handling jpg url", url);
                         linktext = '<img src="' + url + '" height="20" />';
                     } else {
