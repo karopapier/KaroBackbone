@@ -76,7 +76,7 @@
 
       // This should not happen unless you're doing something really strange
       // with your `idAttribute` attribute values!
-      throw new Error('model idAttribute attribute value already exists in cache');
+      throw new Error('model idAttribute attribute value' + value + ' (type ' + typeof value + ') already exists in cache');
     } else {
       cache[key] = model;
     }
