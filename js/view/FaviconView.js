@@ -16,15 +16,14 @@ var FaviconView = Backbone.View.extend({
         this.img.src = this.src;
 
         //expects User as model
-        this.model.on("change:dran", this.update);
+        this.model.on("change:dran change:id", this.update);
 
     },
     update: function (u, dran, e) {
-        //console.log("Dran", dran);
+        if (!dran) dran = 0;
         this.reset();
-        if (dran > 0) {
-            this.addNum(dran);
-        }
+        //console.info("Update favicon ", dran);
+        this.addNum(dran);
         this.render();
     },
     reset: function () {

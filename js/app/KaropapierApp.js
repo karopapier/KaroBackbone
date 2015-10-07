@@ -81,7 +81,7 @@ var KaropapierApp = Marionette.Application.extend({
             me.favi = new FaviconView({
                 model: me.User,
                 el: '#favicon'
-            })
+            });
         });
 
         this.addInitializer(function () {

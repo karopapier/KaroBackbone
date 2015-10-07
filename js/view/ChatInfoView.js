@@ -37,12 +37,18 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
             var dran = this.model.get("dran");
             if (dran == 0) {
                 html = 'Du bist ein <a href="http://www.karopapier.de/karowiki/index.php/Nixblocker">Nixblocker</a>';
-            } else if (dran == 1) {
-                html = '<a target="ibndran" href="http://www.karopapier.de/showgames.php?dranbin=' + myId + '">Bei einem Spiel dran</a>';
-            } else {
-                html = '<a href="http://www.karopapier.de/dran" target="ibndran">Bei <strong>' + dran + '</strong> Spielen dran</a> <a href="""><!--<img src="/images/arrow_right.png"></a>-->';
             }
-            $('#chatInfoDran').html(html)
+            if (dran == 1) {
+                html = 'Bei einem Spiel dran';
+            }
+            if (dran > 1) {
+                html = '<a href="/dran.html" target="ibndran">Bei <strong>' + dran + '</strong> Spielen dran</a> <a href=""">';
+            }
+            if (dran > 0) {
+                var nextGame = Karopapier.UserDranGames.at(0);
+                html += '<br><a title="ZIEH!" href="/game.html?GID=' + nextGame.get("id") + '"><b>Zieh!</b><img src="/images/arrow_right.png" style="vertical-align: center"></a>';
+            }
+            $('#chatInfoDran').html(html);
 
             var pos = 0;
             if (blockerlist.length > 0) {
@@ -62,7 +68,7 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
                 } else if (pos == 2) {
                     html += "DU BIST DER <b>VIZE-VOLLBLOCKER</b>";
                 } else {
-                    html += 'Platz ' + pos + ' der <a href="/blocker">Blockerliste</a>';
+                    html += 'Platz ' + pos + ' der <a href="http://www.karopapier.de/blocker">Blockerliste</a>';
                 }
             }
 

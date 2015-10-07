@@ -2,6 +2,18 @@ module.exports = function (grunt) {
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        asset_cachebuster: {
+            options: {
+                buster: Date.now(),
+                ignore: [],
+                htmlExtension: 'html'
+            },
+            build: {
+                files: {
+                    'index.html': ['index.template.html']
+                }
+            }
+        },
         uglify: {
             min: {
                 files: {
@@ -56,7 +68,7 @@ module.exports = function (grunt) {
         watch: {
             scripts: {
                 files: ['js/**/*.js', '!js/<%= pkg.name %>*.js', 'test/**/*.js'],
-                tasks: ['uglify'],
+                tasks: ['uglify', 'asset_cachebuster'],
                 options: {
                     interrupt: true,
                     livereload: {
@@ -66,7 +78,7 @@ module.exports = function (grunt) {
             },
             templates: {
                 files: ['js/templates/**/*.html', 'js/templates/**/*.tpl'],
-                tasks: ['jst'],
+                tasks: ['jst', 'asset_cachebuster'],
                 options: {
                     interrupt: true,
                     livereload: {
@@ -85,7 +97,7 @@ module.exports = function (grunt) {
             },
             css: {
                 files: ['css/**/*', '!css/**/*.min.css'],
-                tasks: ["cssmin"],
+                tasks: ["cssmin", 'asset_cachebuster'],
                 options: {
                     interrupt: true,
                     livereload: {
@@ -134,6 +146,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-spritesmith');
     grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-asset-cachebuster');
 
     // Default task(s).
     grunt.registerTask('default', ['uglify', 'jst', 'cssmin', 'watch']);
