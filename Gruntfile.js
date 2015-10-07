@@ -149,7 +149,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-asset-cachebuster');
 
     // Default task(s).
-    grunt.registerTask('default', ['uglify', 'jst', 'cssmin', 'watch']);
+    grunt.registerTask('default', ['uglify', 'jst', 'cssmin', 'asset_cachebuster','watch']);
     //grunt.registerTask('guck', ['watch']);
     grunt.registerTask('spielwiese', ['spielwiese']);
 
