@@ -8,6 +8,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         this.layout.render();
         this.already = true;
 
+        console.log("Im ChatApp.init ist funny", Karopapier.Settings.get("chat_funny"));
         this.configuration = new Backbone.Model({
             limit: Karopapier.Settings.get("chat_limit"),
             lastLineId: 0,
@@ -17,6 +18,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
             funny: Karopapier.Settings.get("chat_funny"),
             showBotrix: Karopapier.Settings.get("chat_showBotrix")
         });
+        KaroUtil.setFunny(this.configuration.get("funny"));
 
         this.chatMessageCache = new ChatMessageCache({});
         this.chatMessageCache.cache(0, 20); //initial short load
