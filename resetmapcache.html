@@ -1,0 +1,16 @@
+<script>
+var toDelete=[];
+for ( var i = 0, len = localStorage.length; i < len; ++i ) {
+      //console.log( localStorage.getItem( localStorage.key( i ) ) );
+      var k = localStorage.key(i);
+      document.write(k+"<br>");
+      if (k.indexOf("map") === 0) {
+          toDelete.push(k);
+      }
+}
+
+for (var i = 0, len = toDelete.length; i<len; i++) {
+    localStorage.removeItem(toDelete[i]);
+      document.write("remove " +k+"<br>");
+}
+</script>
