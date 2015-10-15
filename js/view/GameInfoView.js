@@ -18,6 +18,7 @@ var GameInfoView = Backbone.View.extend({
         }
 
         this.tcMeaning = {
+            "free": "grad egal",
             "forbidden": "nicht erlaubt",
             "allowed": "erlaubt"
         }
@@ -34,15 +35,15 @@ var GameInfoView = Backbone.View.extend({
         data.mapAuthor = this.model.map.get("author");
         data.dirMeaning = this.dirMeaning[data.dir];
         data.dirTitle = this.dirTitle[data.dir];
-        data.createdDate = moment(this.model.get("created"),"YYYY-MM-DD HH:mm").format("DD.MM.YYYY");
-        data.createdTime = moment(this.model.get("created"),"YYYY-MM-DD HH:mm").format("HH:mm");
+        data.createdDate = moment(this.model.get("created"), "YYYY-MM-DD HH:mm").format("DD.MM.YYYY");
+        data.createdTime = moment(this.model.get("created"), "YYYY-MM-DD HH:mm").format("HH:mm");
 
         var cpStatus = "aktiviert";
-        if (this.model.map.get("cps").length==0) {
-            cpStatus="deaktiviert, die Karte hat keine";
+        if (this.model.map.get("cps").length == 0) {
+            cpStatus = "deaktiviert, die Karte hat keine";
         } else {
             if (!this.model.get("withCheckpoints")) {
-                cpStatus="deaktiviert";
+                cpStatus = "deaktiviert";
             }
         }
         data.cpStatus = cpStatus;
