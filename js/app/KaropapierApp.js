@@ -2,11 +2,12 @@
  * Created by pdietrich on 20.05.14.
  */
 
-
 var KaropapierApp = Marionette.Application.extend({
     //global layout with regions for nav, sidebar, header and user info...
     initialize: function (options) {
         console.log('APP INIT!!!!!!!!!!!');
+        var me = this;
+
         this.User = new User({});
         //make this user refer to "check" for loging in
         this.User.url = function () {
@@ -30,10 +31,13 @@ var KaropapierApp = Marionette.Application.extend({
             notification_dran: true
         });
 
-        this.notifier = new KaroNotifier();
+        this.notifier = new KaroNotifier({
+            eventEmitter: this.vent,
+            user: this.User,
+            settings: this.Settings
+        });
         this.notifierView = new NotifierView({model: this.notifier});
 
-        var me = this;
         //some initializers after the page is done
 
         //add container for notifications
@@ -121,21 +125,6 @@ var KaropapierApp = Marionette.Application.extend({
         this.addInitializer(function () {
             KaroUtil.lazyCss("http://www.karopapier.de/css/slidercheckbox/slidercheckbox.css");
         })
-
-        //better place for this???
-        me.vent.on('GAME:MOVE', function (data) {
-            //skip unrelated
-            if (!data.related) {
-                if (Karopapier.User.get("id") == 1) console.warn(data.movedLogin, "zog bei", data.gid, data.name);
-                return false;
-            }
-
-            if (me.User.get("id") == data.nextId) {
-                me.notifier.addUserDranNotification(data);
-            } else {
-                me.notifier.addGameMoveNotification(data);
-            }
-        });
 
         me.vent.on('GAME:MOVE', function (data) {
             //only for unrelated moves, count up or down

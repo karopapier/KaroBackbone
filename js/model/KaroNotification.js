@@ -1,4 +1,4 @@
-var Notification = Backbone.Model.extend(/** @lends Notification.prototype*/{
+var KaroNotification = Backbone.Model.extend(/** @lends Notification.prototype*/{
     defaults: {
         level: "info",
         text: "Notification",

@@ -37,7 +37,9 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         this.chatControlView = new ChatControlView({
             model: this.configuration
         });
+
         this.chatEnterView = new ChatEnterView({});
+        this.webNotifierView = new WebNotifierView();
 
         this.listenTo(this.configuration, "change:limit", function (conf, limit) {
             if (this.configuration.get("atEnd")) {
@@ -180,11 +182,11 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         this.layout.chatInfo.show(this.chatInfoView);
         this.layout.chatControl.show(this.chatControlView);
         this.layout.chatEnter.show(this.chatEnterView);
+        this.layout.webNotifier.show(this.webNotifierView);
+
+        this.webNotifierView.check();
         var $el = this.layout.chatMessages.$el;
-        //setTimeout(function () {
-        //$el.animate({scrollTop: $el.prop('scrollHeight')}, 100);
-        //$el.animate({scrollTop: $el.prop('scrollHeight')}, 10);
-        //}, 1000);
+
         $($el).on("scroll", this.scrollCheck);
     }
 });
