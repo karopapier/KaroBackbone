@@ -38,7 +38,7 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
             if (!data.related) {
                 if (Karopapier.User.get("id") == 1) {
                     console.warn(data.movedLogin, "zog bei", data.gid, data.name);
-                    me.addGameMoveNotification(data);
+                    //me.addGameMoveNotification(data);
                 }
                 return false;
             }
@@ -79,7 +79,7 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
         text = 'Bei <%= gid %> - <%= name %> hat <%= movedLogin %> gerade gezogen. Jetzt ist <%= nextLogin %> dran';
         t = _.template(text);
         var b = new BrowserNotification({
-            title: "Gezogen",
+            title: data.movedLogin + " hat gezogen",
             body: t(data),
             level: "info",
             group: "global",
@@ -108,7 +108,7 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
             level: "info",
             group: "global",
             icon: "http://www.karopapier.de/pre/" + data.gid + ".png",
-            tag: "move",
+            tag: "dran",
             timeout: 2000
         });
     }
