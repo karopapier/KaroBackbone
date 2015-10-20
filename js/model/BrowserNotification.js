@@ -4,9 +4,10 @@ var BrowserNotification = Backbone.Model.extend({
         text: "Notification",
         screen: true,
         native: true,
+        tag: "",
         group: "general",
         timeout: 8000,
-        imageUrl: "",
+        icon: "/favicon.ico",
         clickUrl: ""
 
     },

@@ -83,9 +83,8 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
             body: t(data),
             level: "info",
             group: "global",
-            imgUrl: "http://www.karopapier.de/pre/" + data.gid + ".png",
-            tag: "tag",
-            icon: "/favicon.ico",
+            icon: "http://www.karopapier.de/pre/" + data.gid + ".png",
+            tag: "move",
             timeout: 2000,
             notifyClick: function () {
                 alert("Geklickt");
@@ -102,5 +101,15 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
             imgUrl: "http://www.karopapier.de/pre/" + data.gid + ".png"
         });
         this.add(n);
+
+        var b = new BrowserNotification({
+            title: "Du bist dran",
+            body: t(data),
+            level: "info",
+            group: "global",
+            icon: "http://www.karopapier.de/pre/" + data.gid + ".png",
+            tag: "move",
+            timeout: 2000
+        });
     }
 });
