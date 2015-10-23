@@ -3,6 +3,7 @@ var KaroUtil = {};
 (function (karoUtil) {
         karoUtil = karoUtil || {};
         karoUtil.funny = true;
+        karoUtil.old = false;
         karoUtil.init = function () {
             console.log("Do da util init");
             karoUtil.replacements = [];
@@ -78,7 +79,11 @@ var KaroUtil = {};
                     $.getJSON('http://www.karopapier.de/api/game/' + gid + '/info.json?callback=?', function (gameInfo) {
                         $('a.GidLink' + gid).text(gid + ' - ' + gameInfo.game.name);
                     });
-                    return '<a class="GidLink' + gid + '" href="http://2.karopapier.de/game.html?GID=' + gid + '" target="_blank">' + gid + '</a>';
+                    if (karoUtil.old) {
+                        return '<a class="GidLink' + gid + '" href="http://www.karopapier.de/showmap.php?GID=' + gid + '" target="_blank">' + gid + '</a>';
+                    } else {
+                        return '<a class="GidLink' + gid + '" href="http://2.karopapier.de/game.html?GID=' + gid + '" target="_blank">' + gid + '</a>';
+                    }
                 },
                 sw: "i"
             });
@@ -221,10 +226,15 @@ var KaroUtil = {};
         };
 
         karoUtil.setFunny = function (tf) {
+            console.warn("DEPRECATED setFunny");
             karoUtil.funny = tf;
             karoUtil.init();
         };
 
+        karoUtil.set = function(k, v) {
+            karoUtil[k]=v;
+            karoUtil.init();
+        };
         karoUtil.init();
     }
     (KaroUtil)

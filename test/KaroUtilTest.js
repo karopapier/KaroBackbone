@@ -21,7 +21,7 @@ test("linkify", function () {
         '<img src="/images/smilies/wavey.gif" alt="wavey" title="wavey">',
         'Didi und Stickerle fahr ich jetzt in Grund und Boden! GID=87654 <a href="http://www.karopapier.de/showmap.php?GID=87654">Direktlink_1.0</a>',
         "das geht doch schoener: https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson's_Column,_Trafalgar_Square,_London.JPG"
-    ]
+    ];
 
     var expects = [
         "<i> Du wurdest zurückgesetzt </i>",
@@ -69,7 +69,7 @@ test("linkify", function () {
         'das geht doch schoener: <a class="" title="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG" target="_blank" rel="nofollow" href="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG"><img src="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG" height="20" /></a>'
     ]
 
-    expect(inputs.length *2);
+    expect(inputs.length *2 + 3);
 
     //funny
     for (var i = 0; i < inputs.length; i++) {
@@ -77,8 +77,26 @@ test("linkify", function () {
     }
 
     //unfunny
-    KaroUtil.setFunny(false);
+    KaroUtil.set("funny",false);
     for (var i = 0; i < inputs.length; i++) {
         equal(KaroUtil.linkify(inputs[i]), expectsUnfunny[i], inputs[i]);
+    }
+
+
+    KaroUtil.set("old",true);
+    inputs = [
+        "Guck mal bei GID=12345",
+        'Da ist ein Spiel unter http://www.karopapier.de/showmap.php?GID=12345 bei dem ich nicht weiter komme',
+        "Wo leitest du mich hin? http://2.karopapier.de/game.html?GID=85566 ",
+    ];
+
+    expects = [
+        'Guck mal bei <a class="GidLink12345" href="http://www.karopapier.de/showmap.php?GID=12345" target="_blank">12345</a>',
+        'Da ist ein Spiel unter <a class="GidLink12345" href="http://www.karopapier.de/showmap.php?GID=12345" target="_blank">12345</a> bei dem ich nicht weiter komme',
+        'Wo leitest du mich hin? <a class="GidLink85566" href="http://www.karopapier.de/showmap.php?GID=85566" target="_blank">85566</a> ',
+    ];
+
+    for (var i = 0; i < inputs.length; i++) {
+        equal(KaroUtil.linkify(inputs[i]), expects[i], inputs[i]);
     }
 });

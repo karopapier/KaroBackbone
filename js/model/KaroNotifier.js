@@ -102,8 +102,11 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
         });
         this.add(n);
 
+        text = 'Bei <%= gid %><%= name %> hat <%= movedLogin %> gerade gezogen.';
+        t = _.template(text);
+        data.dran = this.user.get("dran");
         var b = new BrowserNotification({
-            title: "Du bist dran",
+            title: "Du bist dran (" + data.dran + ")",
             body: t(data),
             level: "info",
             group: "global",
