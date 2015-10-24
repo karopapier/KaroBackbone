@@ -21,7 +21,7 @@ var BrowserNotification = Backbone.Model.extend({
             });
         }
         catch(err) {
-            alert(err.message);
+            console.log("Could not add notification");
         }
 
         var timeout = this.get("timeout");
