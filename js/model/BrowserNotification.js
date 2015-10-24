@@ -13,11 +13,16 @@ var BrowserNotification = Backbone.Model.extend({
     },
     initialize: function (options) {
 
-        this.myNotify = new Notification(this.get("title"), {
-            'body': this.get("body"),
-            'tag': this.get("tag"),
-            'icon': this.get("icon")
-        });
+        try {
+            this.myNotify = new Notification(this.get("title"), {
+                'body': this.get("body"),
+                'tag': this.get("tag"),
+                'icon': this.get("icon")
+            });
+        }
+        catch(err) {
+            alert(err.message);
+        }
 
         var timeout = this.get("timeout");
         if (timeout && !isNaN(timeout)) {

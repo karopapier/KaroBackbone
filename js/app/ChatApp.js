@@ -8,7 +8,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         this.layout.render();
         this.already = true;
 
-        console.log("Im ChatApp.init ist funny", Karopapier.Settings.get("chat_funny"));
+        //console.log("Im ChatApp.init ist funny", Karopapier.Settings.get("chat_funny"));
         this.configuration = new Backbone.Model({
             limit: Karopapier.Settings.get("chat_limit"),
             lastLineId: 0,
@@ -16,9 +16,11 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
             start: 0,
             history: false,
             funny: Karopapier.Settings.get("chat_funny"),
-            showBotrix: Karopapier.Settings.get("chat_showBotrix")
+            showBotrix: Karopapier.Settings.get("chat_showBotrix"),
+            oldLink: Karopapier.Settings.get("chat_oldLink")
         });
-        KaroUtil.setFunny(this.configuration.get("funny"));
+        KaroUtil.set("funny", this.configuration.get("funny"));
+        KaroUtil.set("oldLink", this.configuration.get("oldLink"));
 
         this.chatMessageCache = new ChatMessageCache({});
         this.chatMessageCache.cache(0, 20); //initial short load
@@ -62,6 +64,10 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
             Karopapier.Settings.set("chat_funny", funny);
         });
 
+        this.listenTo(this.configuration, "change:oldLink", function (conf, oldLink) {
+            Karopapier.Settings.set("chat_oldLink", oldLink);
+        });
+
         this.listenTo(Karopapier.Settings, "change:chat_limit", function (conf, limit) {
             this.configuration.set("limit", limit);
         });
@@ -69,10 +75,20 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         this.listenTo(Karopapier.Settings, "change:chat_funny", function (conf, funny) {
             //console.log("ChatApp bekommt mit, dass sich Karo.Settings -> funny geändert hat",funny);
             this.configuration.set("funny", funny);
-            KaroUtil.setFunny(funny);
+            KaroUtil.set("funny", funny);
             this.chatMessageCache.each(function (m) {
                 //dummy trigger change event to force re-render
                 m.set("funny", funny);
+            });
+        });
+
+        this.listenTo(Karopapier.Settings, "change:chat_oldLink", function (conf, oldLink) {
+            console.log("ChatApp bekommt mit, dass sich Karo.Settings -> oldLink geändert hat",oldLink);
+            this.configuration.set("oldLink", oldLink);
+            KaroUtil.set("oldLink", oldLink);
+            this.chatMessageCache.each(function (m) {
+                //dummy trigger change event to force re-render
+                m.set("oldLink", oldLink);
             });
         });
 
@@ -147,7 +163,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         }.bind(this), 60000);
 
         Karopapier.vent.on('CHAT:MESSAGE', function (data) {
-            console.log("vent CHAT:MESSAGE triggered inside ChatApp");
+            //console.log("vent CHAT:MESSAGE triggered inside ChatApp");
             //disable due to XSS danger
             //console.log(data);
             //var cm = new ChatMessage(data.chatmsg);
@@ -157,7 +173,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         });
     },
     updateView: function () {
-        console.log("updateView");
+        //console.log("updateView");
         if (this.configuration.get("atEnd")) {
             console.log("We are at the end");
             var l = this.chatMessageCache.length;

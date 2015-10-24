@@ -27,6 +27,7 @@ var KaropapierApp = Marionette.Application.extend({
             storageId: "settings",
             chat_funny: true,
             chat_limit: 20,
+            chat_oldLink: false,
             notification_chat: true,
             notification_dran: true
         });

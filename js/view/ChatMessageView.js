@@ -22,7 +22,7 @@ var ChatMessageView = Backbone.View.extend({
         this.checkVisible();
 
         this.listenTo(this.model, "remove", this.remove);
-        this.listenTo(this.model, "change:funny", this.updateText);
+        this.listenTo(this.model, "change:funny change:oldLink", this.updateText);
         this.listenTo(this.model, "change:showBotrix", this.checkVisible);
     },
     updateText: function() {

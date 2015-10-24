@@ -3,7 +3,7 @@ var KaroUtil = {};
 (function (karoUtil) {
         karoUtil = karoUtil || {};
         karoUtil.funny = true;
-        karoUtil.old = false;
+        karoUtil.oldLink = false;
         karoUtil.init = function () {
             console.log("Do da util init");
             karoUtil.replacements = [];
@@ -79,7 +79,7 @@ var KaroUtil = {};
                     $.getJSON('http://www.karopapier.de/api/game/' + gid + '/info.json?callback=?', function (gameInfo) {
                         $('a.GidLink' + gid).text(gid + ' - ' + gameInfo.game.name);
                     });
-                    if (karoUtil.old) {
+                    if (karoUtil.oldLink) {
                         return '<a class="GidLink' + gid + '" href="http://www.karopapier.de/showmap.php?GID=' + gid + '" target="_blank">' + gid + '</a>';
                     } else {
                         return '<a class="GidLink' + gid + '" href="http://2.karopapier.de/game.html?GID=' + gid + '" target="_blank">' + gid + '</a>';
@@ -105,7 +105,7 @@ var KaroUtil = {};
 
                     //special handdling: youtube
                     if (url.match('youtube.com/.*v=.*') || url.match('youtu.be/.*')) {
-                        console.log("Its a yt url", url);
+                        //console.log("Its a yt url", url);
                         try {
                             var videoid = url.split("?")[1].split("&").filter(function (part) {
                                 return part.substr(0, 2) == "v=";

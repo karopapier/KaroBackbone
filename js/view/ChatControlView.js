@@ -9,6 +9,7 @@ var ChatControlView = Backbone.View.extend({
         this.listenTo(this.model, "change:lastLineId", this.render);
         this.listenTo(this.model, "change:history", this.render);
         this.listenTo(this.model, "change:funny", this.updateFunny);
+        this.listenTo(this.model, "change:oldLink", this.updateOldLink);
         this.listenTo(this.model, "change:showBotrix", this.updateBotrix);
         return this;
     },
@@ -21,6 +22,7 @@ var ChatControlView = Backbone.View.extend({
         "click span.rewind": "rewind",
         "click span.forward": "forward",
         "click #funnyChat": "setLinkifyFun",
+        "click #oldLink": "setOldLink",
         "click #showBotrix": "setShowBotrix"
     },
     setStart: function(e) {
@@ -63,7 +65,7 @@ var ChatControlView = Backbone.View.extend({
             settings.limit = 100;
         }
 
-        console.log(settings);
+        //console.log(settings);
         this.model.set(settings);
     },
 
@@ -75,8 +77,15 @@ var ChatControlView = Backbone.View.extend({
         var showBotrix = $(e.currentTarget).prop("checked");
         this.model.set("showBotrix", showBotrix);
     },
+    setOldLink: function(e) {
+        var oldLink = $(e.currentTarget).prop("checked");
+        this.model.set("oldLink", oldLink);
+    },
     updateFunny: function(e) {
         this.$el.find("#funnyChat").prop("checked",this.model.get("funny"));
+    },
+    updateOldLink: function(e) {
+        this.$el.find("#oldLink").prop("checked",this.model.get("oldLink"));
     },
     updateBotrix: function(e) {
         this.$el.find("#showBotrix").prop("checked",this.model.get("showBotrix"));
