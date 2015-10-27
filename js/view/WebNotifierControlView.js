@@ -4,8 +4,12 @@ var WebNotifierControlView = Backbone.View.extend({
         console.log("INIT WEB NOT VIEW");
         this.listenTo(this.model, "change:supported", this.updateSupported);
         this.listenTo(this.model, "change:denied", this.updateDenied);
+        this.listenTo(this.model, "change:final", this.updateFinal);
+        this.listenTo(this.model, "change:enabled", this.updateEnabled);
     },
-
+    events: {
+        "change #notificationEnabled": "checkEnabled"
+    },
     updateSupported: function () {
         if (this.model.get("supported")) {
             this.$('#statusinfo').attr("data-quicktip", "Dein Browser kann das!");
@@ -16,14 +20,28 @@ var WebNotifierControlView = Backbone.View.extend({
             this.$('#statusinfo').removeClass().addClass("quicktip quicktip-box quicktip-error");
         }
     },
-    updateDenied: function() {
+    updateEnabled: function () {
+        this.$('#notificationEnabled').prop("checked", this.model.get("enabled"));
+    },
+    updateFinal: function () {
+        if (this.model.get("denied") && this.model.get("final")) {
+            this.$('#notificationEnabled').prop("disabled", true);
+        } else {
+            this.$('#notificationEnabled').prop("disabled", false);
+        }
+    },
+    updateDenied: function () {
         if (this.model.get("denied")) {
             console.log("DENIED");
-            this.$('#notificationEnabled').prop("disabled", true);
             this.$('#statusinfo').attr("data-quicktip", "Du hast nicht erlaubt, Benachrichtigungen anzuzeigen.");
-            //this.$('#statusinfo').attr("data-quicktip", "Du hast Karopapier.de nicht erlaubt, Benachrichtigungen anzuzeigen. Das bekommst Du nur mit Browsereinstellungen und reload wieder hin.");
+            //this.$('#statusinfo').attr("data-quicktip", "Du hast Karopapier.de nicht erlaubt, Benachrichtigungen
+            // anzuzeigen. Das bekommst Du nur mit Browsereinstellungen und reload wieder hin.");
             this.$('#statusinfo').removeClass().addClass("quicktip quicktip-box quicktip-warn");
         }
+    },
+    checkEnabled: function () {
+        var on = this.$("#notificationEnabled").prop("checked");
+        this.model.set("enabled", on);
     },
     render: function () {
         var t = '';
@@ -37,6 +55,7 @@ var WebNotifierControlView = Backbone.View.extend({
         this.$el.html(t);
         this.updateSupported();
         this.updateDenied();
+        this.updateFinal();
         return this;
     }
 });
