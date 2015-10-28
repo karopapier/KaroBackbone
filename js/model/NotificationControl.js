@@ -1,4 +1,4 @@
-var WebNotifier = Backbone.Model.extend({
+var NotificationControl = Backbone.Model.extend({
     defaults: {
         supported: undefined,
         granted: false,
@@ -9,7 +9,7 @@ var WebNotifier = Backbone.Model.extend({
     initialize: function () {
         _.bindAll(this, "granted", "unsupported", "denied", "finaldenied", "check", "request");
         //console.log("INIT WEB NOT");
-        //this.listenTo(this, "change", this.status);
+        this.listenTo(this, "change", this.status);
         this.listenTo(this, "change:enabled", this.request);
         this.check();
     },
@@ -56,8 +56,7 @@ var WebNotifier = Backbone.Model.extend({
         for (var k in this.attributes) {
             console.log(k, this.attributes[k]);
         }
-    }
-    ,
+    },
     check: function () {
         if (!("Notification" in window)) {
             this.unsupported();

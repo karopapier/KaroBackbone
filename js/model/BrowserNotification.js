@@ -8,7 +8,7 @@ var BrowserNotification = Backbone.Model.extend({
         group: "general",
         timeout: 8000,
         icon: "/favicon.ico",
-        clickUrl: ""
+        onClick: function(){}
 
     },
     initialize: function (options) {
@@ -22,20 +22,22 @@ var BrowserNotification = Backbone.Model.extend({
         }
         catch(err) {
             console.log("Could not add notification");
+            return;
         }
 
         var timeout = this.get("timeout");
         if (timeout && !isNaN(timeout)) {
             setTimeout(this.close.bind(this), timeout);
+            console.log("Set to close after",timeout);
         }
 
         //this.myNotify.addEventListener('show', this, false);
         //this.myNotify.addEventListener('error', this, false);
         //this.myNotify.addEventListener('close', this, false);
-        //this.myNotify.addEventListener('click', this, false);
+        this.myNotify.addEventListener('click', this.get("onClick"), false);
     },
     close: function () {
-        //alert("Zumach");
+        this.myNotify.close();
     }
 });
 

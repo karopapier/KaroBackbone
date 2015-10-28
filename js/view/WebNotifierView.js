@@ -1,6 +1,7 @@
 var WebNotifierView = Backbone.View.extend({
     initialize: function () {
 
+        console.warn ("I AM OBSOLETE");
         console.log("INIT WEB NOT VIEW");
 
         this.settings = new Backbone.Model({

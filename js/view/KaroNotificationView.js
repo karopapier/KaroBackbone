@@ -1,4 +1,4 @@
-var NotificationView = Backbone.View.extend({
+var KaroNotificationView = Backbone.View.extend({
     tagName: "li",
     className: "notification",
     initialize: function () {

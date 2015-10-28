@@ -7,11 +7,10 @@ var BrowserNotifier = Backbone.Model.extend(/** @lends BrowserNotifier.prototype
      *
      */
     initialize: function (options) {
-        var me = this;
-
         this.eventEmitter = options.eventEmitter;
         this.user = options.user;
         this.settings = options.settings;
+        this.control = options.control;
 
         this.eventEmitter.on('CHAT:MESSAGE', function (data) {
             console.warn(data.chatmsg);
@@ -23,38 +22,37 @@ var BrowserNotifier = Backbone.Model.extend(/** @lends BrowserNotifier.prototype
                 tag: "chat",
                 icon: "/favicon.ico",
                 timeout: 2000,
-                notifyClick: function () {
-                    alert("Geklickt");
+                onClick: function () {
+                    window.open("/index.html");
                 }
             });
 
         });
 
-        this.eventEmitter.on('GAME:MOVE', function (data) {
-            //skip unrelated
-            if (!data.related) {
-                return false;
-            }
-
-            if (me.user.get("id") == data.nextId) {
-                me.addUserDranNotification(data);
-            } else {
-                //me.addGameMoveNotification(data);
-            }
-        });
+        this.listenTo(this.user, "change:dran", this.updateDran);
     },
-    addUserDranNotification: function (data) {
-        var text = 'Bei <%= gid %><%= name %> hat <%= movedLogin %> gerade gezogen.';
-        var t = _.template(text);
-        data.dran = this.user.get("dran");
-        var b = new BrowserNotification({
-            title: "Du bist dran (" + data.dran + ")",
-            body: t(data),
-            level: "info",
-            group: "global",
-            icon: "http://www.karopapier.de/pre/" + data.gid + ".png",
+    updateDran: function (data) {
+        var dran = this.user.get("dran");
+        var title = "Du bist ein bisschen dran (" + dran + ")";
+        if (dran == 0) title = "Du bist gar nich dran!";
+        if (dran > 10) title = "Du bist ganz schön dran! (" + dran + ")";
+        if (dran > 20) title = "Du bist mal echt voll dran! (" + dran + ")";
+        if (dran > 30) title = "BOAH!! Du bist sooo dran! (" + dran + ")";
+        if (dran > 40) title = "LOS! Du bist verdammt dran! (" + dran + ")";
+        var en = "";
+        if (dran != 1) en = "en";
+        var text = 'Du bist bei ' + dran + ' Spiel' + en + ' dran';
+        var n = new BrowserNotification({
+            title: title,
             tag: "dran",
-            timeout: 2000
+            body: text,
+            icon: "/favicon.ico",
+            timeout: dran > 0 ? 0 : 2000,
+            //permissionDenied: permissionDenied,
+            onClick: function () {
+                //window.open("http://www.karopapier.de/showmap.php?GID="+data.gid);
+                window.open("http://www.karopapier.de/dran");
+            }
         });
     }
 });

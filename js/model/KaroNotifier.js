@@ -3,7 +3,7 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
     /**
      * @constructor KaroNotifier
      * @class KaroNotifier
-     * KaroNotifier manages all notifications to be shown on the screen and the browser
+     * KaroNotifier manages all notifications to be shown on the screen
      * Provides custom methods as shortcuts for common notifications
      *
      */
@@ -75,21 +75,6 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
             imgUrl: "http://www.karopapier.de/pre/" + data.gid + ".png"
         });
         this.add(n);
-
-        text = 'Bei <%= gid %> - <%= name %> hat <%= movedLogin %> gerade gezogen. Jetzt ist <%= nextLogin %> dran';
-        t = _.template(text);
-        var b = new BrowserNotification({
-            title: data.movedLogin + " hat gezogen",
-            body: t(data),
-            level: "info",
-            group: "global",
-            icon: "http://www.karopapier.de/pre/" + data.gid + ".png",
-            tag: "move",
-            timeout: 2000,
-            notifyClick: function () {
-                alert("Geklickt");
-            }
-        });
     },
     addUserDranNotification: function (data) {
         var text = 'Du bist dran! Bei <a href="/game.html?GID=<%= gid %>"><%= name %></a> hat <%= movedLogin %> gerade gezogen.';
@@ -101,18 +86,5 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
             imgUrl: "http://www.karopapier.de/pre/" + data.gid + ".png"
         });
         this.add(n);
-
-        text = 'Bei <%= gid %><%= name %> hat <%= movedLogin %> gerade gezogen.';
-        t = _.template(text);
-        data.dran = this.user.get("dran");
-        var b = new BrowserNotification({
-            title: "Du bist dran (" + data.dran + ")",
-            body: t(data),
-            level: "info",
-            group: "global",
-            icon: "http://www.karopapier.de/pre/" + data.gid + ".png",
-            tag: "dran",
-            timeout: 2000
-        });
     }
 });

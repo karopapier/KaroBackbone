@@ -37,15 +37,20 @@ var KaropapierApp = Marionette.Application.extend({
             user: this.User,
             settings: this.Settings
         });
-        this.notifierView = new NotifierView({model: this.notifier});
+        this.notifierView = new KaroNotifierView({model: this.notifier});
 
+
+        //Browser Notifications
+        this.notificationControl = new NotificationControl();
         this.browserNotifier = new BrowserNotifier({
             eventEmitter: this.vent,
             user: this.User,
-            settings: this.Settings
+            settings: this.Settings,
+            control: this.notificationControl
         });
-        this.notifierView = new NotifierView({model: this.notifier});
-        //some initializers after the page is done
+
+
+        // --- INITIALIZERS
 
         //add container for notifications
         this.addInitializer(function () {

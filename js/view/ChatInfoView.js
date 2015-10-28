@@ -46,7 +46,9 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
             }
             if (dran > 0) {
                 var nextGame = Karopapier.UserDranGames.at(0);
-                html += '<br><a title="ZIEH!" href="/game.html?GID=' + nextGame.get("id") + '"><b>Zieh!</b><img src="/images/arrow_right.png" style="vertical-align: center"></a>';
+                if (nextGame) {
+                    html += '<br><a title="ZIEH!" href="/game.html?GID=' + nextGame.get("id") + '"><b>Zieh!</b><img src="/images/arrow_right.png" style="vertical-align: center"></a>';
+                }
             }
             $('#chatInfoDran').html(html);
 

@@ -1,4 +1,4 @@
-var NotifierView = Backbone.View.extend({
+var KaroNotifierView = Backbone.View.extend({
     tagName: "ul",
     className: "notifier",
     initialize: function () {
@@ -7,7 +7,7 @@ var NotifierView = Backbone.View.extend({
         this.listenTo(this.model.notifications, "add", this.showNotification);
     },
     showNotification: function (notification) {  //, notifications) {
-        var nv = new NotificationView({
+        var nv = new KaroNotificationView({
             model: notification
         }).render();
         nv.el.style.display = "none";

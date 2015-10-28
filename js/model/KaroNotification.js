@@ -3,7 +3,6 @@ var KaroNotification = Backbone.Model.extend(/** @lends Notification.prototype*/
         level: "info",
         text: "Notification",
         screen: true,
-        native: true,
         group: "general",
         timeout: 8000,
         imageUrl: "",

@@ -1,4 +1,4 @@
-var WebNotifierControlView = Backbone.View.extend({
+var NotificationControlView = Backbone.View.extend({
     initialize: function () {
 
         console.log("INIT WEB NOT VIEW");
