@@ -35,7 +35,7 @@ var BrowserNotifier = Backbone.Model.extend(/** @lends BrowserNotifier.prototype
         var dran = this.user.get("dran");
         var title = "Du bist ein bisschen dran (" + dran + ")";
         if (dran == 0) title = "Du bist gar nich dran!";
-        if (dran > 10) title = "Du bist ganz schön dran! (" + dran + ")";
+        if (dran > 10) title = "Du bist ganz schÃ¶n dran! (" + dran + ")";
         if (dran > 20) title = "Du bist mal echt voll dran! (" + dran + ")";
         if (dran > 30) title = "BOAH!! Du bist sooo dran! (" + dran + ")";
         if (dran > 40) title = "LOS! Du bist verdammt dran! (" + dran + ")";
@@ -51,7 +51,7 @@ var BrowserNotifier = Backbone.Model.extend(/** @lends BrowserNotifier.prototype
             //permissionDenied: permissionDenied,
             onClick: function () {
                 //window.open("http://www.karopapier.de/showmap.php?GID="+data.gid);
-                window.open("http://www.karopapier.de/dran");
+                window.open("/dran.html");
             }
         });
     }

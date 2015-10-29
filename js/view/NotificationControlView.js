@@ -56,6 +56,7 @@ var NotificationControlView = Backbone.View.extend({
         this.updateSupported();
         this.updateDenied();
         this.updateFinal();
+        this.updateEnabled();
         return this;
     }
 });

@@ -11,6 +11,10 @@ var ChatControlView = Backbone.View.extend({
         this.listenTo(this.model, "change:funny", this.updateFunny);
         this.listenTo(this.model, "change:oldLink", this.updateOldLink);
         this.listenTo(this.model, "change:showBotrix", this.updateBotrix);
+
+        this.notificationControlView = new NotificationControlView({
+            model: Karopapier.notificationControl
+        });
         return this;
     },
     events: {
@@ -94,9 +98,11 @@ var ChatControlView = Backbone.View.extend({
         console.log("Render control view", this.model.get("start"), this.model.get("lastLineId"));
         if (Karopapier.User.get("id") != 0) {
             this.$el.html(this.template({user: Karopapier.User.toJSON(), settings: this.model.toJSON()}));
+
+            this.notificationControlView.setElement(this.$('#notificationControlView')).render();
         } else {
             this.$el.html("Nicht angemeldet");
         }
         return this;
     }
-})
+});
