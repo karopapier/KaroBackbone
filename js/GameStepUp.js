@@ -36,7 +36,7 @@ var svgView = new MapSvgView({
 });
 game.on("change:completed", function () {
     if (!game.get("completed")) return false;
-    console.log("Adjust cp settings to", game.get("withCheckpoints"), " and BTW, gamge completed is ", game.get("completed"));
+    //console.log("Adjust cp settings to", game.get("withCheckpoints"), " and BTW, gamge completed is ", game.get("completed"));
     svgView.settings.set("cpsActive", game.get("withCheckpoints"));
     var dranId = game.get("dranId");
     if (dranId!==26) {
@@ -51,10 +51,10 @@ var statusView = new StatusView({
     el: "#statusinfo"
 })
 
-var pt = new PlayerTable({
+var pt = new PlayerTableView({
     collection: game.get("players"),
     el: "#playerTable"
-});
+}).render();
 
 var mpm = new MapPlayerMoves({
     model: game,
@@ -106,18 +106,18 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
             $('#movemessage').show().val("");
         }
 
-        console.log("Send move");
+        //console.log("Send move");
         var movedGID = game.get("id");
-        console.warn("I just moved", movedGID);
+        //console.warn("I just moved", movedGID);
         myTextGet(moveUrl, function (text) {
-            console.log("Parse move response");
+            //console.log("Parse move response");
             parseMoveResponse(text, movedGID);
         });
         dranQueue.remove(game.get("id"));
-        console.log("Now HIDING");
+        //console.log("Now HIDING");
         $('#mapImage').hide();
         game.set({"completed": false, "moved": true});
-        console.log("Done with this game");
+        //console.log("Done with this game");
     }
 });
 
@@ -145,9 +145,9 @@ function parseMoveResponse(text, movedGID) {
                 var s = gids[i].split("=");
                 if (s) {
                     var gid = s[1];
-                    console.log("Compare found", gid, "with", movedGID);
+                    //console.log("Compare found", gid, "with", movedGID);
                     if (gid != movedGID) {
-                        console.log(gid, "!=", movedGID, ", so add it to queue");
+                        //console.log(gid, "!=", movedGID, ", so add it to queue");
                         dranQueue.addId(gid);
                     }
                 }
@@ -216,7 +216,7 @@ var nextGame = new Game();
 /////////////////////////////////////////////////////////////////////////////
 
 game.on("change:completed", function () {
-    console.log("Completed", game.get("completed"));
+    //console.log("Completed", game.get("completed"));
     if (!(game.get("completed"))) return false;
 
     $('#mapImage').show();
@@ -240,7 +240,7 @@ game.on("change:completed", function () {
 });
 
 game.on("change:moved", function () {
-    console.log("Game changed moved to ", game.get("moved"));
+    //console.log("Game changed moved to ", game.get("moved"));
     if (game.get("moved")) {
         checkNextGame();
     }
@@ -248,77 +248,77 @@ game.on("change:moved", function () {
 
 nextGame.on("change:completed", function () {
     if (nextGame.get("completed")) {
-        console.log("Next game is completed. Wanna have it?");
+        //console.log("Next game is completed. Wanna have it?");
         checkNextGame();
     }
 });
 
 dranQueue.on("reset", function (q, e) {
-    console.info("DranQueue INITIAL reset");
+    //console.info("DranQueue INITIAL reset");
     //make sure to remove currently showing game from queue
     checkPreload();
 });
 
 dranQueue.on("add", function (g, q, e) {
-    console.info("DranQueue add", g.get("id"));
+    //console.info("DranQueue add", g.get("id"));
     checkNextGame();
     checkPreload();
 });
 
 dranQueue.on("remove", function (g, q, e) {
-    console.info("DranQueue remove", g.get("id"));
+    //console.info("DranQueue remove", g.get("id"));
     checkPreload();
 });
 
 /////////////////////////////////////////////////////////////////////////////
 var checkPreload = function () {
-    console.log("Preparing buffer");
+    //console.log("Preparing buffer");
     if (dranQueue.length > 0) {
-        console.log("DQ len", dranQueue.length);
+        //console.log("DQ len", dranQueue.length);
         var nextId = dranQueue.at(0).get("id");
-        console.log("Next ID", nextId);
+        //console.log("Next ID", nextId);
 
         if ((nextId == game.get("id")) && (!game.get("moved"))) {
-            console.log("next == current, kicking from queue");
+            //console.log("next == current, kicking from queue");
             dranQueue.shift();
             return false;
             //checkPreload(); //will be triggered by "remove"
         }
 
         if (nextGame.get("id") === 0) {
-            console.log("Trigger preload of", nextId);
+            //console.log("Trigger preload of", nextId);
             nextGame.set("id", nextId);
             setTimeout(function () {
                 nextGame.load(nextId);
             }, 50);
         } else {
-            console.log("Preload already in progress");
+            //console.log("Preload already in progress");
         }
     } else {
-        console.log("DQ empty");
+        //console.log("DQ empty");
     }
 };
 
 var checkNextGame = function () {
-    console.log("checking next game:");
-    console.log("Game moved:", game.get("moved"));
-    console.log("NextGame completed:", nextGame.get("completed"));
-    console.log("NextGame: ", nextGame);
+    //console.log("checking next game:");
+    //console.log("Game moved:", game.get("moved"));
+    //console.log("NextGame completed:", nextGame.get("completed"));
+    //console.log("NextGame: ", nextGame);
 
     if (((game.get("id") == 0) || (game.get("moved"))) && nextGame.get("completed")) {
-        console.log("Setting game from next");
+        //console.log("Setting game from next");
         nextGame.set("moved", false);
         game.setFrom(nextGame);
         gar.navigate(window.location.pathname.substr(1) + "?GID=" + nextGame.get("id"));
-        console.log("Now showing");
+        //console.log("Now showing");
         $('#mapImage').show();
         nextGame.set({id: 0, completed: false}, {silent: true});
         checkPreload();
     } else {
         if (nextGame.get("id") === 0) {
-            console.log("Nixblocker");
+            //console.log("Nixblocker");
         } else {
-            console.log("not completed yet or not moved yet");
+            //console.log("not completed yet or not moved yet");
         }
     }
 };
@@ -329,4 +329,4 @@ Backbone.history.start({
     pushState: true
 });
 
-console.info("Stepup done");
+//console.info("Stepup done");

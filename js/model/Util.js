@@ -5,7 +5,6 @@ var KaroUtil = {};
         karoUtil.funny = true;
         karoUtil.oldLink = false;
         karoUtil.init = function () {
-            console.log("Do da util init");
             karoUtil.replacements = [];
             karoUtil.replacements.push({
                 r: "<a (.*?)</a>",
@@ -170,6 +169,12 @@ var KaroUtil = {};
                 },
                 sw: "i"
             });
+        };
+
+        karoUtil.isoDateDiff = function(d1, d2) {
+            var dt1 = new Date(d1).getTime();
+            var dt2 = new Date(d2).getTime();
+            return (dt2-dt1)/1000;
         };
 
 

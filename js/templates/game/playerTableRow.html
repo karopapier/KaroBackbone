@@ -1,0 +1,25 @@
+<td style="background-color: #<%= color %>; border-radius: 4px; box-shadow: 1px 2px rgba(0,0,0,.4)">&nbsp; &nbsp;</td>';
+<td><%= name %></td>
+<td><img src="images/car.png"/><%= moves.length %>
+    <% if (crashCount >0) { %>
+    <img src="images/crash.png"/> <%= crashCount %>
+    <% } %>
+</td>
+
+
+<td><span class="<%= statusClass %>"><%= displayStatus %></span></td>
+<td>
+    <% for (var i in checkedCps) { %>
+    <img class="icon-<%= checkedCps[i] %>" style="border: 0px"/>
+    <% } %>
+</td>";
+<td><%= lastmovetime %></td>
+<td><%
+    var d = Math.floor(blocktime/86400);
+    var b =blocktime-d*86400;
+    var h = Math.floor(b/3600);
+    b = b-(h*3600);
+    var m = Math.floor(b/60);
+    b = b-(m*60); %>
+    <%= d %> Tage, <%= h %>:<%= m %>:<%= b %>
+</td>

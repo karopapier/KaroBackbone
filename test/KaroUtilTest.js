@@ -67,9 +67,9 @@ test("linkify", function () {
         '<img src="http://www.karopapier.de/bilder/smilies/wavey.gif" alt="wavey" title="wavey">',
         'Didi und Stickerle fahr ich jetzt in Grund und Boden! <a class="GidLink87654" href="http://2.karopapier.de/game.html?GID=87654" target="_blank">87654</a> <a href="http://www.karopapier.de/showmap.php?GID=87654">Direktlink_1.0</a>',
         'das geht doch schoener: <a class="" title="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG" target="_blank" rel="nofollow" href="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG"><img src="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG" height="20" /></a>'
-    ]
+    ];
 
-    expect(inputs.length *2 + 3);
+    expect(inputs.length * 2 + 3);
 
     //funny
     for (var i = 0; i < inputs.length; i++) {
@@ -77,13 +77,13 @@ test("linkify", function () {
     }
 
     //unfunny
-    KaroUtil.set("funny",false);
+    KaroUtil.set("funny", false);
     for (var i = 0; i < inputs.length; i++) {
         equal(KaroUtil.linkify(inputs[i]), expectsUnfunny[i], inputs[i]);
     }
 
 
-    KaroUtil.set("old",true);
+    KaroUtil.set("old", true);
     inputs = [
         "Guck mal bei GID=12345",
         'Da ist ein Spiel unter http://www.karopapier.de/showmap.php?GID=12345 bei dem ich nicht weiter komme',
@@ -98,5 +98,30 @@ test("linkify", function () {
 
     for (var i = 0; i < inputs.length; i++) {
         equal(KaroUtil.linkify(inputs[i]), expects[i], inputs[i]);
+    }
+});
+
+test("date stuff", function () {
+    var inputs = {
+        "2015-12-01 22:50:12": "2015-12-02 22:50:12",
+        "2015-11-30 23:59:59": "2015-12-01 00:00:12",
+        "2015-12-01 22:50:22": "2015-12-01 22:50:22",
+        "2015-12-01 22:50:32": "2015-12-01 22:50:22",
+        "2015-10-17 23:28:08": "2015-10-15 14:19:08"
+    };
+    var expects = [
+        86400,
+        13,
+        0,
+        -10,
+        -205740
+    ];
+    expect(expects.length);
+
+    var xs = Object.keys(inputs);
+    for (var i = 0; i < expects.length; i++) {
+        var x = xs[i];
+        var y = inputs[x];
+        equal(KaroUtil.isoDateDiff(x, y), expects[i], x + " to " + y + " =  " + expects[i]);
     }
 });

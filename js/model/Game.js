@@ -13,7 +13,7 @@ var Game = Backbone.Model.extend({
         this.possibles = new MotionCollection();
         this.listenTo(this, "change:completed", this.updatePossibles);
         this.listenTo(this.get("players"), "movechange", function () {
-            console.log("movechange");
+            //console.log("movechange");
             this.updatePossibles();
         });
     },
@@ -51,19 +51,19 @@ var Game = Backbone.Model.extend({
         //silently set the id, events trigger after data is here
         //this.set({"id": id, completed: false}, {silent: true});
         this.set({"id": id, completed: false});
-        console.info("Fetching game details for " + id);
+        //console.info("Fetching game details for " + id);
         this.fetch();
     },
 
     updatePossibles: function () {
-        console.warn("Start Recalc possibles for", this.get("id"));
+        //console.warn("Start Recalc possibles for", this.get("id"));
         if (!(this.get("completed"))) return false;
         if (this.get("moved")) return false;
         if (this.get("finished")) {
             this.possibles.reset([]);
             return true;
         }
-        console.warn("Really DO recalc possibles for", this.get("id"));
+        //console.warn("Really DO recalc possibles for", this.get("id"));
 
         var dranId = this.get("dranId");
         if (this.get("players").length < 1) return false;
@@ -113,7 +113,7 @@ var Game = Backbone.Model.extend({
      * @param othergame
      */
     setFrom: function (othergame) {
-        console.warn("START SETTING FROM OTHER GAME");
+        //console.warn("START SETTING FROM OTHER GAME");
         this.set("completed", false);
         othergame.set("completed", false);
         var attribsToSet = {};
@@ -125,11 +125,11 @@ var Game = Backbone.Model.extend({
         });
         this.set(attribsToSet);
         this.map.set(othergame.map.toJSON());
-        console.log(othergame.get("players").toJSON());
+        //console.log(othergame.get("players").toJSON());
         this.get("players").reset(othergame.get("players").toJSON(), {parse: true});
         this.updatePossibles();
         //now set completed, really AT THE END
         this.set("completed",true);
-        console.warn("FINISHED SETTING FROM OTHER GAME");
+        //console.warn("FINISHED SETTING FROM OTHER GAME");
     }
 });

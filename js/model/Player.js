@@ -2,33 +2,43 @@ var Player = Backbone.Model.extend({
     defaults: {
         id: 0
     },
-    initialize: function() {
+    initialize: function () {
         _.bindAll(this, "parse", "getLastMove");
         if (!this.moves) {
-            this.moves=new MoveCollection();
+            this.moves = new MoveCollection();
         }
         //this.listenTo(this.moves, "add remove change", this.trigger.bind(this,"movechange"));
         //this.listenTo(this.moves, "reset", this.trigger.bind(this,"movereset"));
     },
-    parse: function(data) {
+    parse: function (data) {
         if (!this.moves) {
-            this.moves=new MoveCollection();
+            this.moves = new MoveCollection();
         }
         this.moves.reset(data.moves);
         delete data.moves;
         return data;
     },
-    getLastMove: function(){
-        if (this.moves.length>0) {
-            return this.moves.at(this.moves.length-1);
+    getLastMove: function () {
+        if (this.moves.length > 0) {
+            return this.moves.at(this.moves.length - 1);
         } else {
             return false;
         }
     },
-    toJSON: function() {
-        var modelJSON= Backbone.Model.prototype.toJSON.call(this);
+    toJSON: function () {
+        var modelJSON = Backbone.Model.prototype.toJSON.call(this);
         modelJSON.moves = this.moves.toJSON();
         return modelJSON;
+    },
+    getStatus: function () {
+        var means = {
+            "kicked": "rausgeworfen",
+            "left": "ausgestiegen",
+            "invited": "eingeladen"
+        }
+        var s = this.get("status");
+        console.log(s,"in",means);
+        if (s in means) return means[s];
+        return s;
     }
-
 });

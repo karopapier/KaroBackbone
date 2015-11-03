@@ -3,7 +3,7 @@ var PossiblesView = Backbone.View.extend({
         "clicked": "clickMove"
     },
     initialize: function (options) {
-        console.warn("I AM THE POSSIBLES VIEW");
+        //console.warn("I AM THE POSSIBLES VIEW");
         _.bindAll(this, "clearPossibles", "checkWillCrash", "render" );
         if (!options.hasOwnProperty("game")) {
             console.error("No game for PossiblesView");
@@ -20,7 +20,7 @@ var PossiblesView = Backbone.View.extend({
         this.highlight = false;
     },
     clearPossibles: function () {
-        console.info("Clear possibles");
+        //console.info("Clear possibles");
         _.each(this.views, function(v) {
             //console.log("Ich entferne nen alten possible");
             v.cleanup().remove();
@@ -36,7 +36,7 @@ var PossiblesView = Backbone.View.extend({
         possible.set("willCrash", k.willCrash(possible, 16));
     },
     checkHighlight: function(e, a, b) {
-        console.log("Triggered");
+        //console.log("Triggered");
         if (this.highlight) {
             this.highlight.model.set("highlight", false);
         }
@@ -44,7 +44,7 @@ var PossiblesView = Backbone.View.extend({
         this.highlight = e;
     },
     render: function () {
-        console.info("Rendering possibles for",this.game.get("id"));
+        //console.info("Rendering possibles for",this.game.get("id"));
         this.clearPossibles();
         var possibles = this.game.possibles;
         //console.log(possibles);

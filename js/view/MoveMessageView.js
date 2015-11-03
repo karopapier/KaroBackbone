@@ -15,7 +15,7 @@ var MoveMessageView = Backbone.View.extend({
         }
     },
     render: function () {
-        console.log("Rendere Movemessages, derer", this.collection.length);
+        //console.log("Rendere Movemessages, derer", this.collection.length);
         var html = '';
         var filtered = this.collection.models;
         if (this.filter) {
