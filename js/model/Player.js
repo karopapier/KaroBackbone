@@ -37,7 +37,6 @@ var Player = Backbone.Model.extend({
             "invited": "eingeladen"
         }
         var s = this.get("status");
-        console.log(s,"in",means);
         if (s in means) return means[s];
         return s;
     }

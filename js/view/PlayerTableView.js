@@ -11,7 +11,7 @@ var PlayerTableView = Marionette.CompositeView.extend({
         //this.listenTo(this.collection, "reset", this.render);
     },
     calcBlocktime: function () {
-        console.log("Calcblocktime");
+        //console.log("Calcblocktime");
         var moves = new MoveCollection();
         var blocktime = {};
         this.collection.each(function (p) {
