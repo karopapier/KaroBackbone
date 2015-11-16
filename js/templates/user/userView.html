@@ -1,16 +1,16 @@
 <%  if (options.withAnniversary && data.birthdayToday) { %>
-<img src="http://www.karopapier.de/images/smilies/birthday.gif" alt="Wird immer älter" title="Wird immer älter">
+<img src="//www.karopapier.de/images/smilies/birthday.gif" alt="Wird immer älter" title="Wird immer älter">
 <% } %>
 <% if (options.withAnniversary && data.karodayToday) { %>
-<img src="http://www.karopapier.de/images/smilies/bouncy.gif" alt="Hat heute Karotag" title="Hat heute Karotag">
+<img src="//www.karopapier.de/images/smilies/bouncy.gif" alt="Hat heute Karotag" title="Hat heute Karotag">
 <% } %>
 <% if (options.withDesperation && data.desperate) { %>
-<img src="http://www.karopapier.de/images/spielegeil.png" alt="Spielegeil" title="Spielegeil">
+<img src="//www.karopapier.de/images/spielegeil.png" alt="Spielegeil" title="Spielegeil">
 <% } %>
 
 <span class="userLabel">
 <% if (options.withInfoLink) { %>
-<a href="http://www.karopapier.de/userinfo.php?about=<%= data.id %>">
+<a href="//www.karopapier.de/userinfo.php?about=<%= data.id %>">
     <% } %>
     <%= data.login %>
     <% if (options.withInfoLink) { %>

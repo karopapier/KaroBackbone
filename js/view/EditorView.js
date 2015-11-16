@@ -56,7 +56,7 @@ var EditorView = Backbone.View.extend({
     loadMapId: function (mapId) {
         console.log("Ich lade jetzt",mapId);
         var $this = this;
-        $.getJSON("http://www.karopapier.de/api/mapcode/" + mapId + ".json?callback=?", function (mapcode) {
+        $.getJSON("//www.karopapier.de/api/mapcode/" + mapId + ".json?callback=?", function (mapcode) {
             $this.map.set("mapcode",mapcode);
         });
     },

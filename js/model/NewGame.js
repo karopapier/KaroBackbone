@@ -6,6 +6,6 @@ var NewGame = Backbone.Model.extend({
     },
 
     url: function () {
-        return "http://www.karopapier.de/api/game/add.json";
+        return "//www.karopapier.de/api/game/add.json";
     }
 });

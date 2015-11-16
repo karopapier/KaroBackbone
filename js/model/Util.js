@@ -54,7 +54,7 @@ var KaroUtil = {};
                 karoUtil.replacements.push({
                     r: "\\banders\\b",
                     f: function () {
-                        return ' <img style="opacity: .3" src="http://www.karopapier.de/images/anders.jpg" alt="anders" title="anders" />';
+                        return ' <img style="opacity: .3" src="//www.karopapier.de/images/anders.jpg" alt="anders" title="anders" />';
                     },
                     sw: "i"
                 });
@@ -63,7 +63,7 @@ var KaroUtil = {};
                 karoUtil.replacements.push({
                     r: "\\bhoff\\b",
                     f: function () {
-                        return ' <img style="opacity: .3" src="http://www.karopapier.de/images/hoff.jpg"     alt="hoff" title="hoff" />';
+                        return ' <img style="opacity: .3" src="//www.karopapier.de/images/hoff.jpg"     alt="hoff" title="hoff" />';
                     },
                     sw: "i"
                 });
@@ -75,13 +75,13 @@ var KaroUtil = {};
                 f: function (all, gid) {
                     //console.log("All", all);
                     //console.log("GID", gid);
-                    $.getJSON('http://www.karopapier.de/api/game/' + gid + '/info.json?callback=?', function (gameInfo) {
+                    $.getJSON('//www.karopapier.de/api/game/' + gid + '/info.json?callback=?', function (gameInfo) {
                         $('a.GidLink' + gid).text(gid + ' - ' + gameInfo.game.name);
                     });
                     if (karoUtil.oldLink) {
-                        return '<a class="GidLink' + gid + '" href="http://www.karopapier.de/showmap.php?GID=' + gid + '" target="_blank">' + gid + '</a>';
+                        return '<a class="GidLink' + gid + '" href="//www.karopapier.de/showmap.php?GID=' + gid + '" target="_blank">' + gid + '</a>';
                     } else {
-                        return '<a class="GidLink' + gid + '" href="http://2.karopapier.de/game.html?GID=' + gid + '" target="_blank">' + gid + '</a>';
+                        return '<a class="GidLink' + gid + '" href="//2.karopapier.de/game.html?GID=' + gid + '" target="_blank">' + gid + '</a>';
                     }
                 },
                 sw: "i"
@@ -151,7 +151,7 @@ var KaroUtil = {};
                 f: function (all, smil) {
                     //console.log(smil);
                     var img = document.createElement("img");
-                    img.src = "http://www.karopapier.de/bilder/smilies/" + smil + ".gif";
+                    img.src = "//www.karopapier.de/bilder/smilies/" + smil + ".gif";
                     img.onload = function () {
                         //console.log("Ich lud");
                         $('.smiley.' + smil).replaceWith(img);
@@ -165,7 +165,7 @@ var KaroUtil = {};
                 r: 'img src="\\/images\\/smilies\\/(.*?).gif" alt=',
                 f: function (all, smil) {
                     //console.log(all, smil);
-                    return 'img src="http://www.karopapier.de/bilder/smilies/' + RegExp.$1 + '.gif" alt=';
+                    return 'img src="//www.karopapier.de/bilder/smilies/' + RegExp.$1 + '.gif" alt=';
                 },
                 sw: "i"
             });
