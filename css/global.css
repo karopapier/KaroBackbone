@@ -4,7 +4,7 @@ html, body, header, footer, nav, aside {
 }
 
 body {
-    background-image: url(http://www.karopapier.de/images/background.jpg);
+    background-image: url(//www.karopapier.de/images/background.jpg);
     font-size: 87.5%;
     margin: 4px;
 }
