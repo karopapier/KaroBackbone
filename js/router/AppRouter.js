@@ -1,20 +1,23 @@
 var AppRouter = Backbone.Router.extend({
     routes: {
-        "index.html": "showChat",
         "chat.html": "showChat",
         "dran.html": "showDran",
         "game.html?GID=:gameId": "showGame",
         "newshowmap.php?GID=:gameId": "showGame",
         "game.html": "defaultRoute",
-        "/": "showChat",
-        "": "showChat"
+        ":path": "showStatic"
+    },
+    showStatic: function(path) {
+        Karopapier.content.show(new StaticView({
+            path: path
+        }));
     },
     showChat: function () {
         console.log("Show Chat");
         if (!Karopapier.chatApp) {
             Karopapier.chatApp = new ChatApp();
         }
-        Karopapier.content.show(Karopapier.chatApp);
+        Karopapier.content.show(Karopapier.chatApp.render());
     },
     showDran: function () {
         console.log("Show Dran");
