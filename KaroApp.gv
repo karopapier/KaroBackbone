@@ -1,0 +1,23 @@
+digraph Karo {
+
+"Karopapier" -> "User"
+"Karopapier" -> "UserDranGames"
+"Karopapier" -> "KEvIn"
+"Karopapier" -> "KaroNotifier"
+"Karopapier" -> "BrowserNotifier"
+"Karopapier" -> "Favicon"
+"Karopapier" -> "Title"
+
+"Karopapier" -> "Router"
+
+"Karopapier" -> "Layout"
+"Layout" -> "Header"
+"Header" -> "UserInfoBar"
+"Layout" -> "Navi"
+"Layout" -> "Content"
+"Layout" -> "Footer"
+"Karopapier" ->"SubApps"
+"SubApps" -> "Chat"
+"SubApps" -> "Game"
+"SubApps" -> "Editor"
+}

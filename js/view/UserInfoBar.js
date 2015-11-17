@@ -1,7 +1,7 @@
 var UserInfoBar = Backbone.View.extend({
     id: "userInfoBar",
     tagName: "div",
-    template: window.JST["global/userInfoBar"],
+    template: window.JST["main/userInfoBar"],
     events: {
         "click .login": "login"
     },

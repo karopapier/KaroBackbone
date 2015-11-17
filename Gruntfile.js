@@ -77,7 +77,7 @@ module.exports = function (grunt) {
                 }
             },
             templates: {
-                files: ['js/templates/**/*.html', 'js/templates/**/*.tpl'],
+                files: ['js/templates/**/*.html', 'js/templates/**/*.tpl', 'index.template.html'],
                 tasks: ['jst', 'asset_cachebuster'],
                 options: {
                     interrupt: true,
@@ -87,7 +87,7 @@ module.exports = function (grunt) {
                 }
             },
             statics: {
-                files: ['*.html', 'images/**/*', '!docs'],
+                files: ['images/**/*', '!docs'],
                 options: {
                     interrupt: true,
                     livereload: {

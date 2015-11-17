@@ -1,12 +1,14 @@
 var DranApp = Backbone.Marionette.LayoutView.extend({
     className: "dranApp",
-    initialize: function () {
+    initialize: function() {
         this.layout = new DranLayout({
-            el: this.el
+            //el: this.el
         });
-        this.layout.render();
     },
     render: function () {
+        console.log("Render of DranApp");
+        this.layout.render();
+        return;
         this.gamesView = new GameCollectionView({
             childView: GameListItemView,
             collection: Karopapier.UserDranGames

@@ -5,7 +5,6 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         this.layout = new ChatLayout({
             el: this.el
         });
-        this.layout.render();
         this.already = true;
 
         //console.log("Im ChatApp.init ist funny", Karopapier.Settings.get("chat_funny"));
@@ -72,7 +71,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         });
 
         this.listenTo(Karopapier.Settings, "change:chat_funny", function (conf, funny) {
-            //console.log("ChatApp bekommt mit, dass sich Karo.Settings -> funny geändert hat",funny);
+            //console.log("ChatApp bekommt mit, dass sich Karo.Settings -> funny geï¿½ndert hat",funny);
             this.configuration.set("funny", funny);
             KaroUtil.set("funny", funny);
             this.chatMessageCache.each(function (m) {
@@ -82,7 +81,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         });
 
         this.listenTo(Karopapier.Settings, "change:chat_oldLink", function (conf, oldLink) {
-            console.log("ChatApp bekommt mit, dass sich Karo.Settings -> oldLink geändert hat",oldLink);
+            console.log("ChatApp bekommt mit, dass sich Karo.Settings -> oldLink geï¿½ndert hat",oldLink);
             this.configuration.set("oldLink", oldLink);
             KaroUtil.set("oldLink", oldLink);
             this.chatMessageCache.each(function (m) {
@@ -92,7 +91,7 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         });
 
         this.listenTo(Karopapier.Settings, "change:chat_showBotrix", function (conf, showBotrix) {
-            //console.log("ChatApp bekommt mit, dass sich Karo.Settings -> showBotrix geändert hat",showBotrix);
+            //console.log("ChatApp bekommt mit, dass sich Karo.Settings -> showBotrix geï¿½ndert hat",showBotrix);
             this.configuration.set("showBotrix", showBotrix);
             this.chatMessageCache.each(function (m) {
                 //dummy trigger change event to force re-render

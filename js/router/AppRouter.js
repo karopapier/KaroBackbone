@@ -7,8 +7,8 @@ var AppRouter = Backbone.Router.extend({
         "game.html": "defaultRoute",
         ":path": "showStatic"
     },
-    showStatic: function(path) {
-        Karopapier.content.show(new StaticView({
+    showStatic: function (path) {
+        Karopapier.layout.content.show(new StaticView({
             path: path
         }));
     },
@@ -16,15 +16,19 @@ var AppRouter = Backbone.Router.extend({
         console.log("Show Chat");
         if (!Karopapier.chatApp) {
             Karopapier.chatApp = new ChatApp();
+            //Karopapier.chatApp.start();
+            Karopapier.chatApp.layout.render();
         }
-        Karopapier.content.show(Karopapier.chatApp.render());
+        Karopapier.layout.content.show(Karopapier.chatApp.layout, {preventDestroy: true});
     },
     showDran: function () {
         console.log("Show Dran");
         if (!Karopapier.dranApp) {
             Karopapier.dranApp = new DranApp();
+            //Karopapier.dranApp.start();
+            Karopapier.dranApp.layout.render();
         }
-        Karopapier.content.show(Karopapier.dranApp);
+        Karopapier.layout.content.show(Karopapier.dranApp.layout, {preventDestroy: true});
     },
     showGame: function (gameId) {
         if (gameId) {

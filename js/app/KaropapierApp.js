@@ -39,7 +39,6 @@ var KaropapierApp = Marionette.Application.extend({
         });
         this.notifierView = new KaroNotifierView({model: this.notifier});
 
-
         //Browser Notifications
         this.notificationControl = new NotificationControl();
         this.browserNotifier = new BrowserNotifier({
@@ -49,96 +48,79 @@ var KaropapierApp = Marionette.Application.extend({
             control: this.notificationControl
         });
 
+        //lazy css
+        KaroUtil.lazyCss("//www.karopapier.de/css/slidercheckbox/slidercheckbox.css");
 
-        // --- INITIALIZERS
+        this.listenTo(this, "start", this.bootstrap.bind(this));
+    },
+    bootstrap: function () {
+        var me = this;
+        console.log("Jetzt bootstrap app");
 
-        //add container for notifications
-        this.addInitializer(function () {
-            me.notifierView.render();
+        //container for KaroNotifier
+        this.notifierView.render();
+
+        //hook to events to update dran queue
+        //refresh function considering logout
+        function dranRefresh() {
+            if (me.User.get("id") == 0) return false;
+            me.UserDranGames.fetch();
+        }
+        dranRefresh();
+        this.listenTo(this.User, "change:id", dranRefresh)
+
+
+        this.vent.on("USER:DRAN", function (data) {
+            this.UserDranGames.addId(data.gid, data.name);
+        });
+
+        this.vent.on("USER:MOVED", function (data) {
+            this.UserDranGames.remove(data.gid);
         });
 
         //hook to events to update dran queue
-        this.addInitializer(function () {
-            //refresh function considering logout
-            function dranRefresh() {
-                if (me.User.get("id") == 0) return false;
-                me.UserDranGames.fetch();
-            }
-
-            dranRefresh();
-
-            this.listenTo(me.User, "change:id", dranRefresh)
-
-            me.vent.on("USER:DRAN", function (data) {
-                me.UserDranGames.addId(data.gid, data.name);
-            });
-
-            me.vent.on("USER:MOVED", function (data) {
-                me.UserDranGames.remove(data.gid);
-            });
-        });
-
-        //hook to events to update dran queue
-        this.addInitializer(function () {
-            //refresh function considering logout
-            function loadTheme() {
-                if (me.User.get("id") == 0) return false;
-                var theme = me.User.get("theme");
-                var themeUrl = "//www.karopapier.de/themes/" + theme + "/css/theme.css";
-                KaroUtil.lazyCss(themeUrl);
-            }
-
-            loadTheme();
-            this.listenTo(me.User, "change:id", loadTheme);
-        });
+        //refresh function considering logout
+        function loadTheme() {
+            if (me.User.get("id") == 0) return false;
+            var theme = me.User.get("theme");
+            var themeUrl = "//www.karopapier.de/themes/" + theme + "/css/theme.css";
+            KaroUtil.lazyCss(themeUrl);
+        }
+        loadTheme();
+        this.listenTo(this.User, "change:id", loadTheme);
 
         //init dynamic favicon
-        this.addInitializer(function () {
-            me.favi = new FaviconView({
-                model: me.User,
-                el: '#favicon'
-            });
+        this.favi = new FaviconView({
+            model: this.User,
+            el: '#favicon'
         });
 
-        this.addInitializer(function () {
-            me.titler = new TitleView({
-                model: me.User,
-                title: "Karopapier - Autofahren wie in der Vorlesung"
-            })
-            me.titler.render();
-        });
+        this.titler = new TitleView({
+            model: this.User,
+            title: "Karopapier - Autofahren wie in der Vorlesung"
+        })
+        this.titler.render();
 
         //genereal page setup
-        this.addInitializer(function () {
-            me.addRegions({
-                header: '#header',
-                content: '#content',
-                footer: '#footer'
-            });
+        this.layout = new KaropapierLayout({
+            el: "body"
         });
 
         //user info bar right top
-        this.addInitializer(function () {
-            me.infoBar = new UserInfoBar({
-                model: me.User
-            });
-            me.header.show(Karopapier.infoBar);
+        this.infoBar = new UserInfoBar({
+            model: this.User
         });
+        this.layout.header.show(Karopapier.infoBar);
+        this.layout.navi.show(new NaviView());
 
         //Start the router
-        this.addInitializer(function () {
-            me.router = new AppRouter();
-            Backbone.history.start({
-                pushState: true
-            });
+        this.router = new AppRouter();
+        Backbone.history.start({
+            pushState: true
         });
 
-        //lazy css
-        this.addInitializer(function () {
-            KaroUtil.lazyCss("//www.karopapier.de/css/slidercheckbox/slidercheckbox.css");
-        })
 
-        me.vent.on('GAME:MOVE', function (data) {
+        this.vent.on('GAME:MOVE', function (data) {
             //only for unrelated moves, count up or down
             if (data.related) return false;
             var movedUser = new User({id: data.movedId, login: data.movedLogin})

@@ -7,4 +7,4 @@ var ChatLayout = Backbone.Marionette.LayoutView.extend({
         chatEnter: "#chatEnter",
         webNotifier: "#webNotifier"
     }
-})
+});
