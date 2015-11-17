@@ -19,7 +19,7 @@ var Game = Backbone.Model.extend({
     },
 
     url: function () {
-        return "http://www.karopapier.de/api/game/" + this.get("id") + "/details.json?callback=?";
+        return "//www.karopapier.de/api/game/" + this.get("id") + "/details.json?callback=?";
     },
 
     parse: function (data) {

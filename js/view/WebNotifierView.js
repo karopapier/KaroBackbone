@@ -14,11 +14,11 @@ var WebNotifierView = Backbone.View.extend({
     unsupportedBrowser: function () {
         console.log("Browser kann nicht");
         this.$('#notif').prop("disabled", true);
-        this.$('#statusinfo').attr("data-quicktip", "Dein Browser unterstützt das leider nicht...");
+        this.$('#statusinfo').attr("data-quicktip", "Dein Browser unterstï¿½tzt das leider nicht...");
         this.$('#statusinfo').removeClass().addClass("quicktip quicktip-box quicktip-error");
     },
     notifPossible: function () {
-        console.log("Browser könnte");
+        console.log("Browser kï¿½nnte");
         this.$('#statusinfo').attr("data-quicktip", "Dein Browser kann das!");
         this.$('#statusinfo').removeClass().addClass("quicktip quicktip-box quicktip-ok");
     },
@@ -29,7 +29,7 @@ var WebNotifierView = Backbone.View.extend({
         this.$('#statusinfo').removeClass().addClass("quicktip quicktip-box quicktip-warn");
     },
     permissionGranted: function () {
-        console.log("Ich dürfte");
+        console.log("Ich dï¿½rfte");
     },
     permissionDenied: function () {
         console.log("Ich darf nicht");
@@ -63,7 +63,7 @@ var WebNotifierView = Backbone.View.extend({
             permissionDenied: permissionDenied,
             notifyClick: function () {
                 //window.open("http://www.karopapier.de/showmap.php?GID="+data.gid);
-                window.open("http://www.karopapier.de/dran");
+                window.open("//www.karopapier.de/dran");
             }
         }).show();
     },

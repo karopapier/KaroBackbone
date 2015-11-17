@@ -33,7 +33,7 @@ var KaroNotificationView = Backbone.View.extend({
             html += '<img class="notification-image" src="' + this.model.get("imgUrl") + '">';
         }
         html += '<div class="notification-message">' + text + '</div>';
-        html += '<img src="http://www.karopapier.de/images/x.png" class="close" style="position: absolute; right: 0px; top: 0px">';
+        html += '<img src="//www.karopapier.de/images/x.png" class="close" style="position: absolute; right: 0px; top: 0px">';
         //html += '<div stlye="clear: both"></div>';
         this.$el.html(html);
         return this;

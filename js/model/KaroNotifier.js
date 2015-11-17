@@ -72,7 +72,7 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
             text: t(data),
             level: "info",
             group: "global",
-            imgUrl: "http://www.karopapier.de/pre/" + data.gid + ".png"
+            imgUrl: "//www.karopapier.de/pre/" + data.gid + ".png"
         });
         this.add(n);
     },
@@ -83,7 +83,7 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
             text: t(data),
             level: "ok",
             group: "dran",
-            imgUrl: "http://www.karopapier.de/pre/" + data.gid + ".png"
+            imgUrl: "//www.karopapier.de/pre/" + data.gid + ".png"
         });
         this.add(n);
     }

@@ -11,7 +11,7 @@ var KaropapierApp = Marionette.Application.extend({
         this.User = new User({});
         //make this user refer to "check" for loging in
         this.User.url = function () {
-            return "http://www.karopapier.de/api/user/check.json?callback=?";
+            return "//www.karopapier.de/api/user/check.json?callback=?";
         };
         this.User.fetch();
 
@@ -84,7 +84,7 @@ var KaropapierApp = Marionette.Application.extend({
             function loadTheme() {
                 if (me.User.get("id") == 0) return false;
                 var theme = me.User.get("theme");
-                var themeUrl = "http://www.karopapier.de/themes/" + theme + "/css/theme.css";
+                var themeUrl = "//www.karopapier.de/themes/" + theme + "/css/theme.css";
                 KaroUtil.lazyCss(themeUrl);
             }
 
@@ -135,7 +135,7 @@ var KaropapierApp = Marionette.Application.extend({
 
         //lazy css
         this.addInitializer(function () {
-            KaroUtil.lazyCss("http://www.karopapier.de/css/slidercheckbox/slidercheckbox.css");
+            KaroUtil.lazyCss("//www.karopapier.de/css/slidercheckbox/slidercheckbox.css");
         })
 
         me.vent.on('GAME:MOVE', function (data) {
