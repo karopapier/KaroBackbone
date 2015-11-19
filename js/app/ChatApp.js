@@ -1,9 +1,8 @@
-var ChatApp = Backbone.Marionette.LayoutView.extend({
-    className: "chatApp",
+var ChatApp = Backbone.Marionette.Application.extend({
     initialize: function () {
-        _.bindAll(this, "updateView", "render", "scrollCheck");
+        _.bindAll(this, "updateView", "start", "scrollCheck");
         this.layout = new ChatLayout({
-            el: this.el
+            model: this
         });
         this.already = true;
 
@@ -25,11 +24,12 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
         this.chatMessageCache.cache(0, 20); //initial short load
 
         this.chatMessageCollection = new ChatMessageCollection();
+
         this.chatMessagesView = new ChatMessagesView({
             model: this.configuration,
             collection: this.chatMessageCollection
         });
-        this.chatMessagesView.render();
+        //this.chatMessagesView.render();
 
         this.chatInfoView = new ChatInfoView({
             model: Karopapier.User
@@ -191,15 +191,14 @@ var ChatApp = Backbone.Marionette.LayoutView.extend({
             }, 50);
         }
     },
-    render: function () {
-        this.layout.chatMessages.show(this.chatMessagesView);
-        this.layout.chatInfo.show(this.chatInfoView);
-        this.layout.chatControl.show(this.chatControlView);
-        this.layout.chatEnter.show(this.chatEnterView);
-
-        var $el = this.layout.chatMessages.$el;
-
-        $($el).on("scroll", this.scrollCheck);
+    start: function () {
+        //this.chatMessages.show(this.model.chatMessagesView, {preventDestroy: true});
+        //this.chatInfo.show(this.model.chatInfoView, {preventDestroy: true});
+        //this.chatControl.show(this.model.chatControlView, {preventDestroy: true});
+        //this.chatEnter.show(this.model.chatEnterView, {preventDestroy: true});
+        //var $el = this.layout.chatMessages.$el;
+        //$($el).on("scroll", this.scrollCheck);
+        this.layout.chatInfo.show(new LogView());
     }
 });
 

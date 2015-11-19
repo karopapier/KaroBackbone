@@ -6,3 +6,5 @@ js/templates/JST.js
 *.min.css
 doc
 index.html
+dran.html
+chat.html

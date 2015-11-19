@@ -10,7 +10,9 @@ module.exports = function (grunt) {
             },
             build: {
                 files: {
-                    'index.html': ['index.template.html']
+                    'index.html': ['index.template.html'],
+                    'dran.html': ['index.template.html'],
+                    'chat.html': ['index.template.html']
                 }
             }
         },

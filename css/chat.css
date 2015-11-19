@@ -25,6 +25,7 @@
 	background-image: inherit;
 }
 
+/*
 @media all and (min-width: 630px) {
     #chatWrapper {
         padding-right: 15em;
@@ -33,7 +34,6 @@
     #chatMessages {
         float: left;
         overflow-y: scroll;
-        /* min-height: 480px; */
         min-width: 320px;
         min-height: 400px;
         max-height: 600px;
@@ -47,6 +47,7 @@
         z-index: 21;
     }
 }
+*/
 
 .chatUsersView {
     list-style: none;

@@ -1,6 +1,7 @@
 var LogView = Backbone.View.extend({
     tagName: "pre",
-    initialize: function () {
+    initialize: function (options) {
+        this.info = options.info|| "-";
         this.log("Init");
     },
     log: function (t) {
@@ -11,7 +12,7 @@ var LogView = Backbone.View.extend({
         m = (m < 10) ? "0" + m : m;
         s = (s < 10) ? "0" + s : s;
         var ds = h + ":" + m + ":" + s;
-        this.$el.append(ds + " " + t + "\n");
+        this.$el.append(ds + " " + this.info + " " + t + " (" + this.cid + ")\n");
     },
     render: function () {
         this.log("Render");
