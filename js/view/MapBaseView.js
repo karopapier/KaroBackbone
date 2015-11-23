@@ -14,7 +14,7 @@
  * @property {number} y y coordinate
  */
 
-var MapBaseView = Backbone.View.extend(/** @lends MapBaseView.prototype */
+var MapBaseView = Marionette.View.extend(/** @lends MapBaseView.prototype */
     {
         optionDefaults: {
             size: 12,
@@ -40,14 +40,14 @@ var MapBaseView = Backbone.View.extend(/** @lends MapBaseView.prototype */
             }
 
             if(!options.model) {
-                console.error("No model for MapView");
+                console.error("No Map model for MapView");
                 return false;
             }
             this.listenTo(this.settings, "change:size change:border", this.updateFieldSize);
             this.updateFieldSize();
         },
         updateFieldSize: function () {
-            this.fieldSize = (this.settings.get("size") + this.settings.get("border"));
+        this.fieldSize = (this.settings.get("size") + this.settings.get("border"));
             //console.log("New fieldsize",this.fieldSize);
         },
 

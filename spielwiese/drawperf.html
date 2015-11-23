@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Karopapier 2.1</title>
+        <!-- <script type="text/javascript" src="js/libs/FEHLER.js?v=1445895669797"></script> -->
+        <script type="text/javascript" src="/js/libs/jquery-1.11.3.min.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/js/libs/jquery-ui-1.11.4.custom.min.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/js/libs/underscore-min.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/js/libs/backbone-min.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/js/libs/backbone.marionette-2.4.1.min.js?v=1445895669797"></script>
+
+
+        <script type="text/javascript" src="/js/model/Map.js"></script>
+        <script type="text/javascript" src="/js/model/MapRenderPalette.js"></script>
+
+        <script type="text/javascript" src="/js/view/LogView.js"></script>
+        <script type="text/javascript" src="/js/view/MapBaseView.js"></script>
+        <script type="text/javascript" src="/js/view/MapRenderView.js"></script>
+        <script type="text/javascript" src="/js/view/MapCodeView.js"></script>
+
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+        <meta charset="utf-8" />
+
+        <style type="text/css">
+            body {
+                background-color: #333;
+                color: #fff;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="controls">
+            <button onclick="renderAll()">Render</button>
+            <div id="viewsettings">
+                <label>Size: <input id="size"></label>
+                <label>Border: <input id="border"></label>
+            </div>
+            <pre id="timer"></pre>
+        </div>
+        <div id="container"></div>
+
+        <script type="text/javascript">
+            var renderAll = function () {
+                mrv.render();
+                mcv.render();
+            };
+            var log = function (t) {
+                var d = new Date();
+                var h = d.getHours();
+                var m = d.getMinutes();
+                var s = d.getSeconds();
+                var ms = d.getMilliseconds();
+                m = (m < 10) ? "0" + m : m;
+                s = (s < 10) ? "0" + s : s;
+                var ds = h + ":" + m + ":" + s + "." + ms;
+                return ds + " " + t;
+            };
+            var ControlView = Backbone.View.extend({
+                events: {
+                    "change #size": "updateSize",
+                    "keyup #size": "updateSize"
+                },
+                updateSize: function (e) {
+                    console.log($("#size").val());
+                    var newsize = parseInt($("#size").val());
+                    if (newsize > 3) {
+                        mrv.settings.set("size", newsize);
+                    }
+                }
+            });
+
+            var ctrlView = new ControlView({
+                el: "#viewsettings",
+            });
+
+            var map = new Map();
+            map.setMapcode("XOSOFOX\nXOS1FOX\nXOSOXXX");
+            var mrv = new MapRenderView({
+                model: map
+            });
+
+            var mcv = new MapCodeView({
+                model: map
+            });
+
+            var TIMER;
+            mrv.on("before:render", function (e) {
+                TIMER = new Date();
+                $("#timer").text(log("Before render\n"));
+            });
+
+            mrv.on("render", function (e) {
+                $("#timer").append(log("Render\n"));
+                var diff = new Date().getTime() - TIMER.getTime();
+                $("#timer").append(log(diff));
+            });
+
+            var container = $('#container');
+            container.append(mrv.$el);
+            container.append("<p>---</p>");
+            container.append(mcv.$el);
+
+            mrv.render();
+            mcv.render();
+
+            var code = "";
+            for (var r = 0; r < 100; r++) {
+                for (var c = 0; c < 70; c++) {
+                    code += "1";
+                }
+                code += "\n";
+            }
+            mrv.settings.set("size", 2);
+            map.setMapcode(code);
+            mrv.render();
+            mcv.render();
+        </script>
+
+        <script type="text/javascript">
+            if (!/karopapier/.test(window.location.hostname)) {
+                document.write('<scr' + 'ipt src="http://localhost:20000/livereload.js?v=1445895669797"></scr' + 'ipt>');
+            }
+        </script>
+    </body>
+</html>

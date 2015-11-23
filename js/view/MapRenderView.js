@@ -19,13 +19,14 @@ var MapRenderView = MapBaseView.extend({
         this.listenTo(this.settings, "change", this.render);
         this.palette = new MapRenderPalette();
     },
-    renderFieldChange: function(e, a, b) {
+    renderFieldChange: function (e, a, b) {
         var field = e.field;
         var r = e.r;
         var c = e.c;
         this.drawField(r, c, field);
     },
     render: function () {
+        this.trigger("before:render");
         var map = this.model;
         this.size = this.settings.get("size");
         this.border = this.settings.get("border");
@@ -38,11 +39,14 @@ var MapRenderView = MapBaseView.extend({
         this.ctx.lineWidth = this.settings.get("size");
 
         this.ctx.fillRect(0, 0, this.el.width, this.el.height);
+        var me = this;
         for (var r = 0; r < map.get("rows"); r++) {
             for (var c = 0; c < map.get("cols"); c++) {
-                this.drawField(r, c, map.getFieldAtRowCol(r, c));
+                var f = map.getFieldAtRowCol(r, c);
+                me.drawField(r, c, f);
             }
         }
+        this.trigger("render");
     },
 
     drawField: function (r, c, field) {
@@ -87,7 +91,8 @@ var MapRenderView = MapBaseView.extend({
 
         //Parc ferme
         if (field == "P") {
-            this.drawStandardField(x, y, this.palette.getRGB('parc'), this.palette.getRGB('roadspecle'), false); //no specles
+            this.drawStandardField(x, y, this.palette.getRGB('parc'), this.palette.getRGB('roadspecle'), false); //no
+                                                                                                                 // specles
         }
     },
 
@@ -117,14 +122,14 @@ var MapRenderView = MapBaseView.extend({
     },
 
     drawBorder: function (x, y, specle) {
-            this.ctx.lineWidth = this.border;
-            this.ctx.strokeStyle = specle;
-            this.ctx.beginPath();
-            this.ctx.moveTo(x + this.size + .5, y);
-            this.ctx.lineTo(x + this.size + .5, y + this.size + .5);
-            this.ctx.lineTo(x, y + this.size + .5);
-            this.ctx.stroke();
-            this.ctx.closePath();
+        this.ctx.lineWidth = this.border;
+        this.ctx.strokeStyle = specle;
+        this.ctx.beginPath();
+        this.ctx.moveTo(x + this.size + .5, y);
+        this.ctx.lineTo(x + this.size + .5, y + this.size + .5);
+        this.ctx.lineTo(x, y + this.size + .5);
+        this.ctx.stroke();
+        this.ctx.closePath();
     },
 
     drawFlagField: function (x, y, c1, c2) {
@@ -165,7 +170,8 @@ var MapRenderView = MapBaseView.extend({
         this.ctx.rect(x + 0.3 * newSize, y + 0.3 * newSize, 0.4 * newSize, 0.4 * newSize);
         this.ctx.stroke();
 
-        //imagerectangle($this->image, $x+0.3*$this->this.size, $y+0.3*$this->this.size, $x+0.7*($this->this.size+border), $y+0.7*($this->this.size+border), $c1);
+        //imagerectangle($this->image, $x+0.3*$this->this.size, $y+0.3*$this->this.size,
+        // $x+0.7*($this->this.size+border), $y+0.7*($this->this.size+border), $c1);
 
         //add border
         //$this->drawBorder($x,$y,$this->MapPalette['roadspecle']);
