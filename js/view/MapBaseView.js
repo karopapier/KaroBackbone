@@ -34,11 +34,16 @@ var MapBaseView = Marionette.View.extend(/** @lends MapBaseView.prototype */
             _.bindAll(this, "updateFieldSize", "getRowColFromXY", "getRowFromY", "getColFromX", "getXYFromRowCol", "getXFromCol", "getYFromRow", "getFieldAtXY", "setFieldAtXY", "setFieldAtRowCol");
             _.defaults(options, this.optionDefaults);
             if (options.settings) {
+                //apply and enrich the settings if some are missing
+                var attr = options.settings.attributes;
+                _.defaults(attr, this.optionDefaults);
                 this.settings = options.settings;
+                this.settings.set(attr);
             } else {
                 this.settings = new Backbone.Model(options);
             }
 
+            //console.log("BASE", this.settings.attributes);
             if(!options.model) {
                 console.error("No Map model for MapView");
                 return false;
@@ -100,7 +105,7 @@ var MapBaseView = Marionette.View.extend(/** @lends MapBaseView.prototype */
 
         setFieldAtXY: function (x, y, field) {
             var rc = this.getRowColFromXY(x, y);
-            var old = this.getFieldAtRowCol(rc.r, rc.c);
+            var old = this.model.getFieldAtRowCol(rc.r, rc.c);
             if (old != field) {
                 this.setFieldAtRowCol(rc.r, rc.c, field);
             }

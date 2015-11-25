@@ -30,6 +30,7 @@ var MapRenderView = MapBaseView.extend({
         var map = this.model;
         this.size = this.settings.get("size");
         this.border = this.settings.get("border");
+        console.log(this.settings.attributes, this.fieldSize);
         this.el.width = map.get("cols") * (this.fieldSize);
         this.el.height = map.get("rows") * (this.fieldSize);
 
@@ -42,6 +43,7 @@ var MapRenderView = MapBaseView.extend({
         var me = this;
         for (var r = 0; r < map.get("rows"); r++) {
             for (var c = 0; c < map.get("cols"); c++) {
+                console.log("Renderfield");
                 var f = map.getFieldAtRowCol(r, c);
                 me.drawField(r, c, f);
             }

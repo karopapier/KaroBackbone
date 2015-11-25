@@ -17,6 +17,7 @@
         <script type="text/javascript" src="/js/view/MapBaseView.js"></script>
         <script type="text/javascript" src="/js/view/MapRenderView.js"></script>
         <script type="text/javascript" src="/js/view/MapCodeView.js"></script>
+        <script type="text/javascript" src="/js/view/EditorMapView.js"></script>
 
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
@@ -43,7 +44,7 @@
 
         <script type="text/javascript">
             var renderAll = function () {
-                mrv.render();
+                editorMapView.render();
                 mcv.render();
             };
             var log = function (t) {
@@ -66,7 +67,7 @@
                     console.log($("#size").val());
                     var newsize = parseInt($("#size").val());
                     if (newsize > 3) {
-                        mrv.settings.set("size", newsize);
+                        editorMapView.settings.set("size", newsize);
                     }
                 }
             });
@@ -77,33 +78,19 @@
 
             var map = new Map();
             map.setMapcode("XOSOFOX\nXOS1FOX\nXOSOXXX");
-            var mrv = new MapRenderView({
+            var editorMapView = new EditorMapView({
                 model: map
             });
 
             var mcv = new MapCodeView({
-                model: map
-            });
-
-            var TIMER;
-            mrv.on("before:render", function (e) {
-                TIMER = new Date();
-                $("#timer").text(log("Before render\n"));
-            });
-
-            mrv.on("render", function (e) {
-                $("#timer").append(log("Render\n"));
-                var diff = new Date().getTime() - TIMER.getTime();
-                $("#timer").append(log(diff));
+                model: map,
+                readonly: false
             });
 
             var container = $('#container');
-            container.append(mrv.$el);
+            container.append(editorMapView.$el);
             container.append("<p>---</p>");
             container.append(mcv.$el);
-
-            mrv.render();
-            mcv.render();
 
             var code = "";
             for (var r = 0; r < 100; r++) {
@@ -112,9 +99,21 @@
                 }
                 code += "\n";
             }
-            mrv.settings.set("size", 2);
+            editorMapView.settings.set("size", 8);
             map.setMapcode(code);
-            mrv.render();
+            editorMapView.render();
+            var TIMER;
+            editorMapView.mapRenderView.on("before:render", function (e) {
+                TIMER = new Date();
+                $("#timer").text(log("Before render\n"));
+            });
+
+            editorMapView.mapRenderView.on("render", function (e) {
+                $("#timer").append(log("Render\n"));
+                var diff = new Date().getTime() - TIMER.getTime();
+                $("#timer").append(log(diff));
+            });
+
             mcv.render();
         </script>
 
