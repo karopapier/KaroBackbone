@@ -3,8 +3,8 @@ var EditorMapView = Backbone.View.extend({
     initialize: function (options) {
         _.bindAll(this, "render", "draw", "mousedown", "mouseup", "mousemove", "mouseleave");
         this.settings = options.settings || new Backbone.Model();
-        this.tools={
-            buttonColor:["X","1","O"]
+        this.tools = {
+            buttonColor: [null, "X", "1", "O"]
         };
         this.$el.bind("contextmenu", function () {
             return false;
@@ -19,7 +19,7 @@ var EditorMapView = Backbone.View.extend({
 								}
 							});
          */
-        this.buttonDown=[false, false, false];
+        this.buttonDown = [false, false, false];
     },
     render: function () {
         this.$el.empty();
