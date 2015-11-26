@@ -41,10 +41,10 @@ var EditorMapView = Backbone.View.extend({
     },
 
     draw: function (e) {
+        var x = e.pageX - this.$el.offset().left;
+        var y = e.pageY - this.$el.offset().top;
         for (var i = 1; i <= 3; i++) {
             if (this.buttonDown[i]) {
-                var x = e.pageX - this.$el.offset().left;
-                var y = e.pageY - this.$el.offset().top;
                 $('#drag' + i).text("(" + x + "|" + y + ")");
                 this.mapRenderView.setFieldAtXY(x, y, this.tools.buttonColor[i]);
             }
@@ -54,15 +54,14 @@ var EditorMapView = Backbone.View.extend({
     mousedown: function (e) {
         this.buttonDown[e.which] = true;
         e.preventDefault();
-        this.render();
+        //this.render();
         this.draw(e);
         this.$el.bind("mousemove", this.mousemove);
-        return false;
     },
 
     mouseup: function (e) {
         this.buttonDown[e.which] = false;
-        this.render();
+        //this.render();
         this.$el.unbind("mousemove");
     },
 
@@ -74,6 +73,6 @@ var EditorMapView = Backbone.View.extend({
         for (var i = 1; i <= 3; i++) {
             this.buttonDown[e.which] = false;
         }
-        this.render();
+        this.$el.unbind("mousemove");
     }
 });

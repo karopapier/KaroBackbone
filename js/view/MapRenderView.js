@@ -18,19 +18,22 @@ var MapRenderView = MapBaseView.extend({
         this.listenTo(this.model, "change:field", this.renderFieldChange);
         this.listenTo(this.settings, "change", this.render);
         this.palette = new MapRenderPalette();
+        this.fieldColors = {};
+        this.initFieldColors();
     },
     renderFieldChange: function (e, a, b) {
+        console.info("Fieldchange only");
         var field = e.field;
         var r = e.r;
         var c = e.c;
         this.drawField(r, c, field);
     },
     render: function () {
+        console.warn("FULL RENDER", new Date())
         this.trigger("before:render");
         var map = this.model;
         this.size = this.settings.get("size");
         this.border = this.settings.get("border");
-        console.log(this.settings.attributes, this.fieldSize);
         this.el.width = map.get("cols") * (this.fieldSize);
         this.el.height = map.get("rows") * (this.fieldSize);
 
@@ -43,14 +46,17 @@ var MapRenderView = MapBaseView.extend({
         var me = this;
         for (var r = 0; r < map.get("rows"); r++) {
             for (var c = 0; c < map.get("cols"); c++) {
-                console.log("Renderfield");
                 var f = map.getFieldAtRowCol(r, c);
                 me.drawField(r, c, f);
             }
         }
         this.trigger("render");
+        console.log("Render fertig");
     },
 
+    initFieldColors: function() {
+        console.warn("Prepare a simple fg/bg field mapping - here or in MapPalette");
+    },
     drawField: function (r, c, field) {
         x = c * (this.fieldSize);
         y = r * (this.fieldSize);

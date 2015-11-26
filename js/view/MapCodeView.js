@@ -4,7 +4,7 @@ var MapCodeView = Backbone.View.extend({
         _.defaults(options, {readonly: true});
         this.readonly = options.readonly;
         _.bindAll(this, "render", "setBounds", "setCode", "getCode", "updateModel");
-        this.listenTo(this.model, "change:mapcode", this.render);
+        //this.listenTo(this.model, "change:mapcode", this.render);
         this.listenTo(this.model, "change:rows change:cols", this.setBounds);
         this.listenTo(this.model, "change:mapcode", this.setCode);
         this.listenTo(this.model, "change:field", this.setCode);
@@ -33,6 +33,7 @@ var MapCodeView = Backbone.View.extend({
         ;
     },
     setCode: function () {
+        console.info("I need to change");
         this.$el.val(this.model.get("mapcode"));
     },
     getCode: function () {

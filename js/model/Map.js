@@ -3,7 +3,8 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         id: 0,
         cps: [],
         rows: 0,
-        cols: 0
+        cols: 0,
+        validFields: ["V","W","X", "Y", "Z", "O", "S", "F", "P", 1, 2, 3, 4, 5, 6, 7, 8, 9, "."]
     },
     /**
      * Represents the map and its code
@@ -11,23 +12,36 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
      * @class Map
      */
     initialize: function () {
-        _.bindAll(this, "updateMapcode", "updateSize", "updateStarties", "updateCpList", "setFieldAtRowCol", "getFieldAtRowCol", "getPosFromRowCol");
+        _.bindAll(this, "updateMapcode", "getCpList", "setFieldAtRowCol", "getFieldAtRowCol", "getPosFromRowCol");
+
+        //sanitization binding
         this.bind("change:mapcode", this.updateMapcode);
     },
     setMapcode: function (mapcode) {
         //make sure we don't have CR in there and make it all UPPERCASE
         var trimcode = mapcode.toUpperCase();
         trimcode = trimcode.replace(/\r/g, "");
-        this.set("mapcode", trimcode, {silent: true});
-        this.updateSize();
-        this.updateStarties();
-        this.updateCpList();
+
+        //nb of start positions ("S")
+        var starties = (trimcode.match(/S/g) || []).length;
+
+        //calc rows and cols
+        var lines = trimcode.split('\n');
+        var rows = lines.length;
+        var line = lines[0].trim();
+        var cols = line.length;
+        var cps = this.getCpList(trimcode);
+
+        this.set({
+            "mapcode": trimcode,
+            "starties": starties,
+            "rows": rows,
+            "cols": cols,
+            "cps": cps
+        });
     },
     updateMapcode: function (e, mapcode) {
         this.setMapcode(mapcode);
-    },
-    updateStarties: function () {
-        this.set("starties", (this.get("mapcode").match(/S/g) || []).length);
     },
     getStartPositions: function () {
         var starts = [];
@@ -40,17 +54,12 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         }
         return starts;
     },
-    updateCpList: function () {
-        this.set("cps", (this.get("mapcode").match(/\d/g) || []).sort().filter(function (el, i, a) {
+    getCpList: function (mapcode) {
+        mapcode = mapcode || this.get("mapcode");
+        return (mapcode.match(/\d/g) || []).sort().filter(function (el, i, a) {
             if (i == a.indexOf(el))return 1;
             return 0;
-        }));
-    },
-    updateSize: function () {
-        var lines = this.get("mapcode").split('\n');
-        this.set({"rows": lines.length});
-        var line = lines[0].trim();
-        this.set("cols", line.length);
+        });
     },
     withinBounds: function (opt) {
         var x;
@@ -74,12 +83,14 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
     setFieldAtRowCol: function (r, c, field) {
         var pos = this.getPosFromRowCol(r, c);
         var mapcode = this.get("mapcode");
+        console.log("Mapcodecheck");
         //only if different
-        if (mapcode[pos]!==field) {
+        if (mapcode[pos] !== field) {
             mapcode = mapcode.substr(0, pos) + field + mapcode.substr(pos + 1);
             this.set("mapcode", mapcode, {silent: true});
             //trigger field change instead
             this.trigger("change:field", {r: r, c: c, field: field});
+            console.log("Change triggered");
         }
     },
     /**
@@ -167,7 +178,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
     verifiedMotions: function (motions) {
         var remaining = [];
         for (var p = 0; p < motions.length; p++) {
-            var mo= motions[p];
+            var mo = motions[p];
             if (this.isPossible(mo)) {
                 remaining.push(mo);
             }

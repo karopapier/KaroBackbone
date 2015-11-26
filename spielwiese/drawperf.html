@@ -39,6 +39,9 @@
                 <label>Border: <input id="border"></label>
             </div>
             <pre id="timer"></pre>
+            Left: <span id="#drag1"></span>
+            Middle: <span id="#drag2"></span>
+            Right: <span id="#drag3"></span>
         </div>
         <div id="container"></div>
 
@@ -59,9 +62,25 @@
                 return ds + " " + t;
             };
             var ControlView = Backbone.View.extend({
+                initialize: function() {
+                    this.listenTo(editorMapView.settings, "change",this.update)
+                },
                 events: {
+                    "change #border": "updateBorder",
+                    "keyup #border": "updateBorder",
                     "change #size": "updateSize",
                     "keyup #size": "updateSize"
+                },
+                update: function() {
+                    this.$('#border').val(editorMapView.settings.get("border"));
+                    this.$('#size').val(editorMapView.settings.get("size"));
+                },
+                updateBorder: function (e) {
+                    console.log($("#border").val());
+                    var newsize = parseInt($("#border").val());
+                    if (newsize > 0) {
+                        editorMapView.settings.set("border", newsize);
+                    }
                 },
                 updateSize: function (e) {
                     console.log($("#size").val());
@@ -72,14 +91,18 @@
                 }
             });
 
+            var map = new Map();
+            //map.setMapcode("XOSOFOX\nXOS1FOX\nXOSOXXX");
+            var editorMapView = new EditorMapView({
+                model: map
+            });
+
             var ctrlView = new ControlView({
                 el: "#viewsettings",
             });
 
-            var map = new Map();
-            map.setMapcode("XOSOFOX\nXOS1FOX\nXOSOXXX");
-            var editorMapView = new EditorMapView({
-                model: map
+            $.getJSON("https://www.karopapier.de/api/mapcode/112.json?callback=?", function(c) {
+                map.setMapcode(c)
             });
 
             var mcv = new MapCodeView({
@@ -92,6 +115,7 @@
             container.append("<p>---</p>");
             container.append(mcv.$el);
 
+            /*
             var code = "";
             for (var r = 0; r < 100; r++) {
                 for (var c = 0; c < 70; c++) {
@@ -99,8 +123,11 @@
                 }
                 code += "\n";
             }
-            editorMapView.settings.set("size", 8);
-            map.setMapcode(code);
+             map.setMapcode(code);
+            */
+
+            editorMapView.settings.set("size", 20);
+            editorMapView.settings.set("border", 8);
             editorMapView.render();
             var TIMER;
             editorMapView.mapRenderView.on("before:render", function (e) {
