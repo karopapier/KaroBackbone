@@ -102,3 +102,18 @@ test("getPassedFields", function () {
     var expected = ["O", "S", "O", "F", "X", "1"];
     deepEqual(map.getPassedFields(mo), expected, "getPassedFields");
 });
+
+test("sanitize code", function () {
+    expect(6);
+
+    var map = new Map();
+    map.set("mapcode", 'XOXX\nXOXXXXX\nVWXYZVX\nXSXXXXX\nXSX\nXOX\nXOXTTT\nXOX\nXOX\nXOX\nXOX\nXOX\nXOX\nXOXSF\nXOX\nXOX\n12345678\n');
+    var sanitized = 'POXXXXXX\nPOXXXXXX\nPWXYZVXX\nXSXXXXXX\nXSXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXSFXXX\nXOXXXXXX\nXOXXXXXX\n12345678';
+    map.sanitize();
+    equal(map.get("cols"), 8, "Cols correct");
+    equal(map.get("rows"), 17, "Rows correct");
+    equal(map.get("mapcode"), sanitized, "Complex code sanitized");
+    equal(map.getFieldAtRowCol(16, 4), "5", "Get correct field");
+    equal(map.getFieldAtRowCol(2, 0), "P", "3 parc fermée added");
+    notEqual(map.getFieldAtRowCol(3, 0), "P", "Only 3 parc fermée added");
+});

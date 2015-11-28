@@ -3,8 +3,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         id: 0,
         cps: [],
         rows: 0,
-        cols: 0,
-        validFields: ["V","W","X", "Y", "Z", "O", "S", "F", "P", 1, 2, 3, 4, 5, 6, 7, 8, 9, "."]
+        cols: 0
     },
     /**
      * Represents the map and its code
@@ -13,9 +12,31 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
      */
     initialize: function () {
         _.bindAll(this, "updateMapcode", "getCpList", "setFieldAtRowCol", "getFieldAtRowCol", "getPosFromRowCol");
+        this.validFields = Object.keys(this.FIELDS);
 
         //sanitization binding
         this.bind("change:mapcode", this.updateMapcode);
+    },
+    FIELDS: {
+        "F": "finish",
+        "O": "road",
+        "P": "parc",
+        "S": "start",
+        "V": "stone",
+        "W": "water",
+        "X": "grass",
+        "Y": "sand",
+        "Z": "mud",
+        ".": "night",
+        "1": "cp1",
+        "2": "cp2",
+        "3": "cp3",
+        "4": "cp4",
+        "5": "cp5",
+        "6": "cp6",
+        "7": "cp7",
+        "8": "cp8",
+        "9": "cp9"
     },
     setMapcode: function (mapcode) {
         //make sure we don't have CR in there and make it all UPPERCASE
@@ -42,6 +63,56 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
     },
     updateMapcode: function (e, mapcode) {
         this.setMapcode(mapcode);
+    },
+    sanitize: function () {
+        //console.log("sanitize and set correct code");
+
+        var dirtyCode = this.get("mapcode").toUpperCase().trim();
+        var starties = (dirtyCode.match(/S/g) || []).length;
+
+        //find longest line
+        var rows = dirtyCode.split("\n");
+        var rowlength = 0;
+        rows.forEach(function (row) {
+            if (row.length > rowlength) {
+                rowlength = row.length;
+            }
+        });
+
+        //pad lines to match longest and replace invalid Characters
+        var cleanRows = [];
+        var parcs = 0;
+        var me = this;
+        rows.forEach(function (row) {
+            if (row.length < rowlength) {
+                var padXXX = Array(rowlength - row.length + 1).join("X");
+                row += padXXX
+            }
+
+            var cleanRow = "";
+
+            for (var i = 0; i < rowlength; i++) {
+                var c = row[i];
+                if (me.validFields.indexOf(c) >= 0) {
+                    cleanRow += row[i];
+                } else {
+                    cleanRow += "X";
+                }
+            }
+
+            //set as many parcs as we have starties
+            if (parcs < starties) {
+                cleanRow = "P" + cleanRow.substr(1);
+                parcs++;
+            }
+            cleanRows.push(cleanRow);
+        });
+
+        cleanCode = cleanRows.join("\n");
+        //console.info(cleanCode);
+        this.set("mapcode", cleanCode);
+
+        //Make sure to remove \n at last line
     },
     getStartPositions: function () {
         var starts = [];
@@ -83,14 +154,14 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
     setFieldAtRowCol: function (r, c, field) {
         var pos = this.getPosFromRowCol(r, c);
         var mapcode = this.get("mapcode");
-        console.log("Mapcodecheck");
+        //console.log("Mapcodecheck");
         //only if different
         if (mapcode[pos] !== field) {
             mapcode = mapcode.substr(0, pos) + field + mapcode.substr(pos + 1);
             this.set("mapcode", mapcode, {silent: true});
             //trigger field change instead
             this.trigger("change:field", {r: r, c: c, field: field});
-            console.log("Change triggered");
+            //console.log("Change triggered");
         }
     },
     /**
@@ -118,27 +189,6 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         var c = pos % cols;
         var r = Math.floor(pos / cols);
         return {row: r, col: c, x: c, y: r};
-    },
-    FIELDS: {
-        "F": "finish",
-        "O": "road",
-        "P": "parc",
-        "S": "start",
-        "V": "stone",
-        "W": "water",
-        "X": "grass",
-        "Y": "sand",
-        "Z": "mud",
-        ".": "night",
-        "1": "cp1",
-        "2": "cp2",
-        "3": "cp3",
-        "4": "cp4",
-        "5": "cp5",
-        "6": "cp6",
-        "7": "cp7",
-        "8": "cp8",
-        "9": "cp9"
     },
     getPassedFields: function (mo) {
         if (!mo) console.error("No motion given");

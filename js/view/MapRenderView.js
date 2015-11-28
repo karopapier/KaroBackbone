@@ -40,7 +40,7 @@ var MapRenderView = MapBaseView.extend({
         this.ctx = this.el.getContext("2d");
 
         this.ctx.fillStyle = this.palette.getRGB("offroad");
-        this.ctx.lineWidth = this.settings.get("size");
+        this.ctx.lineWidth = this.size;
 
         this.ctx.fillRect(0, 0, this.el.width, this.el.height);
         var me = this;
@@ -54,7 +54,7 @@ var MapRenderView = MapBaseView.extend({
         console.log("Render fertig");
     },
 
-    initFieldColors: function() {
+    initFieldColors: function () {
         console.warn("Prepare a simple fg/bg field mapping - here or in MapPalette");
     },
     drawField: function (r, c, field) {
@@ -116,7 +116,10 @@ var MapRenderView = MapBaseView.extend({
             drawSpecles = false;
         }
 
-        this.drawBorder(x, y, specle);
+        if (this.border > 0) {
+            this.drawBorder(x, y, specle);
+        }
+
         if (drawSpecles) {
             this.ctx.fillStyle = specle;
             for (var i = 0; i < this.size; i++) {
@@ -133,9 +136,9 @@ var MapRenderView = MapBaseView.extend({
         this.ctx.lineWidth = this.border;
         this.ctx.strokeStyle = specle;
         this.ctx.beginPath();
-        this.ctx.moveTo(x + this.size + .5, y);
-        this.ctx.lineTo(x + this.size + .5, y + this.size + .5);
-        this.ctx.lineTo(x, y + this.size + .5);
+        this.ctx.moveTo(x + this.size + this.border / 2, y);
+        this.ctx.lineTo(x + this.size + this.border / 2, y + this.size + this.border / 2);
+        this.ctx.lineTo(x, y + this.size + this.border / 2);
         this.ctx.stroke();
         this.ctx.closePath();
     },

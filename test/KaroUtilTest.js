@@ -32,17 +32,17 @@ test("linkify", function () {
         "Einen schönen Abend wünsch ich",
         "Nennen Sie mir einen Namen, Nena",
         "Ich kenn einen",
-        'Jetzt wird alles  <img style="opacity: .3" src="http://www.karopapier.de/images/anders.jpg" alt="anders" title="anders" />!',
-        ' <img style="opacity: .3" src="http://www.karopapier.de/images/anders.jpg" alt="anders" title="anders" /> gehts nicht',
+        'Jetzt wird alles  <img style="opacity: .3" src="//www.karopapier.de/images/anders.jpg" alt="anders" title="anders" />!',
+        ' <img style="opacity: .3" src="//www.karopapier.de/images/anders.jpg" alt="anders" title="anders" /> gehts nicht',
         "Die Dänen lügen nicht",
-        'Guck mal bei <a class="GidLink12345" href="http://2.karopapier.de/game.html?GID=12345" target="_blank">12345</a>',
-        'Da ist ein Spiel unter <a class="GidLink12345" href="http://2.karopapier.de/game.html?GID=12345" target="_blank">12345</a> bei dem ich nicht weiter komme',
-        'Wo leitest du mich hin? <a class="GidLink85566" href="http://2.karopapier.de/game.html?GID=85566" target="_blank">85566</a> ',
+        'Guck mal bei <a class="GidLink12345" href="//2.karopapier.de/game.html?GID=12345" target="_blank">12345</a>',
+        'Da ist ein Spiel unter <a class="GidLink12345" href="//2.karopapier.de/game.html?GID=12345" target="_blank">12345</a> bei dem ich nicht weiter komme',
+        'Wo leitest du mich hin? <a class="GidLink85566" href="//2.karopapier.de/game.html?GID=85566" target="_blank">85566</a> ',
         'Hier is was nettes zum angucken <a class="" title="http://feelgrafix.com/data_images/out/12/861215-nice-wallpaper.jpg" target="_blank" rel="nofollow" href="http://feelgrafix.com/data_images/out/12/861215-nice-wallpaper.jpg"><img src="http://feelgrafix.com/data_images/out/12/861215-nice-wallpaper.jpg" height="20" /></a>. Schön, gell?',
         'Walk off the earth rocks: <a class=" yt_0RgIK36X3Tw" title="https://www.youtube.com/watch?v=0RgIK36X3Tw" target="_blank" rel="nofollow" href="https://www.youtube.com/watch?v=0RgIK36X3Tw">https://www.youtube.com/watch?v=0RgIK36X3Tw</a>',
         'Vielleicht könnte man sowas ja damit verhindern? <a class=\" yt_Jg_K5j7_Bao\" title=\"https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao\" target=\"_blank\" rel=\"nofollow\" href=\"https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao\">https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao</a>',
-        '<img src="http://www.karopapier.de/bilder/smilies/wavey.gif" alt="wavey" title="wavey">',
-        'Didi und Stickerle fahr ich jetzt in Grund und Boden! <a class="GidLink87654" href="http://2.karopapier.de/game.html?GID=87654" target="_blank">87654</a> <a href="http://www.karopapier.de/showmap.php?GID=87654">Direktlink_1.0</a>',
+        '<img src="//www.karopapier.de/bilder/smilies/wavey.gif" alt="wavey" title="wavey">',
+        'Didi und Stickerle fahr ich jetzt in Grund und Boden! <a class="GidLink87654" href="//2.karopapier.de/game.html?GID=87654" target="_blank">87654</a> <a href="http://www.karopapier.de/showmap.php?GID=87654">Direktlink_1.0</a>',
         'das geht doch schoener: <a class="" title="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG" target="_blank" rel="nofollow" href="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG"><img src="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG" height="20" /></a>'
     ];
 
@@ -58,14 +58,14 @@ test("linkify", function () {
         'Jetzt wird alles anders!',
         'Anders gehts nicht',
         "Die Dänen lügen nicht",
-        'Guck mal bei <a class="GidLink12345" href="http://2.karopapier.de/game.html?GID=12345" target="_blank">12345</a>',
-        'Da ist ein Spiel unter <a class="GidLink12345" href="http://2.karopapier.de/game.html?GID=12345" target="_blank">12345</a> bei dem ich nicht weiter komme',
-        'Wo leitest du mich hin? <a class="GidLink85566" href="http://2.karopapier.de/game.html?GID=85566" target="_blank">85566</a> ',
+        'Guck mal bei <a class="GidLink12345" href="//2.karopapier.de/game.html?GID=12345" target="_blank">12345</a>',
+        'Da ist ein Spiel unter <a class="GidLink12345" href="//2.karopapier.de/game.html?GID=12345" target="_blank">12345</a> bei dem ich nicht weiter komme',
+        'Wo leitest du mich hin? <a class="GidLink85566" href="//2.karopapier.de/game.html?GID=85566" target="_blank">85566</a> ',
         'Hier is was nettes zum angucken <a class="" title="http://feelgrafix.com/data_images/out/12/861215-nice-wallpaper.jpg" target="_blank" rel="nofollow" href="http://feelgrafix.com/data_images/out/12/861215-nice-wallpaper.jpg"><img src="http://feelgrafix.com/data_images/out/12/861215-nice-wallpaper.jpg" height="20" /></a>. Schön, gell?',
         'Walk off the earth rocks: <a class=" yt_0RgIK36X3Tw" title="https://www.youtube.com/watch?v=0RgIK36X3Tw" target="_blank" rel="nofollow" href="https://www.youtube.com/watch?v=0RgIK36X3Tw">https://www.youtube.com/watch?v=0RgIK36X3Tw</a>',
         'Vielleicht könnte man sowas ja damit verhindern? <a class=\" yt_Jg_K5j7_Bao\" title=\"https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao\" target=\"_blank\" rel=\"nofollow\" href=\"https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao\">https://www.youtube.com/watch?t=13&v=Jg_K5j7_Bao</a>',
-        '<img src="http://www.karopapier.de/bilder/smilies/wavey.gif" alt="wavey" title="wavey">',
-        'Didi und Stickerle fahr ich jetzt in Grund und Boden! <a class="GidLink87654" href="http://2.karopapier.de/game.html?GID=87654" target="_blank">87654</a> <a href="http://www.karopapier.de/showmap.php?GID=87654">Direktlink_1.0</a>',
+        '<img src="//www.karopapier.de/bilder/smilies/wavey.gif" alt="wavey" title="wavey">',
+        'Didi und Stickerle fahr ich jetzt in Grund und Boden! <a class="GidLink87654" href="//2.karopapier.de/game.html?GID=87654" target="_blank">87654</a> <a href="http://www.karopapier.de/showmap.php?GID=87654">Direktlink_1.0</a>',
         'das geht doch schoener: <a class="" title="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG" target="_blank" rel="nofollow" href="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG"><img src="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG" height="20" /></a>'
     ];
 
@@ -83,7 +83,7 @@ test("linkify", function () {
     }
 
 
-    KaroUtil.set("old", true);
+    KaroUtil.set("oldLink", true);
     inputs = [
         "Guck mal bei GID=12345",
         'Da ist ein Spiel unter http://www.karopapier.de/showmap.php?GID=12345 bei dem ich nicht weiter komme',
@@ -91,37 +91,12 @@ test("linkify", function () {
     ];
 
     expects = [
-        'Guck mal bei <a class="GidLink12345" href="http://www.karopapier.de/showmap.php?GID=12345" target="_blank">12345</a>',
-        'Da ist ein Spiel unter <a class="GidLink12345" href="http://www.karopapier.de/showmap.php?GID=12345" target="_blank">12345</a> bei dem ich nicht weiter komme',
-        'Wo leitest du mich hin? <a class="GidLink85566" href="http://www.karopapier.de/showmap.php?GID=85566" target="_blank">85566</a> ',
+        'Guck mal bei <a class="GidLink12345" href="//www.karopapier.de/showmap.php?GID=12345" target="_blank">12345</a>',
+        'Da ist ein Spiel unter <a class="GidLink12345" href="//www.karopapier.de/showmap.php?GID=12345" target="_blank">12345</a> bei dem ich nicht weiter komme',
+        'Wo leitest du mich hin? <a class="GidLink85566" href="//www.karopapier.de/showmap.php?GID=85566" target="_blank">85566</a> ',
     ];
 
     for (var i = 0; i < inputs.length; i++) {
         equal(KaroUtil.linkify(inputs[i]), expects[i], inputs[i]);
-    }
-});
-
-test("date stuff", function () {
-    var inputs = {
-        "2015-12-01 22:50:12": "2015-12-02 22:50:12",
-        "2015-11-30 23:59:59": "2015-12-01 00:00:12",
-        "2015-12-01 22:50:22": "2015-12-01 22:50:22",
-        "2015-12-01 22:50:32": "2015-12-01 22:50:22",
-        "2015-10-17 23:28:08": "2015-10-15 14:19:08"
-    };
-    var expects = [
-        86400,
-        13,
-        0,
-        -10,
-        -205740
-    ];
-    expect(expects.length);
-
-    var xs = Object.keys(inputs);
-    for (var i = 0; i < expects.length; i++) {
-        var x = xs[i];
-        var y = inputs[x];
-        equal(KaroUtil.isoDateDiff(x, y), expects[i], x + " to " + y + " =  " + expects[i]);
     }
 });

@@ -171,13 +171,6 @@ var KaroUtil = {};
             });
         };
 
-        karoUtil.isoDateDiff = function(d1, d2) {
-            var dt1 = new Date(d1).getTime();
-            var dt2 = new Date(d2).getTime();
-            return (dt2-dt1)/1000;
-        };
-
-
         karoUtil.createSvg = function (tag, attrs) {
             var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
             for (var k in attrs)

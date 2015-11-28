@@ -33,10 +33,11 @@
     <body>
 
         <div id="controls">
-            <button onclick="renderAll()">Render</button>
+            <button id="mapget">Get map</button>
+            <button id="sanitize">Sanitize</button>
             <div id="viewsettings">
-                <label>Size: <input id="size"></label>
-                <label>Border: <input id="border"></label>
+                <label>Size: <input type="number" min="1" step="1" id="size"></label>
+                <label>Border: <input type="number" min="0" step="1" id="border"></label>
             </div>
             <pre id="timer"></pre>
             Left: <span id="#drag1"></span>
@@ -46,10 +47,6 @@
         <div id="container"></div>
 
         <script type="text/javascript">
-            var renderAll = function () {
-                editorMapView.render();
-                mcv.render();
-            };
             var log = function (t) {
                 var d = new Date();
                 var h = d.getHours();
@@ -62,8 +59,8 @@
                 return ds + " " + t;
             };
             var ControlView = Backbone.View.extend({
-                initialize: function() {
-                    this.listenTo(editorMapView.settings, "change",this.update)
+                initialize: function () {
+                    this.listenTo(editorMapView.settings, "change", this.update)
                 },
                 events: {
                     "change #border": "updateBorder",
@@ -71,21 +68,21 @@
                     "change #size": "updateSize",
                     "keyup #size": "updateSize"
                 },
-                update: function() {
+                update: function () {
                     this.$('#border').val(editorMapView.settings.get("border"));
                     this.$('#size').val(editorMapView.settings.get("size"));
                 },
                 updateBorder: function (e) {
                     console.log($("#border").val());
-                    var newsize = parseInt($("#border").val());
-                    if (newsize > 0) {
-                        editorMapView.settings.set("border", newsize);
-                    }
+                    var newborder = parseInt($("#border").val());
+                    if (isNaN(newborder)) newborder = 0;
+                    console.log(newborder);
+                    editorMapView.settings.set("border", newborder);
                 },
                 updateSize: function (e) {
                     console.log($("#size").val());
                     var newsize = parseInt($("#size").val());
-                    if (newsize > 3) {
+                    if (newsize > 1) {
                         editorMapView.settings.set("size", newsize);
                     }
                 }
@@ -101,8 +98,15 @@
                 el: "#viewsettings",
             });
 
-            $.getJSON("https://www.karopapier.de/api/mapcode/112.json?callback=?", function(c) {
-                map.setMapcode(c)
+            $("#mapget").click(function () {
+
+                $.getJSON("https://www.karopapier.de/api/mapcode/112.json?callback=?", function (c) {
+                    map.setMapcode(c)
+                });
+            });
+
+            $("#sanitize").click(function() {
+                map.sanitize();
             });
 
             var mcv = new MapCodeView({
@@ -116,15 +120,15 @@
             container.append(mcv.$el);
 
             /*
-            var code = "";
-            for (var r = 0; r < 100; r++) {
-                for (var c = 0; c < 70; c++) {
-                    code += "1";
-                }
-                code += "\n";
-            }
+             var code = ""
+             for (var r = 0; r < 100; r++) {
+             for (var c = 0; c < 70; c++) {
+             code += "1";
+             }
+             code += "\n";
+             }
              map.setMapcode(code);
-            */
+             */
 
             editorMapView.settings.set("size", 20);
             editorMapView.settings.set("border", 8);
@@ -142,6 +146,15 @@
             });
 
             mcv.render();
+
+
+            var lastX = 0;
+            var lastY = 0;
+            $(editorMapView.mapRenderView.el).mousemove(function (e) {
+                var x = e.pageX - $(e.currentTarget).offset().left;
+                var y = e.pageY - $(e.currentTarget).offset().top;
+                console.log(x, "|", y);
+            });
         </script>
 
         <script type="text/javascript">

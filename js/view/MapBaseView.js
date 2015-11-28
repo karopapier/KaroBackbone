@@ -30,7 +30,7 @@ var MapBaseView = Marionette.View.extend(/** @lends MapBaseView.prototype */
          * @augments Backbone.View
          */
         initialize: function (options) {
-            options=options||{};
+            options = options || {};
             _.bindAll(this, "updateFieldSize", "getRowColFromXY", "getRowFromY", "getColFromX", "getXYFromRowCol", "getXFromCol", "getYFromRow", "getFieldAtXY", "setFieldAtXY", "setFieldAtRowCol");
             _.defaults(options, this.optionDefaults);
             if (options.settings) {
@@ -44,7 +44,7 @@ var MapBaseView = Marionette.View.extend(/** @lends MapBaseView.prototype */
             }
 
             //console.log("BASE", this.settings.attributes);
-            if(!options.model) {
+            if (!options.model) {
                 console.error("No Map model for MapView");
                 return false;
             }
@@ -52,7 +52,7 @@ var MapBaseView = Marionette.View.extend(/** @lends MapBaseView.prototype */
             this.updateFieldSize();
         },
         updateFieldSize: function () {
-        this.fieldSize = (this.settings.get("size") + this.settings.get("border"));
+            this.fieldSize = (this.settings.get("size") + this.settings.get("border"));
             //console.log("New fieldsize",this.fieldSize);
         },
 
@@ -70,9 +70,11 @@ var MapBaseView = Marionette.View.extend(/** @lends MapBaseView.prototype */
             };
         },
         getRowFromY: function (y) {
+            console.log("Math.floor(",y,"/",this.fieldSize,") = ", Math.floor(y / this.fieldSize));
             return Math.floor(y / this.fieldSize);
         },
         getColFromX: function (x) {
+            console.log("Math.floor(",x,"/",this.fieldSize,") = ", Math.floor(x / this.fieldSize));
             return Math.floor(x / this.fieldSize);
         },
 

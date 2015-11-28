@@ -43,6 +43,7 @@ var EditorMapView = Backbone.View.extend({
     draw: function (e) {
         var x = e.pageX - this.$el.offset().left;
         var y = e.pageY - this.$el.offset().top;
+        console.log("Draw ",x,y);
         for (var i = 1; i <= 3; i++) {
             if (this.buttonDown[i]) {
                 $('#drag' + i).text("(" + x + "|" + y + ")");

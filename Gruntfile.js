@@ -138,6 +138,9 @@ module.exports = function (grunt) {
                 dest: "css/images/mapfields.png",
                 destCss: "css/mapfields.css"
             }
+        },
+        qunit: {
+            files: ['test/index.html']
         }
     });
 
@@ -149,10 +152,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-spritesmith');
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-asset-cachebuster');
+    grunt.loadNpmTasks('grunt-contrib-qunit');
 
     // Default task(s).
-    grunt.registerTask('default', ['uglify', 'jst', 'cssmin', 'asset_cachebuster','watch']);
+    grunt.registerTask('default', ['uglify', 'jst', 'cssmin', 'asset_cachebuster', 'watch']);
     //grunt.registerTask('guck', ['watch']);
     grunt.registerTask('spielwiese', ['spielwiese']);
+    grunt.registerTask('test', 'qunit');
 
 };
