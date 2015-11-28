@@ -1,6 +1,8 @@
 KaroBackbone
 ============
 
+[![Build Status](https://travis-ci.org/karopapier/KaroBackbone.svg?branch=master)](https://travis-ci.org/karopapier/KaroBackbone)
+
 Bare, from scratch, and starting simple, growing more complex as we go
 
  Started off as backbone.js rendering a Karopapier Game
@@ -9,8 +11,6 @@ Bare, from scratch, and starting simple, growing more complex as we go
  Planned/Todo
 
  - Integrate Game and Editor Views into Backbone based Application
- - Refactor to use Events
+ - Switch applications
  - Apps to add
    - New Game
-   - Chat
-   - Move
