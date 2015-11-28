@@ -12,5 +12,5 @@ before_script:
   - grunt uglify
   - grunt jst
   - grunt cssmin
-  - grund asset_cachebuster
+  - grunt asset_cachebuster
 script: grunt test --verbose --force
