@@ -4,7 +4,7 @@ var EditorMapView = Backbone.View.extend({
         _.bindAll(this, "render", "draw", "mousedown", "mouseup", "mousemove", "mouseleave");
         this.settings = options.settings || new Backbone.Model();
         this.tools = {
-            buttonColor: [null, "X", "1", "O"]
+            buttonColor: [null, "O", "1", "X"]
         };
         this.$el.bind("contextmenu", function () {
             return false;
@@ -43,16 +43,17 @@ var EditorMapView = Backbone.View.extend({
     draw: function (e) {
         var x = e.pageX - this.$el.offset().left;
         var y = e.pageY - this.$el.offset().top;
-        console.log("Draw ",x,y);
+        //console.log("Draw ", x, y);
         for (var i = 1; i <= 3; i++) {
             if (this.buttonDown[i]) {
-                $('#drag' + i).text("(" + x + "|" + y + ")");
+                $('#drag' + i).text("(" + x + "|" + y + ")").show();
                 this.mapRenderView.setFieldAtXY(x, y, this.tools.buttonColor[i]);
             }
         }
     },
 
     mousedown: function (e) {
+        this.drawing = true;
         this.buttonDown[e.which] = true;
         e.preventDefault();
         //this.render();
@@ -61,16 +62,20 @@ var EditorMapView = Backbone.View.extend({
     },
 
     mouseup: function (e) {
+        this.drawing = false;
         this.buttonDown[e.which] = false;
         //this.render();
         this.$el.unbind("mousemove");
     },
 
     mousemove: function (e) {
-        this.draw(e);
+        if (this.drawing) {
+            this.draw(e);
+        }
     },
 
     mouseleave: function (e) {
+        this.drawing = false;
         for (var i = 1; i <= 3; i++) {
             this.buttonDown[e.which] = false;
         }

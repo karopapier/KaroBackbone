@@ -153,14 +153,15 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
     },
     setFieldAtRowCol: function (r, c, field) {
         var pos = this.getPosFromRowCol(r, c);
-        var mapcode = this.get("mapcode");
+        var oldcode = this.get("mapcode");
         //console.log("Mapcodecheck");
         //only if different
-        if (mapcode[pos] !== field) {
-            mapcode = mapcode.substr(0, pos) + field + mapcode.substr(pos + 1);
+        var oldfield = oldcode[pos];
+        if (oldfield !== field) {
+            mapcode = oldcode.substr(0, pos) + field + oldcode.substr(pos + 1);
             this.set("mapcode", mapcode, {silent: true});
             //trigger field change instead
-            this.trigger("change:field", {r: r, c: c, field: field});
+            this.trigger("change:field", {r: r, c: c, field: field, oldfield: oldfield, oldcode: oldcode});
             //console.log("Change triggered");
         }
     },

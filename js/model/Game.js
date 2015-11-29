@@ -3,9 +3,14 @@ var Game = Backbone.Model.extend({
         id: 0,
         completed: false
     },
-    initialize: function () {
+    initialize: function (options) {
+        options = options || {};
         _.bindAll(this, "parse", "load", "updatePossibles");
-        this.map = new Map();
+        if (options.map) {
+            this.map = options.map;
+        } else {
+            this.map = new Map();
+        }
         this.set("moveMessages", new MoveMessageCollection());
         //pass the MoveMessage collection into it to have the messages ready in one go when walking the moves
         this.set("players", new PlayerCollection());
@@ -94,7 +99,7 @@ var Game = Backbone.Model.extend({
             theoreticals = this.map.verifiedMotions(theoreticals);
         }
 
-        var occupiedPositions = this.get("players").getOccupiedPositions((this.get("id")>=75000)); //only for GID > 75000 limit to those that already moved
+        var occupiedPositions = this.get("players").getOccupiedPositions((this.get("id") >= 75000)); //only for GID > 75000 limit to those that already moved
         var occupiedPositionStrings = occupiedPositions.map(function (e) {
             return e.toString();
         });
@@ -129,7 +134,7 @@ var Game = Backbone.Model.extend({
         this.get("players").reset(othergame.get("players").toJSON(), {parse: true});
         this.updatePossibles();
         //now set completed, really AT THE END
-        this.set("completed",true);
+        this.set("completed", true);
         //console.warn("FINISHED SETTING FROM OTHER GAME");
     }
 });

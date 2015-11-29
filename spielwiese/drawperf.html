@@ -8,17 +8,27 @@
         <script type="text/javascript" src="/js/libs/underscore-min.js?v=1445895669797"></script>
         <script type="text/javascript" src="/js/libs/backbone-min.js?v=1445895669797"></script>
         <script type="text/javascript" src="/js/libs/backbone.marionette-2.4.1.min.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/js/libs/backbone-model-factory-min.js?v=1445895669797"></script>
 
-
+        <!--
+        <script type="text/javascript" src="/js/model/Motion.js"></script>
+        <script type="text/javascript" src="/js/model/Player.js"></script>
+        <script type="text/javascript" src="/js/collection/PlayerCollection.js"></script>
+        <script type="text/javascript" src="/js/collection/MotionCollection.js"></script>
+        <script type="text/javascript" src="/js/model/Move.js"></script>
+        <script type="text/javascript" src="/js/collection/MoveMessageCollection.js"></script>
         <script type="text/javascript" src="/js/model/Map.js"></script>
         <script type="text/javascript" src="/js/model/MapRenderPalette.js"></script>
+        <script type="text/javascript" src="/js/model/Game.js"></script>
 
         <script type="text/javascript" src="/js/view/LogView.js"></script>
         <script type="text/javascript" src="/js/view/MapBaseView.js"></script>
         <script type="text/javascript" src="/js/view/MapRenderView.js"></script>
         <script type="text/javascript" src="/js/view/MapCodeView.js"></script>
         <script type="text/javascript" src="/js/view/EditorMapView.js"></script>
-
+        -->
+        <script type="text/javascript" src="/js/templates/JST.js"></script>
+        <script type="text/javascript" src="/js/KaroBackbone.js"></script>
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
         <meta charset="utf-8" />
@@ -35,14 +45,15 @@
         <div id="controls">
             <button id="mapget">Get map</button>
             <button id="sanitize">Sanitize</button>
+            <button id="undo">Undo</button>
             <div id="viewsettings">
                 <label>Size: <input type="number" min="1" step="1" id="size"></label>
                 <label>Border: <input type="number" min="0" step="1" id="border"></label>
             </div>
             <pre id="timer"></pre>
-            Left: <span id="#drag1"></span>
-            Middle: <span id="#drag2"></span>
-            Right: <span id="#drag3"></span>
+            Left: <span id="drag1"></span>
+            Middle: <span id="drag2"></span>
+            Right: <span id="drag3"></span>
         </div>
         <div id="container"></div>
 
@@ -105,7 +116,7 @@
                 });
             });
 
-            $("#sanitize").click(function() {
+            $("#sanitize").click(function () {
                 map.sanitize();
             });
 
@@ -140,21 +151,52 @@
             });
 
             editorMapView.mapRenderView.on("render", function (e) {
-                $("#timer").append(log("Render\n"));
+                var $t = $('#timer');
+                $t.append(log("Render\n"));
                 var diff = new Date().getTime() - TIMER.getTime();
-                $("#timer").append(log(diff));
+                $t.append(log(diff));
             });
 
             mcv.render();
 
 
-            var lastX = 0;
-            var lastY = 0;
-            $(editorMapView.mapRenderView.el).mousemove(function (e) {
-                var x = e.pageX - $(e.currentTarget).offset().left;
-                var y = e.pageY - $(e.currentTarget).offset().top;
-                console.log(x, "|", y);
+            var game = new Game();
+
+
+            /*
+             $(editorMapView.mapRenderView.el).mousemove(function (e) {
+             var x = e.pageX - $(e.currentTarget).offset().left;
+             var y = e.pageY - $(e.currentTarget).offset().top;
+             console.log(x, "|", y);
+             });
+             */
+
+            var UNDO = [];
+            var UNDO_DEPTH = 3;
+            var WAS_UNDO = false;
+            map.bind("change:field", function (e) {
+                UNDO.push(e.oldcode);
             });
+
+            map.bind("change:mapcode", function (e) {
+                console.log("Mapcode changed, save undo");
+                if (WAS_UNDO) {
+                    console.info("War ein undo");
+                } else {
+                    UNDO.push(map.get("mapcode"));
+                }
+                WAS_UNDO = false;
+                console.log("Undo hat noch", UNDO.length);
+            });
+            $('#undo').click(function () {
+                if (UNDO.length >= 1) {
+                    WAS_UNDO = true;
+                    var undocode = UNDO.pop();
+                    map.set("mapcode", undocode);
+                }
+                console.log("Undo hat noch", UNDO.length);
+            })
+
         </script>
 
         <script type="text/javascript">

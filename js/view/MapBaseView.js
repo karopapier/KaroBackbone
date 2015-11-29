@@ -70,11 +70,11 @@ var MapBaseView = Marionette.View.extend(/** @lends MapBaseView.prototype */
             };
         },
         getRowFromY: function (y) {
-            console.log("Math.floor(",y,"/",this.fieldSize,") = ", Math.floor(y / this.fieldSize));
+            //console.log("Math.floor(",y,"/",this.fieldSize,") = ", Math.floor(y / this.fieldSize));
             return Math.floor(y / this.fieldSize);
         },
         getColFromX: function (x) {
-            console.log("Math.floor(",x,"/",this.fieldSize,") = ", Math.floor(x / this.fieldSize));
+            //console.log("Math.floor(",x,"/",this.fieldSize,") = ", Math.floor(x / this.fieldSize));
             return Math.floor(x / this.fieldSize);
         },
 
