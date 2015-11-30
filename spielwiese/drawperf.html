@@ -88,14 +88,14 @@
             this.$('#size').val(editorMapView.settings.get("size"));
         },
         updateBorder: function (e) {
-            console.log($("#border").val());
+            //console.log($("#border").val());
             var newborder = parseInt($("#border").val());
             if (isNaN(newborder)) newborder = 0;
-            console.log(newborder);
+            //console.log(newborder);
             editorMapView.settings.set("border", newborder);
         },
         updateSize: function (e) {
-            console.log($("#size").val());
+            //console.log($("#size").val());
             var newsize = parseInt($("#size").val());
             if (newsize > 1) {
                 editorMapView.settings.set("size", newsize);

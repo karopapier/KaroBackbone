@@ -28,7 +28,7 @@ var EditorMapView = Backbone.View.extend({
             model: this.model
         });
         this.$el.append(this.mapRenderView.el);
-        this.model.set("mapcode", "XOX");
+        this.model.set("mapcode", "XOXXXSNEP\n123456789\n...VWXYZF");
         this.mapRenderView.render();
     },
     events: {

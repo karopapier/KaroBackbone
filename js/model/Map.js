@@ -123,7 +123,6 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
     getFieldPositions: function(field, mapcode) {
         var positions = [];
         var re = new RegExp(field, "g");
-        console.log(re);
         mapcode = mapcode||this.get("mapcode");
         var hit;
         while (hit = re.exec(mapcode)) {

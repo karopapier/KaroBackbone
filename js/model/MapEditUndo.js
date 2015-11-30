@@ -13,15 +13,14 @@ var MapEditUndo = Backbone.Model.extend({
         });
 
         this.listenTo(this.model, "change:mapcode", function (e) {
-            console.log("Mapcode changed, save undo");
-            console.log(e);
+            //console.log("Mapcode changed, save undo");
             if (this.WAS_UNDO) {
-                console.info("War ein undo");
+                //console.info("War ein undo");
             } else {
                 this.UNDO.push(this.model.previous("mapcode"));
             }
             this.WAS_UNDO = false;
-            console.log("Undo hat noch", this.UNDO.length);
+            //console.log("Undo hat noch", this.UNDO.length);
         });
 
     },
@@ -32,6 +31,6 @@ var MapEditUndo = Backbone.Model.extend({
             var undocode = this.UNDO.pop();
             this.model.set("mapcode", undocode);
         }
-        console.log("Undo hat noch", this.UNDO.length);
+        //console.log("Undo hat noch", this.UNDO.length);
     }
 });

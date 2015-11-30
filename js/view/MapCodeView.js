@@ -33,7 +33,7 @@ var MapCodeView = Backbone.View.extend({
         ;
     },
     setCode: function () {
-        console.info("I need to change");
+        //console.info("I need to change");
         this.$el.val(this.model.get("mapcode"));
     },
     getCode: function () {

@@ -13,23 +13,32 @@ var MapRenderView = MapBaseView.extend({
     initialize: function (options) {
         //init MapBaseView with creation of a settings model
         this.constructor.__super__.initialize.apply(this, arguments);
-        _.bindAll(this, "render", "drawBorder", "drawField", "drawFlagField", "drawStandardField", "drawStartField");
+        _.bindAll(this, "render", "drawBorder", "drawField", "drawFlagField", "drawStandardField", "drawStartField", "renderCheckpoints");
         this.listenTo(this.model, "change:mapcode", this.render);
         this.listenTo(this.model, "change:field", this.renderFieldChange);
         this.listenTo(this.settings, "change:size change:border", this.render);
-        this.listenTo(this.settings, "change:cpsVisited", this.renderCheckpoints);
+        this.listenTo(this.settings, "change:cpsVisited change:cpsActive", this.renderCheckpoints);
         this.palette = new MapRenderPalette();
         this.fieldColors = {};
         this.initFieldColors();
     },
     renderCheckpoints: function () {
-        console.warn("RENDER CHECKPOINTS", new Date());
+        //console.warn("RENDER CHECKPOINTS", new Date());
         //find cps
-        //for each cp, drawField
+        var cps = this.model.getCpPositions();
+        //console.log("CPs to render", cps);
+        var me = this;
 
+        //for each cp, drawField
+        cps.forEach(function (pos) {
+            var cp = pos.attributes;
+            var f = me.model.getFieldAtRowCol(cp.row, cp.col);
+            //console.log("Rendering CP", cp, f);
+            me.drawField(cp.row, cp.col, f);
+        });
     },
     renderFieldChange: function (e, a, b) {
-        console.info("Fieldchange only");
+        //console.info("Fieldchange only");
         var field = e.field;
         var r = e.r;
         var c = e.c;
@@ -58,11 +67,10 @@ var MapRenderView = MapBaseView.extend({
             }
         }
         this.trigger("render");
-        console.log("Render fertig");
     },
 
     initFieldColors: function () {
-        console.warn("Prepare a simple fg/bg field mapping - here or in MapPalette");
+        console.warn("Prepare a simple fg/bg field mapping - here or in MapPalette, to speed up");
     },
     drawField: function (r, c, field) {
         x = c * (this.fieldSize);
@@ -84,8 +92,9 @@ var MapRenderView = MapBaseView.extend({
 
         //checkpoint
         if ((parseInt(field) == field)) {
-            //if (this.cpEnabled)
-            if (1 == 1) {
+            var intField = parseInt(field);
+            if (this.settings.get("cpsActive")) {
+                //console.log("Render CP", field);
                 var fg = this.palette.getRGB('checkpoint' + field);
 
                 if (field % 2) {
@@ -95,7 +104,15 @@ var MapRenderView = MapBaseView.extend({
                 }
 
                 //check passed CPS
-                console.log(this.settings.get("cpsVisited"));
+                //console.log(this.settings.get("cpsVisited"), field, this.settings.get("cpsVisited").indexOf(intField));
+                if (this.settings.get("cpsVisited").indexOf(intField) >= 0) {
+                    //change to rgba with .3
+                    fg = fg.replace("rgb", "rgba").replace(")", ", 0.3)");
+                    bg = bg.replace("rgb", "rgba").replace(")", ", 0.3)");
+                    //draw street layer
+                    this.drawField(r, c, "O");
+                    //console.log("I drew");
+                }
                 this.drawFlagField(x, y, fg, bg);
             } else {
                 this.drawField(r, c, "O");
@@ -154,6 +171,7 @@ var MapRenderView = MapBaseView.extend({
     },
 
     drawFlagField: function (x, y, c1, c2) {
+        //console.log("Flagfield", c1, c2);
         this.ctx.fillStyle = c2;
         this.ctx.beginPath();
         this.ctx.rect(x, y, this.size, this.size);
