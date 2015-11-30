@@ -117,3 +117,12 @@ test("sanitize code", function () {
     equal(map.getFieldAtRowCol(2, 0), "P", "3 parc fermée added");
     notEqual(map.getFieldAtRowCol(3, 0), "P", "Only 3 parc fermée added");
 });
+
+test("field positions", function() {
+    var re = /bar/g,
+        str = "foobarfoobar";
+    while ((match = re.exec(str)) != null) {
+        alert("match found at " + match.index);
+    }
+
+});

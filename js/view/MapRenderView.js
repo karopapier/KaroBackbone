@@ -16,10 +16,17 @@ var MapRenderView = MapBaseView.extend({
         _.bindAll(this, "render", "drawBorder", "drawField", "drawFlagField", "drawStandardField", "drawStartField");
         this.listenTo(this.model, "change:mapcode", this.render);
         this.listenTo(this.model, "change:field", this.renderFieldChange);
-        this.listenTo(this.settings, "change", this.render);
+        this.listenTo(this.settings, "change:size change:border", this.render);
+        this.listenTo(this.settings, "change:cpsVisited", this.renderCheckpoints);
         this.palette = new MapRenderPalette();
         this.fieldColors = {};
         this.initFieldColors();
+    },
+    renderCheckpoints: function () {
+        console.warn("RENDER CHECKPOINTS", new Date());
+        //find cps
+        //for each cp, drawField
+
     },
     renderFieldChange: function (e, a, b) {
         console.info("Fieldchange only");
@@ -86,6 +93,9 @@ var MapRenderView = MapBaseView.extend({
                 } else {
                     var bg = this.palette.getRGB('checkpointBgEven');
                 }
+
+                //check passed CPS
+                console.log(this.settings.get("cpsVisited"));
                 this.drawFlagField(x, y, fg, bg);
             } else {
                 this.drawField(r, c, "O");

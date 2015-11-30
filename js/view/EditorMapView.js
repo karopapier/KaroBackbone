@@ -2,7 +2,7 @@ var EditorMapView = Backbone.View.extend({
     id: "editorMapView",
     initialize: function (options) {
         _.bindAll(this, "render", "draw", "mousedown", "mouseup", "mousemove", "mouseleave");
-        this.settings = options.settings || new Backbone.Model();
+        this.settings = options.settings || new MapViewSettings();
         this.tools = {
             buttonColor: [null, "O", "1", "X"]
         };
