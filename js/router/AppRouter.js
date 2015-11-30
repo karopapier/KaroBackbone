@@ -1,6 +1,7 @@
 var APPS = {};
 var AppRouter = Backbone.Router.extend({
     routes: {
+        "index.html": "showChat",
         "chat.html": "showChat",
         "dran.html": "showDran",
         "game.html?GID=:gameId": "showGame",
@@ -17,9 +18,9 @@ var AppRouter = Backbone.Router.extend({
                 info: info
             });
             a.start();
-            APPS[info] =a;
+            APPS[info] = a;
         }
-        Karopapier.layout.content.show(a.view, {preventDestroy:true});
+        Karopapier.layout.content.show(a.view, {preventDestroy: true});
     },
     showStatic: function (path) {
         this.doDummy(path);
@@ -30,15 +31,10 @@ var AppRouter = Backbone.Router.extend({
         }));
     },
     showChat: function () {
-        console.log("Show Chat");
-        this.doDummy("Chat");
-        return;
-        if (!Karopapier.chatApp) {
-            Karopapier.chatApp = new ChatApp();
-            Karopapier.chatApp.layout.render();
-            setTimeout(Karopapier.chatApp.start, 1000);
-        }
-        Karopapier.layout.content.show(Karopapier.chatApp.layout, {preventDestroy: true});
+        //if (!Karopapier.chatApp) {
+        Karopapier.chatContainer = new Backbone.View();
+        Karopapier.chatApp = new ChatApp();
+        Karopapier.layout.content.show(Karopapier.chatApp.view);
     },
     showDran: function () {
         console.log("Show Dran");

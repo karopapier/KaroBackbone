@@ -1,7 +1,8 @@
 var ChatApp = Backbone.Marionette.Application.extend({
-    initialize: function () {
+    initialize: function (options) {
         _.bindAll(this, "updateView", "start", "scrollCheck");
-        this.layout = new ChatLayout({
+        this.layout = new ChatLayout({});
+        this.view = new ChatAppView({
             model: this
         });
         this.already = true;
@@ -81,7 +82,7 @@ var ChatApp = Backbone.Marionette.Application.extend({
         });
 
         this.listenTo(Karopapier.Settings, "change:chat_oldLink", function (conf, oldLink) {
-            console.log("ChatApp bekommt mit, dass sich Karo.Settings -> oldLink ge�ndert hat",oldLink);
+            console.log("ChatApp bekommt mit, dass sich Karo.Settings -> oldLink ge�ndert hat", oldLink);
             this.configuration.set("oldLink", oldLink);
             KaroUtil.set("oldLink", oldLink);
             this.chatMessageCache.each(function (m) {
@@ -192,13 +193,15 @@ var ChatApp = Backbone.Marionette.Application.extend({
         }
     },
     start: function () {
-        //this.chatMessages.show(this.model.chatMessagesView, {preventDestroy: true});
-        //this.chatInfo.show(this.model.chatInfoView, {preventDestroy: true});
-        //this.chatControl.show(this.model.chatControlView, {preventDestroy: true});
-        //this.chatEnter.show(this.model.chatEnterView, {preventDestroy: true});
-        //var $el = this.layout.chatMessages.$el;
-        //$($el).on("scroll", this.scrollCheck);
-        this.layout.chatInfo.show(new LogView());
+        //Karopapier.chatApp.layout); //, {preventDestroy: true});
+        //console.log(Karopapier.chatApp.layout);
+        //Karopapier.ca = new ChatLayout();
+        //Karopapier.ca.chatInfo.show(new LogView());
+        //Karopapier.chatApp.layout.render();
+        //Karopapier.chatApp.start();
+        //}
+
+
     }
 });
 

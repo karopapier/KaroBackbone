@@ -19,7 +19,7 @@ module.exports = function (grunt) {
         uglify: {
             min: {
                 files: {
-                    "js/<%= pkg.name %>.min.js": ['js/app/*.js', 'js/layout/*.js', 'js/model/*.js', 'js/collection/*.js', 'js/view/*.js', 'js/router/*.js']
+                    "js/<%= pkg.name %>.min.js": ['js/app/**/*.js', 'js/layout/**/*.js', 'js/model/**/*.js', 'js/collection/**/*.js', 'js/view/**/*.js', 'js/router/**/*.js']
                 },
                 options: {
                     sourceMap: true,
