@@ -115,15 +115,22 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         //Make sure to remove \n at last line
     },
     getStartPositions: function () {
-        var starts = [];
-        var startSearch = /S/g;
-        var code = this.get("mapcode");
+        return this.getFieldPositions("S");
+    },
+    getCpPositions: function (mapcode) {
+        return this.getFieldPositions('\\d', mapcode);
+    },
+    getFieldPositions: function(field, mapcode) {
+        var positions = [];
+        var re = new RegExp(field, "g");
+        console.log(re);
+        mapcode = mapcode||this.get("mapcode");
         var hit;
-        while (hit = startSearch.exec(code)) {
-            var strPos = hit.index;
-            starts.push(new Position(this.getRowColFromPos(strPos)));
+        while (hit = re.exec(mapcode)) {
+            var pos = hit.index;
+            positions.push(new Position(this.getRowColFromPos(pos)));
         }
-        return starts;
+        return positions;
     },
     getCpList: function (mapcode) {
         mapcode = mapcode || this.get("mapcode");

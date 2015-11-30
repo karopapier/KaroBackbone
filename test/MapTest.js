@@ -118,11 +118,12 @@ test("sanitize code", function () {
     notEqual(map.getFieldAtRowCol(3, 0), "P", "Only 3 parc fermée added");
 });
 
-test("field positions", function() {
-    var re = /bar/g,
-        str = "foobarfoobar";
-    while ((match = re.exec(str)) != null) {
-        alert("match found at " + match.index);
-    }
-
+test("Map getCpPositions", function () {
+    var map = new Map();
+    map.set("mapcode", "XOXX\nO112\n34XO\n7777");
+    var positions = map.getCpPositions();
+    expected = ["[1|1]", "[2|1]", "[3|1]", "[0|2]", "[1|2]", "[0|3]", "[1|3]", "[2|3]", "[3|3]"];
+    deepEqual(map.getCpPositions().map(function (p) {
+        return p.toString()
+    }), expected, "returns correct CP Positions");
 });
