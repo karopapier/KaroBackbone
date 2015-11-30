@@ -207,6 +207,18 @@
      $('body').append(wml.$el);
      */
 
+    var karoMaps = new KaroMapCollection();
+    karoMaps.fetch();
+    //CustomMapCollection()
+    //WikiMapCollection()
+
+    var karoMapList = new MapListView({
+        collection:  karoMaps
+    });
+
+    karoMapList.render();
+    container.append(karoMapList.$el);
+
 </script>
 
 <script type="text/javascript">
