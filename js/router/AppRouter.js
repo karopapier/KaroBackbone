@@ -32,7 +32,7 @@ var AppRouter = Backbone.Router.extend({
     },
     showChat: function () {
         //if (!Karopapier.chatApp) {
-        Karopapier.chatContainer = new Backbone.View();
+        //Karopapier.chatContainer = new Backbone.View();
         Karopapier.chatApp = new ChatApp();
         Karopapier.layout.content.show(Karopapier.chatApp.view);
     },

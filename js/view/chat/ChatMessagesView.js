@@ -2,7 +2,7 @@ var ChatMessagesView = Backbone.View.extend({
     tagName: "div",
     id: "chatMessagesContainer",
     initialize: function () {
-        _.bindAll(this, "addItem");
+        _.bindAll(this, "addItem", "scrollCheck");
         this.collection.on("add", this.addItem);
         this.currentStart = 0;
         this.currentEnd = 0;

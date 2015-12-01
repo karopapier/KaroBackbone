@@ -1,5 +1,5 @@
 var ChatLayout = Backbone.Marionette.LayoutView.extend({
-    className: "chatApp",
+    className: "chatLayout",
     template: window["JST"]["chat/chatLayout"],
     regions: {
         chatMessages: "#chatMessages",

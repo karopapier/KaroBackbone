@@ -25,7 +25,6 @@
 	background-image: inherit;
 }
 
-/*
 @media all and (min-width: 630px) {
     #chatWrapper {
         padding-right: 15em;
@@ -47,7 +46,6 @@
         z-index: 21;
     }
 }
-*/
 
 .chatUsersView {
     list-style: none;
