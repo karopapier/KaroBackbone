@@ -1,6 +1,7 @@
 var APPS = {};
 var AppRouter = Backbone.Router.extend({
     routes: {
+        "": "showChat",
         "index.html": "showChat",
         "chat.html": "showChat",
         "dran.html": "showDran",
