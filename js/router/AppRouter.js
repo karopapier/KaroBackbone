@@ -38,15 +38,8 @@ var AppRouter = Backbone.Router.extend({
         Karopapier.layout.content.show(Karopapier.chatApp.view);
     },
     showDran: function () {
-        console.log("Show Dran");
-        this.doDummy("Dran");
-        return;
-        if (!Karopapier.dranApp) {
-            Karopapier.dranApp = new DranApp();
-            //Karopapier.dranApp.start();
-            Karopapier.dranApp.layout.render();
-        }
-        Karopapier.layout.content.show(Karopapier.dranApp.layout, {preventDestroy: true});
+        Karopapier.dranApp = new DranApp();
+        Karopapier.layout.content.show(Karopapier.dranApp.view);
     },
     showGame: function (gameId) {
         this.doDummy("Game " + gameId);
