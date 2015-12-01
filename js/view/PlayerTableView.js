@@ -27,13 +27,16 @@ var PlayerTableView = Marionette.CompositeView.extend({
         });
 
         moves.comparator = function (m) {
-            return new Date(m.get("t").replace(" ","T")+"Z").getTime();
+            return new Date(m.get("t").replace(" ", "T") + "Z").getTime();
         };
         moves.sort();
         moves.comparator = undefined;
-        var lasttime = new Date(moves.at(0).get("t").replace(" ","T")+"Z").getTime();
+        var lasttime = new Date();
+        if (moves.length > 0) {
+            var lasttime = new Date(moves.at(0).get("t").replace(" ", "T") + "Z").getTime();
+        }
         moves.each(function (m) {
-            var d = new Date(m.get("t").replace(" ","T")+"Z").getTime();
+            var d = new Date(m.get("t").replace(" ", "T") + "Z").getTime();
             var userId = m.get("userId");
             blocktime[userId] += (d - lasttime);
             lasttime = d;

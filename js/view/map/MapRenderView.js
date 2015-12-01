@@ -21,6 +21,7 @@ var MapRenderView = MapBaseView.extend({
         this.palette = new MapRenderPalette();
         this.fieldColors = {};
         this.initFieldColors();
+        this.specles = false;
     },
     renderCheckpoints: function () {
         //console.warn("RENDER CHECKPOINTS", new Date());
