@@ -22,7 +22,7 @@
         </script>
 
         <script type="text/javascript" src="js/templates/JST.js?v=1"></script>
-        <script type="text/javascript" src="js/KaroBackbone.js?v=1"></script>
+        <script type="text/javascript" src="js/KaroBackbone.js?v=2"></script>
 
         <link id="favicon" rel="shortcut icon" href="favicon.ico"/>
 
@@ -83,7 +83,7 @@
             </tr>
         </table>
 
-        <div style="position:absolute;right:0;top:0; font-size: 8pt">Experiment:<br/>
+        <div style="position:absolute;right:0;top:0; font-size: 8pt; dispplay: none">Experiment:<br/>
             <img src="/images/loading.gif" id="pinstatus" style="height: 30px"/><br/>
             Details <a href="http://www.karopapier.de/showthread.php?forumid=1&thread=960">hier</a></div>
 
@@ -94,7 +94,7 @@
 
         <!--<div id="mapImageContainer" style="position: relative; width: 400px; height:400px; overflow: hidden"> -->
             <div id="mapImage" style="position: relative;">
-                <svg id="mapSvgView"></svg>
+                <canvas id="mapRenderView"></canvas>
                 <svg id="mapPlayerMoves" style="position: absolute; top:0; left:0; z-index: 5"></svg>
             </div>
         <!--</div> -->

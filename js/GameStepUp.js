@@ -29,19 +29,20 @@ var gtv = new GameTitleView({
     model: game
 });
 
-var svgView = new MapSvgView({
-    el: "#mapSvgView",
+var renderView = new MapRenderView({
+    el: "#mapRenderView",
     model: game.map,
     settings: mvs
 });
+
 game.on("change:completed", function () {
     if (!game.get("completed")) return false;
     //console.log("Adjust cp settings to", game.get("withCheckpoints"), " and BTW, gamge completed is ", game.get("completed"));
-    svgView.settings.set("cpsActive", game.get("withCheckpoints"));
+    renderView.settings.set("cpsActive", game.get("withCheckpoints"));
     var dranId = game.get("dranId");
     if (dranId!==26) {
         var cpsVisited = game.get("players").get(game.get("dranId")).get("checkedCps");
-        svgView.settings.set("cpsVisited", cpsVisited);
+        renderView.settings.set("cpsVisited", cpsVisited);
     }
 });
 
@@ -74,7 +75,7 @@ var mpm = new MapPlayerMoves({
 var possView = new PossiblesView({
     el: "#mapImage",
     game: game,
-    mapView: svgView
+    mapView: renderView
 });
 
 Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {

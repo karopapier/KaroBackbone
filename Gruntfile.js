@@ -29,7 +29,7 @@ module.exports = function (grunt) {
             },
             dev: {
                 files: {
-                    "js/<%= pkg.name %>.js": ['js/app/*.js', 'js/layout/*.js', 'js/model/*.js', 'js/collection/*.js', 'js/view/*.js', 'js/router/*.js']
+                    "js/<%= pkg.name %>.js": ['js/app/**/*.js', 'js/layout/**/*.js', 'js/model/**/*.js', 'js/collection/**/*.js', 'js/view/**/*.js', 'js/router/**/*.js']
                 },
                 options: {
                     sourceMapIncludeSources: true,
