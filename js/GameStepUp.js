@@ -57,7 +57,7 @@ var pt = new PlayerTableView({
     el: "#playerTable"
 }).render();
 
-var mpm = new MapPlayerMoves({
+var mpm = new MapPlayersMoves({
     model: game,
     collection: game.get("players"),
     settings: mvs,
