@@ -21,7 +21,7 @@ var MapRenderView = MapBaseView.extend({
         this.palette = new MapRenderPalette();
         this.fieldColors = {};
         this.initFieldColors();
-        this.specles = false;
+        this.specles = true;
     },
     renderCheckpoints: function () {
         //console.warn("RENDER CHECKPOINTS", new Date());
@@ -108,8 +108,8 @@ var MapRenderView = MapBaseView.extend({
                 //console.log(this.settings.get("cpsVisited"), field, this.settings.get("cpsVisited").indexOf(intField));
                 if (this.settings.get("cpsVisited").indexOf(intField) >= 0) {
                     //change to rgba with .3
-                    fg = fg.replace("rgb", "rgba").replace(")", ", 0.3)");
-                    bg = bg.replace("rgb", "rgba").replace(")", ", 0.3)");
+                    fg = fg.replace("rgb", "rgba").replace(")", ", 0.15)");
+                    bg = bg.replace("rgb", "rgba").replace(")", ", 0.15)");
                     //draw street layer
                     this.drawField(r, c, "O");
                     //console.log("I drew");
@@ -134,9 +134,7 @@ var MapRenderView = MapBaseView.extend({
 
     drawStandardField: function (x, y, fg, specle) {
         this.ctx.fillStyle = fg;
-        this.ctx.beginPath();
-        this.ctx.rect(x, y, this.size, this.size);
-        this.ctx.fill();
+        this.ctx.fillRect(x, y, this.size, this.size);
 
         //check optional param to force "no specles"
         var drawSpecles = this.specles;
@@ -149,14 +147,19 @@ var MapRenderView = MapBaseView.extend({
         }
 
         if (drawSpecles) {
-            this.ctx.fillStyle = specle;
-            for (var i = 0; i < this.size; i++) {
-                this.ctx.beginPath();
-                var xr = Math.round(Math.random() * (this.size - 1));
-                var yr = Math.round(Math.random() * (this.size - 1));
-                this.ctx.rect(x + xr, y + yr, 1, 1);
-                this.ctx.fill();
-            }
+            var ctx = this.ctx
+            var specleColor = specle;
+            var size = this.size;
+            var baseX = x;
+            var baseY = y;
+            setTimeout(function () {
+                ctx.fillStyle = specleColor;
+                for (var i = 0; i < 3; i++) {
+                    var xr = Math.round(Math.random() * (size - 1));
+                    var yr = Math.round(Math.random() * (size - 1));
+                    ctx.fillRect(baseX + xr, baseY + yr, 1, 1);
+                }
+            }, 1);
         }
     },
 

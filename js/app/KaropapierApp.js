@@ -71,11 +71,11 @@ var KaropapierApp = Marionette.Application.extend({
 
 
         this.vent.on("USER:DRAN", function (data) {
-            this.UserDranGames.addId(data.gid, data.name);
+            me.UserDranGames.addId(data.gid, data.name);
         });
 
         this.vent.on("USER:MOVED", function (data) {
-            this.UserDranGames.remove(data.gid);
+            me.UserDranGames.remove(data.gid);
         });
 
         //hook to events to update dran queue
@@ -118,7 +118,6 @@ var KaropapierApp = Marionette.Application.extend({
         Backbone.history.start({
             pushState: true
         });
-
 
         this.vent.on('GAME:MOVE', function (data) {
             //only for unrelated moves, count up or down
