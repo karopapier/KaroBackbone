@@ -54,7 +54,6 @@ var MapPlayersMoves = Marionette.CollectionView.extend({
                 visible = false;
             }
 
-            console.log("For", m.get("name"), drawLimit);
             m.set({
                 drawLimit: drawLimit,
                 initDrawLimit: drawLimit,
