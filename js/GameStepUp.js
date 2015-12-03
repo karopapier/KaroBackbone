@@ -5,9 +5,12 @@ Karopapier.User.url = function () {
 };
 Karopapier.User.fetch();
 
+Karopapier.User.on("change:id", function() {
+    $('#username').text(Karopapier.User.get("login"));
+});
+
 var game = new Game();
 var mvs = new MapViewSettings();
-//game.load(GameId);
 
 var mmv = new MoveMessageView({
     el: '#moveMessages',
@@ -57,20 +60,12 @@ var pt = new PlayerTableView({
     el: "#playerTable"
 }).render();
 
-var mpm = new MapPlayerMoves({
+var mpm = new MapPlayersMoves({
     model: game,
     collection: game.get("players"),
     settings: mvs,
     el: '#mapPlayerMoves'
 });
-
-/*
- var mpl = new MapPlayerLayer({
- el: '#fgImg',
- model: game
- });
- mpl.render();
- */
 
 var possView = new PossiblesView({
     el: "#mapImage",

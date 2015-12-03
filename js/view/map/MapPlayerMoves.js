@@ -1,49 +1,150 @@
 var MapPlayerMoves = Backbone.View.extend({
-    tag: "svg",
     optionDefaults: {
-        size: 11,
-        border: 1,
-        drawMoveLimit: 2
+        visible: true
     },
+    initialize: function (options) {
+        _.bindAll(this, "resize", "hidePlayerInfo", "showPlayerInfo");
+        //console.info("MapPlayerMoves being called for", this.model.get("name"));
+        //console.log(options);
+        options = options || {};
+        if (!options.settings) {
+            console.error("No settings for MapPlayerMoves");
+        }
+
+        this.settings = options.settings;
+        this.w = options.w;
+        this.h = options.h;
+        this.listenTo(this.settings, "change:size change:border ", this.render);
+        this.listenTo(this.model, "change:drawLimit", this.render);
+        this.listenTo(this.model, "change:visible", this.visibility);
+        this.listenTo(this.model, "change:highlight", this.highlight);
+        this.color = "#" + this.model.get("color");
+    },
+
     events: {
         "mouseenter .playerPosition": "showPlayerInfo",
         "mouseleave .playerPosition": "hidePlayerInfo"
     },
-    initialize: function (options) {
-        if (!this.collection) {
-            console.error("Missing Collection");
-            return false;
+
+    render: function () {
+        if (!this.g) {
+            this.createGroup();
+        } else {
+            this.$el.empty();
+        }
+        this.resize();
+        this.addMoves();
+        this.addPosition();
+        this.visibility();
+    },
+
+    createGroup: function () {
+        //replace my container div with a svg group
+        this.g = KaroUtil.createSvg("g", {
+            class: "playerMoves"
+        });
+        this.setElement(this.g);
+    },
+
+    addPosition: function () {
+        //if no move, nothing to draw, stop
+        if (this.model.moves.length < 1) return false;
+
+        var m = this.model.getLastMove();
+        var currentPosition = KaroUtil.createSvg("circle", {
+            cx: m.get("x") * this.fieldsize + this.size / 2,
+            cy: m.get("y") * this.fieldsize + this.size / 2,
+            r: 4,
+            //stroke: "black",
+            fill: this.color,
+            class: "playerPosition",
+            "data-playerId": this.model.get("id")
+        });
+        this.$el.append(currentPosition);
+    },
+
+    addMoves: function () {
+        //if only one move, stop here
+        if (this.model.moves.length <= 1) return false;
+
+        var limit = this.model.get("drawLimit");
+        //console.log("Limit:", limit);
+        var color = this.color;
+        var movesFragment = document.createDocumentFragment();
+
+        var moves = this.model.moves.toArray();
+        if (limit >= 0) {
+            //reduce moves to limited amount
+            moves = this.model.moves.last(limit + 1);
         }
 
-        if (!options.settings) {
-            console.error("No settings passed into MapPlayerMoves");
-            this.settings = new Backbone.Model(options);
-        } else {
-            this.settings = options.settings;
+        if (this.model.get("position") > 0) {
+            //finished, don't draw last line
+            moves.pop();
         }
-        _.bindAll(this, "render");
-        _.defaults(options, this.optionDefaults);
-        this.listenTo(this.settings, "change:size change:border change:drawMoveLimit", this.render);
-        this.listenTo(this.collection, "add remove", this.render);
-        this.listenTo(this.collection, "reset", this.render);
-        this.listenTo(this.collection, "change", this.render);
-        this.listenTo(this.model, "change:completed", this.render);
-    },
-    adjustSize: function () {
-        //console.log(this.model.get("cols"));
-        //console.log(this.fieldSize);
-        var w = this.model.map.get("cols") * (this.settings.get("size") + this.settings.get("border"));
-        var h = this.model.map.get("rows") * (this.settings.get("size") + this.settings.get("border") );
-        this.$el.css({
-            width: w,
-            height: h
+        //console.log("Render with moves", moves.length);
+
+        if (moves.length > 0) {
+
+            //start path for all moves
+            var pathCode = "M" + (parseInt(moves[0].get("x") * this.fieldsize) + this.halfsize) + "," + (parseInt(moves[0].get("y") * this.fieldsize) + this.halfsize);
+            moves.forEach(function (m, i) {
+                var x = parseInt(m.get("x"));
+                var y = parseInt(m.get("y"));
+                pathCode += "L" + (x * this.fieldsize + this.halfsize) + "," + (y * this.fieldsize + this.halfsize);
+                var square = KaroUtil.createSvg("rect", {
+                    x: x * this.fieldsize + this.thirdsize,
+                    y: y * this.fieldsize + this.thirdsize,
+                    width: this.thirdsize,
+                    height: this.thirdsize,
+                    fill: color
+                });
+                movesFragment.appendChild(square);
+            }.bind(this));
+        }
+
+        //console.log(pathCode);
+        var p = KaroUtil.createSvg("path", {
+            d: pathCode,
+            stroke: color,
+            "stroke-width": 1,
+            fill: "none"
         });
-        this.$el.attr({
-            width: w,
-            height: h
-        });
+        //movesFragment.appendChild(p);
+        //console.log(movesFragment);
+        this.$el.append(movesFragment);
+        this.$el.append(p);
+        //console.log("RENDERTE moves for", this.model.get("name"));
     },
-    showPlayerInfo: function(e) {
+
+    resize: function () {
+        this.size = this.settings.get("size");
+        this.halfsize = this.size / 2;
+        this.thirdsize = this.size / 3;
+        this.border = this.settings.get("border");
+        this.fieldsize = this.size + this.border;
+    },
+
+    visibility: function () {
+        //console.log(this.model.attributes);
+        if (this.model.get("visible")) {
+            this.$el.css("display", "inline");
+        } else {
+            this.$el.css("display", "none");
+        }
+    },
+
+    highlight: function () {
+        if (this.model.get("highlight")) {
+            this.model.set("drawLimit", -1);
+        } else {
+            this.model.set("drawLimit", this.model.get("initDrawLimit"));
+        }
+    },
+
+    showPlayerInfo: function (e) {
+        this.model.set("highlight", true);
+        return true;
         var playerId = e.currentTarget.getAttribute("data-playerId");
         var p = this.collection.get(playerId);
         this.activePi = new PlayerInfo({
@@ -52,100 +153,11 @@ var MapPlayerMoves = Backbone.View.extend({
         this.activePi.render();
         this.$el.parent().append(this.activePi.el);
     },
-    hidePlayerInfo: function(e) {
-        this.activePi.remove();
+    hidePlayerInfo: function (e) {
+        this.model.set("highlight", false);
+        //this.activePi.remove();
     },
-    render: function () {
-        //NOTE: when this render fires after first reset, not all game properties might be set yet
-        if (!this.model.get("completed")) return false;
-        this.adjustSize();
-        var gameId = this.model.get("id");
-        if (gameId === 0) {
-            this.$el.hide();
-        } else {
-            this.$el.show();
-            var defaultLimit = this.settings.get("drawMoveLimit");
-            if (this.model.get("finished")) {
-                defaultLimit = 0;
-            }
-        }
-
-        //clear this el
-        while (this.el.childNodes.length > 0) {
-            var f = this.el.firstChild;
-            this.el.removeChild(f);
-        }
-
-        var movesFragment = document.createDocumentFragment();
-        var posFragment = document.createDocumentFragment();
-        this.collection.each(function (player, i) {
-            //console.info(player);
-            var limit = defaultLimit;
-            if (Karopapier.User.get("id") === player.get("id")) {
-                //alle eigenen
-                limit = 0;
-            }
-            if (player.get("highlighted")) limit = 0;
-            var moves = player.moves.toArray();
-
-            //if no move, nothing to draw, stop
-            if (moves.length<1) return false;
-
-            var color = "#" + player.get("color");
-            var m = player.getLastMove();
-            var currentPosition = KaroUtil.createSvg("circle", {
-                cx: m.get("x") * 12 + 5.5,
-                cy: m.get("y") * 12 + 5.5,
-                r: 4,
-                //stroke: "black",
-                fill: color,
-                class:"playerPosition",
-                "data-playerId": player.get("id")
-            });
-            posFragment.appendChild(currentPosition);
-
-            //if only one move, stop here
-            if (moves.length<=1) return false;
-
-            if (limit > 0) {
-                moves = player.moves.last(this.settings.get("drawMoveLimit") + 1);
-            }
-
-            //console.log(moves);
-            //console.log(player.attributes);
-            if (player.get("position") > 0) {
-                //finish, don't draw last line
-                moves.pop();
-                //console.log(moves);
-            }
-            //console.info(moves);
-            var pathCode = "M" + (parseInt(moves[0].get("x") * 12) + 6) + "," + (parseInt(moves[0].get("y") * 12) + 6);
-            moves.forEach(function (m, i) {
-                var x = parseInt(m.get("x"));
-                var y = parseInt(m.get("y"));
-                pathCode += "L" + (x * 12 + 6) + "," + (y * 12 + 6);
-                var square = KaroUtil.createSvg("rect",{
-                    x: x*12+4,
-                    y:y*12+4,
-                    width: 4,
-                    height: 4,
-                    fill: color
-                });
-                movesFragment.appendChild(square);
-            }.bind(this));
-            //console.log(pathCode);
-            var p = KaroUtil.createSvg("path", {
-                d: pathCode,
-                stroke: color,
-                "stroke-width": 1,
-                fill: "none"
-            });
-            movesFragment.appendChild(p);
-
-
-
-            //console.log("RENDERTE moves for", player.get("name"));
-        }.bind(this));
+    old_render: function () {
         this.el.appendChild(movesFragment);
         this.el.appendChild(posFragment);
     }

@@ -5,6 +5,7 @@ var MapPlayerLayer = Backbone.View.extend({
         border: 1
     },
     initialize: function (options) {
+        alert("I HAVE BEEN USED");
         if (!this.model) {
             console.error("Missing Model");
             return false;
