@@ -183,12 +183,12 @@
         <label for="testmode">Testmode: </label><input type="checkbox" id="testmode" checked="checked" accesskey="t"/> Züge werden NICHT an den Server geschickt
         <BR>
         Zuganzeige:
-        <span class="drawMoveLimit" data-limit="0">Pos</span>
-        <span class="drawMoveLimit" data-limit="1">1</span>
-        <span class="drawMoveLimit" data-limit="2">2</span>
-        <span class="drawMoveLimit" data-limit="5">5</span>
-        <span class="drawMoveLimit" data-limit="10">10</span>
-        <span class="drawMoveLimit" data-limit="-1">Alle</span>
+        <span class="drawMoveLimit clickable" data-limit="0">Pos</span>
+        <span class="drawMoveLimit clickable" data-limit="1">1</span>
+        <span class="drawMoveLimit clickable" data-limit="2">2</span>
+        <span class="drawMoveLimit clickable" data-limit="5">5</span>
+        <span class="drawMoveLimit clickable" data-limit="10">10</span>
+        <span class="drawMoveLimit clickable" data-limit="-1">Alle</span>
         <script>
             $('.drawMoveLimit').click(function(e) {
                 var l = $(e.currentTarget).data("limit");
