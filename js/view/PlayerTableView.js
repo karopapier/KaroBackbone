@@ -10,6 +10,18 @@ var PlayerTableView = Marionette.CompositeView.extend({
         this.listenTo(this.collection, "reset add", this.calcBlocktime);
         //this.listenTo(this.collection, "reset", this.render);
     },
+
+    events: {
+        "change input.checkAll": "checkAll"
+    },
+
+    checkAll: function (e) {
+        var vis = $(e.currentTarget).prop("checked");
+        this.collection.each(function (m) {
+            m.set("visible", vis);
+        });
+    },
+
     calcBlocktime: function () {
         //console.log("Calcblocktime");
         var moves = new MoveCollection();

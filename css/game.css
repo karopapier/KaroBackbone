@@ -63,6 +63,10 @@
     border: 1px solid orange;
 }
 
+.playerTableRow.highlight {
+    background-color: #CCCCFF;
+}
+
 span.moved {
     color: red;
 }

@@ -1,11 +1,46 @@
 var PlayerTableRowView = Backbone.View.extend({
     tagName: "tr",
+    className: "playerTableRow",
     template: window["JST"]["game/playerTableRow"],
     initialize: function () {
         _.bindAll(this, "render");
         //this.listenTo(this.collection, "change", this.render);
         //this.listenTo(this.collection, "reset", this.render);
+        this.listenTo(this.model, "change:visible", this.updateVisibility);
+        this.listenTo(this.model, "change:highlight", this.updateHighlight);
     },
+
+    events: {
+        "change input": "setVisibility",
+        "mouseenter": "highlight",
+        "mouseleave": "unhighlight"
+    },
+
+    setVisibility: function (e) {
+        $e = $(e.currentTarget);
+        this.model.set("visible", $e.prop("checked"));
+    },
+
+    updateVisibility: function () {
+        this.$('input').prop("checked", this.model.get("visible"));
+    },
+
+    updateHighlight: function () {
+        if (this.model.get("highlight")) {
+            this.$el.addClass("highlight");
+        } else {
+            this.$el.removeClass("highlight");
+        }
+    },
+
+    highlight: function () {
+        this.model.set("highlight", true);
+    },
+
+    unhighlight: function () {
+        this.model.set("highlight", false);
+    },
+
     render: function () {
         var data = this.model.toJSON();
         var statusClass = "";
