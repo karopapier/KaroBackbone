@@ -180,7 +180,7 @@ function myTextGet(url, cb, errcb) {
 }
 
 var checkTestmode = function () {
-    if ($('#testmode').is(":checked")) {
+    if ($('#testmode').prop("checked")) {
         $('#mapImage').addClass("testmode");
     } else {
         $('#mapImage').removeClass("testmode");
@@ -197,6 +197,8 @@ var checkTestmode = function () {
 };
 
 $('#testmode').click(checkTestmode);
+//Make sure to start with testmode - Looking at YOU, Firefox!!!
+$('#testmode').prop("checked", true);
 checkTestmode();
 
 var dranQueue = new DranGameCollection();
