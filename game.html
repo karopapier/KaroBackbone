@@ -182,22 +182,24 @@
         -->
         <label for="testmode">Testmode: </label><input type="checkbox" id="testmode" checked="checked" accesskey="t"/> Züge werden NICHT an den Server geschickt
         <BR>
-        Zuganzeige: 
+        Zuganzeige:
+        <span class="drawMoveLimit" data-limit="0">Pos</span>
+        <span class="drawMoveLimit" data-limit="1">1</span>
         <span class="drawMoveLimit" data-limit="2">2</span>
         <span class="drawMoveLimit" data-limit="5">5</span>
         <span class="drawMoveLimit" data-limit="10">10</span>
-        <span class="drawMoveLimit" data-limit="Alle">Alle</span>
+        <span class="drawMoveLimit" data-limit="-1">Alle</span>
         <script>
             $('.drawMoveLimit').click(function(e) {
                 var l = $(e.currentTarget).data("limit");
-                mvs.set("drawMoveLimit",l);
+                mvs.set("drawLimit",l);
             });
         </script>
         <br />
         <span id="statusinfo">Status wird völlig überbewertet</span>
 
         <form id="moveMsgForm">
-            Didi:
+            <span id="username">Du</span>:
             <input type="text" id="movemessage" size="80" maxlenght="255">
             <span id="movemessageDisplay" style="display: none"></span>
             <input type="submit" value="Nachricht mitschicken">
