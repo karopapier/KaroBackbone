@@ -1,6 +1,6 @@
 Karopapier.User = new User({});
 //make this user refer to "check" for loging in
-Karopapier.User.url = function () {
+Karopapier.User.url = function() {
     return "http://www.karopapier.de/api/user/check.json?callback=?";
 };
 Karopapier.User.fetch();
@@ -38,12 +38,12 @@ var renderView = new MapRenderView({
     settings: mvs
 });
 
-game.on("change:completed", function () {
+game.on("change:completed", function() {
     if (!game.get("completed")) return false;
     //console.log("Adjust cp settings to", game.get("withCheckpoints"), " and BTW, gamge completed is ", game.get("completed"));
     renderView.settings.set("cpsActive", game.get("withCheckpoints"));
     var dranId = game.get("dranId");
-    if (dranId!==26) {
+    if (dranId !== 26) {
         var cpsVisited = game.get("players").get(game.get("dranId")).get("checkedCps");
         renderView.settings.set("cpsVisited", cpsVisited);
     }
@@ -73,7 +73,7 @@ var possView = new PossiblesView({
     mapView: renderView
 });
 
-Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
+Karopapier.listenTo(possView, "game:player:move", function(playerId, mo) {
     var testmode = $('#testmode').is(":checked");
     if (testmode) {
         var player = game.get("players").get(playerId);
@@ -105,7 +105,7 @@ Karopapier.listenTo(possView, "game:player:move", function (playerId, mo) {
         //console.log("Send move");
         var movedGID = game.get("id");
         //console.warn("I just moved", movedGID);
-        myTextGet(moveUrl, function (text) {
+        myTextGet(moveUrl, function(text) {
             //console.log("Parse move response");
             parseMoveResponse(text, movedGID);
         });
@@ -133,9 +133,10 @@ function parseMoveResponse(text, movedGID) {
             dranQueue.addId(game.get("id"));
         }
 
-        //check listed next games and add them to queue as well, excluding moved one
+        //console.log("check listed next games and add them to queue as well, excluding moved one");
         var gids = text.match(/GID=(\d*)/g);
         var currentGID = game.get("id");
+        var dranQueueEmpty = (dranQueue.length == 0);
         if (gids.length > 0) {
             for (var i = 0; i < gids.length; i++) {
                 var s = gids[i].split("=");
@@ -144,12 +145,24 @@ function parseMoveResponse(text, movedGID) {
                     //console.log("Compare found", gid, "with", movedGID);
                     if (gid != movedGID) {
                         //console.log(gid, "!=", movedGID, ", so add it to queue");
+                        dranQueueEmpty = false;
                         dranQueue.addId(gid);
                     }
                 }
             }
         }
-    } else {
+
+        //last game is added and immediately removed when loading
+        //so we might have an empty queue but are currently loading the new game
+        //thus the "dranQueueEmpty" workaround
+        //console.log("Done adding, queue length now", dranQueue.length);
+
+        //if, after parsing, still no games in queue... Nixblocker, goto chat
+        if (dranQueueEmpty) {
+            window.location.href = "/chat.html";
+        }
+    }
+    else {
         alert("KEIN DANKE!!! Da hat wohl was nicht gepasst");
         console.log(text);
     }
@@ -159,7 +172,7 @@ function myTextGet(url, cb, errcb) {
     var request = new XMLHttpRequest();
     request.withCredentials = true;
     request.open('GET', url, true);
-    request.onload = function () {
+    request.onload = function() {
         if (request.status >= 200 && request.status < 400) {
             // Success!
             //console.log(request.responseText);
@@ -172,14 +185,14 @@ function myTextGet(url, cb, errcb) {
         }
     };
 
-    request.onerror = function () {
+    request.onerror = function() {
         // There was a connection error of some sort
     };
 
     request.send();
 }
 
-var checkTestmode = function () {
+var checkTestmode = function() {
     if ($('#testmode').prop("checked")) {
         $('#mapImage').addClass("testmode");
     } else {
@@ -213,7 +226,7 @@ var nextGame = new Game();
 // EVENTS
 /////////////////////////////////////////////////////////////////////////////
 
-game.on("change:completed", function () {
+game.on("change:completed", function() {
     //console.log("Completed", game.get("completed"));
     if (!(game.get("completed"))) return false;
 
@@ -237,39 +250,39 @@ game.on("change:completed", function () {
     lmmv.settings.set("timestamp", ts);
 });
 
-game.on("change:moved", function () {
+game.on("change:moved", function() {
     //console.log("Game changed moved to ", game.get("moved"));
     if (game.get("moved")) {
         checkNextGame();
     }
 });
 
-nextGame.on("change:completed", function () {
+nextGame.on("change:completed", function() {
     if (nextGame.get("completed")) {
         //console.log("Next game is completed. Wanna have it?");
         checkNextGame();
     }
 });
 
-dranQueue.on("reset", function (q, e) {
+dranQueue.on("reset", function(q, e) {
     //console.info("DranQueue INITIAL reset");
     //make sure to remove currently showing game from queue
     checkPreload();
 });
 
-dranQueue.on("add", function (g, q, e) {
+dranQueue.on("add", function(g, q, e) {
     //console.info("DranQueue add", g.get("id"));
     checkNextGame();
     checkPreload();
 });
 
-dranQueue.on("remove", function (g, q, e) {
+dranQueue.on("remove", function(g, q, e) {
     //console.info("DranQueue remove", g.get("id"));
     checkPreload();
 });
 
 /////////////////////////////////////////////////////////////////////////////
-var checkPreload = function () {
+var checkPreload = function() {
     //console.log("Preparing buffer");
     if (dranQueue.length > 0) {
         //console.log("DQ len", dranQueue.length);
@@ -286,7 +299,7 @@ var checkPreload = function () {
         if (nextGame.get("id") === 0) {
             //console.log("Trigger preload of", nextId);
             nextGame.set("id", nextId);
-            setTimeout(function () {
+            setTimeout(function() {
                 nextGame.load(nextId);
             }, 50);
         } else {
@@ -297,7 +310,7 @@ var checkPreload = function () {
     }
 };
 
-var checkNextGame = function () {
+var checkNextGame = function() {
     //console.log("checking next game:");
     //console.log("Game moved:", game.get("moved"));
     //console.log("NextGame completed:", nextGame.get("completed"));
