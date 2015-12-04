@@ -20,6 +20,7 @@ var UserView = Backbone.View.extend({
         this.listenTo(this.model, "change", this.onChange);
         //this.listenTo(this.model, "change", this.render);
         //this.listenTo(this.model, "change:dran", this.dranChange);
+        this.listenTo(this.model, "remove", this.remove);
 
         this.render();
     },
