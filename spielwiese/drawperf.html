@@ -47,19 +47,25 @@
         </script>
 
         <div id="controls">
-            <button id="mapget">Get map</button>
-            <button id="sanitize">Sanitize</button>
-            <button id="undo">Undo</button>
             <div id="viewsettings">
                 <label>Size: <input type="number" min="1" step="1" id="size"></label>
                 <label>Border: <input type="number" min="0" step="1" id="border"></label>
             </div>
-            <pre id="timer"></pre>
-            Left: <span id="drag1"></span>
-            Middle: <span id="drag2"></span>
-            Right: <span id="drag3"></span>
+            <div style="display: none">
+
+                <pre id="timer"></pre>
+                Left: <span id="drag1"></span>
+                Middle: <span id="drag2"></span>
+                Right: <span id="drag3"></span>
+            </div>
         </div>
-        <div id="container"></div>
+        <div id="container">
+
+            <div id="karoMapList"></div>
+            <br/>
+            <br/>
+            <button id="undo">Undo</button>
+        </div>
 
         <script type="text/javascript">
             var log = function(t) {
@@ -126,11 +132,6 @@
                 });
             });
 
-            $("#sanitize").click(function() {
-                map.sanitize();
-            });
-
-
             var mcv = new MapCodeView({
                 model: map,
                 readonly: false
@@ -138,8 +139,12 @@
 
             var container = $('#container');
             container.append(editorMapView.$el);
-            container.append("<p>---</p>");
+            container.append('<br/><button id="sanitize">Sanitize</button><br/>');
             container.append(mcv.$el);
+
+            $("#sanitize").click(function() {
+                map.sanitize();
+            });
 
             /*
              var code = ""
@@ -219,11 +224,20 @@
             //WikiMapCollection()
 
             var karoMapList = new MapListView({
-                collection: karoMaps
+                collection: karoMaps,
+                el: "#karoMapList"
+            });
+
+            karoMaps.on("add", function(m) {
+                console.log(m.get("mapcode"));
+            });
+
+            karoMapList.on("selected", function(m) {
+                console.log(m.get("mapcode"));
+                map.setMapcode(m.get("mapcode"));
             });
 
             karoMapList.render();
-            container.append(karoMapList.$el);
 
         </script>
 
