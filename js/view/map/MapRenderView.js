@@ -108,8 +108,8 @@ var MapRenderView = MapBaseView.extend({
                 //console.log(this.settings.get("cpsVisited"), field, this.settings.get("cpsVisited").indexOf(intField));
                 if (this.settings.get("cpsVisited").indexOf(intField) >= 0) {
                     //change to rgba with .3
-                    fg = fg.replace("rgb", "rgba").replace(")", ", 0.15)");
-                    bg = bg.replace("rgb", "rgba").replace(")", ", 0.15)");
+                    fg = fg.replace("rgb", "rgba").replace(")", ", 0.3)");
+                    bg = bg.replace("rgb", "rgba").replace(")", ", 0.3)");
                     //draw street layer
                     this.drawField(r, c, "O");
                     //console.log("I drew");
