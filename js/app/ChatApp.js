@@ -82,7 +82,7 @@ var ChatApp = Backbone.Marionette.Application.extend({
         });
 
         this.listenTo(Karopapier.Settings, "change:chat_oldLink", function (conf, oldLink) {
-            console.log("ChatApp bekommt mit, dass sich Karo.Settings -> oldLink ge�ndert hat", oldLink);
+            //console.log("ChatApp bekommt mit, dass sich Karo.Settings -> oldLink ge�ndert hat", oldLink);
             this.configuration.set("oldLink", oldLink);
             KaroUtil.set("oldLink", oldLink);
             this.chatMessageCache.each(function (m) {

@@ -3,25 +3,30 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
     className: "chatInfoView",
     template: window["JST"]["chat/chatInfo"],
     initialize: function () {
-        _.bindAll(this, "updateInfos", "updateTopBlocker", "updateHabdich", "updateDranInfo", "render");
+        _.bindAll(this, "updateInfos", "updateTopBlocker", "updateHabdich", "updateDranInfo", "updateChatUser", "render");
         this.$el.html(this.template);
 
         this.chatUserCollection = new ChatUserCollection();
+        this.chatUserCollection.fetch();
         this.chatUsersView = new ChatUsersView({
             collection: this.chatUserCollection,
             el: this.$('#chatUsers')
-        });
+        }).render();
         this.chatUserCollection.on("add remove reset change", this.updateHabdich);
         this.model.on("change:id", this.updateInfos);
         this.model.on("change:dran", this.updateInfos);
 
-        this.blockerInterval = setInterval(this.updateDranInfo, 60000);
+        this.dranInterval = setInterval(this.updateDranInfo, 60000);
         this.blockerInterval = setInterval(this.updateTopBlocker, 60000);
+        this.userInterval = setInterval(this.updateChatUser, 60000);
 
         this.updateInfos();
     },
     onClose: function () {
         clearInterval(this.blockerInterval);
+    },
+    updateChatUser:function() {
+        this.chatUserCollection.fetch();
     },
     updateInfos: function () {
         this.updateDranInfo();
