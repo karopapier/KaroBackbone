@@ -159,7 +159,9 @@ var ChatApp = Backbone.Marionette.Application.extend({
         this.refreshMessages = setInterval(function () {
             //this.chatMessageCollection.fetch();
             this.chatInfoView.updateTopBlocker();
-        }.bind(this), 60000);
+            //keepalive
+            $.getJSON("//www.karopapier.de/api/chat/list.json?limit=2&callback=?");
+        }.bind(this), 59000);
 
         Karopapier.vent.on('CHAT:MESSAGE', function (data) {
             //console.log("vent CHAT:MESSAGE triggered inside ChatApp");

@@ -16,11 +16,11 @@ var UserView = Backbone.View.extend({
         this.options = _.defaults(options || {}, this.options);
         _.bindAll(this, "dranChange", "render", "onChange");
 
-        //console.log(this.model);
+        //console.log("Init UserView", this.model.get("login"));
         this.listenTo(this.model, "change", this.onChange);
         //this.listenTo(this.model, "change", this.render);
         //this.listenTo(this.model, "change:dran", this.dranChange);
-        this.listenTo(this.model, "remove", this.remove);
+        //this.listenTo(this.model, "remove", this.remove);
 
         this.render();
     },
