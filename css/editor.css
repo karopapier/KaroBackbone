@@ -1,27 +1,25 @@
-#editorMap {
+.editor-map-container {
     float: left;
     max-height: 600px;
     overflow: auto;
 }
 
-#editorTools {
+.editor-mapview-container {
+    float: left;
+}
+
+.editor-codeview-container {
+    float: left;
+}
+
+.editor-tools-container {
     width: 300px;
     height: 500px;
     float: right;
-    background-color: rgba(100, 100, 100, .3);
+    /* background-color: rgba(100, 100, 100, .3); */
 }
 
-.fieldSelector {
+.editor-tools-fields-field {
     width: 20px;
     height: 20px;
-    background-image: url('mapfields/mapfields.png');
-    float: left;
-    margin: 2px;
-    border: 2px solid #333;
-    opacity: 0.7;
-}
-
-.activeFieldSelector {
-    border: 2px solid white;
-    opacity: 1;
 }

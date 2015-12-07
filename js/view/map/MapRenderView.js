@@ -54,6 +54,7 @@ var MapRenderView = MapBaseView.extend({
         this.el.width = map.get("cols") * (this.fieldSize);
         this.el.height = map.get("rows") * (this.fieldSize);
 
+        console.log("FIELDSIZE", this.fieldSize);
         this.ctx = this.el.getContext("2d");
 
         this.ctx.fillStyle = this.palette.getRGB("offroad");

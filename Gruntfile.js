@@ -1,4 +1,4 @@
-module.exports = function (grunt) {
+module.exports = function(grunt) {
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -12,7 +12,8 @@ module.exports = function (grunt) {
                 files: {
                     'index.html': ['index.template.html'],
                     'dran.html': ['index.template.html'],
-                    'chat.html': ['index.template.html']
+                    'chat.html': ['index.template.html'],
+                    'editor.html': ['index.template.html']
                 }
             }
         },
@@ -42,7 +43,7 @@ module.exports = function (grunt) {
         jst: {
             options: {
                 prettify: true,
-                processName: function (filepath) {
+                processName: function(filepath) {
                     var p = filepath;
                     p = p.replace("js/templates/", "");
                     p = p.replace(/\.html$/, "");
