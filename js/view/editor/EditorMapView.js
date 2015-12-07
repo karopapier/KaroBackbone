@@ -1,14 +1,19 @@
 var EditorMapView = Backbone.View.extend({
     id: "editorMapView",
-    initialize: function (options) {
+    initialize: function(options) {
+        options = options || {};
+        if (!options.viewsettings) {
+            console.error("No viewsettings passed to EditorMapView");
+            return;
+        }
+        if (!options.editorsettings) {
+            console.error("No editorsettings passed to EditorMapView");
+            return;
+        }
+
         _.bindAll(this, "render", "draw", "mousedown", "mouseup", "mousemove", "mouseleave");
-        this.settings = options.settings || new MapViewSettings();
-        this.tools = {
-            buttonColor: [null, "O", "1", "X"]
-        };
-        this.$el.bind("contextmenu", function () {
-            return false;
-        });
+        this.viewsettings = options.viewsettings;
+        this.editorsettings = options.editorsettings;
 
         //this.$el.css({"display": "inline-block"});
         /**
@@ -19,28 +24,27 @@ var EditorMapView = Backbone.View.extend({
 								}
 							});
          */
-        this.buttonDown = [false, false, false];
+        this.buttonDown = [false, false, false, false];
     },
-    render: function () {
+    render: function() {
         this.$el.empty();
         this.mapRenderView = new MapRenderView({
             settings: this.settings,
             model: this.model
         });
         this.$el.append(this.mapRenderView.el);
-        this.model.set("mapcode", "XOXXXSNEP\n123456789\n...VWXYZF");
         this.mapRenderView.render();
     },
     events: {
         'mousedown': 'mousedown',
         'mouseup': 'mouseup',
         'mouseleave': 'mouseleave',
-        "contextmenu": function () {
+        "contextmenu": function() {
             return false;
         }
     },
 
-    draw: function (e) {
+    draw: function(e) {
         var x = e.pageX - this.$el.offset().left;
         var y = e.pageY - this.$el.offset().top;
         //console.log("Draw ", x, y);
@@ -52,7 +56,7 @@ var EditorMapView = Backbone.View.extend({
         }
     },
 
-    mousedown: function (e) {
+    mousedown: function(e) {
         this.drawing = true;
         this.buttonDown[e.which] = true;
         e.preventDefault();
@@ -61,20 +65,20 @@ var EditorMapView = Backbone.View.extend({
         this.$el.bind("mousemove", this.mousemove);
     },
 
-    mouseup: function (e) {
+    mouseup: function(e) {
         this.drawing = false;
         this.buttonDown[e.which] = false;
         //this.render();
         this.$el.unbind("mousemove");
     },
 
-    mousemove: function (e) {
+    mousemove: function(e) {
         if (this.drawing) {
             this.draw(e);
         }
     },
 
-    mouseleave: function (e) {
+    mouseleave: function(e) {
         this.drawing = false;
         for (var i = 1; i <= 3; i++) {
             this.buttonDown[e.which] = false;

@@ -1,0 +1,128 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/html">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Karo Map Editor</title>
+        <link rel="shortcut icon" href="http://www.karopapier.de/favicon.ico" />
+        <link rel="stylesheet" type="text/css" media="screen" href="http://www.karopapier.de/css/karo.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="http://www.karopapier.de/themes/black/css/theme.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="../css/editor.css" />
+    </head>
+
+    <body>
+        <div id="header">
+            <div id="infoBar">
+                <span class="userLabel" name="userLabel1">Didi</span>
+                Spiele: <a href="/dran"><span id="dranCount">5</span></a>/<span id="gamesCount">105</span> [5/105]
+                <a href="/logout">Logout</a>
+
+                <div id="NotifierContainer"></div>
+            </div>
+        </div>
+        <div class="clearer"></div>
+
+        <div id="container">
+            <div id="sidebar">
+                <ul id="navi">
+                    <li><a href="#editor/1">Map 1</a></li>
+                    <li><a href="#editor/65">Map 65</a></li>
+                    <li><a href="#editor/75">Map 75</a></li>
+                    <li><a href="#editor/123">Map 123</a></li>
+                </ul>
+            </div>
+            <div id="content">
+            </div>
+            <div class="clearer"></div>
+
+            <footer>
+                <center><a href="http://www.karopapier.de">Karopapier.de</a> is brought to you by
+                    <script type="text/javascript">document.write(String.fromCharCode(0x44, 0x69, 0x64, 0x69).link(String.fromCharCode(0x6d, 0x61, 0x69, 0x6c, 0x74, 0x6f, 0x3a, 0x64, 0x69, 0x64, 0x69, 0x40, 0x6b, 0x61, 0x72, 0x6f, 0x70, 0x61, 0x70, 0x69, 0x65, 0x72, 0x2e, 0x64, 0x65)));</script>
+                    </a>
+                </center>
+            </footer>
+        </div>
+
+        <script type="text/javascript">
+            var Karopapier={};
+        </script>
+
+        <!-- <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+        <script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
+        <script type="text/javascript" src="../js/libs/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="../js/libs/jquery-ui-1.8.22.custom.min.js"></script>
+        <script type="text/javascript" src="../js/libs/underscore-min.js"></script>
+        <script type="text/javascript" src="../js/libs/backbone-min.js"></script>
+        <script type="text/javascript" src="../js/libs/backbone-model-factory-min.js"></script>
+        <script type="text/javascript" src="../js/libs/backbone.marionette.min.js"></script>
+        <script type="text/javascript" src="../js/templates/JST.js"></script>
+        <script type="text/javascript" src="../js/KaroBackbone.min.js"></script>
+
+        <script type="text/javascript">
+            var app;
+
+            $(document).ready(function () {
+
+                app = new EditorView();
+                app.router = new EditorAppRouter();
+                $('#content').append(app.el);
+
+                //here comes the ugly part
+                $(window).resize(function () {
+                    recalcWidth();
+                });
+
+                function recalcWidth() {
+                    var ww = $(window).width();
+                    var nw = $('#sidebar').width();
+                    var iw = $('#editorTools').width();
+                    $('#editorMap').width(ww - nw - iw - 30);
+
+                }
+
+                recalcWidth();
+                Backbone.history.start();
+
+                $('#editorMap').on("mousewheel DOMMouseScroll", handleScroll);
+            });
+
+
+            var scale = 1;
+            var handleScroll = function (e) {
+                //console.log(e);
+                e.delta = null;
+                if (e.originalEvent) {
+                    if (e.originalEvent.wheelDelta) e.delta = e.originalEvent.wheelDelta / -40;
+                    if (e.originalEvent.deltaY) e.delta = e.originalEvent.deltaY;
+                    if (e.originalEvent.detail) e.delta = e.originalEvent.detail;
+                }
+                //console.log(e.delta);
+                if (e.delta > 0) {
+                    //zoom out
+                    scale *= 0.9;
+                } else {
+                    //zoom in
+                    scale *= 1.1;
+                }
+                console.log(scale)
+                var x = e.pageX || e.originalEvent.pageX;
+                var y = e.pageY || e.originalEvent.pageY;
+
+                x = x - $('#editorMap').offset().left;
+                y = y - $('#editorMap').offset().top;
+
+                var trans = "scale(" + scale + ")";
+                trans = trans + " translate(-" + x + "px,-" + y + "px)";
+
+                console.log(x, y, trans);
+                $('#editorMapView').css("transform", trans);
+                //$('#editorMapView').css("transform-origin", x + " " + y);
+                e.preventDefault();
+            };
+
+            if (!/karopapier/.test(window.location.hostname)) {
+                document.write('<scr' + 'ipt src="http://localhost:35729/livereload.js"></scr' + 'ipt>');
+            }
+        </script>
+    </body>
+</html>

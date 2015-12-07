@@ -5,6 +5,7 @@ var AppRouter = Backbone.Router.extend({
         "index.html": "showChat",
         "chat.html": "showChat",
         "dran.html": "showDran",
+        "editor.html": "showEditor",
         "game.html?GID=:gameId": "showGame",
         "newshowmap.php?GID=:gameId": "showGame",
         "game.html": "defaultRoute",
@@ -36,6 +37,10 @@ var AppRouter = Backbone.Router.extend({
         //Karopapier.chatContainer = new Backbone.View();
         Karopapier.chatApp = new ChatApp();
         Karopapier.layout.content.show(Karopapier.chatApp.view);
+    },
+    showEditor: function() {
+        Karopapier.editorApp = new EditorApp();
+        Karopapier.layout.content.show(Karopapier.editorApp.layout);
     },
     showDran: function () {
         Karopapier.dranApp = new DranApp();
