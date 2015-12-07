@@ -29,7 +29,7 @@ var EditorMapView = Backbone.View.extend({
     render: function() {
         this.$el.empty();
         this.mapRenderView = new MapRenderView({
-            settings: this.settings,
+            settings: this.viewsettings,
             model: this.model
         });
         this.$el.append(this.mapRenderView.el);
@@ -47,11 +47,12 @@ var EditorMapView = Backbone.View.extend({
     draw: function(e) {
         var x = e.pageX - this.$el.offset().left;
         var y = e.pageY - this.$el.offset().top;
+        var buttons = this.editorsettings.get("buttons");
         //console.log("Draw ", x, y);
         for (var i = 1; i <= 3; i++) {
             if (this.buttonDown[i]) {
                 $('#drag' + i).text("(" + x + "|" + y + ")").show();
-                this.mapRenderView.setFieldAtXY(x, y, this.tools.buttonColor[i]);
+                this.mapRenderView.setFieldAtXY(x, y, buttons[i]);
             }
         }
     },

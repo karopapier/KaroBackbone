@@ -12,7 +12,7 @@ var EditorLayout = Marionette.LayoutView.extend({
     template: window.JST["editor/layout"],
     onShow: function() {
         //add all subviews into the rendered view
-        this.tools.show(new EditorToolsView({
+        this.tools.show(new EditorToolsLayout({
             viewsettings: this.editorApp.viewsettings,
             editorsettings: this.editorApp.editorsettings
         }));

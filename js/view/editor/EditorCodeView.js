@@ -7,12 +7,18 @@ var EditorCodeView = Backbone.View.extend({
         }
 
     },
+    events: {
+        "blur .mapCodeView": "sanity"
+    },
+    sanity: function() {
+        this.model.sanitize();
+    },
     render: function() {
         var mcv = new MapCodeView({
+            className: "mapCodeView",
             model: this.model,
             readonly: false
         });
         this.$el.append(mcv.$el);
-        this.$el.append("<button>San</button>");
     }
 });

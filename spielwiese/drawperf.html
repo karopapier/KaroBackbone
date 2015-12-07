@@ -30,8 +30,8 @@
         <script type="text/javascript" src="/js/templates/JST.js"></script>
         <script type="text/javascript" src="/js/KaroBackbone.js"></script>
 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+        <meta charset="utf-8"/>
 
         <style type="text/css">
             body {
@@ -62,7 +62,7 @@
         <div id="container"></div>
 
         <script type="text/javascript">
-            var log = function (t) {
+            var log = function(t) {
                 var d = new Date();
                 var h = d.getHours();
                 var m = d.getMinutes();
@@ -74,7 +74,7 @@
                 return ds + " " + t;
             };
             var ControlView = Backbone.View.extend({
-                initialize: function () {
+                initialize: function() {
                     this.listenTo(editorMapView.settings, "change", this.update)
                 },
                 events: {
@@ -83,18 +83,18 @@
                     "change #size": "updateSize",
                     "keyup #size": "updateSize"
                 },
-                update: function () {
+                update: function() {
                     this.$('#border').val(editorMapView.settings.get("border"));
                     this.$('#size').val(editorMapView.settings.get("size"));
                 },
-                updateBorder: function (e) {
+                updateBorder: function(e) {
                     //console.log($("#border").val());
                     var newborder = parseInt($("#border").val());
                     if (isNaN(newborder)) newborder = 0;
                     //console.log(newborder);
                     editorMapView.settings.set("border", newborder);
                 },
-                updateSize: function (e) {
+                updateSize: function(e) {
                     //console.log($("#size").val());
                     var newsize = parseInt($("#size").val());
                     if (newsize > 1) {
@@ -113,14 +113,14 @@
                 el: "#viewsettings",
             });
 
-            $("#mapget").click(function () {
+            $("#mapget").click(function() {
 
-                $.getJSON("https://www.karopapier.de/api/mapcode/112.json?callback=?", function (c) {
+                $.getJSON("https://www.karopapier.de/api/mapcode/112.json?callback=?", function(c) {
                     map.setMapcode(c)
                 });
             });
 
-            $("#sanitize").click(function () {
+            $("#sanitize").click(function() {
                 map.sanitize();
             });
 
@@ -150,12 +150,12 @@
             editorMapView.settings.set("border", 8);
             editorMapView.render();
             var TIMER;
-            editorMapView.mapRenderView.on("before:render", function (e) {
+            editorMapView.mapRenderView.on("before:render", function(e) {
                 TIMER = new Date();
                 $("#timer").text(log("Before render\n"));
             });
 
-            editorMapView.mapRenderView.on("render", function (e) {
+            editorMapView.mapRenderView.on("render", function(e) {
                 var $t = $('#timer');
                 $t.append(log("Render\n"));
                 var diff = new Date().getTime() - TIMER.getTime();
