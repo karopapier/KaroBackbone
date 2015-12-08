@@ -9,17 +9,14 @@ var EditorToolsButtonsView = Marionette.ItemView.extend({
         this.listenTo(this.editorsettings, "change:buttons", this.update);
     },
     urlFor: function(f) {
-        return "/css/mapfields/" + f + ".png";
+        return "/css/mapfields/" + f + ".png?v=25";
     },
     update: function(model, buttons) {
-        console.log(model);
         var prev = model.previous("buttons");
         var now = buttons;
-        console.log("P", prev);
-        console.log("N", now);
         for (var i = 1; i <= 3; i++) {
             if (prev[i] != now[i]) {
-                //remove existing icon- class
+                //set new src
                 this.$('.button' + i).attr("src", this.urlFor(now[i]));
             }
         }

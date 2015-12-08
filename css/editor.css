@@ -25,4 +25,12 @@
 .editor-tools-fields-field {
     width: 20px;
     height: 20px;
+    margin: 4px;
+}
+
+.editor-tools-fields-field.activeField {
+    width: 20px;
+    height: 20px;
+    border: 4px solid red;
+    margin: 0;
 }

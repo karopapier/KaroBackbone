@@ -4,10 +4,9 @@ var EditorApp = Backbone.Marionette.Application.extend({
             editorApp: this
         });
         this.viewsettings = new MapViewSettings();
-        this.editorsettings = new Backbone.Model({
-            buttons: [null, "X", "O", "1"]
-        });
+        this.editorsettings = new EditorSettings();
         this.map = new Map();
         this.map.setMapcode("XOSOFOXSNEP\n12345678901\n..LMNUVWXYZ");
+
     }
 });

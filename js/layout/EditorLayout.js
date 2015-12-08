@@ -2,6 +2,9 @@ var EditorLayout = Marionette.LayoutView.extend({
     initialize: function(options) {
         this.editorApp = options.editorApp;
         _.bindAll(this, "onShow");
+
+        //global keyup handler for field selection shortcut
+        $(document).on("keyup", this.hotkey);
     },
     regions: {
         "tools": ".editor-tools-container",
@@ -10,6 +13,13 @@ var EditorLayout = Marionette.LayoutView.extend({
     },
     className: "editorAppView",
     template: window.JST["editor/layout"],
+    hotkey: function(e) {
+        if (e.target.tagName.toUpperCase() == "BODY") {
+            if (e.which !== 0) {
+                console.log("Charcter was typed. It was: " + String.fromCharCode(e.which));
+            }
+        }
+    },
     onShow: function() {
         //add all subviews into the rendered view
         this.tools.show(new EditorToolsLayout({

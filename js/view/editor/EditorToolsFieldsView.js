@@ -10,9 +10,8 @@ var EditorToolsFieldsView = Marionette.ItemView.extend({
         this.activeField();
     },
     events: {
-        //"contextmenu": "rightclick",
         "contextmenu .editor-tools-fields-field": "rightclick",
-        "mousedown .editor-tools-fields-field": "selectField"
+        "mousedown .editor-tools-fields-field": "selectField",
     },
     rightclick: function(e) {
         e.preventDefault();
@@ -21,30 +20,19 @@ var EditorToolsFieldsView = Marionette.ItemView.extend({
     activeField: function() {
         var buttons = this.editorsettings.get("buttons");
         console.log("BUTTONS changed", buttons);
-        //$('.fieldSelector', this.$el).removeClass("activeFieldSelector");
-        //$('.fieldSelector[rel="' + buttons[1] + '"]', this.$el).addClass("activeFieldSelector");
+        this.$('.editor-tools-fields-field').removeClass("activeField");
+        this.$('.editor-tools-fields-field[data-field="' + buttons[1] + '"]').addClass("activeField");
     },
 
     selectField: function(e, i) {
-        var buttons = this.editorsettings.get("buttons");
         var f = $(e.currentTarget).data("field");
         var w = e.which;
-        console.log("Selected", f, "for", e.which);
-        //unset silently to trigger change event on array
-        //https://stackoverflow.com/questions/8491546/models-change-event-wont-fire-when-updating-an-array#
-        if (buttons[w] != f) {
-            var newButtons = [];
-            for (var i = 0; i <= 3; i++) {
-                newButtons[i] = buttons[i];
-            }
-            newButtons[e.which] = f;
-            this.editorsettings.set("buttons", newButtons);
-        }
+        this.editorsettings.setButtonField(w, f);
     },
 
     render: function() {
         this.$el.empty();
-        var fieldlists = ["OX", "SFP", "123456789", "LNWYZ"];
+        var fieldlists = ["OX", "SFP", "123456789", "LNVWYZ"];
         var html = "";
         for (var r = 0; r < fieldlists.length; r++) {
             var fieldlist = fieldlists[r];
