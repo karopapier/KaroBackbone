@@ -44,11 +44,15 @@ var EditorToolsFieldsView = Marionette.ItemView.extend({
 
     render: function() {
         this.$el.empty();
-        var fieldlist = "OXSFP123456789WYZ";
+        var fieldlists = ["OX", "SFP", "123456789", "LNWYZ"];
         var html = "";
-        for (var i = 0, e = fieldlist.length; i < e; i++) {
-            var c = fieldlist[i];
-            html += '<img src="/css/mapfields/' + c + '.png" class="editor-tools-fields-field" data-field="' + c + '"/>';
+        for (var r = 0; r < fieldlists.length; r++) {
+            var fieldlist = fieldlists[r];
+            for (var i = 0, e = fieldlist.length; i < e; i++) {
+                var c = fieldlist[i];
+                html += '<img src="/css/mapfields/' + c + '.png" class="editor-tools-fields-field" data-field="' + c + '"/>';
+            }
+            html += "<br/>";
         }
         this.$el.html(html);
     }

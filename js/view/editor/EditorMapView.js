@@ -43,7 +43,6 @@ var EditorMapView = Backbone.View.extend({
             return false;
         }
     },
-
     draw: function(e) {
         var x = e.pageX - this.$el.offset().left;
         var y = e.pageY - this.$el.offset().top;
