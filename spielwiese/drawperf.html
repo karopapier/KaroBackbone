@@ -6,8 +6,8 @@
         <script type="text/javascript" src="/js/libs/jquery-1.11.3.min.js?v=1445895669797"></script>
         <script type="text/javascript" src="/js/libs/jquery-ui-1.11.4.custom.min.js?v=1445895669797"></script>
         <script type="text/javascript" src="/js/libs/underscore-min.js?v=1445895669797"></script>
-        <script type="text/javascript" src="/js/libs/backbone-min.js?v=1445895669797"></script>
-        <script type="text/javascript" src="/js/libs/backbone.marionette-2.4.1.min.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/js/libs/backbone-1.2.3.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/js/libs/backbone.marionette-2.4.1.js?v=1445895669797"></script>
         <script type="text/javascript" src="/js/libs/backbone-model-factory-min.js?v=1445895669797"></script>
 
         <!--
@@ -75,7 +75,7 @@
             };
             var ControlView = Backbone.View.extend({
                 initialize: function() {
-                    this.listenTo(editorMapView.settings, "change", this.update)
+                    this.listenTo(Viewsettings, "change", this.update)
                 },
                 events: {
                     "change #border": "updateBorder",
@@ -84,28 +84,34 @@
                     "keyup #size": "updateSize"
                 },
                 update: function() {
-                    this.$('#border').val(editorMapView.settings.get("border"));
-                    this.$('#size').val(editorMapView.settings.get("size"));
+                    this.$('#border').val(Viewsettings.get("border"));
+                    this.$('#size').val(Viewsettings.get("size"));
                 },
                 updateBorder: function(e) {
                     //console.log($("#border").val());
                     var newborder = parseInt($("#border").val());
                     if (isNaN(newborder)) newborder = 0;
                     //console.log(newborder);
-                    editorMapView.settings.set("border", newborder);
+                    Viewsettings.set("border", newborder);
                 },
                 updateSize: function(e) {
                     //console.log($("#size").val());
                     var newsize = parseInt($("#size").val());
                     if (newsize > 1) {
-                        editorMapView.settings.set("size", newsize);
+                        Viewsettings.set("size", newsize);
                     }
                 }
             });
 
             var map = new Map();
-            //map.setMapcode("XOSOFOX\nXOS1FOX\nXOSOXXX");
+            var Viewsettings = new MapViewSettings()
+            var Editorsettings = new Backbone.Model({
+                buttons: [null, "X", "1", "O"]
+            });
+            map.setMapcode("XOSOFOX\nXOS1FOX\nXOSOXXX");
             var editorMapView = new EditorMapView({
+                viewsettings: Viewsettings,
+                editorsettings: Editorsettings,
                 model: map
             });
 
@@ -146,8 +152,8 @@
              map.setMapcode(code);
              */
 
-            editorMapView.settings.set("size", 20);
-            editorMapView.settings.set("border", 8);
+            Viewsettings.set("size", 20);
+            Viewsettings.set("border", 8);
             editorMapView.render();
             var TIMER;
             editorMapView.mapRenderView.on("before:render", function(e) {
