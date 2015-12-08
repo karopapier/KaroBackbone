@@ -4,13 +4,13 @@
 
 var KaropapierApp = Marionette.Application.extend({
     //global layout with regions for nav, sidebar, header and user info...
-    initialize: function (options) {
+    initialize: function(options) {
         console.log('APP INIT!!!!!!!!!!!');
         var me = this;
 
         this.User = new User({});
         //make this user refer to "check" for loging in
-        this.User.url = function () {
+        this.User.url = function() {
             return "//www.karopapier.de/api/user/check.json?callback=?";
         };
         this.User.fetch();
@@ -53,7 +53,7 @@ var KaropapierApp = Marionette.Application.extend({
 
         this.listenTo(this, "start", this.bootstrap.bind(this));
     },
-    bootstrap: function () {
+    bootstrap: function() {
         var me = this;
         console.log("Jetzt bootstrap app");
 
@@ -66,15 +66,16 @@ var KaropapierApp = Marionette.Application.extend({
             if (me.User.get("id") == 0) return false;
             me.UserDranGames.fetch();
         }
+
         dranRefresh();
         this.listenTo(this.User, "change:id", dranRefresh)
 
 
-        this.vent.on("USER:DRAN", function (data) {
+        this.vent.on("USER:DRAN", function(data) {
             me.UserDranGames.addId(data.gid, data.name);
         });
 
-        this.vent.on("USER:MOVED", function (data) {
+        this.vent.on("USER:MOVED", function(data) {
             me.UserDranGames.remove(data.gid);
         });
 
@@ -86,6 +87,7 @@ var KaropapierApp = Marionette.Application.extend({
             var themeUrl = "//www.karopapier.de/themes/" + theme + "/css/theme.css";
             KaroUtil.lazyCss(themeUrl);
         }
+
         loadTheme();
         this.listenTo(this.User, "change:id", loadTheme);
 
@@ -119,13 +121,25 @@ var KaropapierApp = Marionette.Application.extend({
             pushState: true
         });
 
-        this.vent.on('GAME:MOVE', function (data) {
+        this.vent.on('GAME:MOVE', function(data) {
             //only for unrelated moves, count up or down
             if (data.related) return false;
             var movedUser = new User({id: data.movedId, login: data.movedLogin})
             movedUser.decreaseDran();
             var nextUser = new User({id: data.nextId, login: data.nextLogin});
             nextUser.increaseDran();
+        });
+
+        //global keyup handler for hotkeys
+        $(document).on("keypress", function(e) {
+            //if key pressed outside input, the target is "body", so we consider it a hotkey
+            var targetTag = e.target.tagName.toUpperCase();
+            if (targetTag === "BODY") {
+                if (e.which !== 0) {
+                    //console.log("HOTKEY " + String.fromCharCode(e.which));
+                    me.vent.trigger("HOTKEY", e);
+                }
+            }
         });
     }
 });

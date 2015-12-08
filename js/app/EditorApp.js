@@ -8,5 +8,12 @@ var EditorApp = Backbone.Marionette.Application.extend({
         this.map = new Map();
         this.map.setMapcode("XOSOFOXSNEP\n12345678901\n..LMNUVWXYZ");
 
+        this.listenTo(Karopapier.vent, "HOTKEY", _.bind(this.hotkey, this));
+    },
+    hotkey: function(e) {
+        var char = String.fromCharCode(e.which).toUpperCase();
+        if (this.map.isValidField(char)) {
+            this.editorsettings.setButtonField(1, char);
+        }
     }
 });

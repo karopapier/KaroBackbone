@@ -1,6 +1,6 @@
 var EditorSettings = Backbone.Model.extend({
     defaults: {
-        buttons: [null, "X", "O", "1"]
+        buttons: [null, "O", "1", "X"]
     },
     setButtonField: function(b, f) {
         var buttons = this.get("buttons");

@@ -41,6 +41,9 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         "8": "cp8",
         "9": "cp9"
     },
+    isValidField: function(c) {
+        return this.validFields.indexOf(c.toUpperCase()) >= 0;
+    },
     setMapcode: function(mapcode) {
         //make sure we don't have CR in there and make it all UPPERCASE
         var trimcode = mapcode.toUpperCase();
@@ -96,7 +99,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
 
             for (var i = 0; i < rowlength; i++) {
                 var c = row[i];
-                if (me.validFields.indexOf(c) >= 0) {
+                if (me.isValidField(c)) {
                     cleanRow += row[i];
                 } else {
                     cleanRow += "X";

@@ -11,8 +11,8 @@ var EditorToolsSettingsView = Marionette.ItemView.extend({
         _.bindAll(this, "changeSizeBorder");
     },
     events: {
-        "change input[name='size']": "changeSizeBorder",
-        "change input[name='border']": "changeSizeBorder"
+        "input input[name='size']": "changeSizeBorder",
+        "input input[name='border']": "changeSizeBorder"
     },
     changeSizeBorder: function(e) {
         var size = parseInt(this.$('.editor-tools-settings-size').val());
@@ -21,7 +21,6 @@ var EditorToolsSettingsView = Marionette.ItemView.extend({
         if (size > 50) size = 50;
         if (border > 20) border = 20;
         if (border < 0)  border = 0;
-        console.log("Update settings to ", size, border);
         this.viewsettings.set({
             size: size,
             border: border
@@ -29,7 +28,6 @@ var EditorToolsSettingsView = Marionette.ItemView.extend({
 
     },
     update: function(e) {
-        console.log("Overwrite");
         this.$('.editor-tools-settings-size').val(this.viewsettings.get("size"));
         this.$('.editor-tools-settings-border').val(this.viewsettings.get("border"));
     },

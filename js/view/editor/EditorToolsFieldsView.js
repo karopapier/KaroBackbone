@@ -7,7 +7,6 @@ var EditorToolsFieldsView = Marionette.ItemView.extend({
         }
         this.editorsettings = options.editorsettings;
         this.listenTo(this.editorsettings, "change:buttons", this.activeField);
-        this.activeField();
     },
     events: {
         "contextmenu .editor-tools-fields-field": "rightclick",
@@ -19,7 +18,6 @@ var EditorToolsFieldsView = Marionette.ItemView.extend({
     },
     activeField: function() {
         var buttons = this.editorsettings.get("buttons");
-        console.log("BUTTONS changed", buttons);
         this.$('.editor-tools-fields-field').removeClass("activeField");
         this.$('.editor-tools-fields-field[data-field="' + buttons[1] + '"]').addClass("activeField");
     },
@@ -32,7 +30,7 @@ var EditorToolsFieldsView = Marionette.ItemView.extend({
 
     render: function() {
         this.$el.empty();
-        var fieldlists = ["OX", "SFP", "123456789", "LNVWYZ"];
+        var fieldlists = ["OX", "SFP", "123456789", "LNVWYZ."];
         var html = "";
         for (var r = 0; r < fieldlists.length; r++) {
             var fieldlist = fieldlists[r];
@@ -43,6 +41,7 @@ var EditorToolsFieldsView = Marionette.ItemView.extend({
             html += "<br/>";
         }
         this.$el.html(html);
+        this.activeField();
     }
 });
 
