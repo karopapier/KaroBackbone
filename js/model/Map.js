@@ -10,9 +10,10 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
      * @constructor Map
      * @class Map
      */
-    initialize: function () {
-        _.bindAll(this, "updateMapcode", "getCpList", "setFieldAtRowCol", "getFieldAtRowCol", "getPosFromRowCol");
+    initialize: function() {
+        _.bindAll(this, "updateMapcode", "getCpList", "setFieldAtRowCol", "getFieldAtRowCol", "getPosFromRowCol", "isPossible");
         this.validFields = Object.keys(this.FIELDS);
+        this.offroadRegEx = new RegExp("(X|P|L|N|V|W|Y|Z|_)");
 
         //sanitization binding
         this.bind("change:mapcode", this.updateMapcode);
@@ -22,7 +23,9 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         "O": "road",
         "P": "parc",
         "S": "start",
-        "V": "stone",
+        "L": "lava",
+        "N": "snow",
+        "V": "mountain",
         "W": "water",
         "X": "grass",
         "Y": "sand",
@@ -38,7 +41,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         "8": "cp8",
         "9": "cp9"
     },
-    setMapcode: function (mapcode) {
+    setMapcode: function(mapcode) {
         //make sure we don't have CR in there and make it all UPPERCASE
         var trimcode = mapcode.toUpperCase();
         trimcode = trimcode.replace(/\r/g, "");
@@ -61,10 +64,10 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
             "cps": cps
         });
     },
-    updateMapcode: function (e, mapcode) {
+    updateMapcode: function(e, mapcode) {
         this.setMapcode(mapcode);
     },
-    sanitize: function () {
+    sanitize: function() {
         //console.log("sanitize and set correct code");
 
         var dirtyCode = this.get("mapcode").toUpperCase().trim();
@@ -73,7 +76,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         //find longest line
         var rows = dirtyCode.split("\n");
         var rowlength = 0;
-        rows.forEach(function (row) {
+        rows.forEach(function(row) {
             if (row.length > rowlength) {
                 rowlength = row.length;
             }
@@ -83,10 +86,10 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         var cleanRows = [];
         var parcs = 0;
         var me = this;
-        rows.forEach(function (row) {
+        rows.forEach(function(row) {
             if (row.length < rowlength) {
                 var padXXX = Array(rowlength - row.length + 1).join("X");
-                row += padXXX
+                row += padXXX;
             }
 
             var cleanRow = "";
@@ -114,16 +117,16 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
 
         //Make sure to remove \n at last line
     },
-    getStartPositions: function () {
+    getStartPositions: function() {
         return this.getFieldPositions("S");
     },
-    getCpPositions: function (mapcode) {
+    getCpPositions: function(mapcode) {
         return this.getFieldPositions('\\d', mapcode);
     },
     getFieldPositions: function(field, mapcode) {
         var positions = [];
         var re = new RegExp(field, "g");
-        mapcode = mapcode||this.get("mapcode");
+        mapcode = mapcode || this.get("mapcode");
         var hit;
         while (hit = re.exec(mapcode)) {
             var pos = hit.index;
@@ -131,14 +134,14 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         }
         return positions;
     },
-    getCpList: function (mapcode) {
+    getCpList: function(mapcode) {
         mapcode = mapcode || this.get("mapcode");
-        return (mapcode.match(/\d/g) || []).sort().filter(function (el, i, a) {
+        return (mapcode.match(/\d/g) || []).sort().filter(function(el, i, a) {
             if (i == a.indexOf(el))return 1;
             return 0;
         });
     },
-    withinBounds: function (opt) {
+    withinBounds: function(opt) {
         var x;
         var y;
         if ((opt.hasOwnProperty("row")) && opt.hasOwnProperty("col")) {
@@ -157,7 +160,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         if (y > this.get("rows") - 1) return false;
         return true;
     },
-    setFieldAtRowCol: function (r, c, field) {
+    setFieldAtRowCol: function(r, c, field) {
         var pos = this.getPosFromRowCol(r, c);
         var oldcode = this.get("mapcode");
         //console.log("Mapcodecheck");
@@ -177,7 +180,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
      * @param c 0..cols-1
      * @returns {String}
      */
-    getFieldAtRowCol: function (r, c) {
+    getFieldAtRowCol: function(r, c) {
         //console.log(r, c);
         if (!this.withinBounds({row: r, col: c})) {
             console.error(r, c);
@@ -187,17 +190,17 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         //console.log("Ich sag",pos);
         return this.get("mapcode").charAt(pos);
     },
-    getPosFromRowCol: function (r, c) {
+    getPosFromRowCol: function(r, c) {
         var pos = ( r * (this.get("cols") + 1)) + c;
         return pos;
     },
-    getRowColFromPos: function (pos) {
+    getRowColFromPos: function(pos) {
         var cols = this.get("cols") + 1;
         var c = pos % cols;
         var r = Math.floor(pos / cols);
         return {row: r, col: c, x: c, y: r};
     },
-    getPassedFields: function (mo) {
+    getPassedFields: function(mo) {
         if (!mo) console.error("No motion given");
         var positions = mo.getPassedPositions();
         //console.log(positions);
@@ -214,25 +217,20 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         }
         return fields;
     },
-    isPossible: function (mo) {
+    isPossible: function(mo) {
         var fields = this.getPassedFields(mo);
-        //console.log(fields);
+
+        //if undefined in fields, not possible
         if (fields.indexOf(undefined) >= 0) return false;
-        if (fields.indexOf("X") >= 0) return false;
-        if (fields.indexOf("Y") >= 0) return false;
-        if (fields.indexOf("Z") >= 0) return false;
-        if (fields.indexOf("V") >= 0) return false;
-        if (fields.indexOf("W") >= 0) return false;
-        if (fields.indexOf("P") >= 0) return false;
-        if (fields.indexOf("_") >= 0) return false;
-        //console.log(mo.toString(), "is possible");
-        return true;
+
+        //concat fields and test against offroad regexp
+        return (!fields.join("").match(this.offroadRegEx));
     },
     /**
      * @param motions
      * @returns {Array} Motions
      */
-    verifiedMotions: function (motions) {
+    verifiedMotions: function(motions) {
         var remaining = [];
         for (var p = 0; p < motions.length; p++) {
             var mo = motions[p];

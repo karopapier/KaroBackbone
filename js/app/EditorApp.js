@@ -8,6 +8,6 @@ var EditorApp = Backbone.Marionette.Application.extend({
             buttons: [null, "X", "O", "1"]
         });
         this.map = new Map();
-        this.map.setMapcode("XOSOFOXSNEP\n12345678901\n...MNUVWXYZ");
+        this.map.setMapcode("XOSOFOXSNEP\n12345678901\n..LMNUVWXYZ");
     }
 });

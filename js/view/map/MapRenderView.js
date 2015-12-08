@@ -10,7 +10,7 @@ var MapRenderView = MapBaseView.extend({
     id: "mapRenderView",
     className: "mapRenderView",
     tagName: "canvas",
-    initialize: function (options) {
+    initialize: function(options) {
         //init MapBaseView with creation of a settings model
         this.constructor.__super__.initialize.apply(this, arguments);
         _.bindAll(this, "render", "drawBorder", "drawField", "drawFlagField", "drawStandardField", "drawStartField", "renderCheckpoints");
@@ -22,8 +22,9 @@ var MapRenderView = MapBaseView.extend({
         this.fieldColors = {};
         this.initFieldColors();
         this.specles = true;
+        this.stdFields = "LNOVWXYZ.";
     },
-    renderCheckpoints: function () {
+    renderCheckpoints: function() {
         //console.warn("RENDER CHECKPOINTS", new Date());
         //find cps
         var cps = this.model.getCpPositions();
@@ -31,22 +32,22 @@ var MapRenderView = MapBaseView.extend({
         var me = this;
 
         //for each cp, drawField
-        cps.forEach(function (pos) {
+        cps.forEach(function(pos) {
             var cp = pos.attributes;
             var f = me.model.getFieldAtRowCol(cp.row, cp.col);
             //console.log("Rendering CP", cp, f);
             me.drawField(cp.row, cp.col, f);
         });
     },
-    renderFieldChange: function (e, a, b) {
+    renderFieldChange: function(e, a, b) {
         //console.info("Fieldchange only");
         var field = e.field;
         var r = e.r;
         var c = e.c;
         this.drawField(r, c, field);
     },
-    render: function () {
-        console.warn("FULL RENDER", new Date())
+    render: function() {
+        //console.warn("FULL RENDER", new Date())
         this.trigger("before:render");
         var map = this.model;
         this.size = this.settings.get("size");
@@ -54,10 +55,10 @@ var MapRenderView = MapBaseView.extend({
         this.el.width = map.get("cols") * (this.fieldSize);
         this.el.height = map.get("rows") * (this.fieldSize);
 
-        console.log("FIELDSIZE", this.fieldSize);
+        //console.log("FIELDSIZE", this.fieldSize);
         this.ctx = this.el.getContext("2d");
 
-        this.ctx.fillStyle = this.palette.getRGB("offroad");
+        this.ctx.fillStyle = this.palette.getRGB("grass");
         this.ctx.lineWidth = this.size;
 
         this.ctx.fillRect(0, 0, this.el.width, this.el.height);
@@ -71,25 +72,27 @@ var MapRenderView = MapBaseView.extend({
         this.trigger("render");
     },
 
-    initFieldColors: function () {
+    initFieldColors: function() {
         console.warn("Prepare a simple fg/bg field mapping - here or in MapPalette, to speed up");
     },
-    drawField: function (r, c, field) {
-        x = c * (this.fieldSize);
-        y = r * (this.fieldSize);
+    drawField: function(r, c, field) {
+        var x = c * (this.fieldSize);
+        var y = r * (this.fieldSize);
 
         //faster than 1x1 rect
         //this.specle=this.ctx.getImageData(0,0,1,1);
 
-        if ((field == "X") || (field == "Y") || (field == "Z") || (field == "O") || (field == "V") || (field == "W") || (field == ".")) {
-            fillColor = this.palette.getRGB(field);
-            specleColor = this.palette.getRGB(field + "specle");
+        if (this.stdFields.indexOf(field) >= 0) {
+            var fillColor = this.palette.getRGB(field);
+            var specleColor = this.palette.getRGB(field + "specle");
             this.drawStandardField(x, y, fillColor, specleColor);
+            return true;
         }
 
         //finish
         if (field == "F") {
             this.drawFlagField(x, y, this.palette.getRGB('finish1'), this.palette.getRGB('finish2'));
+            return true;
         }
 
         //checkpoint
@@ -119,21 +122,27 @@ var MapRenderView = MapBaseView.extend({
             } else {
                 this.drawField(r, c, "O");
             }
+            return true;
         }
 
         //Start
         if (field == "S") {
             this.drawStartField(x, y, this.palette.getRGB('start1'), this.palette.getRGB('start2'));
+            return true;
         }
 
         //Parc ferme
         if (field == "P") {
-            this.drawStandardField(x, y, this.palette.getRGB('parc'), this.palette.getRGB('roadspecle'), false); //no
-                                                                                                                 // specles
+            this.drawStandardField(x, y, this.palette.getRGB('parc'), this.palette.getRGB('roadspecle'), false); //no specles
+            return true;
         }
+
+        //default for "unknown"
+        //console.warn("MAL DEFAULT", field);
+        this.drawStandardField(x, y, "rgb(0,0,0)", "rgb(0,0,0)", false);
     },
 
-    drawStandardField: function (x, y, fg, specle) {
+    drawStandardField: function(x, y, fg, specle) {
         this.ctx.fillStyle = fg;
         this.ctx.fillRect(x, y, this.size, this.size);
 
@@ -153,7 +162,7 @@ var MapRenderView = MapBaseView.extend({
             var size = this.size;
             var baseX = x;
             var baseY = y;
-            setTimeout(function () {
+            setTimeout(function() {
                 ctx.fillStyle = specleColor;
                 for (var i = 0; i < 3; i++) {
                     var xr = Math.round(Math.random() * (size - 1));
@@ -164,7 +173,7 @@ var MapRenderView = MapBaseView.extend({
         }
     },
 
-    drawBorder: function (x, y, specle) {
+    drawBorder: function(x, y, specle) {
         this.ctx.lineWidth = this.border;
         this.ctx.strokeStyle = specle;
         this.ctx.beginPath();
@@ -175,7 +184,7 @@ var MapRenderView = MapBaseView.extend({
         this.ctx.closePath();
     },
 
-    drawFlagField: function (x, y, c1, c2) {
+    drawFlagField: function(x, y, c1, c2) {
         //console.log("Flagfield", c1, c2);
         this.ctx.fillStyle = c2;
         this.ctx.beginPath();
@@ -200,7 +209,7 @@ var MapRenderView = MapBaseView.extend({
         this.drawBorder(x, y, this.palette.getRGB('roadspecle'));
     },
 
-    drawStartField: function (x, y) {
+    drawStartField: function(x, y) {
         this.ctx.fillStyle = this.palette.getRGB('start2');
         this.ctx.beginPath();
         //this.ctx.rect(x,y,this.size,this.size); //instead of border make larger
