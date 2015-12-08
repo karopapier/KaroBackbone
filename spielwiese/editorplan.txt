@@ -1,0 +1,8 @@
+Karolender Türchen  7: <i>KaroKaMEL - wirst ihn lieben?</i>. Jetzt neu! MALEN mit Zahlen!<br />
+Karolender Türchen  8: <i>Hat den Code-Aufräumer 'bracht.</i>. Beim Verlassen des Textfeldes wird der Kartencode korrigiert oder vervollständigt<br />
+
+Karolender Türchen  9: <i>ÜPluMifreu Über Plus und Minus freuen</i>. Zeilen und Spalten da hinzufügen, wo der Cursor gerade ist
+Karolender Türchen 10: <i>Kalatujege Karten laden tut jetzt geh'n</i>Offizielle Karten laden und drauf rum malen<br />
+Karolender Türchen 11: <i>KnomiUnkozeHe Knopf mit Undo kommt zur Helf</i>Vermalt? Rückgängig machen...<br />
+
+Karolender Türchen 14:
