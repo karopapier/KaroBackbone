@@ -21,7 +21,7 @@ var BrowserNotifier = Backbone.Model.extend(/** @lends BrowserNotifier.prototype
                 group: "global",
                 tag: "chat",
                 icon: "/favicon.ico",
-                timeout: 2000,
+                timeout: 10000,
                 onClick: function () {
                     window.open("/index.html");
                 }

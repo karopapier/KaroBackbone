@@ -157,6 +157,7 @@ module.exports = function(grunt) {
 
     // Default task(s).
     grunt.registerTask('default', ['uglify', 'jst', 'cssmin', 'asset_cachebuster', 'watch']);
+    grunt.registerTask('once', ['uglify', 'jst', 'cssmin', 'asset_cachebuster']);
     //grunt.registerTask('guck', ['watch']);
     grunt.registerTask('spielwiese', ['spielwiese']);
     grunt.registerTask('test', 'qunit');
