@@ -23,7 +23,7 @@ var EditorToolsButtonsView = Marionette.ItemView.extend({
     },
     render: function() {
         var buttons = this.editorsettings.get("buttons");
-        var html = "Mausknöpfe<br />Links, Mitte, Rechts: ";
+        var html = "Aktuelle Mausbelegung<br />Links, Mitte, Rechts: ";
         for (var i = 1; i <= 3; i++) {
             html += '<img src="' + this.urlFor(buttons[i]) + '" class="button' + i + '" > ';
         }
