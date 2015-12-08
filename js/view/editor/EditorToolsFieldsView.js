@@ -50,7 +50,7 @@ var EditorToolsFieldsView = Marionette.ItemView.extend({
             var fieldlist = fieldlists[r];
             for (var i = 0, e = fieldlist.length; i < e; i++) {
                 var c = fieldlist[i];
-                html += '<img src="/css/mapfields/' + c + '.png" class="editor-tools-fields-field" data-field="' + c + '"/>';
+                html += '<img src="/css/mapfields/' + c + '.png?v=25" class="editor-tools-fields-field" data-field="' + c + '"/>';
             }
             html += "<br/>";
         }
