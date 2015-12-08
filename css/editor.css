@@ -7,6 +7,9 @@
 .editor-mapview-container {
     float: left;
 }
+.editor-mapview-container canvas {
+    cursor: crosshair;
+}
 
 .editor-codeview-container {
     float: left;
