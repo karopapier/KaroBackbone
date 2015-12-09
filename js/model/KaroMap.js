@@ -6,7 +6,7 @@ var KaroMap = Backbone.Model.extend({
     defaults: {
         id: 0,
         name: "o(-.-)o",
-        mapcode: "",
+        mapcode: "1",
         loaded: false
     },
     initialize: function (options) {
