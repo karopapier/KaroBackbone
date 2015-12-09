@@ -28,7 +28,7 @@ var MapCodeView = Backbone.View.extend({
         //console.log("Bounds");
         this.$el.attr({
             "rows": this.model.get("rows") + 1,
-            "cols": this.model.get("cols") + 1
+            "cols": this.model.get("cols") + 5
         })
         ;
     },
