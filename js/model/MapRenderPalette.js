@@ -68,6 +68,8 @@ var MapRenderPalette = Backbone.Model.extend({
         }
     },
     getRGB: function(field) {
+        var rgb = this.get(field);
+        if (!rgb) rgb = "0,0,0";
         return "rgb(" + this.get(field) + ")";
     },
     rgb2hsl: function(rgb) {
