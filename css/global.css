@@ -45,6 +45,11 @@ h2 {
     font-weight: bold
 }
 
+h3.dense {
+    margin-top: 5px;
+    margin-bottom: 3px;
+}
+
 span.small {
     font-size: .7em;
 }
