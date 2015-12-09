@@ -9,6 +9,10 @@ var EditorApp = Backbone.Marionette.Application.extend({
         this.map.setMapcode("XOSOFOXSNEP\n12345678901\n..LMNUVWXYZ");
 
         this.listenTo(Karopapier.vent, "HOTKEY", _.bind(this.hotkey, this));
+
+        this.karoMaps = new KaroMapCollection();
+        //CustomMapCollection()
+        //WikiMapCollection()
     },
     hotkey: function(e) {
         var char = String.fromCharCode(e.which).toUpperCase();
