@@ -1,18 +1,22 @@
 .editor-map-container {
-    float: left;
-    max-height: 600px;
-    overflow: auto;
+    /*float: left;*/
+    /*max-height: 600px;*/
+    /*overflow: auto;*/
+    display: inline-block;
 }
 
 .editor-mapview-container {
-    float: left;
+    /* float: left;*/
+    display: inline-block;
+    vertical-align:top;
 }
 .editor-mapview-container canvas {
     cursor: crosshair;
 }
 
 .editor-codeview-container {
-    float: left;
+    /* float: left; */
+    display: inline-block;
 }
 
 .editor-tools-container {

@@ -14,7 +14,8 @@ var EditorLayout = Marionette.LayoutView.extend({
         //add all subviews into the rendered view
         this.tools.show(new EditorToolsLayout({
             viewsettings: this.editorApp.viewsettings,
-            editorsettings: this.editorApp.editorsettings
+            editorsettings: this.editorApp.editorsettings,
+            editorApp: this.editorApp
         }));
 
         this.mapview.show(new EditorMapView({

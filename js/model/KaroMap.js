@@ -12,7 +12,6 @@ var KaroMap = Backbone.Model.extend({
     initialize: function (options) {
         //init Maps model
         this.constructor.__super__.initialize.apply(this, arguments);
-        this.set("mapcode","");
     },
     loading: function() {
         //fill mapcode with growing Xs while waiting
