@@ -1,5 +1,10 @@
 var EditorLayout = Marionette.LayoutView.extend({
     initialize: function(options) {
+        options = options || {};
+        if (!options.editorApp) {
+            console.error("No editorApp passed to EditorLayout");
+            return;
+        }
         this.editorApp = options.editorApp;
         _.bindAll(this, "onShow");
     },
@@ -13,8 +18,6 @@ var EditorLayout = Marionette.LayoutView.extend({
     onShow: function() {
         //add all subviews into the rendered view
         this.tools.show(new EditorToolsLayout({
-            viewsettings: this.editorApp.viewsettings,
-            editorsettings: this.editorApp.editorsettings,
             editorApp: this.editorApp
         }));
 

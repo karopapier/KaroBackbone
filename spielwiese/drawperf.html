@@ -61,7 +61,7 @@
         </div>
         <div id="container">
 
-            <div id="karoMapList"></div>
+            <select id="karoMapList"></select>
             <br/>
             <br/>
             <button id="undo">Undo</button>
@@ -112,7 +112,7 @@
             var map = new Map();
             var Viewsettings = new MapViewSettings()
             var Editorsettings = new Backbone.Model({
-                buttons: [null, "X", "1", "O"]
+                buttons: [null, "O", "1", "X"]
             });
             map.setMapcode("XOSOFOX\nXOS1FOX\nXOSOXXX");
             var editorMapView = new EditorMapView({
@@ -176,7 +176,7 @@
 
             mcv.render();
 
-            var undo = new MapEditUndo({
+            var undo = new EditorUndo({
                 map: map
             });
             $('#undo').click(undo.undo);
