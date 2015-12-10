@@ -263,6 +263,53 @@
             }, false);
 
 
+            var $el = $('#mapRenderView').css({
+                border: "10px solid black",
+            });
+            console.log($el.css("position"));
+
+            var Fieldsize = 28;
+            var gridTarget = interact.createSnapGrid({
+                x: Fieldsize,
+                y: Fieldsize,
+                range: 16
+            })
+            interact('#mapRenderView')
+                    .resizable({
+                        preserveAspectRatio: false,
+                        edges: {left: true, right: true, bottom: true, top: true},
+                        snap: {
+                            targets: [
+                                    gridTarget
+                            ]
+                        }
+                    })
+                    .on('resizestart', function(e) {
+                        console.log("Es geht los");
+                    })
+                    .on('resizemove', function(e) {
+                        var target = e.target,
+                                x = (parseFloat(target.getAttribute('data-x')) || 0),
+                                y = (parseFloat(target.getAttribute('data-y')) || 0);
+
+                        //return true;
+                        // update the element's style
+
+                        //consider border of 20
+                        target.style.width = (e.rect.width - 20) + 'px';
+                        target.style.height = (e.rect.height - 20) + 'px';
+
+                        // translate when resizing from top or left edges
+                        x += e.deltaRect.left;
+                        y += e.deltaRect.top;
+
+                        target.style.webkitTransform = target.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+
+                        target.setAttribute('data-x', x);
+                        target.setAttribute('data-y', y);
+                        target.textContent = Math.round(e.rect.width) + '×' + Math.round(e.rect.height);
+                    });
+            console.log($el.css("position"));
         </script>
 
         <script type="text/javascript">
