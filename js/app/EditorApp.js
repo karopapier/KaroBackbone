@@ -13,11 +13,25 @@ var EditorApp = Backbone.Marionette.Application.extend({
         this.karoMaps = new KaroMapCollection();
         //CustomMapCollection()
         //WikiMapCollection()
+
+        this.editorUndo = new EditorUndo({
+            map: this.map
+        });
     },
     hotkey: function(e) {
-        var char = String.fromCharCode(e.which).toUpperCase();
+        var ascii = e.which;
+        var char = String.fromCharCode(ascii).toUpperCase();
+        //check hotkey for being a map code
         if (this.map.isValidField(char)) {
             this.editorsettings.setButtonField(1, char);
         }
+
+        //ctrl + z -->undo
+        if (e.ctrlKey && ascii == 26) {
+            //UNDO
+            this.editorUndo.undo()
+        }
+
+        //console.log("Unhandled hotkey",char, ascii);
     }
 });
