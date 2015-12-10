@@ -1,5 +1,5 @@
 module("Map");
-test("Map pos calculations", function () {
+test("Map pos calculations", function() {
     expect(9);
     var map = new Map();
     map.set("rows", 5);
@@ -15,7 +15,7 @@ test("Map pos calculations", function () {
     equal(map.getRowColFromPos(18).row, 2, "getRowColFromPos works correctly")
     equal(map.getRowColFromPos(18).col, 4, "getRowColFromPos works correctly")
 });
-test("Map setup functions", function () {
+test("Map setup functions", function() {
     expect(4);
     var map = new Map();
     map.set("mapcode", "XOSOFOX");
@@ -27,7 +27,7 @@ test("Map setup functions", function () {
     equal(map.get("cols"), 7, "correct number of cols");
 });
 
-test("Map data getter functions", function () {
+test("Map data getter functions", function() {
     expect(7);
     var map = new Map();
     map.set("mapcode", "XOSOFOX");
@@ -45,7 +45,7 @@ test("Map data getter functions", function () {
 
 });
 
-test("Map data setter functions", function () {
+test("Map data setter functions", function() {
     expect(1);
     var map = new Map();
 
@@ -54,20 +54,28 @@ test("Map data setter functions", function () {
     equal(map.get("mapcode"), "XXXX\nXXOX\nXXXX", "mapcode was correctly modified");
 });
 
-test("Map getStartPositions", function () {
+test("Map matrix helpers", function() {
+
+    expect(1);
+    var map = new Map();
+    map.set("mapcode", "XOSOFOX\n7654321\nVOLVOSF");
+    deepEqual(map.getMapcodeAsArray(), ["XOSOFOX", "7654321", "VOLVOSF"], "returns code as array");
+});
+
+test("Map getStartPositions", function() {
     expect(1);
 
     var map = new Map();
     map.setMapcode("XXXXXXX\nXOSOFOX\nXOFOSOX\nXXXXSXS");
 
     var expected = ["[2|1]", "[4|2]", "[4|3]", "[6|3]"];
-    deepEqual(map.getStartPositions().map(function (p) {
+    deepEqual(map.getStartPositions().map(function(p) {
         return p.toString()
     }), expected, "returns correct Start Positions");
 
 });
 
-test("isPossible", function () {
+test("isPossible", function() {
     expect(3);
     //isPossible
     var map = new Map();
@@ -89,7 +97,7 @@ test("isPossible", function () {
 
 })
 
-test("getPassedFields", function () {
+test("getPassedFields", function() {
     expect(1);
 
     //getPassedFields
@@ -103,7 +111,7 @@ test("getPassedFields", function () {
     deepEqual(map.getPassedFields(mo), expected, "getPassedFields");
 });
 
-test("sanitize code", function () {
+test("sanitize code", function() {
     expect(6);
 
     var map = new Map();
@@ -118,12 +126,37 @@ test("sanitize code", function () {
     notEqual(map.getFieldAtRowCol(3, 0), "P", "Only 3 parc fermée added");
 });
 
-test("Map getCpPositions", function () {
+test("Map getCpPositions", function() {
     var map = new Map();
     map.set("mapcode", "XOXX\nO112\n34XO\n7777");
     var positions = map.getCpPositions();
     expected = ["[1|1]", "[2|1]", "[3|1]", "[0|2]", "[1|2]", "[0|3]", "[1|3]", "[2|3]", "[3|3]"];
-    deepEqual(map.getCpPositions().map(function (p) {
+    deepEqual(map.getCpPositions().map(function(p) {
         return p.toString()
     }), expected, "returns correct CP Positions");
+});
+
+test("Row+Col operations", function() {
+    //ROWS
+    var map = new Map();
+    map.set("mapcode", "XOXX");
+    map.addRow(2);
+    equal(map.get("mapcode"), "XOXX\nXOXX\nXOXX", "addRow(2) adds two similar rows at end");
+
+    map.set("mapcode", "XOXX\n1234");
+    map.addRow(3);
+    equal(map.get("mapcode"), "XOXX\n1234\n1234\n1234\n1234", "addRow(2) adds three similar rows at end");
+
+    map.set("mapcode", "SFSF\nXOXX\n1234");
+    map.addRow(2, 0);
+    equal(map.get("mapcode"), "SFSF\nSFSF\nSFSF\nXOXX\n1234", "addRow(2,0) adds two similar rows at beginning");
+
+    //COLS
+    map.set("mapcode", "SFSF\nXOXX\n1234");
+    map.addCol(4);
+    equal(map.get("mapcode"), "SFSFFFFF\nXOXXXXXX\n12344444", "addCol(4,0) adds four similar cols at end");
+
+    map.set("mapcode", "SFSF\nXOXX\n1234");
+    map.addCol(4, 0);
+    equal(map.get("mapcode"), "SSSSSFSF\nXXXXXOXX\n11111234", "addCol(4,0) adds four similar cols at end");
 });
