@@ -223,6 +223,14 @@ var KaroUtil = {};
             head.appendChild(link);
         };
 
+        karoUtil.lazyJs = function(url) {
+            var head = document.getElementsByTagName('head')[0];
+            var script = document.createElement('script');
+            script.type = "text/javascript";
+            script.src = url;
+            head.appendChild(script);
+        }
+
         karoUtil.setFunny = function (tf) {
             console.warn("DEPRECATED setFunny");
             karoUtil.funny = tf;
