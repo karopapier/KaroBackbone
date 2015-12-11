@@ -266,13 +266,14 @@
             var $el = $('#mapRenderView').css({
                 border: "10px solid black",
             });
-            console.log($el.css("position"));
 
             var Fieldsize = 28;
             var ROWS = 3;
             var COLS = 7;
             var WIDTH = 0;
             var HEIGHT = 0;
+            var STARTX = 0;
+            var STARTY = 0;
             var gridTarget = interact.createSnapGrid({
                 x: Fieldsize,
                 y: Fieldsize,
@@ -284,39 +285,38 @@
                         edges: {left: true, right: true, bottom: true, top: true}
                     })
                     .on('resizestart', function(e) {
-                        console.log("Es geht los");
                         ROWS = map.get("rows");
                         COLS = map.get("cols");
-                        console.log(ROWS, COLS);
-                        console.log(e);
                         WIDTH = e.rect.width;
                         HEIGHT = e.rect.height;
+                        STARTX = e.x0;
+                        STARTY = e.y0;
                     })
                     .on('resizemove', function(e) {
                         var target = e.target;
                         var x = (parseFloat(target.getAttribute('data-x')) || 0);
                         var y = (parseFloat(target.getAttribute('data-y')) || 0);
-                        console.log(x, y);
-
-                        var plusX = Math.floor((e.rect.width+20 - WIDTH) / Fieldsize);
-                        var plusY = Math.floor((e.rect.height+20 - HEIGHT) / Fieldsize);
-                        console.log("GROWTH", plusX, plusY);
+                        var plusX = Math.floor(((e.rect.width - target.width) - 20) / Fieldsize);
+                        var minusX = Math.ceil(((e.rect.width - target.width) - 20) / Fieldsize);
+                        var plusY = Math.floor((e.rect.height - target.height) / Fieldsize);
+                        var minusY = Math.ceil((e.rect.height - target.height) / Fieldsize);
 
                         if (plusX > 0) {
-                            console.log("Add col");
-                            map.addCol(plusX);
-                            WIDTH = e.rect.width + 20;
+                            //console.log("Add col");
+                            map.addCol(1);
                         }
                         if (plusY > 0) {
-                            console.log("Add row");
-                            map.addRow(plusY);
-                            HEIGHT = e.rect.height + 20;
+                            //console.log("Add row");
+                            map.addRow(1);
                         }
 
-                        if (plusX < 0) {
-                            console.log("Del col");
-                            map.delCol(Math.abs(plusX));
-                            WIDTH = e.rect.width;
+                        if (minusX < 0) {
+                            //console.log("Del col");
+                            map.delCol(1);
+                        }
+
+                        if (minusY < 0) {
+                            map.delRow(1);
                         }
 
                         //target.style.width = (e.rect.width - 20) + 'px';
@@ -337,7 +337,6 @@
                         e.target.style.height = "";
                     })
             ;
-            console.log($el.css("position"));
         </script>
 
         <script type="text/javascript">
