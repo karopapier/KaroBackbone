@@ -269,6 +269,10 @@
             console.log($el.css("position"));
 
             var Fieldsize = 28;
+            var ROWS = 3;
+            var COLS = 7;
+            var WIDTH = 0;
+            var HEIGHT = 0;
             var gridTarget = interact.createSnapGrid({
                 x: Fieldsize,
                 y: Fieldsize,
@@ -277,38 +281,62 @@
             interact('#mapRenderView')
                     .resizable({
                         preserveAspectRatio: false,
-                        edges: {left: true, right: true, bottom: true, top: true},
-                        snap: {
-                            targets: [
-                                    gridTarget
-                            ]
-                        }
+                        edges: {left: true, right: true, bottom: true, top: true}
                     })
                     .on('resizestart', function(e) {
                         console.log("Es geht los");
+                        ROWS = map.get("rows");
+                        COLS = map.get("cols");
+                        console.log(ROWS, COLS);
+                        console.log(e);
+                        WIDTH = e.rect.width;
+                        HEIGHT = e.rect.height;
                     })
                     .on('resizemove', function(e) {
-                        var target = e.target,
-                                x = (parseFloat(target.getAttribute('data-x')) || 0),
-                                y = (parseFloat(target.getAttribute('data-y')) || 0);
+                        var target = e.target;
+                        var x = (parseFloat(target.getAttribute('data-x')) || 0);
+                        var y = (parseFloat(target.getAttribute('data-y')) || 0);
+                        console.log(x, y);
 
-                        //return true;
-                        // update the element's style
+                        var plusX = Math.floor((e.rect.width+20 - WIDTH) / Fieldsize);
+                        var plusY = Math.floor((e.rect.height+20 - HEIGHT) / Fieldsize);
+                        console.log("GROWTH", plusX, plusY);
 
-                        //consider border of 20
-                        target.style.width = (e.rect.width - 20) + 'px';
-                        target.style.height = (e.rect.height - 20) + 'px';
+                        if (plusX > 0) {
+                            console.log("Add col");
+                            map.addCol(plusX);
+                            WIDTH = e.rect.width + 20;
+                        }
+                        if (plusY > 0) {
+                            console.log("Add row");
+                            map.addRow(plusY);
+                            HEIGHT = e.rect.height + 20;
+                        }
+
+                        if (plusX < 0) {
+                            console.log("Del col");
+                            map.delCol(Math.abs(plusX));
+                            WIDTH = e.rect.width;
+                        }
+
+                        //target.style.width = (e.rect.width - 20) + 'px';
+                        //target.style.height = (e.rect.height - 20) + 'px';
 
                         // translate when resizing from top or left edges
                         x += e.deltaRect.left;
                         y += e.deltaRect.top;
 
                         target.style.webkitTransform = target.style.transform = 'translate(' + x + 'px,' + y + 'px)';
-
-                        target.setAttribute('data-x', x);
-                        target.setAttribute('data-y', y);
-                        target.textContent = Math.round(e.rect.width) + '×' + Math.round(e.rect.height);
-                    });
+                    })
+                    .on("resizeend", function(e) {
+                        //remove all translations so it snaps back to original position but with new size
+                        e.target.style.transform = "";
+                        e.target.removeAttribute("data-x");
+                        e.target.removeAttribute("data-y");
+                        e.target.style.width = "";
+                        e.target.style.height = "";
+                    })
+            ;
             console.log($el.css("position"));
         </script>
 
