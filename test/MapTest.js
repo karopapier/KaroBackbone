@@ -137,7 +137,8 @@ test("Map getCpPositions", function() {
 });
 
 test("Row+Col operations", function() {
-    //ROWS
+    //ADD ROWS
+    expect(13);
     var map = new Map();
     map.set("mapcode", "XOXX");
     map.addRow(2);
@@ -151,12 +152,47 @@ test("Row+Col operations", function() {
     map.addRow(2, 0);
     equal(map.get("mapcode"), "SFSF\nSFSF\nSFSF\nXOXX\n1234", "addRow(2,0) adds two similar rows at beginning");
 
-    //COLS
+    //ADD COLS
     map.set("mapcode", "SFSF\nXOXX\n1234");
     map.addCol(4);
     equal(map.get("mapcode"), "SFSFFFFF\nXOXXXXXX\n12344444", "addCol(4,0) adds four similar cols at end");
 
     map.set("mapcode", "SFSF\nXOXX\n1234");
     map.addCol(4, 0);
-    equal(map.get("mapcode"), "SSSSSFSF\nXXXXXOXX\n11111234", "addCol(4,0) adds four similar cols at end");
+    equal(map.get("mapcode"), "SSSSSFSF\nXXXXXOXX\n11111234", "addCol(4,0) adds four similar cols at beginning");
+
+    //DEL ROW
+    map.set("mapcode", "SSSSSFSF\nXXXXXOXX\n11111234\nVOLVOXXX");
+    map.delRow(2);
+    equal(map.get("mapcode"),"SSSSSFSF\nXXXXXOXX","delRow(2) removes two rows at end");
+
+    map.set("mapcode", "SSSSSFSF\nXXXXXOXX\n11111234\nVOLVOXXX");
+    map.delRow(2,0);
+    equal(map.get("mapcode"),"11111234\nVOLVOXXX","delRow(2,0) removes first two rows");
+
+    map.set("mapcode", "XOSOFOX");
+    map.delRow(2);
+    equal(map.get("mapcode"),"XOSOFOX","delRow(2,0) does nothing if only one is left");
+
+    map.set("mapcode", "XOSOFOX");
+    map.delRow(1);
+    equal(map.get("mapcode"),"","delRow(1,0) deletes last row");
+
+    //del COL
+    map.set("mapcode", "SSSSSFSF\nXXXXXOXX\n11111234\nVOLVOXXX");
+    map.delCol(2);
+    equal(map.get("mapcode"),"SSSSSF\nXXXXXO\n111112\nVOLVOX","delRow(2) removes two cols at end");
+
+    map.set("mapcode", "SSSSSFSF\nXXXXXOXX\n11111234\nVOLVOXXX");
+    map.delCol(2,0);
+    equal(map.get("mapcode"),"SSSFSF\nXXXOXX\n111234\nLVOXXX","delCol(2,0) removes first two cols");
+
+    map.set("mapcode", "X\nX\nX");
+    map.delCol(2);
+    equal(map.get("mapcode"),"X\nX\nX","delCol(2,0) does nothing if only one is left");
+
+    map.set("mapcode", "X\nX\nX\nX");
+    map.delCol(1);
+    equal(map.get("mapcode"),"\n\n\n","delCol(1,0) deletes last col");
+
 });
