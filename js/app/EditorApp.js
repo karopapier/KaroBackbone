@@ -24,12 +24,16 @@ var EditorApp = Backbone.Marionette.Application.extend({
         //check hotkey for being a map code
         if (this.map.isValidField(char)) {
             this.editorsettings.setButtonField(1, char);
+            e.preventDefault();
+            e.stopPropagation();
         }
 
         //ctrl + z -->undo
         if (e.ctrlKey && ascii == 26) {
             //UNDO
             this.editorUndo.undo()
+            e.preventDefault();
+            e.stopPropagation();
         }
 
         //console.log("Unhandled hotkey",char, ascii);
