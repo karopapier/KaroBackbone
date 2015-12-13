@@ -14,6 +14,11 @@
     cursor: crosshair;
 }
 
+#editorMapView {
+    padding: 10px;
+    background-color: lightgrey;
+}
+
 .editor-codeview-container {
     /* float: left; */
     display: inline-block;

@@ -25,6 +25,8 @@ var EditorMapView = Backbone.View.extend({
 							});
          */
         this.buttonDown = [false, false, false, false];
+
+        INSIDE = false;
     },
     render: function() {
         this.$el.empty();
@@ -36,10 +38,12 @@ var EditorMapView = Backbone.View.extend({
         this.mapRenderView.render();
     },
     events: {
-        'mousedown': 'mousedown',
-        'mouseup': 'mouseup',
-        'mouseleave': 'mouseleave',
-        "contextmenu": function() {
+        'mouseenter canvas': "mouseenter",
+        'mousedown canvas': 'mousedown',
+        'mouseup canvas': 'mouseup',
+        'mouseleave canvas': 'mouseleave',
+        "mousemove": "mousemove",
+        "contextmenu canvas": function() {
             return false;
         }
     },
@@ -56,33 +60,47 @@ var EditorMapView = Backbone.View.extend({
         }
     },
 
+    mouseenter: function(e) {
+        INSIDE = true;
+        console.log("ENTER");
+    },
+
     mousedown: function(e) {
         this.drawing = true;
         this.buttonDown[e.which] = true;
         e.preventDefault();
         //this.render();
         this.draw(e);
-        this.$el.bind("mousemove", this.mousemove);
+        //this.$el.bind("mousemove", this.mousemove);
     },
 
     mouseup: function(e) {
         this.drawing = false;
         this.buttonDown[e.which] = false;
         //this.render();
-        this.$el.unbind("mousemove");
+        //this.$el.unbind("mousemove");
     },
 
     mousemove: function(e) {
         if (this.drawing) {
             this.draw(e);
+            return true;
         }
+
+        if (!INSIDE) {
+            console.log(e.clientX, e.clientY);
+        }
+
     },
 
     mouseleave: function(e) {
+        console.log("LEAVE");
+        INSIDE = false;
         this.drawing = false;
         for (var i = 1; i <= 3; i++) {
             this.buttonDown[e.which] = false;
         }
-        this.$el.unbind("mousemove");
-    }
+        //this.$el.unbind("mousemove");
+    },
+
 });
