@@ -156,6 +156,9 @@ var MapRenderView = MapBaseView.extend({
             this.drawBorder(x, y, specle);
         }
 
+        //no specles on tiny fields
+        if (this.size <= 4) return true;
+
         if (drawSpecles) {
             var ctx = this.ctx
             var specleColor = specle;
@@ -192,7 +195,7 @@ var MapRenderView = MapBaseView.extend({
         this.ctx.rect(x, y, this.size, this.size);
         this.ctx.fill();
 
-        if (this.size <2) return;
+        if (this.size < 2) return;
 
         var factor = Math.round(this.size / 4);
         var sende = this.size / factor;
