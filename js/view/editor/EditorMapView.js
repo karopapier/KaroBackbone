@@ -29,15 +29,8 @@ var EditorMapView = Backbone.View.extend({
         this.drawing = false;
         this.resizing = false;
 
-        $(document).mousemove(_.bind(this.mousemove, this));
-        $(document).mouseup(_.bind(this.mouseup, this));
-
     },
     render: function() {
-        this.viewsettings.set({
-            size: 20,
-            border: 8
-        });
         this.mapRenderView = new MapRenderView({
             settings: this.viewsettings,
             model: this.model
@@ -52,8 +45,8 @@ var EditorMapView = Backbone.View.extend({
         'mouseleave': 'mouseleave',
         'mouseenter': "mouseenter",
         'mousedown': 'mousedown',
-        //'mouseup': 'mouseup',
-        //"mousemove": "mousemove",
+        'mouseup': 'mouseup',
+        "mousemove": "mousemove",
         "contextmenu": function() {
             return false;
         }
@@ -81,46 +74,73 @@ var EditorMapView = Backbone.View.extend({
     resize: function(e) {
         if (!this.resize) return false;
         var target = e.target;
-
         var xy = this.xyFromE(e);
-        var x = xy.x - this.resizeHandleWidth;
-        var y = xy.y - this.resizeHandleWidth;
-        var Fieldsize = 28;
 
-        //console.log(this.startX, x);
-        //console.log(this.startY, y);
-        console.log(this.rd);
-        var plusX = Math.floor((x - this.startX ) / Fieldsize);
-        var minusX = Math.ceil((x - this.startX ) / Fieldsize);
-        //var plusY = Math.floor((y - this.startY ) / Fieldsize);
-        //var minusY = Math.ceil((y - this.startY ) / Fieldsize);
+        //check for W-E resize
+        if (this.currentDirections.we) {
+            var x = xy.x - this.resizeHandleWidth;
+            var right = Math.floor((x - this.startX ) / this.fieldsize) > 0;
+            var left = Math.ceil((x - this.startX ) / this.fieldsize) < 0;
 
-        console.log("X, startX, plusX:", x, this.startX, plusX);
+            if (this.currentDirections.e) {
+                if (right) {
+                    this.model.addCol(1);
+                    this.startX += this.fieldsize;
+                }
 
-        //console.log(plusX, minusX, plusY, minusY);
-        if (plusX > 0) {
-            console.log("Add col");
-            this.model.addCol(1);
-            this.startX += Fieldsize;
+                if (left) {
+                    this.model.delCol(1);
+                    this.startX -= this.fieldsize;
+                }
+            }
+
+            if (this.currentDirections.w) {
+                if (left) {
+                    this.model.addCol(1, 0);
+                    this.startX -= this.fieldsize;
+                }
+
+                if (right) {
+                    this.model.delCol(1, 0);
+                    this.startX += this.fieldsize;
+                    //this.el.style.webkitTransform = this.el.style.transform = 'translate(' + this.fieldsize + 'px,' + 0 + 'px)';
+                }
+            }
+        } else {
+            //console.log("Skip WE");
         }
 
+        //check for N-S resize
+        if (this.currentDirections.ns) {
+            var y = xy.y - this.resizeHandleWidth;
+            var down = Math.floor((y - this.startY ) / this.fieldsize) > 0;
+            var up = Math.ceil((y - this.startY ) / this.fieldsize) < 0;
 
-        if (minusX < 0) {
-            //console.log("Del col");
-            this.model.delCol(1);
-            this.startX -= Fieldsize;
-        }
+            if (this.currentDirections.s) {
 
-        /*
-        if (plusY > 0) {
-            //console.log("Add row");
-            //map.addRow(1);
+                if (down) {
+                    this.model.addRow(1);
+                    this.startY += this.fieldsize;
+                }
+
+                if (up) {
+                    this.model.delRow(1);
+                    this.startY -= this.fieldsize;
+                }
+            }
+
+            if (this.currentDirections.n) {
+                if (up) {
+                    this.model.addRow(1, 0);
+                    this.startY -= this.fieldsize;
+                }
+
+                if (down) {
+                    this.model.delRow(1, 0);
+                    this.startY += this.fieldsize;
+                }
+            }
         }
-        /*
-         if (minusY < 0) {
-         //map.delRow(1);
-         }
-         */
 
     },
 
@@ -135,9 +155,15 @@ var EditorMapView = Backbone.View.extend({
         console.log("Now", this.w, this.h, this.outW, this.outH, this.offLeft, this.offTop);
     },
 
-    resizeDirection: function(e) {
-        var directionNS = "";
-        var directionWE = "";
+    resizeDirections: function(e) {
+        var d = {
+            we: "",
+            ns: "",
+            n: false,
+            s: false,
+            w: false,
+            e: false
+        };
         var xy = this.xyFromE(e);
         var x = xy.x;
         var y = xy.y;
@@ -145,23 +171,44 @@ var EditorMapView = Backbone.View.extend({
         var w = this.w;
         var h = this.h;
 
-        if (x < rhw) directionWE = "w";
-        if (x > (w + rhw)) directionWE = "e";
-        if (y < rhw) directionNS = "n";
-        if (y > (h + rhw)) directionNS = "s";
-        var direction = directionNS + directionWE;
-        console.log(direction);
-        return direction;
+        if (x < rhw) {
+            d.we = "w";
+            d.w = true;
+        }
+        if (x > (w + rhw)) {
+            d.we = "e";
+            d.e = true;
+        }
+
+        if (y < rhw) {
+            d.ns = "n";
+            d.n = true;
+        }
+        if (y > (h + rhw)) {
+            d.ns = "s";
+            d.s = true;
+        }
+
+        d.direction = d.ns + d.we;
+        return d;
     },
 
     mousedown: function(e) {
-        this.rd = this.resizeDirection(e);
-        if (this.rd !== "") {
+        var d = this.resizeDirections(e);
+        this.currentDirections = d;
+        this.fieldsize = this.viewsettings.get("size") + this.viewsettings.get("border");
+        console.log(this.fieldsize);
+
+        if (this.currentDirections.direction !== "") {
             var xy = this.xyFromE(e);
             this.startX = xy.x - this.resizeHandleWidth;
             this.startY = xy.y - this.resizeHandleWidth;
             this.resizing = true;
             e.preventDefault();
+
+            $(document).bind("mousemove", _.bind(this.mousemove, this));
+            $(document).bind("mouseup", _.bind(this.mouseup, this));
+
             return false;
         }
 
@@ -170,12 +217,16 @@ var EditorMapView = Backbone.View.extend({
         //this.render();
         this.draw(e);
         return true;
+
+
     },
 
     mouseup: function(e) {
         this.drawing = false;
         this.resizing = false;
         this.buttonDown[e.which] = false;
+        $(document).unbind("mousemove");
+        $(document).unbind("mouseup");
     },
 
     mouseenter: function(e) {
@@ -198,9 +249,9 @@ var EditorMapView = Backbone.View.extend({
         //console.log(e.target);
 
         //simple mouse move
-        var rd = this.resizeDirection(e);
-        if (rd) {
-            this.el.style.cursor = this.resizeDirection(e) + "-resize";
+        var d = this.resizeDirections(e);
+        if (d.direction) {
+            this.el.style.cursor = d.direction + "-resize";
         } else {
             this.el.style.cursor = "crosshair";
         }
