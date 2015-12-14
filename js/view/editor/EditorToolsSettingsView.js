@@ -36,7 +36,7 @@ var EditorToolsSettingsView = Marionette.ItemView.extend({
     update: function(e) {
         this.$('.editor-tools-settings-size').val(this.viewsettings.get("size"));
         this.$('.editor-tools-settings-border').val(this.viewsettings.get("border"));
-        this.$('.editor-tools-settings-specles').prop("checkes", this.viewsettings.get("specles"));
+        this.$('.editor-tools-settings-specles').prop("checked", this.viewsettings.get("specles"));
     },
     render: function() {
         this.$el.html(this.template());
