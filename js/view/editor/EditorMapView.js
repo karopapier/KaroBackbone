@@ -1,5 +1,4 @@
 var EditorMapView = Backbone.View.extend({
-    id: "editorMapView",
     initialize: function(options) {
         options = options || {};
         if (!options.viewsettings) {
@@ -11,9 +10,11 @@ var EditorMapView = Backbone.View.extend({
             return;
         }
 
-        _.bindAll(this, "render", "draw", "mousedown", "mouseup", "mousemove", "mouseleave");
+        _.bindAll(this, "render", "draw", "mousedown", "mouseup", "mousemove", "mouseleave", "recalcDimensions");
         this.viewsettings = options.viewsettings;
         this.editorsettings = options.editorsettings;
+        this.resizeHandleWidth = 15;
+        this.listenTo (this.model, "change:mapcode", this.recalcDimensions);
 
         //this.$el.css({"display": "inline-block"});
         /**
@@ -25,64 +26,244 @@ var EditorMapView = Backbone.View.extend({
 							});
          */
         this.buttonDown = [false, false, false, false];
+        this.drawing = false;
+        this.resizing = false;
+
     },
     render: function() {
-        this.$el.empty();
         this.mapRenderView = new MapRenderView({
             settings: this.viewsettings,
             model: this.model
         });
-        this.$el.append(this.mapRenderView.el);
+        this.listenTo(this.mapRenderView, "render", this.recalcDimensions);
+        this.setElement(this.mapRenderView.el);
+        this.$el.css("border", this.resizeHandleWidth + "px solid lightgrey");
         this.mapRenderView.render();
     },
+
     events: {
+        'mouseleave': 'mouseleave',
+        'mouseenter': "mouseenter",
         'mousedown': 'mousedown',
         'mouseup': 'mouseup',
-        'mouseleave': 'mouseleave',
+        "mousemove": "mousemove",
         "contextmenu": function() {
             return false;
         }
     },
+
+    xyFromE: function(e) {
+        var x = (e.pageX - this.offLeft);
+        var y = (e.pageY - this.offTop);
+        return {x: x, y: y};
+    },
+
     draw: function(e) {
-        var x = e.pageX - this.$el.offset().left;
-        var y = e.pageY - this.$el.offset().top;
+        var xy = this.xyFromE(e);
+        var x = xy.x - this.resizeHandleWidth;
+        var y = xy.y - this.resizeHandleWidth;
         var buttons = this.editorsettings.get("buttons");
         //console.log("Draw ", x, y);
         for (var i = 1; i <= 3; i++) {
             if (this.buttonDown[i]) {
-                $('#drag' + i).text("(" + x + "|" + y + ")").show();
                 this.mapRenderView.setFieldAtXY(x, y, buttons[i]);
             }
         }
     },
 
+    resize: function(e) {
+        if (!this.resize) return false;
+        var target = e.target;
+        var xy = this.xyFromE(e);
+
+        //check for W-E resize
+        if (this.currentDirections.we) {
+            var x = xy.x - this.resizeHandleWidth;
+            var right = Math.floor((x - this.startX ) / this.fieldsize) > 0;
+            var left = Math.ceil((x - this.startX ) / this.fieldsize) < 0;
+
+            if (this.currentDirections.e) {
+                if (right) {
+                    this.model.addCol(1);
+                    this.startX += this.fieldsize;
+                }
+
+                if (left) {
+                    this.model.delCol(1);
+                    this.startX -= this.fieldsize;
+                }
+            }
+
+            if (this.currentDirections.w) {
+                if (left) {
+                    this.model.addCol(1, 0);
+                    this.startX -= this.fieldsize;
+                }
+
+                if (right) {
+                    this.model.delCol(1, 0);
+                    this.startX += this.fieldsize;
+                    //this.el.style.webkitTransform = this.el.style.transform = 'translate(' + this.fieldsize + 'px,' + 0 + 'px)';
+                }
+            }
+        } else {
+            //console.log("Skip WE");
+        }
+
+        //check for N-S resize
+        if (this.currentDirections.ns) {
+            var y = xy.y - this.resizeHandleWidth;
+            var down = Math.floor((y - this.startY ) / this.fieldsize) > 0;
+            var up = Math.ceil((y - this.startY ) / this.fieldsize) < 0;
+
+            if (this.currentDirections.s) {
+
+                if (down) {
+                    this.model.addRow(1);
+                    this.startY += this.fieldsize;
+                }
+
+                if (up) {
+                    this.model.delRow(1);
+                    this.startY -= this.fieldsize;
+                }
+            }
+
+            if (this.currentDirections.n) {
+                if (up) {
+                    this.model.addRow(1, 0);
+                    this.startY -= this.fieldsize;
+                }
+
+                if (down) {
+                    this.model.delRow(1, 0);
+                    this.startY += this.fieldsize;
+                }
+            }
+        }
+
+    },
+
+    recalcDimensions: function(e) {
+        this.w = this.$el.width();
+        this.h = this.$el.height();
+        var off = this.$el.offset();
+        this.offLeft = Math.round(off.left);
+        this.offTop = Math.round(off.top);
+        this.outW = this.$el.outerWidth();
+        this.outH = this.$el.outerHeight();
+        console.log("Now", this.w, this.h, this.outW, this.outH, this.offLeft, this.offTop);
+    },
+
+    resizeDirections: function(e) {
+        var d = {
+            we: "",
+            ns: "",
+            n: false,
+            s: false,
+            w: false,
+            e: false
+        };
+        var xy = this.xyFromE(e);
+        var x = xy.x;
+        var y = xy.y;
+        var rhw = this.resizeHandleWidth;
+        var w = this.w;
+        var h = this.h;
+
+        if (x < rhw) {
+            d.we = "w";
+            d.w = true;
+        }
+        if (x > (w + rhw)) {
+            d.we = "e";
+            d.e = true;
+        }
+
+        if (y < rhw) {
+            d.ns = "n";
+            d.n = true;
+        }
+        if (y > (h + rhw)) {
+            d.ns = "s";
+            d.s = true;
+        }
+
+        d.direction = d.ns + d.we;
+        return d;
+    },
+
     mousedown: function(e) {
+        var d = this.resizeDirections(e);
+        this.currentDirections = d;
+        this.fieldsize = this.viewsettings.get("size") + this.viewsettings.get("border");
+        console.log(this.fieldsize);
+
+        if (this.currentDirections.direction !== "") {
+            var xy = this.xyFromE(e);
+            this.startX = xy.x - this.resizeHandleWidth;
+            this.startY = xy.y - this.resizeHandleWidth;
+            this.resizing = true;
+            e.preventDefault();
+
+            $(document).bind("mousemove", _.bind(this.mousemove, this));
+            $(document).bind("mouseup", _.bind(this.mouseup, this));
+
+            return false;
+        }
+
         this.drawing = true;
         this.buttonDown[e.which] = true;
-        e.preventDefault();
         //this.render();
         this.draw(e);
-        this.$el.bind("mousemove", this.mousemove);
+        return true;
+
+
     },
 
     mouseup: function(e) {
         this.drawing = false;
+        this.resizing = false;
         this.buttonDown[e.which] = false;
-        //this.render();
-        this.$el.unbind("mousemove");
+        $(document).unbind("mousemove");
+        $(document).unbind("mouseup");
+    },
+
+    mouseenter: function(e) {
+        //If it's not correctly updated, do this!
+        if (this.offTop == 0) this.recalcDimensions();
     },
 
     mousemove: function(e) {
         if (this.drawing) {
             this.draw(e);
+            return true;
+        }
+
+        if (this.resizing) {
+            this.resize(e);
+            return true;
+        }
+
+        if (e.target.tagName.toUpperCase() !== "CANVAS") return false;
+        //console.log(e.target);
+
+        //simple mouse move
+        var d = this.resizeDirections(e);
+        if (d.direction) {
+            this.el.style.cursor = d.direction + "-resize";
+        } else {
+            this.el.style.cursor = "crosshair";
         }
     },
 
     mouseleave: function(e) {
+        console.log("LEAVE");
         this.drawing = false;
+        //this.resizing = false;
         for (var i = 1; i <= 3; i++) {
             this.buttonDown[e.which] = false;
         }
-        this.$el.unbind("mousemove");
-    }
+    },
+
 });

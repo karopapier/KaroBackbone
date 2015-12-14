@@ -9,7 +9,7 @@
         <script type="text/javascript" src="/js/libs/backbone-1.2.3.js?v=1445895669797"></script>
         <script type="text/javascript" src="/js/libs/backbone.marionette-2.4.1.js?v=1445895669797"></script>
         <script type="text/javascript" src="/js/libs/backbone-model-factory-min.js?v=1445895669797"></script>
-
+        <script type="text/javascript" src="/js/libs/interact-1.2.6.js"></script>
         <!--
         <script type="text/javascript" src="/js/model/Motion.js"></script>
         <script type="text/javascript" src="/js/model/Player.js"></script>
@@ -64,7 +64,7 @@
             <select id="karoMapList"></select>
             <br/>
             <br/>
-            <button id="undo">Undo</button>
+            <button id="undo">Undo</button><br />
         </div>
 
         <script type="text/javascript">
@@ -120,6 +120,7 @@
                 editorsettings: Editorsettings,
                 model: map
             });
+            editorMapView.render();
 
             var ctrlView = new ControlView({
                 el: "#viewsettings",
@@ -160,7 +161,7 @@
 
             Viewsettings.set("size", 20);
             Viewsettings.set("border", 8);
-            editorMapView.render();
+            Viewsettings.set("specles", false);
             var TIMER;
             editorMapView.mapRenderView.on("before:render", function(e) {
                 TIMER = new Date();
@@ -263,6 +264,61 @@
             }, false);
 
 
+            var $el = $('#mapRenderView').css({
+                border: "10px solid black",
+            });
+
+            var Fieldsize = 28;
+            interact('canvas.mapRenderView')
+                    .resizable({
+                        preserveAspectRatio: false,
+                        edges: {left: false, right: true, bottom: true, top: false}
+                    })
+                    .on('resizemove', function(e) {
+                        var target = e.target;
+                        var x = (parseFloat(target.getAttribute('data-x')) || 0);
+                        var y = (parseFloat(target.getAttribute('data-y')) || 0);
+                        var plusX = Math.floor(((e.rect.width - target.width) - 20) / Fieldsize);
+                        var minusX = Math.ceil(((e.rect.width - target.width) - 20) / Fieldsize);
+                        var plusY = Math.floor((e.rect.height - target.height) / Fieldsize);
+                        var minusY = Math.ceil((e.rect.height - target.height) / Fieldsize);
+
+                        if (plusX > 0) {
+                            //console.log("Add col");
+                            map.addCol(1);
+                        }
+                        if (plusY > 0) {
+                            //console.log("Add row");
+                            map.addRow(1);
+                        }
+
+                        if (minusX < 0) {
+                            //console.log("Del col");
+                            map.delCol(1);
+                        }
+
+                        if (minusY < 0) {
+                            map.delRow(1);
+                        }
+
+                        //target.style.width = (e.rect.width - 20) + 'px';
+                        //target.style.height = (e.rect.height - 20) + 'px';
+
+                        // translate when resizing from top or left edges
+                        x += e.deltaRect.left;
+                        y += e.deltaRect.top;
+
+                        target.style.webkitTransform = target.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+                    })
+                    .on("resizeend", function(e) {
+                        //remove all translations so it snaps back to original position but with new size
+                        e.target.style.transform = "";
+                        e.target.removeAttribute("data-x");
+                        e.target.removeAttribute("data-y");
+                        e.target.style.width = "";
+                        e.target.style.height = "";
+                    })
+            ;
         </script>
 
         <script type="text/javascript">

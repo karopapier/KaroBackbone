@@ -67,6 +67,149 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
             "cps": cps
         });
     },
+
+    getMapcodeAsArray: function() {
+        return this.get("mapcode").split('\n');
+    },
+
+    setMapcodeFromArray: function(a) {
+        this.setMapcode(a.join('\n'));
+    },
+
+    addRow: function(count, index) {
+        /**
+         * @param counter number of rows to insert
+         * @param index   "before where to add". 0 is at front; undefined or negative at end
+         */
+
+        var codeRows = this.getMapcodeAsArray();
+        var l = codeRows.length;
+        if (l == 0) return false;
+        if (count == 0) return false;
+        var src = "";
+
+        //normalize undefined index to negative
+        if (typeof index === "undefined") index = -1;
+
+        //find row to add
+        if (index === 0) {
+            src = codeRows[0];
+        } else {
+            src = codeRows[l - 1];
+        }
+
+        //modifying operation
+        var op = function() {
+        };
+        if (index === 0) {
+            op = Array.prototype.unshift;
+        } else {
+            op = Array.prototype.push;
+        }
+
+        for (var i = 1; i <= count; i++) {
+            op.call(codeRows, src);
+        }
+
+        this.setMapcodeFromArray(codeRows);
+    },
+    addCol: function(count, index) {
+        /**
+         * @param counter number of cols to insert
+         * @param index   "before where to add". 0 is at front; undefined or negative at end
+         */
+
+        var codeRows = this.getMapcodeAsArray();
+        var l = codeRows.length;
+        if (l == 0) return false;
+        if (count == 0) return false;
+        var src = "";
+
+        //normalize undefined index to negative
+        if (typeof index === "undefined") index = -1;
+
+        var f;
+        if (index === 0) {
+            f = function(row) {
+                var first = row[0];
+                var pad = first.repeat(count);
+                return pad + row;
+            }
+        } else {
+            f = function(row) {
+                var last = row.slice(-1);
+                var pad = last.repeat(count);
+                return row + pad;
+            }
+        }
+
+        var newCodeRows = codeRows.map(f, count);
+        this.setMapcodeFromArray(newCodeRows);
+    },
+
+    delRow: function(count, index) {
+        /**
+         * @param counter number of cols to delete
+         * @param index   "before where to delete". 0 is at front; undefined or negative at end
+         */
+
+        var codeRows = this.getMapcodeAsArray();
+        var l = codeRows.length;
+        if (l == 0) return false;
+        if (count == 0) return false;
+        if (count > l) return false;
+
+        //calc slice params
+        //they define "what remains"
+        var sliceStart = 0;
+        var sliceEnd = l;
+        if (index == 0) {
+            sliceStart = count;
+            sliceEnd = l;
+        } else {
+            sliceStart = 0;
+            sliceEnd = -count;
+        }
+
+        var newCodeRows = codeRows.slice(sliceStart, sliceEnd)
+        this.setMapcodeFromArray(newCodeRows);
+    },
+
+    delCol: function(count, index) {
+        /**
+         * @param counter number of cols to delete
+         * @param index   "before where to delete". 0 is at front; undefined or negative at end
+         */
+
+        var codeRows = this.getMapcodeAsArray();
+        var l = codeRows.length;
+        if (l < 1) return false;
+        var cols = codeRows[0].length;
+        if (cols == 0) return false;
+        if (count == 0) return false;
+        if (count > cols) return false;
+
+        //calc slice params
+        //they define "what remains"
+        var sliceStart = 0;
+        var sliceEnd = 0;
+        if (index == 0) {
+            sliceStart = count;
+            sliceEnd = cols;
+        } else {
+            sliceStart = 0;
+            sliceEnd = -count;
+        }
+
+        //define function that is apply to every row
+        var f = function(row) {
+            return row.slice(sliceStart, sliceEnd);
+        };
+
+        var newCodeRows = codeRows.map(f, count);
+        this.setMapcodeFromArray(newCodeRows);
+    },
+
     updateMapcode: function(e, mapcode) {
         this.setMapcode(mapcode);
     },

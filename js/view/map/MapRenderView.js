@@ -7,7 +7,6 @@
  */
 
 var MapRenderView = MapBaseView.extend({
-    id: "mapRenderView",
     className: "mapRenderView",
     tagName: "canvas",
     initialize: function(options) {
@@ -21,7 +20,7 @@ var MapRenderView = MapBaseView.extend({
         this.palette = new MapRenderPalette();
         this.fieldColors = {};
         this.initFieldColors();
-        this.specles = true;
+        this.listenTo(this.settings, "change:specles", this.render);
         this.stdFields = "LNOVWXYZ.";
     },
     renderCheckpoints: function() {
@@ -52,6 +51,7 @@ var MapRenderView = MapBaseView.extend({
         var map = this.model;
         this.size = this.settings.get("size");
         this.border = this.settings.get("border");
+        this.specles = this.settings.get("specles");
         this.el.width = map.get("cols") * (this.fieldSize);
         this.el.height = map.get("rows") * (this.fieldSize);
 
@@ -156,6 +156,9 @@ var MapRenderView = MapBaseView.extend({
             this.drawBorder(x, y, specle);
         }
 
+        //no specles on tiny fields
+        if (this.size <= 4) return true;
+
         if (drawSpecles) {
             var ctx = this.ctx
             var specleColor = specle;
@@ -174,6 +177,7 @@ var MapRenderView = MapBaseView.extend({
     },
 
     drawBorder: function(x, y, specle) {
+        if (this.border < 1) return false;
         this.ctx.lineWidth = this.border;
         this.ctx.strokeStyle = specle;
         this.ctx.beginPath();
@@ -190,6 +194,8 @@ var MapRenderView = MapBaseView.extend({
         this.ctx.beginPath();
         this.ctx.rect(x, y, this.size, this.size);
         this.ctx.fill();
+
+        if (this.size < 2) return;
 
         var factor = Math.round(this.size / 4);
         var sende = this.size / factor;
