@@ -1,5 +1,4 @@
 var EditorMapView = Backbone.View.extend({
-    id: "editorMapView",
     initialize: function(options) {
         options = options || {};
         if (!options.viewsettings) {

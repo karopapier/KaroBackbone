@@ -7,7 +7,6 @@
  */
 
 var MapRenderView = MapBaseView.extend({
-    id: "mapRenderView",
     className: "mapRenderView",
     tagName: "canvas",
     initialize: function(options) {
