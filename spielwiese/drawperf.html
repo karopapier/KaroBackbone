@@ -64,7 +64,7 @@
             <select id="karoMapList"></select>
             <br/>
             <br/>
-            <button id="undo">Undo</button>
+            <button id="undo">Undo</button><br />
         </div>
 
         <script type="text/javascript">
@@ -120,6 +120,7 @@
                 editorsettings: Editorsettings,
                 model: map
             });
+            editorMapView.render();
 
             var ctrlView = new ControlView({
                 el: "#viewsettings",
@@ -161,7 +162,6 @@
             Viewsettings.set("size", 20);
             Viewsettings.set("border", 8);
             Viewsettings.set("specles", false);
-            editorMapView.render();
             var TIMER;
             editorMapView.mapRenderView.on("before:render", function(e) {
                 TIMER = new Date();
@@ -269,29 +269,10 @@
             });
 
             var Fieldsize = 28;
-            var ROWS = 3;
-            var COLS = 7;
-            var WIDTH = 0;
-            var HEIGHT = 0;
-            var STARTX = 0;
-            var STARTY = 0;
-            var gridTarget = interact.createSnapGrid({
-                x: Fieldsize,
-                y: Fieldsize,
-                range: 16
-            })
-            interact('#mapRenderView')
+            interact('canvas.mapRenderView')
                     .resizable({
                         preserveAspectRatio: false,
-                        edges: {left: true, right: true, bottom: true, top: true}
-                    })
-                    .on('resizestart', function(e) {
-                        ROWS = map.get("rows");
-                        COLS = map.get("cols");
-                        WIDTH = e.rect.width;
-                        HEIGHT = e.rect.height;
-                        STARTX = e.x0;
-                        STARTY = e.y0;
+                        edges: {left: false, right: true, bottom: true, top: false}
                     })
                     .on('resizemove', function(e) {
                         var target = e.target;

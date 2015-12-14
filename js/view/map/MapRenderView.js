@@ -175,6 +175,7 @@ var MapRenderView = MapBaseView.extend({
     },
 
     drawBorder: function(x, y, specle) {
+        if (this.border < 1) return false;
         this.ctx.lineWidth = this.border;
         this.ctx.strokeStyle = specle;
         this.ctx.beginPath();

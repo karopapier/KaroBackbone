@@ -10,13 +10,9 @@
     display: inline-block;
     vertical-align:top;
 }
+
 .editor-mapview-container canvas {
     cursor: crosshair;
-}
-
-#editorMapView {
-    padding: 10px;
-    background-color: lightgrey;
 }
 
 .editor-codeview-container {
