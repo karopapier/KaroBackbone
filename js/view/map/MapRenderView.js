@@ -12,19 +12,118 @@ var MapRenderView = MapBaseView.extend({
     initialize: function(options) {
         //init MapBaseView with creation of a settings model
         this.constructor.__super__.initialize.apply(this, arguments);
-        _.bindAll(this, "render", "drawBorder", "drawField", "drawFlagField", "drawStandardField", "drawStartField", "renderCheckpoints");
+        _.bindAll(this, "drawField", "render", "addBorder", "addFlags", "addStartGrid", "addSpecles", "renderCheckpoints", "prepareCache");
         this.listenTo(this.model, "change:mapcode", this.render);
         this.listenTo(this.model, "change:field", this.renderFieldChange);
+
+        this.listenTo(this.settings, "change:size change:border", this.prepareCache);
         this.listenTo(this.settings, "change:size change:border", this.render);
+
+        this.listenTo(this.settings, "change:cpsVisited change:cpsActive", this.prepareCache);
         this.listenTo(this.settings, "change:cpsVisited change:cpsActive", this.renderCheckpoints);
-        this.palette = new MapRenderPalette();
-        this.fieldColors = {};
-        this.initFieldColors();
+
+        this.listenTo(this.settings, "change:specles", this.prepareCache);
         this.listenTo(this.settings, "change:specles", this.render);
-        this.stdFields = "LNOVWXYZ.";
+
+        this.palette = new MapRenderPalette();
+
+        this.standardFields = "LNOVWXYZ.";
+        this.flagFields = "F123456789";
+        this.ctx = this.el.getContext("2d");
+
+        this.prepareCache();
     },
+
+    isCheckpoint: function(f) {
+        return (parseInt(f) == f);
+    },
+
+    isFlagField: function(f) {
+        return (this.flagFields.indexOf(f) >= 0);
+    },
+
+    isStandardField: function(f) {
+        return (this.standardFields.indexOf(f) >= 0);
+    },
+
+    prepareCache: function() {
+        console.info("Prepare field cache");
+        var me = this;
+        this.imageDatas = {};
+        this.size = this.settings.get("size");
+        this.border = this.settings.get("border");
+        this.fieldSize = this.size + this.border;
+        this.specles = this.settings.get("specles");
+        this.cpsActive = this.settings.get("cpsActive");
+        this.cpsVisited = this.settings.get("cpsVisited");
+        console.log(this.cpsVisited);
+
+        var canvas = document.createElement("canvas");
+        canvas.width = canvas.height = this.fieldSize;
+        var ctx = canvas.getContext("2d");
+
+        _.each(this.model.FIELDS, function(name, f) {
+            ctx = me.prepareFieldCtx(ctx, f);
+            me.imageDatas[f] = ctx.getImageData(0, 0, me.fieldSize, me.fieldSize);
+        });
+    },
+
+    prepareFieldCtx: function(ctx, f) {
+        var me = this;
+
+        //fill completely field with primary color
+        ctx.fillStyle = me.palette.getRGB(f);
+
+        var alpha = 1;
+        var color = "";
+        //if CP but not active, replace with "O"
+        if (me.isCheckpoint(f)) {
+            if (!me.cpsActive) {
+                ctx.fillStyle = me.palette.getRGB("O");
+            } else {
+                if (me.cpsVisited.indexOf(parseInt(f)) >= 0) {
+                    ctx.fillStyle = me.palette.getRGB("O");
+                    ctx.fillRect(0, 0, me.fieldSize, me.fieldSize);
+                    //change to rgba with .3
+                    color = me.palette.getRGB(f);
+                    color = color.replace("rgb", "rgba").replace(")", ", 0.3)");
+                    ctx.fillStyle = color;
+                    alpha = 0.3;
+                }
+            }
+        }
+
+        ctx.fillRect(0, 0, me.fieldSize, me.fieldSize);
+
+        if (me.size > 1 && me.isFlagField(f)) {
+            color = me.palette.getRGB(f + "_2");
+            if (alpha != 1) {
+                color = color.replace("rgb", "rgba").replace(")", ", " + alpha + ")");
+            }
+            me.addFlags(ctx, color);
+            return ctx;
+        }
+
+        //no specles on tiny fields
+        //specles only on standard fields
+        if (me.size > 4 && me.isStandardField(f) && me.specles) {
+            me.addSpecles(ctx, me.palette.getRGB(f + "_2"));
+        }
+
+        if (f === "S") {
+            me.addStartGrid(ctx, me.palette.getRGB("S_2"));
+            return ctx;
+        }
+
+        if (me.border > 0) {
+            me.addBorder(ctx, me.palette.getRGB(f + "_2"));
+        }
+        return ctx;
+    },
+
     renderCheckpoints: function() {
         //console.warn("RENDER CHECKPOINTS", new Date());
+
         //find cps
         var cps = this.model.getCpPositions();
         //console.log("CPs to render", cps);
@@ -35,9 +134,14 @@ var MapRenderView = MapBaseView.extend({
             var cp = pos.attributes;
             var f = me.model.getFieldAtRowCol(cp.row, cp.col);
             //console.log("Rendering CP", cp, f);
-            me.drawField(cp.row, cp.col, f);
+            if (me.settings.get("cpsActive")) {
+                me.drawField(cp.row, cp.col, f);
+            } else {
+                me.drawField(cp.row, cp.col, "O");
+            }
         });
     },
+
     renderFieldChange: function(e, a, b) {
         //console.info("Fieldchange only");
         var field = e.field;
@@ -45,26 +149,19 @@ var MapRenderView = MapBaseView.extend({
         var c = e.c;
         this.drawField(r, c, field);
     },
+
     render: function() {
-        //console.warn("FULL RENDER", new Date())
+        console.warn("FULL RENDER", new Date());
         this.trigger("before:render");
         var map = this.model;
-        this.size = this.settings.get("size");
-        this.border = this.settings.get("border");
-        this.specles = this.settings.get("specles");
+        var rows = map.get("rows");
+        var cols = map.get("cols");
         this.el.width = map.get("cols") * (this.fieldSize);
         this.el.height = map.get("rows") * (this.fieldSize);
 
-        //console.log("FIELDSIZE", this.fieldSize);
-        this.ctx = this.el.getContext("2d");
-
-        this.ctx.fillStyle = this.palette.getRGB("grass");
-        this.ctx.lineWidth = this.size;
-
-        this.ctx.fillRect(0, 0, this.el.width, this.el.height);
         var me = this;
-        for (var r = 0; r < map.get("rows"); r++) {
-            for (var c = 0; c < map.get("cols"); c++) {
+        for (var r = 0; r < rows; r++) {
+            for (var c = 0; c < cols; c++) {
                 var f = map.getFieldAtRowCol(r, c);
                 me.drawField(r, c, f);
             }
@@ -72,167 +169,62 @@ var MapRenderView = MapBaseView.extend({
         this.trigger("render");
     },
 
-    initFieldColors: function() {
-        console.warn("Prepare a simple fg/bg field mapping - here or in MapPalette, to speed up");
-    },
     drawField: function(r, c, field) {
         var x = c * (this.fieldSize);
         var y = r * (this.fieldSize);
-
-        //faster than 1x1 rect
-        //this.specle=this.ctx.getImageData(0,0,1,1);
-
-        if (this.stdFields.indexOf(field) >= 0) {
-            var fillColor = this.palette.getRGB(field);
-            var specleColor = this.palette.getRGB(field + "specle");
-            this.drawStandardField(x, y, fillColor, specleColor);
-            return true;
-        }
-
-        //finish
-        if (field == "F") {
-            this.drawFlagField(x, y, this.palette.getRGB('finish1'), this.palette.getRGB('finish2'));
-            return true;
-        }
-
-        //checkpoint
-        if ((parseInt(field) == field)) {
-            var intField = parseInt(field);
-            if (this.settings.get("cpsActive")) {
-                //console.log("Render CP", field);
-                var fg = this.palette.getRGB('checkpoint' + field);
-
-                if (field % 2) {
-                    var bg = this.palette.getRGB('checkpointBgOdd');
-                } else {
-                    var bg = this.palette.getRGB('checkpointBgEven');
-                }
-
-                //check passed CPS
-                //console.log(this.settings.get("cpsVisited"), field, this.settings.get("cpsVisited").indexOf(intField));
-                if (this.settings.get("cpsVisited").indexOf(intField) >= 0) {
-                    //change to rgba with .3
-                    fg = fg.replace("rgb", "rgba").replace(")", ", 0.3)");
-                    bg = bg.replace("rgb", "rgba").replace(")", ", 0.3)");
-                    //draw street layer
-                    this.drawField(r, c, "O");
-                    //console.log("I drew");
-                }
-                this.drawFlagField(x, y, fg, bg);
-            } else {
-                this.drawField(r, c, "O");
-            }
-            return true;
-        }
-
-        //Start
-        if (field == "S") {
-            this.drawStartField(x, y, this.palette.getRGB('start1'), this.palette.getRGB('start2'));
-            return true;
-        }
-
-        //Parc ferme
-        if (field == "P") {
-            this.drawStandardField(x, y, this.palette.getRGB('parc'), this.palette.getRGB('roadspecle'), false); //no specles
-            return true;
-        }
-
-        //default for "unknown"
-        //console.warn("MAL DEFAULT", field);
-        this.drawStandardField(x, y, "rgb(0,0,0)", "rgb(0,0,0)", false);
+        this.ctx.putImageData(this.imageDatas[field], x, y);
     },
 
-    drawStandardField: function(x, y, fg, specle) {
-        this.ctx.fillStyle = fg;
-        this.ctx.fillRect(x, y, this.size, this.size);
-
-        //check optional param to force "no specles"
-        var drawSpecles = this.specles;
-        if (arguments[4] === false) {
-            drawSpecles = false;
-        }
-
-        if (this.border > 0) {
-            this.drawBorder(x, y, specle);
-        }
-
-        //no specles on tiny fields
-        if (this.size <= 4) return true;
-
-        if (drawSpecles) {
-            var ctx = this.ctx
-            var specleColor = specle;
-            var size = this.size;
-            var baseX = x;
-            var baseY = y;
-            setTimeout(function() {
-                ctx.fillStyle = specleColor;
-                for (var i = 0; i < 3; i++) {
-                    var xr = Math.round(Math.random() * (size - 1));
-                    var yr = Math.round(Math.random() * (size - 1));
-                    ctx.fillRect(baseX + xr, baseY + yr, 1, 1);
-                }
-            }, 1);
+    addSpecles: function(ctx, color) {
+        //console.log("Adding specles ");
+        ctx.fillStyle = color;
+        for (var i = 0; i < 3; i++) {
+            var xr = Math.round(Math.random() * (this.size - 1));
+            var yr = Math.round(Math.random() * (this.size - 1));
+            ctx.fillRect(xr, yr, 1, 1);
         }
     },
 
-    drawBorder: function(x, y, specle) {
-        if (this.border < 1) return false;
-        this.ctx.lineWidth = this.border;
-        this.ctx.strokeStyle = specle;
-        this.ctx.beginPath();
-        this.ctx.moveTo(x + this.size + this.border / 2, y);
-        this.ctx.lineTo(x + this.size + this.border / 2, y + this.size + this.border / 2);
-        this.ctx.lineTo(x, y + this.size + this.border / 2);
-        this.ctx.stroke();
-        this.ctx.closePath();
+    addBorder: function(ctx, color) {
+        //console.log("Adding border");
+        ctx.lineWidth = this.border;
+        ctx.strokeStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(this.size + this.border / 2, 0);
+        ctx.lineTo(this.size + this.border / 2, this.size + this.border / 2);
+        ctx.lineTo(0, this.size + this.border / 2);
+        ctx.stroke();
+        ctx.closePath();
     },
 
-    drawFlagField: function(x, y, c1, c2) {
-        //console.log("Flagfield", c1, c2);
-        this.ctx.fillStyle = c2;
-        this.ctx.beginPath();
-        this.ctx.rect(x, y, this.size, this.size);
-        this.ctx.fill();
+    addFlags: function(ctx, color) {
+        //assume prefilled with color1
+        if (this.fieldSize < 2) return;
+        ctx.fillStyle = color;
 
-        if (this.size < 2) return;
-
-        var factor = Math.round(this.size / 4);
-        var sende = this.size / factor;
+        var factor = Math.round(this.fieldSize / 4);
+        var sende = this.fieldSize / factor;
 
         for (var m = 0; m < sende; m++) {
             for (var n = 0; n < sende; n++) {
-                if ((m + n) % 2 == 1) {
-                    this.ctx.fillStyle = c1;
-                    this.ctx.beginPath();
-                    var xm = Math.round(x + m * factor);
-                    var yn = Math.round(y + n * factor);
-                    this.ctx.rect(xm, yn, factor, factor);
-                    this.ctx.fill();
+                if ((m + n) % 2 === 1) {
+                    var xm = Math.round(m * factor);
+                    var yn = Math.round(n * factor);
+                    ctx.fillRect(xm, yn, factor, factor);
                 }
             }
         }
-        this.drawBorder(x, y, this.palette.getRGB('roadspecle'));
     },
 
-    drawStartField: function(x, y) {
-        this.ctx.fillStyle = this.palette.getRGB('start2');
-        this.ctx.beginPath();
-        //this.ctx.rect(x,y,this.size,this.size); //instead of border make larger
-        var newSize = this.size + this.border;
-        this.ctx.rect(x, y, newSize, newSize);
-        this.ctx.fill();
-
+    addStartGrid: function(ctx, color) {
         //fg square
-        this.ctx.strokeStyle = this.palette.getRGB('start1');
-        this.ctx.beginPath();
-        this.ctx.rect(x + 0.3 * newSize, y + 0.3 * newSize, 0.4 * newSize, 0.4 * newSize);
-        this.ctx.stroke();
+        var newSize = this.fieldSize;
+        ctx.lineWidth = this.fieldSize / 8;
+        ctx.strokeStyle = color;
+        ctx.beginPath();
+        //30% border
+        ctx.rect(0.3 * newSize, 0.3 * newSize, 0.4 * newSize, 0.4 * newSize);
+        ctx.stroke();
 
-        //imagerectangle($this->image, $x+0.3*$this->this.size, $y+0.3*$this->this.size,
-        // $x+0.7*($this->this.size+border), $y+0.7*($this->this.size+border), $c1);
-
-        //add border
-        //$this->drawBorder($x,$y,$this->MapPalette['roadspecle']);
     }
 });
