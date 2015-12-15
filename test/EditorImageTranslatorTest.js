@@ -3,27 +3,27 @@ module("EditorImageTranslator");
 test("rgb to hsl", function() {
     var trans = new EditorImageTranslator();
 
-    //varlues from https://en.wikipedia.org/wiki/HSL_and_HSV#Saturation, slightly adjusted due to rounding
+    //values from https://en.wikipedia.org/wiki/HSL_and_HSV#Saturation, slightly adjusted due to rounding
     var rgbs = [
-        [255,255,255],
-        [128,128,128],
-        [0,0,0],
-        [255,0,0],
-        [191,191,0],
-        [0,128,0],
-        [128,255,255],
-        [128,128,255],
-        [191,64,191],
-        [160,164,36],
-        [65,27,234],
-        [30,172,65],
-        [240,200,14],
-        [180,48,229],
-        [237,118,81],
-        [254,248,136],
-        [25,203,151],
-        [54,38,152],
-        [126,126,184]
+        [255, 255, 255],
+        [128, 128, 128],
+        [0, 0, 0],
+        [255, 0, 0],
+        [191, 191, 0],
+        [0, 128, 0],
+        [128, 255, 255],
+        [128, 128, 255],
+        [191, 64, 191],
+        [160, 164, 36],
+        [65, 27, 234],
+        [30, 172, 65],
+        [240, 200, 14],
+        [180, 48, 229],
+        [237, 118, 81],
+        [254, 248, 136],
+        [25, 203, 151],
+        [54, 38, 152],
+        [126, 126, 184]
     ];
 
     var hsls = [
