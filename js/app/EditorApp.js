@@ -3,12 +3,18 @@ var EditorApp = Backbone.Marionette.Application.extend({
         this.layout = new EditorLayout({
             editorApp: this
         });
-        this.viewsettings = new MapViewSettings({
-            specles: false
-        });
+        this.viewsettings = new MapViewSettings();
         this.editorsettings = new EditorSettings();
         this.map = new Map();
         this.map.setMapcode("XXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXLLLLLLLLLLLLLLLLLLLLLLLLLXX\nXLVLLVLLLLLLVLLLVLVVVLVLLL.X\nXLVLVLLLLLLLVVLVVLVLLLVLLL.X\nXLVVLLLVVVLLVLVLVLVVLLVLLL.X\nXLVLVLLVLVLLVLLLVLVLLLVLLL.X\nXLVLLVLVVVVLVLLLVLVVVLVVVL.X\nXLLLLLLLLLLLLLLLLLLLLLLLLL.X\nXX.........................X\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        //this.map.setMapcode("F123456789\nWXYZLNOXPS");
+        /*
+        this.viewsettings.set({
+            size: 20,
+            border: 10,
+            specles: true
+        });
+        */
 
         this.listenTo(Karopapier.vent, "HOTKEY", _.bind(this.hotkey, this));
 
