@@ -53,3 +53,37 @@ test("rgb to hsl", function() {
         deepEqual(trans.rgb2hsl(rgbs[i]), hsls[i], "Works for " + rgbs[i].join(","));
     }
 });
+
+test("imagedata", function(assert) {
+    expect(1);
+    var done = assert.async();
+
+    var eit = new EditorImageTranslator();
+    var url = "/test/assets/pics/bw4x4.gif";
+    eit.loadUrl(url, function() {
+        var w = eit.image.width;
+        var h = eit.image.height;
+        var imgdata = eit.ctx.getImageData(0, 0, w, h);
+        var rgba = imgdata.data;
+
+        assert.equal(w, 4, "Width ist 4");
+
+        var mapcode = "";
+        for (var row = 0; row < h; row++) {
+            for (var col = 0; col < w; col++) {
+                imgdata = eit.ctx.getImageData(col, row, 1, 1);
+                var pixelRgba = imgdata.data;
+                console.log(pixelRgba);
+                if (pixelRgba[0] == 255) {
+                    mapcode += "O";
+                } else {
+                    mapcode += "X";
+                }
+            }
+            mapcode += "\n";
+        }
+        console.log(mapcode);
+        done();
+    });
+    console.log("Direkt");
+});
