@@ -25,13 +25,39 @@ var EditorImageTranslator = Backbone.Model.extend({
         this.image = new Image();
         this.canvas = document.createElement('canvas');
         this.ctx = this.canvas.getContext('2d');
-
+        this.settings = new EditorImageTranslatorSettings();
     },
 
-    start: function() {
+    run: function() {
+        var mapcode = "";
+        var scaleWidth = this.settings.get("scaleWidth");
+        var scaleHeight = this.settings.get("scaleHeight");
+        var w = this.image.width;
+        var h = this.image.height;
 
-        return "XOSOFOX";
+        var codeRows = [];
+        for (var row = 0; row < h; row += scaleHeight) {
+            for (var col = 0; col < w; col += scaleWidth) {
+                var imgdata = this.ctx.getImageData(col, row, scaleWidth, scaleHeight);
+                var pixelRgba = this.averageRgba(imgdata.data);
+                if (pixelRgba[0] <= 127) {
+                    mapcode += "O";
+                } else {
+                    mapcode += "X";
+                }
+            }
+            codeRows.push(mapcode);
+            mapcode = "";
+        }
+        this.set("mapcode", codeRows.join('\n'));
+        return true;
+    },
 
+    getSourceInfo: function() {
+        return {
+            width: this.image.width,
+            height: this.image.height
+        }
     },
 
     loadImage: function() {
@@ -41,12 +67,37 @@ var EditorImageTranslator = Backbone.Model.extend({
     loadUrl: function(url, callback) {
         var me = this;
         this.image.onload = function() {
-            me.canvas.width = me.image.width;
-            me.canvas.height = me.image.height;
+            var w = me.image.width;
+            var h = me.image.height;
+            me.settings.set({
+                sourceWidth: w,
+                sourceHeight: h
+            });
+
+            me.canvas.width = w;
+            me.canvas.height = h;
             me.ctx.drawImage(me.image, 0, 0);
             callback();
         };
         this.image.src = url;
+    },
+
+    averageRgba: function(imageData) {
+        if (imageData.length % 4 != 0) {
+            console.error("Imagedate has a length of", imageData.length);
+            return false;
+        }
+
+        var sum = [0, 0, 0];
+        for (var p = 0, l = imageData.length; p < l; p += 4) {
+            sum[0] += imageData[p];
+            sum[1] += imageData[p + 1];
+            sum[2] += imageData[p + 2];
+        }
+        var pixels = l / 4;
+        avg = [sum[0] / pixels, sum[1] / pixels, sum[2] / pixels, 255];
+        //console.log(avg);
+        return avg;
     },
 
     rgb2hsl: function(rgb) {
