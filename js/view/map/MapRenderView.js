@@ -6,6 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
+
 var MapRenderView = MapBaseView.extend({
     className: "mapRenderView",
     tagName: "canvas",
@@ -30,6 +31,7 @@ var MapRenderView = MapBaseView.extend({
         this.standardFields = "LNOVWXYZ.";
         this.flagFields = "F123456789";
         this.ctx = this.el.getContext("2d");
+        this.helper = 0; //used to cycle through 4 different standardfield caches
 
         this.prepareCache();
     },
@@ -56,15 +58,23 @@ var MapRenderView = MapBaseView.extend({
         this.specles = this.settings.get("specles");
         this.cpsActive = this.settings.get("cpsActive");
         this.cpsVisited = this.settings.get("cpsVisited");
-        console.log(this.cpsVisited);
 
         var canvas = document.createElement("canvas");
         canvas.width = canvas.height = this.fieldSize;
         var ctx = canvas.getContext("2d");
 
         _.each(this.model.FIELDS, function(name, f) {
-            ctx = me.prepareFieldCtx(ctx, f);
-            me.imageDatas[f] = ctx.getImageData(0, 0, me.fieldSize, me.fieldSize);
+            if (me.isStandardField(f)) {
+                me.imageDatas[f] = [];
+                //create 4 different random fields
+                for (var i = 0; i < 4; i++) {
+                    ctx = me.prepareFieldCtx(ctx, f);
+                    me.imageDatas[f].push(ctx.getImageData(0, 0, me.fieldSize, me.fieldSize));
+                }
+            } else {
+                ctx = me.prepareFieldCtx(ctx, f);
+                me.imageDatas[f] = ctx.getImageData(0, 0, me.fieldSize, me.fieldSize);
+            }
         });
     },
 
@@ -172,7 +182,13 @@ var MapRenderView = MapBaseView.extend({
     drawField: function(r, c, field) {
         var x = c * (this.fieldSize);
         var y = r * (this.fieldSize);
-        this.ctx.putImageData(this.imageDatas[field], x, y);
+        var d = this.imageDatas[field];
+        if (this.helper >= 4) this.helper = 0;
+        if (this.isStandardField(field)) {
+            d = d[this.helper];
+            this.helper++;
+        }
+        this.ctx.putImageData(d, x, y);
     },
 
     addSpecles: function(ctx, color) {
