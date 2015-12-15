@@ -16,6 +16,8 @@ var EditorApp = Backbone.Marionette.Application.extend({
         //CustomMapCollection()
         //WikiMapCollection()
 
+        this.imageTranslator = new EditorImageTranslator();
+
         this.editorUndo = new EditorUndo({
             map: this.map
         });

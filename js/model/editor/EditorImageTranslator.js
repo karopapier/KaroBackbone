@@ -35,6 +35,7 @@ var EditorImageTranslator = Backbone.Model.extend({
         var w = this.image.width;
         var h = this.image.height;
 
+        console.log("Run translation of " + w + "x" + h + " at", scaleWidth, scaleHeight);
         var codeRows = [];
         for (var row = 0; row < h; row += scaleHeight) {
             for (var col = 0; col < w; col += scaleWidth) {
@@ -49,7 +50,9 @@ var EditorImageTranslator = Backbone.Model.extend({
             codeRows.push(mapcode);
             mapcode = "";
         }
-        this.set("mapcode", codeRows.join('\n'));
+        mapcode = codeRows.join('\n');
+        console.log(mapcode);
+        this.set("mapcode", mapcode);
         return true;
     },
 
@@ -60,8 +63,19 @@ var EditorImageTranslator = Backbone.Model.extend({
         }
     },
 
-    loadImage: function() {
+    loadImage: function(img) {
+        console.log("Load", img);
+        var w = img.width;
+        var h = img.height;
+        this.settings.set({
+            sourceWidth: w,
+            sourceHeight: h
+        });
 
+        this.canvas.width = w;
+        this.canvas.height = h;
+        this.ctx.drawImage(img, 0, 0);
+        console.log("Loaded");
     },
 
     loadUrl: function(url, callback) {
