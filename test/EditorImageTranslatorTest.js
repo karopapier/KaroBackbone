@@ -1,7 +1,7 @@
-module("MapRenderPalette");
+module("EditorImageTranslator");
 
 test("rgb to hsl", function() {
-    var mrp = new MapRenderPalette();
+    var trans = new EditorImageTranslator();
 
     //varlues from https://en.wikipedia.org/wiki/HSL_and_HSV#Saturation, slightly adjusted due to rounding
     var rgbs = [
@@ -50,6 +50,6 @@ test("rgb to hsl", function() {
 
     expect(rgbs.length);
     for (var i = 0; i < rgbs.length; i++) {
-        deepEqual(mrp.rgb2hsl(rgbs[i]), hsls[i], "Works for " + rgbs[i].join(","));
+        deepEqual(trans.rgb2hsl(rgbs[i]), hsls[i], "Works for " + rgbs[i].join(","));
     }
 });
