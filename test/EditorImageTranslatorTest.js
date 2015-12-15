@@ -54,27 +54,46 @@ test("rgb to hsl", function() {
     }
 });
 
+function averageRgba(imageData) {
+    if (imageData.length % 4 != 0) {
+        console.error("Imagedate has a length of", imageData.length);
+        return false;
+    }
+
+    var sum = [0, 0, 0];
+    for (var p = 0, l = imageData.length; p < l; p += 4) {
+        sum[0] += imageData[p];
+        sum[1] += imageData[p + 1];
+        sum[2] += imageData[p + 2];
+    }
+    var pixels = l / 4;
+    avg = [sum[0] / pixels, sum[1] / pixels, sum[2] / pixels, 255];
+    //console.log(avg);
+    return avg;
+}
+
 test("imagedata", function(assert) {
     expect(1);
     var done = assert.async();
 
+    var scaleWidth = 10;
+    var scaleHeight = 10;
+
     var eit = new EditorImageTranslator();
-    var url = "/test/assets/pics/bw4x4.gif";
+    //var url = "/test/assets/pics/bw4x4.gif";
+    var url = "/test/assets/pics/qr.png";
     eit.loadUrl(url, function() {
         var w = eit.image.width;
         var h = eit.image.height;
-        var imgdata = eit.ctx.getImageData(0, 0, w, h);
-        var rgba = imgdata.data;
 
         assert.equal(w, 4, "Width ist 4");
 
         var mapcode = "";
-        for (var row = 0; row < h; row++) {
-            for (var col = 0; col < w; col++) {
-                imgdata = eit.ctx.getImageData(col, row, 1, 1);
-                var pixelRgba = imgdata.data;
-                console.log(pixelRgba);
-                if (pixelRgba[0] == 255) {
+        for (var row = 0; row < h; row += scaleHeight) {
+            for (var col = 0; col < w; col += scaleWidth) {
+                var imgdata = eit.ctx.getImageData(col, row, scaleWidth, scaleHeight);
+                var pixelRgba = averageRgba(imgdata.data);
+                if (pixelRgba[0] <= 127) {
                     mapcode += "O";
                 } else {
                     mapcode += "X";
@@ -85,5 +104,4 @@ test("imagedata", function(assert) {
         console.log(mapcode);
         done();
     });
-    console.log("Direkt");
 });

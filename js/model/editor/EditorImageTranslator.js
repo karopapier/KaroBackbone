@@ -41,6 +41,8 @@ var EditorImageTranslator = Backbone.Model.extend({
     loadUrl: function(url, callback) {
         var me = this;
         this.image.onload = function() {
+            me.canvas.width = me.image.width;
+            me.canvas.height = me.image.height;
             me.ctx.drawImage(me.image, 0, 0);
             callback();
         };
