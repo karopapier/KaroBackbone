@@ -53,27 +53,27 @@
         <meta charset="utf-8"/>
     </head>
     <BODY BACKGROUND="/images/karolight.gif" BGCOLOR=#FFFFFF TEXT=#333399 LINK=#3333FF VLINK=#3333EE ALINK=#0000FF>
-        <script type="text/javascript" src="http://www.karopapier.de/js/jquery.tablesorter.min.js"></script>
-        <script type="text/javascript" src="http://www.karopapier.de/js/starvote.js"></script>
-        <script type="text/javascript" src="http://www.karopapier.de/js/libs/json2.min.js"></script>
-        <script type="text/javascript" src="http://www.karopapier.de/js/libs/store.min.js"></script>
-        <script type="text/javascript" src="http://www.karopapier.de/js/libs/lz-string.min.js"></script>
+        <script type="text/javascript" src="//www.karopapier.de/js/jquery.tablesorter.min.js"></script>
+        <script type="text/javascript" src="//www.karopapier.de/js/starvote.js"></script>
+        <script type="text/javascript" src="//www.karopapier.de/js/libs/json2.min.js"></script>
+        <script type="text/javascript" src="//www.karopapier.de/js/libs/store.min.js"></script>
+        <script type="text/javascript" src="//www.karopapier.de/js/libs/lz-string.min.js"></script>
 
         <style type="text/css">
             th.header {
-                background-image: url(http://www.karopapier.de/images/bg.gif);
+                background-image: url(//www.karopapier.de/images/bg.gif);
                 background-repeat: no-repeat;
                 background-position: center right;
             }
 
             th.headerSortUp {
-                background-image: url(http://www.karopapier.de/images/asc.gif);
+                background-image: url(//www.karopapier.de/images/asc.gif);
                 background-repeat: no-repeat;
                 background-position: center right;
             }
 
             th.headerSortDown {
-                background-image: url(http://www.karopapier.de/images/desc.gif);
+                background-image: url(//www.karopapier.de/images/desc.gif);
                 background-repeat: no-repeat;
                 background-position: center right;
             }
@@ -107,7 +107,7 @@
 
         <div style="position:absolute;right:0;top:0; font-size: 8pt; display: none">Experiment:<br/>
             <img src="/images/loading.gif" id="pinstatus" style="height: 30px"/><br/>
-            Details <a href="http://www.karopapier.de/showthread.php?forumid=1&thread=960">hier</a></div>
+            Details <a href="//www.karopapier.de/showthread.php?forumid=1&thread=960">hier</a></div>
 
 
         <div id="lastMoveMessages">
@@ -236,7 +236,7 @@
         <FONT SIZE=+2 COLOR=RED>Support Karopapier!!!!!</FONT>Nein, ich will mit Karopapier nicht Geld verdienen - wenn
         Ihr trotzdem an mich denken w&uuml;rdet, w&auml;re ich Euch zu tiefst verbunden. Einfach vor jedem Kauf/Besuch
         bei Amazon &uuml;ber
-        <A HREF=http://www.karopapier.de/support.php>Support Karopapier</A> dort hingehen und schon ist Didi fr&ouml;hlicher...
+        <A HREF=//www.karopapier.de/support.php>Support Karopapier</A> dort hingehen und schon ist Didi fr&ouml;hlicher...
 
 
         <script type="text/javascript">
@@ -280,7 +280,7 @@
 
             var MapId = 96;
 
-            var voteurl = "http://www.karopapier.de/api/map/" + MapId + "/vote.json";
+            var voteurl = "//www.karopapier.de/api/map/" + MapId + "/vote.json";
             function initStarvote() {
                 $.getJSON(voteurl + "?callback=?", function (data) {
                     $('#mapvote').trigger("newdata", data);
@@ -293,7 +293,7 @@
                 $('#mapvote').bind("newdata", function (e, data) {
                     //console.log(data);
                     var mv = new StarVote($('#mapvote'), {
-                        "picPath": "http://www.karopapier.de/images/starvote"
+                        "picPath": "//www.karopapier.de/images/starvote"
                     });
                     mv.setValue(data.myvote);
                     mv.setGlobalValue(data.avg);
@@ -329,7 +329,7 @@
         Letzter Satz im <a href="index.html">Chat</a>:<br/>
         <B>KaroMAMA</B> (25:37): Das ist noch nicht dynamisch - aber das hast Du bestimmt gerade auch gemerkt <BR><br/>
 
-        <script src="/js/GameStepUp.js?v=201512031400"></script>
+        <script src="/js/GameStepUp.js?v=201512161400"></script>
 
         <script>
             if (!/karopapier/.test(window.location.hostname)) {
@@ -349,6 +349,7 @@
         <!-- Piwik -->
           <script type="text/javascript">
           var pkBaseURL = "http://stats.karopapier.de/";
+          pkBaseURL = "//www.karopapier.de/piwik/";
           document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
           </script><script type="text/javascript">
           piwik_action_name = '';
@@ -356,7 +357,7 @@
           piwik_url = pkBaseURL + "piwik.php";
           piwik_log(piwik_action_name, piwik_idsite, piwik_url);
           </script>
-          <object><noscript><p>Web analytics <img src="http://stats.karopapier.de/piwik.php?idsite=1" style="border:0" alt=""/></p></noscript></object></a>
+          <object><noscript><p>Web analytics <img src="//stats.karopapier.de/piwik.php?idsite=1" style="border:0" alt=""/></p></noscript></object></a>
         <!-- End Piwik Tag -->
     </BODY>
 </HTML>

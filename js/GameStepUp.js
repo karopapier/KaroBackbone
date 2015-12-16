@@ -1,7 +1,7 @@
 Karopapier.User = new User({});
 //make this user refer to "check" for loging in
 Karopapier.User.url = function() {
-    return "http://www.karopapier.de/api/user/check.json?callback=?";
+    return "//www.karopapier.de/api/user/check.json?callback=?";
 };
 Karopapier.User.fetch();
 
