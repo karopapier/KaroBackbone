@@ -85,7 +85,7 @@ Karopapier.listenTo(possView, "game:player:move", function(playerId, mo) {
         mpm.render();
     } else {
         //build move url
-        var moveUrl = "http://www.karopapier.de/move.php?GID=" + game.get("id");
+        var moveUrl = "//www.karopapier.de/move.php?GID=" + game.get("id");
         var m = mo.toMove();
         if (mo.get("vector").getLength() === 0) {
             //http://www.karopapier.de/move.php?GID=84078&startx=8&starty=29
