@@ -1,0 +1,8 @@
+<% if (active) {  %>
+Quelle: <%= sourceWidth %> x <%= sourceHeight %><br/>
+Skalierung: <%= scaleWidth %> x <%= scaleHeight %><br/>
+Ziel: <%= targetCols %> x <%= targetRows %><br/>
+<% if (fieldtime) { %>
+Zeit: <%= (targetRows * targetCols) %> x <%= fieldtime %>ms = <%= Math.round(targetRows * targetCols * fieldtime / 1000) %> sec
+<% } %>
+<% } %>

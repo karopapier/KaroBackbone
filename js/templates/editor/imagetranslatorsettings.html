@@ -1,0 +1,14 @@
+<% if (active) {  %>
+Skalierung:<!--<br/>
+Breite: --><input value="<%= scaleWidth %>" type="number" name="scaleWidth"
+                  class="editor-imagetranslator-settings-scaleWidth"><br/>
+<!--Höhe: <input value="<%= scaleHeight %>" type="number" name="scaleHeight" class="editor-imagetranslator-settings-scaleHeight"><br/> -->
+<label>Invertiert: <input type="checkbox" name="invert" class="editor-imagetranslator-settings-invert"><br/>
+<% if (binaryMode) { %>
+Zweifarbenmodus mit <%= buttons[1] %> und <%= buttons[3] %> (Linke und Rechte Mausfarbe)<br />
+<label>Vollfarbe: <input type="checkbox" name="binary" disabled="disabled"></label>(noch nicht)<br/>
+<% } %>
+<button>RECHNE!!!!</button>
+<% } else { %>
+Zieh hier mal ein Bild hin.
+<% } %>
