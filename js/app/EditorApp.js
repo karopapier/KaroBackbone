@@ -16,10 +16,13 @@ var EditorApp = Backbone.Marionette.Application.extend({
         //CustomMapCollection()
         //WikiMapCollection()
 
-        this.imageTranslator = new EditorImageTranslator();
+        this.imageTranslator = new EditorImageTranslator({
+            map: this.map
+        });
 
         this.editorUndo = new EditorUndo({
-            map: this.map
+            map: this.map,
+            editorsettings: this.editorsettings
         });
     },
     hotkey: function(e) {

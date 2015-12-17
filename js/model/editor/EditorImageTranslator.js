@@ -21,19 +21,31 @@ var EditorImageTranslator = Backbone.Model.extend({
     //include progress callback
 
 
-    initialize: function() {
+    initialize: function(options) {
+        options = options || {};
+        if (!options.map) {
+            console.error("No map passed to EditorImageTranslator");
+            return;
+        }
+        this.map = options.map;
+
+        _.bindAll(this, "loadImage", "getImageData");
+        //internal offscreen img and canvas
         this.image = new Image();
         this.canvas = document.createElement('canvas');
         this.ctx = this.canvas.getContext('2d');
         this.settings = new EditorImageTranslatorSettings();
+
+        this.listenTo(this.settings, "change", this.mapcodeResize);
     },
 
     run: function() {
         var mapcode = "";
+        var field = "";
         var scaleWidth = this.settings.get("scaleWidth");
         var scaleHeight = this.settings.get("scaleHeight");
-        var w = this.image.width;
-        var h = this.image.height;
+        var w = this.canvas.width;
+        var h = this.canvas.height;
 
         console.log("Run translation of " + w + "x" + h + " at", scaleWidth, scaleHeight);
         var codeRows = [];
@@ -42,18 +54,30 @@ var EditorImageTranslator = Backbone.Model.extend({
                 var imgdata = this.ctx.getImageData(col, row, scaleWidth, scaleHeight);
                 var pixelRgba = this.averageRgba(imgdata.data);
                 if (pixelRgba[0] <= 127) {
-                    mapcode += "O";
+                    field = "X";
                 } else {
-                    mapcode += "X";
+                    field = "O";
                 }
+                mapcode += field;
+                this.map.setFieldAtRowCol(row, col, field);
             }
             codeRows.push(mapcode);
             mapcode = "";
         }
         mapcode = codeRows.join('\n');
         console.log(mapcode);
-        this.set("mapcode", mapcode);
+        //this.set("mapcode", mapcode);
         return true;
+    },
+
+    mapcodeResize: function() {
+        console.log("Resize map to", this.settings.get("targetCols"), this.settings.get("targetRows"));
+        var row = Array(this.settings.get("targetCols") + 1).join(".");
+        var rows = [];
+        for (var i = 0, l = this.settings.get("targetRows"); i < l; i++) {
+            rows.push(row);
+        }
+        this.map.setMapcode(rows.join('\n'));
     },
 
     getSourceInfo: function() {
@@ -64,18 +88,28 @@ var EditorImageTranslator = Backbone.Model.extend({
     },
 
     loadImage: function(img) {
-        console.log("Load", img);
+        console.log("Load img");
         var w = img.width;
         var h = img.height;
+
+        //adjust internal canvas
+        this.canvas.width = w;
+        this.canvas.height = h;
+        this.ctx.drawImage(img, 0, 0);
+        console.log(this.canvas);
+        console.log(this.ctx);
+        console.log("Set new wh", w, h);
         this.settings.set({
             sourceWidth: w,
             sourceHeight: h
         });
-
-        this.canvas.width = w;
-        this.canvas.height = h;
-        this.ctx.drawImage(img, 0, 0);
+        console.log("Set new wh done");
         console.log("Loaded");
+    },
+
+    getImageData: function() {
+        console.log("get data of ctx", this.canvas.width, this.canvas.height);
+        return this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
     },
 
     loadUrl: function(url, callback) {

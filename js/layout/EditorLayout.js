@@ -32,8 +32,8 @@ var EditorLayout = Marionette.LayoutView.extend({
             model: this.editorApp.map,
         }));
 
-        this.imageTranslator.show(new EditorImageTranslatorView({
-            model: this.editorApp.imageTranslator,
+        this.imageTranslator.show(new EditorImageTranslatorLayout({
+            imageTranslator: this.editorApp.imageTranslator,
             map: this.editorApp.map
         }));
     }
