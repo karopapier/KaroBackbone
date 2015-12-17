@@ -11,7 +11,8 @@ var EditorLayout = Marionette.LayoutView.extend({
     regions: {
         "tools": ".editor-tools-container",
         "mapview": ".editor-mapview-container",
-        "codeview": ".editor-codeview-container"
+        "codeview": ".editor-codeview-container",
+        "imageTranslator": ".editor-imagetranslator-container"
     },
     className: "editorAppView",
     template: window.JST["editor/layout"],
@@ -29,6 +30,11 @@ var EditorLayout = Marionette.LayoutView.extend({
 
         this.codeview.show(new EditorCodeView({
             model: this.editorApp.map,
+        }));
+
+        this.imageTranslator.show(new EditorImageTranslatorLayout({
+            imageTranslator: this.editorApp.imageTranslator,
+            map: this.editorApp.map
         }));
     }
 });

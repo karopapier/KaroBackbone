@@ -15,6 +15,11 @@
     cursor: crosshair;
 }
 
+.editor-imagetranslator-preview canvas {
+    max-width: 400px;
+    max-height: 300px;
+}
+
 .editor-codeview-container {
     /* float: left; */
     display: inline-block;
