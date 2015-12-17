@@ -152,7 +152,7 @@ var EditorMapView = Backbone.View.extend({
         this.offTop = Math.round(off.top);
         this.outW = this.$el.outerWidth();
         this.outH = this.$el.outerHeight();
-        console.log("Now", this.w, this.h, this.outW, this.outH, this.offLeft, this.offTop);
+        //console.log("Now", this.w, this.h, this.outW, this.outH, this.offLeft, this.offTop);
     },
 
     resizeDirections: function(e) {
