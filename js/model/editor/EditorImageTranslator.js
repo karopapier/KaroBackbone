@@ -1,35 +1,18 @@
 var EditorImageTranslator = Backbone.Model.extend({
-    //drop area to receive file
-    //area to show dropped image
-    //   -> EditorImageTranslatorView?
-    //   -> EditorImageTranslatorSourceView?
-    //   -> EditorImageTranslatorSettingsView?
-
-    //INPUTS
-    //src canvas or imagedata
-    //target mapcode
-
-    //SETTINGS:
-    //bw mode (XO) or color mode (full palette)
-    //scale factor width
-    //scale factor height
-
-    //RUN
-    //translate rectangles into one map field
-
-
-    //include progress callback
-
-
     initialize: function(options) {
         options = options || {};
         if (!options.map) {
             console.error("No map passed to EditorImageTranslator");
             return;
         }
+        if (!options.editorsettings) {
+            console.error("No editorsettings passed to EditorImageTranslator");
+            return;
+        }
         this.map = options.map;
+        this.editorsettings = options.editorsettings;
 
-        _.bindAll(this, "loadImage", "getImageData");
+        _.bindAll(this, "loadImage", "getImageData", "getFieldForRgbaArray");
         //internal offscreen img and canvas
         this.image = new Image();
         this.canvas = document.createElement('canvas');
@@ -37,41 +20,100 @@ var EditorImageTranslator = Backbone.Model.extend({
         this.settings = new EditorImageTranslatorSettings();
 
         this.listenTo(this.settings, "change", this.mapcodeResize);
+        this.findOptions = {
+            binary: true,
+            invert: false,
+            colors: ["X", "1"]
+        };
+
+        this.helper = 0;
+    },
+
+    getFieldForRgbaArray: function(rgba) {
+        var avg = (rgba[0] + rgba[1] + rgba[2]) / 3;
+        var idx = (!this.findOptions.invert ^ !(avg <= 127)) << 0;  //true =1, false =0
+        field = this.findOptions.colors[idx];
+        return field;
+    },
+
+    processField: function(row, col, x, y, scW, scH) {
+        //console.log("Processing", row, col);
+        var me = this;
+        var imgdata = me.ctx.getImageData(x, y, scW, scH);
+        var pixelRgba = me.averageRgba(imgdata.data);
+        var field = me.getFieldForRgbaArray(pixelRgba);
+        me.map.setFieldAtRowCol(row, col, field);
+    },
+
+    queueField: function(row, col, x, y, scW, scH, t) {
+        var me = this;
+        var timeout = (row * col) + col;
+        //console.log(timeout);
+        //console.log("Prepare timeout for ", row, col, ", Timout: ", timeout);
+
+        //setTimeout(function() {
+        me.processField(row, col, x, y, scW, scH);
+        //}, t * this.helper*2);
+        this.helper++;
+    },
+
+    timecheck: function() {
+        var start0 = new Date().getTime();
+        var scW = this.settings.get("scaleWidth");
+        var scH = this.settings.get("scaleHeight");
+
+        this.processField(0, 0, 0, 0, scW, scH);
+        var end0 = new Date().getTime();
+        var t = Math.round(end0 - start0);
+        //console.log(t);
+        return t;
     },
 
     run: function() {
+        this.helper = 0;
+        this.mapcodeResize();
         var mapcode = "";
         var field = "";
-        var scaleWidth = this.settings.get("scaleWidth");
-        var scaleHeight = this.settings.get("scaleHeight");
+        var scW = this.settings.get("scaleWidth");
+        var scH = this.settings.get("scaleHeight");
         var w = this.canvas.width;
         var h = this.canvas.height;
-
-        console.log("Run translation of " + w + "x" + h + " at", scaleWidth, scaleHeight);
-        var codeRows = [];
-        for (var row = 0; row < h; row += scaleHeight) {
-            for (var col = 0; col < w; col += scaleWidth) {
-                var imgdata = this.ctx.getImageData(col, row, scaleWidth, scaleHeight);
-                var pixelRgba = this.averageRgba(imgdata.data);
-                if (pixelRgba[0] <= 127) {
-                    field = "X";
-                } else {
-                    field = "O";
-                }
-                mapcode += field;
-                this.map.setFieldAtRowCol(row, col, field);
-            }
-            codeRows.push(mapcode);
-            mapcode = "";
+        var t = this.settings.get("fieldtime");
+        if (t == 0) {
+            t = 20;
         }
-        mapcode = codeRows.join('\n');
-        console.log(mapcode);
+
+        this.findOptions = {
+            binary: true,
+            invert: this.settings.get("invert"),
+            colors: [
+                this.editorsettings.get("buttons")[1],
+                this.editorsettings.get("buttons")[3]
+            ]
+        };
+
+        //console.log("Run translation of " + w + "x" + h + " at", scW, scH, "with fieldtime", t);
+
+
+        var me = this;
+        var row = 0;
+        var col = 0;
+        for (var y = 0; y < h; y += scW) {
+            for (var x = 0; x < w; x += scH) {
+                me.queueField(row, col, x, y, scW, scH, t);
+                col++;
+            }
+            col = 0;
+            row++;
+        }
+        //mapcode = codeRows.join('\n');
+        //console.log(mapcode);
         //this.set("mapcode", mapcode);
         return true;
     },
 
     mapcodeResize: function() {
-        console.log("Resize map to", this.settings.get("targetCols"), this.settings.get("targetRows"));
+        //console.log("Resize map to", this.settings.get("targetCols"), this.settings.get("targetRows"));
         var row = Array(this.settings.get("targetCols") + 1).join(".");
         var rows = [];
         for (var i = 0, l = this.settings.get("targetRows"); i < l; i++) {
@@ -88,27 +130,30 @@ var EditorImageTranslator = Backbone.Model.extend({
     },
 
     loadImage: function(img) {
-        console.log("Load img");
         var w = img.width;
         var h = img.height;
+        //console.log("Loaded img", w, h);
 
         //adjust internal canvas
         this.canvas.width = w;
         this.canvas.height = h;
         this.ctx.drawImage(img, 0, 0);
-        console.log(this.canvas);
-        console.log(this.ctx);
-        console.log("Set new wh", w, h);
+        //console.log(this.canvas);
+        //console.log(this.ctx);
+        //console.log("Set new wh", w, h);
         this.settings.set({
             sourceWidth: w,
             sourceHeight: h
         });
-        console.log("Set new wh done");
-        console.log("Loaded");
+        //console.log("Set new wh done");
+        //console.log("Loaded, set active true");
+        this.settings.set("active", true);
+        //console.log("Active is true");
+        this.settings.set("fieldtime", this.timecheck());
     },
 
     getImageData: function() {
-        console.log("get data of ctx", this.canvas.width, this.canvas.height);
+        //console.log("get data of ctx", this.canvas.width, this.canvas.height);
         return this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
     },
 
@@ -191,9 +236,5 @@ var EditorImageTranslator = Backbone.Model.extend({
         l *= 100;
 
         return [Math.round(h), Math.round(s), Math.round(l)];
-    },
-    getFieldForRGB: function(r, g, b) {
-        return "X";
     }
-
 });

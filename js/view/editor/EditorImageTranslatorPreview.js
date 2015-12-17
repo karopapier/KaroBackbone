@@ -9,10 +9,24 @@ var EditorImageTranslatorPreview = Marionette.ItemView.extend({
         }
 
         this.imageTranslator = options.imageTranslator;
-        this.img = new Image();
         this.canvas = this.el;
         this.ctx = this.canvas.getContext("2d");
-        this.active = false;
+
+        var me = this;
+        this.img = new Image();
+        this.img.onload = function() {
+            //console.log("Cat loaded");
+            var w = me.img.width;
+            var h = me.img.height;
+
+            //adjust internal canvas
+            me.canvas.width = w;
+            me.canvas.height = h;
+            me.ctx.drawImage(me.img, 0, 0);
+        };
+        this.img.src = "/images/dragdropcat.png";
+
+        this.imageTranslator.settings.set("active",false);
         this.listenTo(this.imageTranslator.settings, "change", this.render);
     },
 
@@ -38,20 +52,19 @@ var EditorImageTranslatorPreview = Marionette.ItemView.extend({
                 // Note: addEventListener doesn't work in Google Chrome for this event
                 reader.onload = function(e) {
                     me.img.src = e.target.result;
-                    me.imageTranslator.loadImage(me.img);
+                    me.img.onload = function() {
+                        me.imageTranslator.loadImage(me.img);
+                    };
                 };
                 reader.readAsDataURL(file);
             }
         }
         //console.log("Set active");
-        this.active = true;
         e.preventDefault();
     },
 
     render: function() {
-        this.ctx.fillStyle = "rgb(200, 100, 0)";
-        this.ctx.fillRect(0, 0, 30, 30);
-        if (!this.active) {
+        if (!this.imageTranslator.settings.get("active")) {
             //console.info("not active");
             return true;
         }

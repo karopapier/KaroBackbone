@@ -1,5 +1,6 @@
 var EditorImageTranslatorSettings = Backbone.Model.extend({
     defaults: {
+        active: false,
         binaryMode: true, //X or O
         inverted: false,
         scaleWidth: 10,
@@ -7,7 +8,8 @@ var EditorImageTranslatorSettings = Backbone.Model.extend({
         targetRows: 20,
         targetCols: 30,
         sourceWidth: 300,
-        sourceHeight: 200
+        sourceHeight: 200,
+        fieldtime: 0
     },
     initialize: function() {
         //_.bindAll(this, "recalcFromTarget", "recalcFromScale");
@@ -40,6 +42,7 @@ var EditorImageTranslatorSettings = Backbone.Model.extend({
     },
 
     recalcFromSource: function() {
+        //console.log("Calc from source");
         // assume default target cols of 60
         //calc scale to match that
         var TARGETCOLS = 60;
@@ -53,11 +56,13 @@ var EditorImageTranslatorSettings = Backbone.Model.extend({
             sc = Math.floor(this.get("sourceWidth") / 60);
         }
 
+        //console.log("Set scale and target");
         this.set({
             scaleWidth: sc,
             scaleHeight: sc,
             targetCols: Math.floor(srcW / sc),
             targetRows: Math.floor(srcH / sc)
-        })
+        });
+        //console.log("Scale and target set");
     }
 });
