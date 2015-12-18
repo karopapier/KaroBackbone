@@ -30,7 +30,7 @@ var EditorToolsFieldsView = Marionette.ItemView.extend({
 
     render: function() {
         this.$el.empty();
-        var fieldlists = ["OX", "SFP", "123456789", "LNVWYZ."];
+        var fieldlists = ["OX", "SFP", "123456789", "GLNVWYZ."];
         var html = "";
         for (var r = 0; r < fieldlists.length; r++) {
             var fieldlist = fieldlists[r];
