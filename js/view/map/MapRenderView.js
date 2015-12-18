@@ -183,6 +183,11 @@ var MapRenderView = MapBaseView.extend({
         var x = c * (this.fieldSize);
         var y = r * (this.fieldSize);
         var d = this.imageDatas[field];
+        if (!d) {
+            //unknown new field??
+            field = "X";
+            d = this.imageDatas["X"];
+        }
         if (this.helper >= 4) this.helper = 0;
         if (this.isStandardField(field)) {
             d = d[this.helper];
