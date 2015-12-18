@@ -47,7 +47,12 @@ var EditorMapView = Backbone.View.extend({
         'mousedown': 'mousedown',
         'mouseup': 'mouseup',
         "mousemove": "mousemove",
-        "contextmenu": function() {
+        "contextmenu": "rightclick"
+    },
+
+    rightclick: function(e) {
+        if (this.editorsettings.get("rightclick")) {
+            e.preventDefault();
             return false;
         }
     },
@@ -194,10 +199,17 @@ var EditorMapView = Backbone.View.extend({
     },
 
     mousedown: function(e) {
+        var button = e.which;
+        //console.log("Button", button, "right", this.editorsettings.get("rightclick"));
+        if ((button == 3) && (!this.editorsettings.get("rightclick"))) {
+            //leave default rightclick menu intact
+            return true;
+        }
+
         var d = this.resizeDirections(e);
         this.currentDirections = d;
         this.fieldsize = this.viewsettings.get("size") + this.viewsettings.get("border");
-        console.log(this.fieldsize);
+        //console.log(this.fieldsize);
 
         if (this.currentDirections.direction !== "") {
             var xy = this.xyFromE(e);
@@ -258,7 +270,7 @@ var EditorMapView = Backbone.View.extend({
     },
 
     mouseleave: function(e) {
-        console.log("LEAVE");
+        //console.log("LEAVE");
         this.drawing = false;
         //this.resizing = false;
         for (var i = 1; i <= 3; i++) {

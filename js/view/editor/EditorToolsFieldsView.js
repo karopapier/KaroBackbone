@@ -6,25 +6,42 @@ var EditorToolsFieldsView = Marionette.ItemView.extend({
             return;
         }
         this.editorsettings = options.editorsettings;
-        this.listenTo(this.editorsettings, "change:buttons", this.activeField);
+        this.listenTo(this.editorsettings, "change:buttons", this.update);
+        this.listenTo(this.editorsettings, "change:rightclick", this.update);
+
+        _.bindAll(this, "setRightclick", "update", "selectField");
     },
     events: {
         "contextmenu .editor-tools-fields-field": "rightclick",
         "mousedown .editor-tools-fields-field": "selectField",
+        "change input": "setRightclick"
     },
+
+    setRightclick: function() {
+        var rightclick = this.$(".editor-tools-fields-rightclick").prop("checked");
+        this.editorsettings.set("rightclick", rightclick);
+    },
+
     rightclick: function(e) {
-        e.preventDefault();
-        return false;
+        if (this.editorsettings.get("rightclick")) {
+            e.preventDefault();
+            return false;
+        }
     },
-    activeField: function() {
+
+    update: function() {
         var buttons = this.editorsettings.get("buttons");
         this.$('.editor-tools-fields-field').removeClass("activeField");
         this.$('.editor-tools-fields-field[data-field="' + buttons[1] + '"]').addClass("activeField");
+        this.$('.editor-tools-fields-rightclick').prop("checked", this.editorsettings.get("rightclick"));
     },
 
     selectField: function(e, i) {
         var f = $(e.currentTarget).data("field");
         var w = e.which;
+        if ((w == 3) && (!this.editorsettings.get("rightclick"))) {
+            return false;
+        }
         this.editorsettings.setButtonField(w, f);
     },
 
@@ -40,8 +57,9 @@ var EditorToolsFieldsView = Marionette.ItemView.extend({
             }
             html += "<br/>";
         }
+        html += '<label>Rechtsklick zum Malen? <input type="checkbox" name="rightclick" class="editor-tools-fields-rightclick"</label>';
         this.$el.html(html);
-        this.activeField();
+        this.update();
     }
 });
 
