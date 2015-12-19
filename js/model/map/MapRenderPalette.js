@@ -20,6 +20,8 @@ var MapRenderPalette = Backbone.Model.extend({
         "snow_2": "120,120,120",
         "start": "100,100,100",
         "start_2": "200,200,200",
+        "tar": "0,0,0",
+        "tar_2": "40,40,40",
         "finish": "255,255,255",
         "finish_2": "0,0,0",
         "night": "0,0,0",

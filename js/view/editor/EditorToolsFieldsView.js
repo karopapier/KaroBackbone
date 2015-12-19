@@ -47,13 +47,14 @@ var EditorToolsFieldsView = Marionette.ItemView.extend({
 
     render: function() {
         this.$el.empty();
-        var fieldlists = ["OX", "SFP", "123456789", "GLNVWYZ."];
+        var map = new Map();
+        var fieldlists = ["OX", "SFP", "123456789", "GLNVTWYZ"];
         var html = "";
         for (var r = 0; r < fieldlists.length; r++) {
             var fieldlist = fieldlists[r];
             for (var i = 0, e = fieldlist.length; i < e; i++) {
                 var c = fieldlist[i];
-                html += '<img src="/css/mapfields/' + c + '.png?v=201512181836" class="editor-tools-fields-field" data-field="' + c + '"/>';
+                html += '<img src="/css/mapfields/' + c + '.png?v=201512181836" class="editor-tools-fields-field" data-field="' + c + '" title="' + map.FIELDS[c] + '" />';
             }
             html += "<br/>";
         }

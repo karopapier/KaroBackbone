@@ -26,6 +26,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         "G": "gold",
         "L": "lava",
         "N": "snow",
+        "T": "tar",
         "V": "mountain",
         "W": "water",
         "X": "grass",
