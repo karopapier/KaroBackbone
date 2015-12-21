@@ -13,7 +13,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
     initialize: function() {
         _.bindAll(this, "updateMapcode", "getCpList", "setFieldAtRowCol", "getFieldAtRowCol", "getPosFromRowCol", "isPossible", "floodfill", "floodFill4");
         this.validFields = Object.keys(this.FIELDS);
-        this.offroadRegEx = new RegExp("(X|P|L|N|V|W|Y|Z|_)");
+        this.offroadRegEx = new RegExp("(X|P|L|G|N|V|W|Y|Z|_)");
 
         //sanitization binding
         this.bind("change:mapcode", this.updateMapcode);
