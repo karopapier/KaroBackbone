@@ -1,6 +1,6 @@
-module("Map");
-test("Map pos calculations", function() {
-    expect(9);
+QUnit.module("Map");
+QUnit.test("Map pos calculations", function(assert) {
+    assert.expect(9);
     var map = new Map();
     map.set("rows", 5);
     map.set("cols", 6);
@@ -15,8 +15,8 @@ test("Map pos calculations", function() {
     equal(map.getRowColFromPos(18).row, 2, "getRowColFromPos works correctly")
     equal(map.getRowColFromPos(18).col, 4, "getRowColFromPos works correctly")
 });
-test("Map setup functions", function() {
-    expect(4);
+QUnit.test("Map setup functions", function(assert) {
+    assert.expect(4);
     var map = new Map();
     map.set("mapcode", "XOSOFOX");
     equal(map.get("rows"), 1, "correct number of rows");
@@ -27,8 +27,8 @@ test("Map setup functions", function() {
     equal(map.get("cols"), 7, "correct number of cols");
 });
 
-test("Map data getter functions", function() {
-    expect(7);
+QUnit.test("Map data getter functions", function(assert) {
+    assert.expect(7);
     var map = new Map();
     map.set("mapcode", "XOSOFOX");
 
@@ -45,8 +45,8 @@ test("Map data getter functions", function() {
 
 });
 
-test("Map data setter functions", function() {
-    expect(1);
+QUnit.test("Map data setter functions", function(assert) {
+    assert.expect(1);
     var map = new Map();
 
     map.set("mapcode", "XXXX\nXXXX\nXXXX");
@@ -54,16 +54,16 @@ test("Map data setter functions", function() {
     equal(map.get("mapcode"), "XXXX\nXXOX\nXXXX", "mapcode was correctly modified");
 });
 
-test("Map matrix helpers", function() {
+QUnit.test("Map matrix helpers", function(assert) {
 
-    expect(1);
+    assert.expect(1);
     var map = new Map();
     map.set("mapcode", "XOSOFOX\n7654321\nVOLVOSF");
     deepEqual(map.getMapcodeAsArray(), ["XOSOFOX", "7654321", "VOLVOSF"], "returns code as array");
 });
 
-test("Map getStartPositions", function() {
-    expect(1);
+QUnit.test("Map getStartPositions", function(assert) {
+    assert.expect(1);
 
     var map = new Map();
     map.setMapcode("XXXXXXX\nXOSOFOX\nXOFOSOX\nXXXXSXS");
@@ -75,8 +75,8 @@ test("Map getStartPositions", function() {
 
 });
 
-test("isPossible", function() {
-    expect(3);
+QUnit.test("isPossible", function(assert) {
+    assert.expect(3);
     //isPossible
     var map = new Map();
     map.setMapcode("XXXXXXX\nXOSOFX1\nXXXXXXX");
@@ -97,8 +97,8 @@ test("isPossible", function() {
 
 })
 
-test("getPassedFields", function() {
-    expect(1);
+QUnit.test("getPassedFields", function(assert) {
+    assert.expect(1);
 
     //getPassedFields
     var pos = new Position({x: 6, y: 1});
@@ -111,8 +111,8 @@ test("getPassedFields", function() {
     deepEqual(map.getPassedFields(mo), expected, "getPassedFields");
 });
 
-test("sanitize code", function() {
-    expect(6);
+QUnit.test("sanitize code", function(assert) {
+    assert.expect(6);
 
     var map = new Map();
     map.set("mapcode", 'XOXX\nXOXXXXX\nVWXYZVX\nXSXXXXX\nXSX\nXOX\nXOXTTT\nXOX\nXOX\nXOX\nXOX\nXOX\nXOX\nXOXSF\nXOX\nXOX\n12345678\n');
@@ -126,7 +126,7 @@ test("sanitize code", function() {
     notEqual(map.getFieldAtRowCol(3, 0), "P", "Only 3 parc fermée added");
 });
 
-test("Map getCpPositions", function() {
+QUnit.test("Map getCpPositions", function(assert) {
     var map = new Map();
     map.set("mapcode", "XOXX\nO112\n34XO\n7777");
     var positions = map.getCpPositions();
@@ -136,9 +136,9 @@ test("Map getCpPositions", function() {
     }), expected, "returns correct CP Positions");
 });
 
-test("Row+Col operations", function() {
+QUnit.test("Row+Col operations", function(assert) {
     //ADD ROWS
-    expect(13);
+    assert.expect(13);
     var map = new Map();
     map.set("mapcode", "XOXX");
     map.addRow(2);
