@@ -1,7 +1,10 @@
-module("EditorImageTranslator");
+QUnit.module("EditorImageTranslator");
 
-test("rgb to hsl", function() {
-    var trans = new EditorImageTranslator();
+QUnit.test("rgb to hsl", function() {
+    var trans = new EditorImageTranslator({
+        map: new Map(),
+        editorsettings: new EditorSettings()
+    });
 
     //values from https://en.wikipedia.org/wiki/HSL_and_HSV#Saturation, slightly adjusted due to rounding
     var rgbs = [
@@ -54,14 +57,17 @@ test("rgb to hsl", function() {
     }
 });
 
-test("imagedata", function(assert) {
+QUnit.test("imagedata", function(assert) {
     expect(6);
     var done = assert.async();
 
     var scaleWidth = 10;
     var scaleHeight = 10;
 
-    var eit = new EditorImageTranslator();
+    var eit = new EditorImageTranslator({
+        map: new Map(),
+        editorsettings: new EditorSettings()
+    });
     //var url = "/test/assets/pics/bw4x4.gif";
     var url = "/test/assets/pics/qr.png";
 
@@ -104,6 +110,7 @@ test("imagedata", function(assert) {
         assert.equal(eit.getSourceInfo().width, 330, "EIT returns correct source width");
 
         eit.settings.setTargetRowCol(66, 66);
+        eit.settings.set("invert", true);
 
         assert.equal(eit.settings.get("scaleWidth"), 5, "EIT calculates scale factor of 5");
 
@@ -113,7 +120,7 @@ test("imagedata", function(assert) {
         assert.equal(eit.settings.get("scaleWidth"), 10, "EIT returns previously set scale factor of 10");
         assert.equal(eit.settings.get("targetCols"), 33, "EIT calculates target cols");
         assert.equal(eit.run(), true, "successful conversion returns true");
-        assert.equal(eit.get("mapcode"), qrcode, "returns correct mapcode");
+        assert.equal(eit.map.get("mapcode"), qrcode, "returns correct mapcode");
 
         done();
     });

@@ -116,7 +116,7 @@ test("sanitize code", function() {
 
     var map = new Map();
     map.set("mapcode", 'XOXX\nXOXXXXX\nVWXYZVX\nXSXXXXX\nXSX\nXOX\nXOXTTT\nXOX\nXOX\nXOX\nXOX\nXOX\nXOX\nXOXSF\nXOX\nXOX\n12345678\n');
-    var sanitized = 'POXXXXXX\nPOXXXXXX\nPWXYZVXX\nXSXXXXXX\nXSXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXSFXXX\nXOXXXXXX\nXOXXXXXX\n12345678';
+    var sanitized = 'POXXXXXX\nPOXXXXXX\nPWXYZVXX\nXSXXXXXX\nXSXXXXXX\nXOXXXXXX\nXOXTTTXX\nXOXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXXXXXX\nXOXSFXXX\nXOXXXXXX\nXOXXXXXX\n12345678';
     map.sanitize();
     equal(map.get("cols"), 8, "Cols correct");
     equal(map.get("rows"), 17, "Rows correct");

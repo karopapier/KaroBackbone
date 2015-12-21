@@ -12,7 +12,7 @@ var EditorImageTranslator = Backbone.Model.extend({
         this.map = options.map;
         this.editorsettings = options.editorsettings;
 
-        _.bindAll(this, "loadImage", "getImageData", "getFieldForRgbaArray");
+        _.bindAll(this, "loadImage", "loadUrl", "getImageData", "getFieldForRgbaArray");
         //internal offscreen img and canvas
         this.image = new Image();
         this.canvas = document.createElement('canvas');
