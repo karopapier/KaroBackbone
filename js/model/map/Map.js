@@ -82,6 +82,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
         var oldColor = this.getFieldAtRowCol(row, col);
         this.fillstack = [];
         //console.log("Start fill", row, col, color);
+        if (oldColor === color) return false;
         this.floodFill4(row, col, oldColor, color);
     },
 
