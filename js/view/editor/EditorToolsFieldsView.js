@@ -8,13 +8,15 @@ var EditorToolsFieldsView = Marionette.ItemView.extend({
         this.editorsettings = options.editorsettings;
         this.listenTo(this.editorsettings, "change:buttons", this.update);
         this.listenTo(this.editorsettings, "change:rightclick", this.update);
+        this.listenTo(this.editorsettings, "change:drawmode", this.update);
 
-        _.bindAll(this, "setRightclick", "update", "selectField");
+        _.bindAll(this, "setRightclick", "update", "selectField", "selectDrawmode");
     },
     events: {
         "contextmenu .editor-tools-fields-field": "rightclick",
+        "change input": "setRightclick",
         "mousedown .editor-tools-fields-field": "selectField",
-        "change input": "setRightclick"
+        "click .editor-tools-fields-drawmode": "selectDrawmode"
     },
 
     setRightclick: function() {
@@ -33,6 +35,10 @@ var EditorToolsFieldsView = Marionette.ItemView.extend({
         var buttons = this.editorsettings.get("buttons");
         this.$('.editor-tools-fields-field').removeClass("activeField");
         this.$('.editor-tools-fields-field[data-field="' + buttons[1] + '"]').addClass("activeField");
+
+        this.$('.editor-tools-fields-drawmode').removeClass("activeField");
+        this.$('.editor-tools-fields-drawmode[data-drawmode="' + this.editorsettings.get("drawmode") + '"]').addClass("activeField");
+
         this.$('.editor-tools-fields-rightclick').prop("checked", this.editorsettings.get("rightclick"));
     },
 
@@ -43,6 +49,11 @@ var EditorToolsFieldsView = Marionette.ItemView.extend({
             return false;
         }
         this.editorsettings.setButtonField(w, f);
+    },
+
+    selectDrawmode: function(e, i) {
+        var m = $(e.currentTarget).data("drawmode");
+        this.editorsettings.set("drawmode", m);
     },
 
     render: function() {
@@ -58,9 +69,9 @@ var EditorToolsFieldsView = Marionette.ItemView.extend({
             }
             html += "<br/>";
         }
+        html += '<img src = "/images/draw.png" class="editor-tools-fields-drawmode" data-drawmode="draw" /> <img src = "/images/floodfill.png"  class="editor-tools-fields-drawmode" data-drawmode="floodfill"  /><br />';
         html += '<label>Rechtsklick zum Malen? <input type="checkbox" name="rightclick" class="editor-tools-fields-rightclick"</label>';
         this.$el.html(html);
         this.update();
     }
 });
-

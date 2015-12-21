@@ -2,7 +2,7 @@ var EditorSettings = Backbone.Model.extend({
     defaults: {
         buttons: [null, "O", "1", "X"],
         rightclick: true,
-        mode: "brush"
+        drawmode: "draw"
     },
     setButtonField: function(b, f) {
         var buttons = this.get("buttons");

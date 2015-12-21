@@ -206,13 +206,14 @@ var EditorMapView = Backbone.View.extend({
             return true;
         }
 
-        var d = this.resizeDirections(e);
-        this.currentDirections = d;
+        this.currentDirections = this.resizeDirections(e);
         this.fieldsize = this.viewsettings.get("size") + this.viewsettings.get("border");
         //console.log(this.fieldsize);
 
+        this.buttonDown[e.which] = true;
+        var xy = this.xyFromE(e);
+        //check if we are resizing
         if (this.currentDirections.direction !== "") {
-            var xy = this.xyFromE(e);
             this.startX = xy.x - this.resizeHandleWidth;
             this.startY = xy.y - this.resizeHandleWidth;
             this.resizing = true;
@@ -224,13 +225,30 @@ var EditorMapView = Backbone.View.extend({
             return false;
         }
 
+        //no resize, start drawing
+
+        //check draw mode
+        if (this.editorsettings.get("drawmode") == "floodfill") {
+            //console.log("FLOODFILL");
+            var x = xy.x - this.resizeHandleWidth;
+            var y = xy.y - this.resizeHandleWidth;
+            var buttons = this.editorsettings.get("buttons");
+            //console.log(this.buttonDown)
+            for (var i = 1; i <= 3; i++) {
+                //console.log(this.buttonDown)
+                if (this.buttonDown[i]) {
+                    //console.log("Floodfill", x, y, buttons[i]);
+                    this.mapRenderView.floodfill(x, y, buttons[i]);
+                }
+            }
+            return true;
+        }
+
+        //default draw mode
         this.drawing = true;
-        this.buttonDown[e.which] = true;
         //this.render();
         this.draw(e);
         return true;
-
-
     },
 
     mouseup: function(e) {

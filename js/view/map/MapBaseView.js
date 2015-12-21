@@ -105,6 +105,12 @@ var MapBaseView = Marionette.View.extend(/** @lends MapBaseView.prototype */
             return this.model.getFieldAtRowCol(rc.r, rc.c);
         },
 
+        floodfill: function(x,y,field) {
+            var rc = this.getRowColFromXY(x, y);
+            var old = this.model.getFieldAtRowCol(rc.r, rc.c);
+            this.model.floodfill(rc.r, rc.c, field);
+        },
+
         setFieldAtXY: function (x, y, field) {
             var rc = this.getRowColFromXY(x, y);
             var old = this.model.getFieldAtRowCol(rc.r, rc.c);
