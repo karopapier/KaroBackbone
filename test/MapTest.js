@@ -164,35 +164,51 @@ QUnit.test("Row+Col operations", function(assert) {
     //DEL ROW
     map.set("mapcode", "SSSSSFSF\nXXXXXOXX\n11111234\nVOLVOXXX");
     map.delRow(2);
-    equal(map.get("mapcode"),"SSSSSFSF\nXXXXXOXX","delRow(2) removes two rows at end");
+    equal(map.get("mapcode"), "SSSSSFSF\nXXXXXOXX", "delRow(2) removes two rows at end");
 
     map.set("mapcode", "SSSSSFSF\nXXXXXOXX\n11111234\nVOLVOXXX");
-    map.delRow(2,0);
-    equal(map.get("mapcode"),"11111234\nVOLVOXXX","delRow(2,0) removes first two rows");
+    map.delRow(2, 0);
+    equal(map.get("mapcode"), "11111234\nVOLVOXXX", "delRow(2,0) removes first two rows");
 
     map.set("mapcode", "XOSOFOX");
     map.delRow(2);
-    equal(map.get("mapcode"),"XOSOFOX","delRow(2,0) does nothing if only one is left");
+    equal(map.get("mapcode"), "XOSOFOX", "delRow(2,0) does nothing if only one is left");
 
     map.set("mapcode", "XOSOFOX");
     map.delRow(1);
-    equal(map.get("mapcode"),"","delRow(1,0) deletes last row");
+    equal(map.get("mapcode"), "", "delRow(1,0) deletes last row");
 
     //del COL
     map.set("mapcode", "SSSSSFSF\nXXXXXOXX\n11111234\nVOLVOXXX");
     map.delCol(2);
-    equal(map.get("mapcode"),"SSSSSF\nXXXXXO\n111112\nVOLVOX","delRow(2) removes two cols at end");
+    equal(map.get("mapcode"), "SSSSSF\nXXXXXO\n111112\nVOLVOX", "delRow(2) removes two cols at end");
 
     map.set("mapcode", "SSSSSFSF\nXXXXXOXX\n11111234\nVOLVOXXX");
-    map.delCol(2,0);
-    equal(map.get("mapcode"),"SSSFSF\nXXXOXX\n111234\nLVOXXX","delCol(2,0) removes first two cols");
+    map.delCol(2, 0);
+    equal(map.get("mapcode"), "SSSFSF\nXXXOXX\n111234\nLVOXXX", "delCol(2,0) removes first two cols");
 
     map.set("mapcode", "X\nX\nX");
     map.delCol(2);
-    equal(map.get("mapcode"),"X\nX\nX","delCol(2,0) does nothing if only one is left");
+    equal(map.get("mapcode"), "X\nX\nX", "delCol(2,0) does nothing if only one is left");
 
     map.set("mapcode", "X\nX\nX\nX");
     map.delCol(1);
-    equal(map.get("mapcode"),"\n\n\n","delCol(1,0) deletes last col");
+    equal(map.get("mapcode"), "\n\n\n", "delCol(1,0) deletes last col");
+
+});
+
+QUnit.test("Flood fill", function(assert) {
+
+    assert.expect(2);
+    var map = new Map();
+    map.setMapcode('OOOOOOOOO\nOXXXOXXXO\nOXXXOXXXO\nOXXOXXXXO\nOOOXXXOOO\nOXXXXOXXO\nOXXXOXXXO\nOXXXOXXXO\nOOOOOOOOO');
+    map.floodfill(5, 2, "1");
+    expect = 'OOOOOOOOO\nOXXXO111O\nOXXXO111O\nOXXO1111O\nOOO111OOO\nO1111OXXO\nO111OXXXO\nO111OXXXO\nOOOOOOOOO';
+    equal(map.get("mapcode"), expect, "Flood filled central ara");
+
+    map.setMapcode('OOOOOOOOO\nOXXXOXXXO\nOXXXOXXXO\nOXXOXXXXO\nOOOXXXOOO\nOXXXXOXXO\nOXXXOXXXO\nOXXXOXXXO\nOOOOOOOOO');
+    map.floodfill(2, 4, "X");
+    expect = 'XXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXOXXXXX\nXXXXXXXXX\nXXXXXOXXX\nXXXXXXXXX\nXXXXXXXXX\nXXXXXXXXX';
+    equal(map.get("mapcode"), expect, "Flood filled border");
 
 });

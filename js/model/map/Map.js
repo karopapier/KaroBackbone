@@ -11,7 +11,7 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
      * @class Map
      */
     initialize: function() {
-        _.bindAll(this, "updateMapcode", "getCpList", "setFieldAtRowCol", "getFieldAtRowCol", "getPosFromRowCol", "isPossible");
+        _.bindAll(this, "updateMapcode", "getCpList", "setFieldAtRowCol", "getFieldAtRowCol", "getPosFromRowCol", "isPossible", "floodfill", "floodFill4");
         this.validFields = Object.keys(this.FIELDS);
         this.offroadRegEx = new RegExp("(X|P|L|N|V|W|Y|Z|_)");
 
@@ -76,6 +76,33 @@ var Map = Backbone.Model.extend(/** @lends Map.prototype*/{
 
     setMapcodeFromArray: function(a) {
         this.setMapcode(a.join('\n'));
+    },
+
+    floodfill: function(row, col, color) {
+        var oldColor = this.getFieldAtRowCol(row, col);
+        this.fillstack = [];
+        console.log("Start fill", row, col, color);
+        this.floodFill4(row, col, oldColor, color);
+    },
+
+    floodFill4: function(row, col, oldColor, color) {
+        this.fillstack.push({row: row, col: col});
+        while (this.fillstack.length > 0) {
+            var rc = this.fillstack.pop();
+            var r = rc.row;
+            var c = rc.col;
+            if (this.withinBounds({row: r, col: c})) {
+                var field = this.getFieldAtRowCol(r, c);
+                if (field === oldColor) {
+                    this.setFieldAtRowCol(r, c, color);
+
+                    this.fillstack.push({row: r, col: c + 1});
+                    this.fillstack.push({row: r, col: c - 1});
+                    this.fillstack.push({row: r + 1, col: c});
+                    this.fillstack.push({row: r - 1, col: c});
+                }
+            }
+        }
     },
 
     addRow: function(count, index) {
