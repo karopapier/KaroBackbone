@@ -7,7 +7,7 @@ var EditorImageTranslatorSettingsView = Marionette.ItemView.extend({
             return;
         }
         this.imageTranslator = options.imageTranslator;
-        _.bindAll(this, "changeScale", "run");
+        _.bindAll(this, "changeScale", "changeSetting", "update", "run");
         this.listenTo(this.imageTranslator.settings, "change:active", this.render);
         this.listenTo(this.imageTranslator.settings, "change", this.update);
         this.listenTo(this.imageTranslator.editorsettings, "change:buttons", this.render);
@@ -15,8 +15,8 @@ var EditorImageTranslatorSettingsView = Marionette.ItemView.extend({
     events: {
         "click button": "run",
         "input input[name='scaleWidth']": "changeScale",
-        "input[name='invert']": "changeSetting",
-        "input[name='speedmode']": "changeSetting"
+        "change input[name='invert']": "changeSetting",
+        "change input[name='speedmode']": "changeSetting"
         //"input input[name='scaleHeight']": "changeScale"
     },
 
