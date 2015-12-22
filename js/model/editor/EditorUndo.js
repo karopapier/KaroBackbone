@@ -7,8 +7,16 @@ var EditorUndo = Backbone.Model.extend({
             console.error("No map for EditorUndo");
             return false;
         }
+        if (!options.editorsettings) {
+            console.error("No editorsettings for EditorUndo");
+            return false;
+        }
+        this.editorsettings = options.editorsettings;
+
         this.undoStack = [];
+        this._enabled = true;
         this._lastChangeWasUndo = false;
+        this.listenTo(this.editorsettings, "change:undo", this.checkStatus);
         this.listenTo(this.map, "change:field", function(e) {
             this.pushChange(e.oldcode);
         });
@@ -16,8 +24,15 @@ var EditorUndo = Backbone.Model.extend({
         this.listenTo(this.map, "change:mapcode", this.checkChange);
     },
 
+    checkStatus: function() {
+        if (this.editorsettings.get("undo")) {
+            this.enable();
+        } else {
+            this.disable();
+        }
+    },
+
     checkChange: function(e) {
-        //console.log("Mapcode changed, check undo");
         if (this._lastChangeWasUndo) {
             //console.info("War ein undo");
         } else {
@@ -28,6 +43,7 @@ var EditorUndo = Backbone.Model.extend({
     },
 
     pushChange: function(code) {
+        if (!this._enabled) return false;
         //console.log("Push ", code);
         var l = this.undoStack.length;
         if (l > 0) {
@@ -41,6 +57,19 @@ var EditorUndo = Backbone.Model.extend({
         this.undoStack.push(code);
         this.trigger("change:undoStack", this.undoStack);
     },
+
+    disable: function() {
+        //console.log("Undo disabled");
+        this.pushChange(this.map.get("mapcode"));
+        this._enabled = false;
+    },
+
+    enable: function() {
+        //console.log("Undo re-enabled, take snapshot")
+        this._enabled = true;
+        //this.pushChange(this.map.get("mapcode"));
+    },
+
 
     undo: function() {
         if (this.undoStack.length >= 1) {

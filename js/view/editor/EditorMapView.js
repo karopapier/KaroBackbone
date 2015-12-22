@@ -210,6 +210,8 @@ var EditorMapView = Backbone.View.extend({
         this.fieldsize = this.viewsettings.get("size") + this.viewsettings.get("border");
         //console.log(this.fieldsize);
 
+        this.editorsettings.set("undo", false);
+
         this.buttonDown[e.which] = true;
         var xy = this.xyFromE(e);
         //check if we are resizing
@@ -234,6 +236,7 @@ var EditorMapView = Backbone.View.extend({
             var y = xy.y - this.resizeHandleWidth;
             var buttons = this.editorsettings.get("buttons");
             //console.log(this.buttonDown)
+
             for (var i = 1; i <= 3; i++) {
                 //console.log(this.buttonDown)
                 if (this.buttonDown[i]) {
@@ -252,6 +255,7 @@ var EditorMapView = Backbone.View.extend({
     },
 
     mouseup: function(e) {
+        this.editorsettings.set("undo", true);
         this.drawing = false;
         this.resizing = false;
         this.buttonDown[e.which] = false;

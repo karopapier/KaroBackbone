@@ -70,6 +70,7 @@ var EditorImageTranslator = Backbone.Model.extend({
     },
 
     run: function() {
+        this.editorsettings.set("undo", false);
         this.helper = 0;
         this.mapcodeResize();
         var mapcode = "";
@@ -109,17 +110,20 @@ var EditorImageTranslator = Backbone.Model.extend({
         //mapcode = codeRows.join('\n');
         //console.log(mapcode);
         //this.set("mapcode", mapcode);
+        this.editorsettings.set("undo", true);
         return true;
     },
 
     mapcodeResize: function() {
         //console.log("Resize map to", this.settings.get("targetCols"), this.settings.get("targetRows"));
+        this.editorsettings.set("undo", false);
         var row = Array(this.settings.get("targetCols") + 1).join(".");
         var rows = [];
         for (var i = 0, l = this.settings.get("targetRows"); i < l; i++) {
             rows.push(row);
         }
         this.map.setMapcode(rows.join('\n'));
+        this.editorsettings.set("undo", true);
     },
 
     getSourceInfo: function() {
@@ -149,7 +153,9 @@ var EditorImageTranslator = Backbone.Model.extend({
         //console.log("Loaded, set active true");
         this.settings.set("active", true);
         //console.log("Active is true");
+        this.editorsettings.set("undo", false);
         this.settings.set("fieldtime", this.timecheck());
+        this.editorsettings.set("undo", true);
     },
 
     getImageData: function() {
