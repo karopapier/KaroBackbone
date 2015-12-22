@@ -44,7 +44,7 @@ var EditorUndo = Backbone.Model.extend({
 
     pushChange: function(code) {
         if (!this._enabled) return false;
-        //console.log("Push ", code);
+        //console.log("Push ", code, "because", this._enabled);
         var l = this.undoStack.length;
         if (l > 0) {
             var prev = this.undoStack[l - 1];

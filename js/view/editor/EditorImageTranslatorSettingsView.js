@@ -15,18 +15,25 @@ var EditorImageTranslatorSettingsView = Marionette.ItemView.extend({
     events: {
         "click button": "run",
         "input input[name='scaleWidth']": "changeScale",
-        "change input[name='invert']": "changeInvert"
+        "input[name='invert']": "changeSetting",
+        "input[name='speedmode']": "changeSetting"
         //"input input[name='scaleHeight']": "changeScale"
     },
 
     update: function() {
+        //console.log("EITSV update");
         this.$(".editor-imagetranslator-settings-invert").prop("checked", this.imageTranslator.settings.get("invert"));
+        this.$(".editor-imagetranslator-settings-speedmode").prop("checked", this.imageTranslator.settings.get("speedmode"));
         this.$('.editor-imagetranslator-settings-scaleWidth').val(this.imageTranslator.settings.get("scaleWidth"));
     },
 
-    changeInvert: function() {
+    changeSetting: function() {
         var invert = this.$(".editor-imagetranslator-settings-invert").prop("checked");
         this.imageTranslator.settings.set("invert", invert);
+
+        var speedmode = this.$(".editor-imagetranslator-settings-speedmode").prop("checked");
+        //console.log("Speedmode now", speedmode);
+        this.imageTranslator.settings.set("speedmode", speedmode);
     },
 
     changeScale: function() {
@@ -41,9 +48,11 @@ var EditorImageTranslatorSettingsView = Marionette.ItemView.extend({
     },
 
     render: function() {
+        //console.log("EITSV render");
         var json = this.imageTranslator.settings.toJSON();
         _.defaults(json, this.imageTranslator.editorsettings.toJSON());
         //console.log(json);
         this.$el.html(this.template(json));
+        this.update();
     }
 });

@@ -36,25 +36,35 @@ var EditorImageTranslator = Backbone.Model.extend({
         return field;
     },
 
-    processField: function(row, col, x, y, scW, scH) {
-        //console.log("Processing", row, col);
+    processField: function(row, col, x, y, w, h, scW, scH, withTimeout) {
+        //console.log("Processing", row, col, x, y, w, h, scW, scH);
         var me = this;
         var imgdata = me.ctx.getImageData(x, y, scW, scH);
         var pixelRgba = me.averageRgba(imgdata.data);
         var field = me.getFieldForRgbaArray(pixelRgba);
         me.map.setFieldAtRowCol(row, col, field);
-    },
 
-    queueField: function(row, col, x, y, scW, scH, t) {
-        var me = this;
-        var timeout = (row * col) + col;
-        //console.log(timeout);
-        //console.log("Prepare timeout for ", row, col, ", Timout: ", timeout);
+        //next column
+        x += scW;
+        col += 1;
+        if (x > w) {
+            //col 0, but next row
+            x = 0;
+            col = 0;
+            y += scH;
+            row++;
+        }
 
-        //setTimeout(function() {
-        me.processField(row, col, x, y, scW, scH);
-        //}, t * this.helper*2);
-        this.helper++;
+        if (y > h) {
+            console.log("DONE");
+            this.editorsettings.set("undo", true);
+            return true;
+        }
+
+        if (!withTimeout) return false;
+        window.setTimeout(function() {
+            me.processField(row, col, x, y, w, h, scW, scH, true);
+        }, 0);
     },
 
     timecheck: function() {
@@ -62,7 +72,7 @@ var EditorImageTranslator = Backbone.Model.extend({
         var scW = this.settings.get("scaleWidth");
         var scH = this.settings.get("scaleHeight");
 
-        this.processField(0, 0, 0, 0, scW, scH);
+        this.processField(0, 0, 0, 0, scW, scH, scW, scH, false);
         var end0 = new Date().getTime();
         var t = Math.round(end0 - start0);
         //console.log(t);
@@ -95,27 +105,34 @@ var EditorImageTranslator = Backbone.Model.extend({
 
         //console.log("Run translation of " + w + "x" + h + " at", scW, scH, "with fieldtime", t);
 
-
         var me = this;
         var row = 0;
         var col = 0;
-        for (var y = 0; y < h; y += scW) {
-            for (var x = 0; x < w; x += scH) {
-                me.queueField(row, col, x, y, scW, scH, t);
-                col++;
+
+        //Speedmode -> Blocking the browser, run in blocking thread
+        if (this.settings.get("speedmode")) {
+            for (var y = 0; y < h; y += scH) {
+                for (var x = 0; x < w; x += scW) {
+                    me.processField(row, col, x, y, w, h, scW, scH, false);
+                    col++;
+                }
+                col = 0;
+                row++;
             }
-            col = 0;
-            row++;
+            this.editorsettings.set("undo", false);
+        } else {
+            me.processField(0, 0, 0, 0, w, h, scW, scH, t);
         }
+
         //mapcode = codeRows.join('\n');
         //console.log(mapcode);
         //this.set("mapcode", mapcode);
-        this.editorsettings.set("undo", true);
         return true;
     },
 
     mapcodeResize: function() {
         //console.log("Resize map to", this.settings.get("targetCols"), this.settings.get("targetRows"));
+        var undo = this.editorsettings.get("undo");
         this.editorsettings.set("undo", false);
         var row = Array(this.settings.get("targetCols") + 1).join(".");
         var rows = [];
@@ -123,14 +140,14 @@ var EditorImageTranslator = Backbone.Model.extend({
             rows.push(row);
         }
         this.map.setMapcode(rows.join('\n'));
-        this.editorsettings.set("undo", true);
+        this.editorsettings.set("undo", undo);
     },
 
     getSourceInfo: function() {
         return {
             width: this.image.width,
             height: this.image.height
-        }
+        };
     },
 
     loadImage: function(img) {

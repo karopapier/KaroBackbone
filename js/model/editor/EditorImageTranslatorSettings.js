@@ -2,6 +2,7 @@ var EditorImageTranslatorSettings = Backbone.Model.extend({
     defaults: {
         active: false,
         binaryMode: true, //X or O
+        speedmode: true,
         inverted: false,
         scaleWidth: 10,
         scaleHeight: 10,
@@ -11,6 +12,7 @@ var EditorImageTranslatorSettings = Backbone.Model.extend({
         sourceHeight: 200,
         fieldtime: 0
     },
+
     initialize: function() {
         //_.bindAll(this, "recalcFromTarget", "recalcFromScale");
         //bindings
