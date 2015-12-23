@@ -29,7 +29,7 @@ var EditorImageTranslatorSettings = Backbone.Model.extend({
             scaleHeight: sc,
             targetRows: tr,
             targetCols: tc
-        })
+        });
     },
 
     setTargetRowCol: function(r, c) {
@@ -40,7 +40,7 @@ var EditorImageTranslatorSettings = Backbone.Model.extend({
             scaleHeight: sch,
             targetRows: r,
             targetCols: c
-        })
+        });
     },
 
     recalcFromSource: function() {
