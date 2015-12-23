@@ -61,10 +61,12 @@
         </div>
         <div id="container">
 
-            <select id="karoMapList"></select>
+            <select id="karoMapList"></select><br/>
+            <select id="wikiMapList"></select>
             <br/>
             <br/>
-            <button id="undo">Undo</button><br />
+            <button id="undo">Undo</button>
+            <br/>
         </div>
 
         <script type="text/javascript">
@@ -178,6 +180,7 @@
             mcv.render();
 
             var undo = new EditorUndo({
+                editorsettings: Editorsettings,
                 map: map
             });
             $('#undo').click(undo.undo);
@@ -190,16 +193,8 @@
              });
              */
 
-            /*
-             var WikiMaps = Backbone.Collection.extend({
-             url: "http://wiki.karopapier.de/api.php?action=query&list=search&format=json&srsearch=Karte:*source&srwhat=title&rvprop=content&prop=content&srprop=title&callback=?",
-             parse: function (data) {
-             return data.query.search
-             }
-             });
-             var wikiMaps = new WikiMaps();
-             wikiMaps.fetch();
 
+            /*
              var WikiMapView = Marionette.ItemView.extend({
              render: function () {
              var attr = this.model.toJSON();
@@ -236,6 +231,46 @@
 
             karoMapList.render();
 
+
+            //WIKI
+            var WikiMaps = Backbone.Collection.extend({
+                url: "http://wiki.karopapier.de/api.php?action=query&list=search&format=json&srsearch=Karte:*source&srwhat=title&rvprop=content&callback=?",
+                comperator: "name",
+                parse: function(data) {
+                    var parsed = [];
+                    var i = 1;
+                    _.each(data.query.search, function(e) {
+                        parsed.push({
+                            name: e.title
+                        });
+                    });
+                    if (data["query-continue"]) {
+                        var o = data["query-continue"].search.sroffset;
+                        var me = this;
+                        setTimeout(function() {
+                            me.fetch({
+                                remove: false,
+                                data: {
+                                    sroffset: o
+                                }
+                            });
+                        });
+                    }
+
+                    return parsed;
+                }
+            });
+            var wikiMaps = new WikiMaps();
+            wikiMaps.fetch();
+
+            var wikiMapList = new MapListView({
+                collection: wikiMaps,
+                el: "#wikiMapList"
+            })
+            wikiMapList.render();
+
+
+            //DRAG
             editorMapView.mapRenderView.el.addEventListener("dragover", function(evt) {
                 evt.preventDefault();
             }, false);
