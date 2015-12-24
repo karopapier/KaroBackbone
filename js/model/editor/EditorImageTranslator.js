@@ -12,7 +12,7 @@ var EditorImageTranslator = Backbone.Model.extend({
         this.map = options.map;
         this.editorsettings = options.editorsettings;
 
-        _.bindAll(this, "loadImage", "loadUrl", "getImageData", "getFieldForRgbaArray");
+        _.bindAll(this, "loadImage", "loadUrl", "getImageData", "getFieldForRgbaArray", "initColorMode");
         //internal offscreen img and canvas
         this.image = new Image();
         this.canvas = document.createElement('canvas');
@@ -27,13 +27,40 @@ var EditorImageTranslator = Backbone.Model.extend({
         };
 
         this.helper = 0;
+        console.info("Dörtiii");
+        this.initColorMode(this.map, new MapRenderPalette());
     },
 
-    getFieldForRgbaArray: function(rgba) {
-        var avg = (rgba[0] + rgba[1] + rgba[2]) / 3;
-        var idx = (!this.findOptions.invert ^ !(avg <= 127)) << 0;  //true =1, false =0
-        field = this.findOptions.colors[idx];
+    getFieldForRgbaArray: function(rgba, colormode) {
+        if (!colormode) {
+            var avg = (rgba[0] + rgba[1] + rgba[2]) / 3;
+            var idx = (!this.findOptions.invert ^ !(avg <= 127)) << 0;  //true =1, false =0
+            field = this.findOptions.colors[idx];
+            return field;
+        }
+
+        //full color mode
+        var minDiff = Infinity;
+        var field = ".";
+
+        var fieldHSL = this.rgb2hsl(rgba);
+        for (var f in this.hsls) {
+            var diff = 0;
+            var hsl = this.hsls[f];
+            //console.log("Diff", hsl, fieldHSL);
+
+            diff += Math.pow(hsl[0] - fieldHSL[0], 2);
+            diff += Math.pow(hsl[1] - fieldHSL[1], 2);
+            diff += Math.pow(hsl[2] - fieldHSL[2], 2);
+
+            if (diff < minDiff) {
+                minDiff = diff;
+                field = f;
+            }
+        }
+
         return field;
+
     },
 
     processField: function(row, col, tr, tc, x, y, w, h, scW, scH, withTimeout) {
@@ -41,9 +68,14 @@ var EditorImageTranslator = Backbone.Model.extend({
         //console.log("processing ",x,"/",w,"and",y,"/",h);
         var me = this;
         var imgdata = me.ctx.getImageData(x, y, scW, scH);
+
         var pixelRgba = me.averageRgba(imgdata.data);
-        var field = me.getFieldForRgbaArray(pixelRgba);
+        var field = me.getFieldForRgbaArray(pixelRgba, !this.findOptions.binary);
         me.map.setFieldAtRowCol(row, col, field);
+
+        if (!withTimeout) return false;
+
+        //So we need to call the process for the next field ourselves...
 
         //next column
         x += scW;
@@ -62,7 +94,6 @@ var EditorImageTranslator = Backbone.Model.extend({
             return true;
         }
 
-        if (!withTimeout) return false;
         window.setTimeout(function() {
             me.processField(row, col, tr, tc, x, y, w, h, scW, scH, true);
         }, 0);
@@ -73,11 +104,26 @@ var EditorImageTranslator = Backbone.Model.extend({
         var scW = this.settings.get("scaleWidth");
         var scH = this.settings.get("scaleHeight");
 
-        this.processField(0, 0, 1, 1,0, 0, scW, scH, scW, scH, false);
+        this.processField(0, 0, 1, 1, 0, 0, scW, scH, scW, scH, false);
         var end0 = new Date().getTime();
         var t = Math.round(end0 - start0);
         //console.log(t);
         return t;
+    },
+
+    initColorMode: function(map, palette) {
+        var whitelist = /(O|P|G|L|N|T|V|W|X|Y|Z)/;
+        this.hsls = {};
+        for (var f in map.FIELDS) {
+            if (f.match(whitelist)) {
+                var mainRGB = palette.get(f).split(",").map(function(e) {
+                    return parseInt(e)
+                });
+                var hsl = this.rgb2hsl(mainRGB);
+                this.hsls[f] = hsl;
+            }
+        }
+        return true;
     },
 
     run: function() {
@@ -91,14 +137,14 @@ var EditorImageTranslator = Backbone.Model.extend({
         var w = this.canvas.width;
         var h = this.canvas.height;
         var t = this.settings.get("fieldtime");
-        var tr =  this.settings.get("targetRows");
+        var tr = this.settings.get("targetRows");
         var tc = this.settings.get("targetCols");
         if (t == 0) {
             t = 20;
         }
 
         this.findOptions = {
-            binary: true,
+            binary: this.settings.get("binary"),
             invert: this.settings.get("invert"),
             colors: [
                 this.editorsettings.get("buttons")[1],
@@ -107,7 +153,6 @@ var EditorImageTranslator = Backbone.Model.extend({
         };
 
         //console.log("Run translation of " + w + "x" + h + " at", scW, scH, "with fieldtime", t);
-
         var me = this;
         var row = 0;
         var col = 0;

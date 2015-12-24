@@ -125,3 +125,69 @@ QUnit.test("imagedata", function(assert) {
         done();
     });
 });
+
+QUnit.test("Fields for colors", function(assert) {
+    assert.expect(6);
+    var trans = new EditorImageTranslator({
+        map: new Map(),
+        editorsettings: new EditorSettings()
+    });
+
+    trans.findOptions = {
+        binary: true,
+        invert: false,
+        colors: [
+            "X",
+            "O"
+        ]
+    };
+
+    assert.equal(trans.getFieldForRgbaArray([0, 0, 0]), "O", "black -> O");
+    assert.equal(trans.getFieldForRgbaArray([200, 100, 128]), "X", "light -> X");
+    trans.findOptions.invert = true;
+    assert.equal(trans.getFieldForRgbaArray([0, 0, 0]), "X", "black -> X");
+    assert.equal(trans.getFieldForRgbaArray([200, 100, 128]), "O", "light -> O");
+    trans.findOptions.colors = ["L", "P"];
+    assert.equal(trans.getFieldForRgbaArray([0, 0, 0]), "L", "black -> L");
+    assert.equal(trans.getFieldForRgbaArray([200, 100, 128]), "P", "light -> P");
+});
+
+QUnit.test("Prepare fields' HSL values", function(assert) {
+    assert.expect(3);
+    var map = new Map();
+    var palette = new MapRenderPalette();
+    var trans = new EditorImageTranslator({
+        map: map,
+        editorsettings: new EditorSettings()
+    });
+    trans.initColorMode(map, palette);
+
+    assert.deepEqual(trans.hsls["G"],[47, 100, 53], "Generates a list of HSL");
+    assert.notOk(trans.hsls["F"], "Generates a list of HSL, excluding F, S and CPs");
+    assert.notOk(trans.hsls["5"], "Generates a list of HSL, excluding F, S and CPs");
+});
+
+QUnit.test("Fields for colors in COLOR mode", function(assert) {
+    assert.expect(7);
+
+    var map = new Map();
+    var palette = new MapRenderPalette();
+    var trans = new EditorImageTranslator({
+        map: map,
+        editorsettings: new EditorSettings()
+    });
+
+    trans.findOptions = {
+        binary: false
+    };
+
+    trans.initColorMode(map, palette);
+
+    assert.equal(trans.getFieldForRgbaArray([253, 200, 13], true), "G", "gold -> G");
+    assert.equal(trans.getFieldForRgbaArray([0, 0, 0], true), "T", "black -> T");
+    assert.equal(trans.getFieldForRgbaArray([250, 20, 8], true), "L", "red -> L");
+    assert.equal(trans.getFieldForRgbaArray([130, 130, 130], true), "O", "grey -> O");
+    assert.equal(trans.getFieldForRgbaArray([200, 200, 200], true), "P", "light grey -> P");
+    assert.equal(trans.getFieldForRgbaArray([100, 100, 100], true), "V", "dark grey -> V");
+    assert.equal(trans.getFieldForRgbaArray([0, 0, 240], true), "W", "blue -> W");
+});

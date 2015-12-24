@@ -1,7 +1,7 @@
 var EditorImageTranslatorSettings = Backbone.Model.extend({
     defaults: {
         active: false,
-        binaryMode: true, //X or O
+        binary: true, //X or O
         speedmode: true,
         inverted: false,
         scaleWidth: 10,
