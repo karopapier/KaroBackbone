@@ -1,0 +1,63 @@
+digraph Karo {
+rankdir="BT"
+
+#bugs
+"Botrix Spielanfragen" ->"Rework Chat"
+
+"Thumbnail rendering" ->"New Game"
+"Einladung" ->"New Game"
+"Autostart" ->"Einladung"
+"Freie Slots" ->"Einladung"
+"Aussteiger verwandeln" ->"Einladung"
+"Sonderregeln" ->"Einladung"
+"Tags" ->"Einladung"
+"Kommentar" ->"Einladung"
+"Sonderregeln" ->"Einladung"
+"Challenge, Rank, Liga" ->"Einladung"
+
+"GROG"->"Die on E_DEPRECATED"
+"Die on E_DEPRECATED"->"Die on Warnings"
+"Die on Warnings"->"get backend dev working in prod"
+"merge dev"->"get backend dev working in prod"
+"Stop reworking old code"->"get backend dev working in prod"
+
+
+"Mail/Telegramm" ->"Karo3"
+
+"Karo3"->"GROG"
+"Karo3"->"PHP5.5"
+"PHP5.5" ->"PHP5.3"
+"PHP5.3"->"GROG"
+"Serverupdate"->"GROG"
+"Serverupdate" ->"Other domains"
+"PHP5.5" -> "Other domains"
+"beididi" -> "Other domains"
+"managerator" -> "Other domains"
+"hosting" -> "Other domains"
+
+"Deadlock"->"Karo2 Move"
+"Crash direkt"->"Karo2 Move"
+"Process passed fields" ->"Karo2 Move"
+"Karo2 Move" ->"Karo3"
+
+"Thumbnail"->"Rework Image Creation"
+"Unify Image Creation" ->"Rework Image Creation"
+"Unify Image Creation" ->"Karo3"
+"Karo3a"->"PHP5.3"
+"Sf2 to Sf3" ->"PHP5.5"
+"Sf1.x to Sf2"->"PHP5.3"
+
+"Replace Karo2" ->"Karo3"
+"Replace Karo2" ->"Remove Karo2"
+"Remove Karo2" ->"Karo3"
+"User Settings Karo3"->"Karo3"
+"Remove Karo2 UI"->"User Settings Karo3"
+
+"Login Rework"->"Karo3"
+"Replace all Karo1" ->"Karo3"
+
+
+"New Game" -> "DB Migration Process" 
+"DB Migration Process" ->"Karo3"
+"New Game" -> "Karo3"
+}
