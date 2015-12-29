@@ -3,6 +3,7 @@ test("linkify", function () {
     var inputs = [
         "-:K Du wurdest zurückgesetzt K:-",
         "i've been looking for -:FfreedomF:-",
+        "Schön -:REDrotRED:-",
         "Huhu :wavey:",
         "Nix",
         "Hol mir nen Bier, Botrix!",
@@ -26,6 +27,7 @@ test("linkify", function () {
     var expects = [
         "<i> Du wurdest zurückgesetzt </i>",
         "i've been looking for <b>freedom</b>",
+        'Schön <span style="color: red">rot</span>',
         'Huhu <span class="smiley wavey">:wavey:</span>',
         "Nix",
         "Hol mir einen Bier, Botrix!",
@@ -49,6 +51,7 @@ test("linkify", function () {
     var expectsUnfunny = [
         "<i> Du wurdest zurückgesetzt </i>",
         "i've been looking for <b>freedom</b>",
+        'Schön <span style="color: red">rot</span>',
         'Huhu <span class="smiley wavey">:wavey:</span>',
         "Nix",
         "Hol mir nen Bier, Botrix!",

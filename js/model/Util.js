@@ -32,6 +32,14 @@ var KaroUtil = {};
                 r: "F:-",
                 f: "</b>"
             });
+            karoUtil.replacements.push({
+                r: "-:RED",
+                f: '<span style="color: red">'
+            });
+            karoUtil.replacements.push({
+                r: "RED:-",
+                f: "</span>"
+            });
 
             if (karoUtil.funny) {
                 //nen
