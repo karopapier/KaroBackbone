@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Karopapier 2.1</title>
+    <script type="text/javascript" src="js/libs/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="js/libs/jquery-ui-1.10.4.custom.min.js"></script>
+    <script type="text/javascript" src="js/libs/underscore-min.js"></script>
+    <script type="text/javascript" src="js/libs/backbone-min.js"></script>
+    <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
+    <script type="text/javascript" src="js/libs/backbone-model-factory.js"></script>
+    <script type="text/javascript" src="js/libs/notify.js"></script>
+    <script type="text/javascript" src="js/libs/jquery.notify.min.js"></script>
+
+    <script type="text/javascript" src="js/libs/TURTED.js"></script>
+    <script type="text/javascript" src="js/libs/sockjs-0.3.min.js"></script>
+
+    <script type="text/javascript" src="/templates/JST.js"></script>
+    <script type="text/javascript" src="/src/KaroBackbone.min.js"></script>
+
+    <script type="text/javascript">
+        var Karopapier = new KaropapierApp();
+    </script>
+
+    <link id="favicon" rel="shortcut icon" href="favicon.ico" />
+
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/global.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <meta charset="utf-8" />
+</head>
+
+<body>
+    <div id="dran"></div>
+    <label>
+        <input type="checkbox" id="webNot">Browser Notifications</label>
+    <br>
+    <label>
+        <input type="checkbox" id="anyMoveNot">Anybody Move Notifications</label>
+    <br>
+    <label>
+        <input type="checkbox" id="myMoveNot">Mygames Move Notifications</label>
+    <br>
+    <label>
+        <input type="checkbox" id="dranNot">Dran Notifications</label>
+    <br>
+    <label>
+        <input type="checkbox" id="chatNot">Chat Notifications</label>
+    <br>
+
+    <script type="text/javascript">
+		var DRAN=0;
+        $(document).ready(function() {
+
+            if (Notify.permissionLevel === "denied") {
+                permissionCompletelyDenied();
+            }
+
+            console.log("Doc ready, start app");
+            var kevin = new KEvIn({
+                user: Karopapier.User
+            });
+
+
+            Karopapier.vent.on('GAME:MOVE', function(data)
+            {
+                console.log("anyOtherMoved", data);
+				if (document.getElementById("anyMoveNot").checked) {
+                    var html='Bei "' + data.name + '" hat '+data.movedLogin+' gerade gezogen und jetzt ist '+data.nextLogin+' dran';  
+					var n = new Notify(data.movedLogin + " moved", {
+						tag: "Moved",
+                        body: html,
+						icon: "http://www.karopapier.de/pre/"+data.gid+".png",
+						timeout: 5,
+						notifyClick: function() {
+							window.open("http://www.karopapier.de/showmap.php?GID="+data.gid);
+						}
+					}).show();
+                    $.notify(html, { position: "top-center", className: "info"});
+
+				} else {
+					console.log("No not");
+				}
+
+            });
+            Karopapier.vent.on('CHAT:MESSAGE', function(data)
+            {
+                console.log(data);
+                msg = data.chatmsg;
+				if (document.getElementById("chatNot").checked) {
+					var n = new Notify(msg.user + " sagt:",
+					{
+						tag: "Chat",
+						body: msg.text,
+						icon: "http://www.karopapier.de/favicon.ico",
+						permissionDenied: permissionDenied,
+						notifyClick: function() {
+							window.open("http://www.karopapier.de/chat");
+						}
+					}).show();
+                    $.notify("Chat: " + msg.text);
+				}
+            });
+
+			Karopapier.vent.on('USER:DRAN',function(data) {
+				DRAN++;
+				dranNotification();
+			});
+			Karopapier.vent.on('USER:MOVED',function(data) {
+				DRAN--;
+				DRAN = DRAN<0?0:DRAN;
+				dranNotification();
+			});
+
+            $('#webNot').change(function(e) {
+                    console.log("Ich prüfe");
+                    if (e.currentTarget.checked) {
+                        console.log("Ich prüfe ob ich darf");
+                        requestPerm();
+                    }
+            });
+
+        });
+
+        if (!/karopapier/.test(window.location.hostname)) {
+            document.write('<scr' +
+                'ipt src="http://localhost:35729/livereload.js"></scr' +
+                'ipt>');
+        }
+
+		function dranNotification()
+		{
+				if (document.getElementById("dranNot").checked) {
+					var n = new Notify("Du bist bei " + DRAN + " Spielen dran", {
+						tag: "Dran",
+						body: "Musst halt ziehen...",
+						timeout: DRAN > 0 ? 0 : 2,
+						permissionDenied: permissionDenied,
+						notifyClick: function() {
+							//window.open("http://www.karopapier.de/showmap.php?GID="+data.gid);
+							window.open("http://www.karopapier.de/dran");
+						}
+					}).show();
+				}
+		}
+
+        function permStats()
+        {
+            console.log("Level: " + Notify.permissionLevel);
+        }
+
+        function requestPerm()
+        {
+            console.log("Dann frag ich mal...");
+            Notify.requestPermission(permissionGranted, permissionDenied);
+            console.log("Und nu?");
+        }
+
+        function permissionGranted() {
+            console.log("Ich darf");
+        }
+
+        function permissionDenied()
+        {
+            console.log("Ich darf gerade noch nicht!");
+        }
+
+        function permissionCompletelyDenied()
+        {
+            console.log("All is lost! No way to ask again...");
+            $('#webNot').attr("disabled","disabled");
+        }
+    </script>
+</body>
+
+</html>

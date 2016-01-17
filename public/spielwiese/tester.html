@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Karopapier 2.1</title>
+        <!-- <script type="text/javascript" src="js/libs/FEHLER.js?v=1445895669797"></script> -->
+        <script type="text/javascript" src="/public/js/libs/jquery-1.11.3.min.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/public/js/libs/jquery-ui-1.11.4.custom.min.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/public/js/libs/underscore-min.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/public/js/libs/backbone-min.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/public/js/libs/backbone.marionette-2.4.1.min.js?v=1445895669797"></script>
+
+        <script type="text/javascript" src="/src/view/LogView.js"></script>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="http://www.karopapier.de/css/quicktip/quicktip.css?v=1445898828527" />
+
+        <style type="text/css">
+            body {
+                background-color: #333;
+                color: #fff;
+            }
+        </style>
+    </head>
+    <body>
+
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+
+        <div id="container"></div>
+
+        <script type="text/javascript">
+            var app;
+            $(document).ready(function () {
+
+                var App = Marionette.Application.extend({});
+
+                var Controller = Marionette.Object.extend({
+                    home: function() {
+                        console.log("Home");
+                    },
+                    binda: function() {
+                        console.log("Binda");
+                    }
+                });
+
+                var Router = Marionette.AppRouter.extend({
+                    appRoutes: {
+                        "": "home",
+                        "/": "home",
+                        "tester.html": "binda"
+                    },
+                    routes: {
+                        "hello/:username": "helloBuddy"
+                    },
+                    helloBuddy: function(name) {
+                        console.log("Hello", name);
+                    }
+                });
+
+                var RootView = Marionette.LayoutView.extend({
+                    el: 'body',
+                    template: "#layout-view-template",
+
+                    regions: {
+                        menu: "#menu",
+                        content: "#content"
+                    }
+                });
+
+                app = new App();
+                app.rootView = new RootView().render();
+                app.controller = new Controller();
+                app.on("start", function(){
+                    // Start Backbone history a necessary step for bookmarkable URL's
+                    console.log("Started");
+                    //Backbone.history.start({pushState:true});
+                    Backbone.history.start();
+                    app.router.navigate("hello/didi", {trigger:true});
+                });
+
+                app.router = new Router({
+                    controller : app.controller
+                });
+
+                app.view1 = new LogView();
+                app.view2 = new LogView();
+                app.rootView.content.show(app.view1);
+                app.rootView.content.show(app.view2);
+                //app.rootView.content.show(app.view1);
+
+                app.start({});
+
+            });
+
+        </script>
+
+        <script id="layout-view-template" type="text/template">
+            <section>
+                <navigation id="menu">...</navigation>
+                <article id="content">...</article>
+            </section>
+        </script>
+
+        <script type="text/javascript">
+            if (!/karopapier/.test(window.location.hostname)) {
+                document.write('<scr' + 'ipt src="http://localhost:20000/livereload.js?v=1445895669797"></scr' + 'ipt>');
+            }
+        </script>
+    </body>
+</html>
+

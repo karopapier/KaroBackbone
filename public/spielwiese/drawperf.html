@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Karopapier 2.1</title>
+        <!-- <script type="text/javascript" src="js/libs/FEHLER.js?v=1445895669797"></script> -->
+        <script type="text/javascript" src="/public/js/libs/jquery-1.11.3.min.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/public/js/libs/jquery-ui-1.11.4.custom.min.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/public/js/libs/underscore-min.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/public/js/libs/backbone-1.2.3.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/public/js/libs/backbone.marionette-2.4.1.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/public/js/libs/backbone-model-factory-min.js?v=1445895669797"></script>
+        <script type="text/javascript" src="/public/js/libs/interact-1.2.6.js"></script>
+        <!--
+        <script type="text/javascript" src="/js/model/Motion.js"></script>
+        <script type="text/javascript" src="/js/model/Player.js"></script>
+        <script type="text/javascript" src="/js/collection/PlayerCollection.js"></script>
+        <script type="text/javascript" src="/js/collection/MotionCollection.js"></script>
+        <script type="text/javascript" src="/js/model/Move.js"></script>
+        <script type="text/javascript" src="/js/collection/MoveMessageCollection.js"></script>
+        <script type="text/javascript" src="/js/model/Map.js"></script>
+        <script type="text/javascript" src="/js/model/MapRenderPalette.js"></script>
+        <script type="text/javascript" src="/js/model/Game.js"></script>
+
+        <script type="text/javascript" src="/js/view/LogView.js"></script>
+        <script type="text/javascript" src="/js/view/MapBaseView.js"></script>
+        <script type="text/javascript" src="/js/view/MapRenderView.js"></script>
+        <script type="text/javascript" src="/js/view/MapCodeView.js"></script>
+        <script type="text/javascript" src="/js/view/EditorMapView.js"></script>
+        -->
+        <script type="text/javascript" src="/templates/JST.js"></script>
+        <script type="text/javascript" src="/src/KaroBackbone.js"></script>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+        <meta charset="utf-8"/>
+
+        <style type="text/css">
+            body {
+                background-color: #333;
+                color: #fff;
+            }
+        </style>
+    </head>
+    <body>
+
+        <script id="wiki-template" type="text/html">
+            <select></select>
+        </script>
+
+        <div id="controls">
+            <div id="viewsettings">
+                <label>Size: <input type="number" min="1" step="1" id="size"></label>
+                <label>Border: <input type="number" min="0" step="1" id="border"></label>
+            </div>
+            <div style="display: none">
+
+                <pre id="timer"></pre>
+                Left: <span id="drag1"></span>
+                Middle: <span id="drag2"></span>
+                Right: <span id="drag3"></span>
+            </div>
+        </div>
+        <div id="container">
+
+            <select id="karoMapList"></select><br/>
+            <select id="wikiMapList"></select>
+            <br/>
+            <br/>
+            <button id="undo">Undo</button>
+            <br/>
+        </div>
+
+        <script type="text/javascript">
+            var log = function(t) {
+                var d = new Date();
+                var h = d.getHours();
+                var m = d.getMinutes();
+                var s = d.getSeconds();
+                var ms = d.getMilliseconds();
+                m = (m < 10) ? "0" + m : m;
+                s = (s < 10) ? "0" + s : s;
+                var ds = h + ":" + m + ":" + s + "." + ms;
+                return ds + " " + t;
+            };
+            var ControlView = Backbone.View.extend({
+                initialize: function() {
+                    this.listenTo(Viewsettings, "change", this.update)
+                },
+                events: {
+                    "change #border": "updateBorder",
+                    "keyup #border": "updateBorder",
+                    "change #size": "updateSize",
+                    "keyup #size": "updateSize"
+                },
+                update: function() {
+                    this.$('#border').val(Viewsettings.get("border"));
+                    this.$('#size').val(Viewsettings.get("size"));
+                },
+                updateBorder: function(e) {
+                    //console.log($("#border").val());
+                    var newborder = parseInt($("#border").val());
+                    if (isNaN(newborder)) newborder = 0;
+                    //console.log(newborder);
+                    Viewsettings.set("border", newborder);
+                },
+                updateSize: function(e) {
+                    //console.log($("#size").val());
+                    var newsize = parseInt($("#size").val());
+                    if (newsize > 1) {
+                        Viewsettings.set("size", newsize);
+                    }
+                }
+            });
+
+            var map = new Map();
+            var Viewsettings = new MapViewSettings()
+            var Editorsettings = new Backbone.Model({
+                buttons: [null, "O", "1", "X"]
+            });
+            map.setMapcode("XOSOFOX\nXOS1FOX\nXOSOXXX");
+            var editorMapView = new EditorMapView({
+                viewsettings: Viewsettings,
+                editorsettings: Editorsettings,
+                model: map
+            });
+            editorMapView.render();
+
+            var ctrlView = new ControlView({
+                el: "#viewsettings",
+            });
+
+            $("#mapget").click(function() {
+
+                $.getJSON("https://www.karopapier.de/api/mapcode/112.json?callback=?", function(c) {
+                    map.setMapcode(c)
+                });
+            });
+
+            var mcv = new MapCodeView({
+                model: map,
+                readonly: false
+            });
+
+            var container = $('#container');
+            container.append(editorMapView.$el);
+            container.append('<br/><button id="sanitize">Sanitize</button><br/>');
+            container.append('<br/><img id="dragfile"/><br/>');
+            container.append(mcv.$el);
+
+            $("#sanitize").click(function() {
+                map.sanitize();
+            });
+
+            /*
+             var code = ""
+             for (var r = 0; r < 100; r++) {
+             for (var c = 0; c < 70; c++) {
+             code += "1";
+             }
+             code += "\n";
+             }
+             map.setMapcode(code);
+             */
+
+            Viewsettings.set("size", 20);
+            Viewsettings.set("border", 8);
+            Viewsettings.set("specles", false);
+            var TIMER;
+            editorMapView.mapRenderView.on("before:render", function(e) {
+                TIMER = new Date();
+                $("#timer").text(log("Before render\n"));
+            });
+
+            editorMapView.mapRenderView.on("render", function(e) {
+                var $t = $('#timer');
+                $t.append(log("Render\n"));
+                var diff = new Date().getTime() - TIMER.getTime();
+                $t.append(log(diff));
+            });
+
+            mcv.render();
+
+            var undo = new EditorUndo({
+                editorsettings: Editorsettings,
+                map: map
+            });
+            $('#undo').click(undo.undo);
+
+            /*
+             $(editorMapView.mapRenderView.el).mousemove(function (e) {
+             var x = e.pageX - $(e.currentTarget).offset().left;
+             var y = e.pageY - $(e.currentTarget).offset().top;
+             console.log(x, "|", y);
+             });
+             */
+
+
+            /*
+             var WikiMapView = Marionette.ItemView.extend({
+             render: function () {
+             var attr = this.model.toJSON();
+             this.$el.html("<option>" + attr.title + "</option>");
+             return this;
+             }
+             });
+
+             //var WikiMapList = new Marionette.CompositeView.extend({
+             var WikiMapList = new Marionette.ItemView.extend({
+             template: "#wiki-template",
+             //childViewContainer: "select",
+             //childView: WikiMapView,
+             });
+
+             var wml = new WikiMapList({});
+             wml.render();
+             $('body').append(wml.$el);
+             */
+
+            var karoMaps = new KaroMapCollection();
+            karoMaps.fetch();
+            //CustomMapCollection()
+            //WikiMapCollection()
+
+            var karoMapList = new MapListView({
+                collection: karoMaps,
+                el: "#karoMapList"
+            });
+
+            karoMapList.on("selected", function(m) {
+                map.setMapcode(m.get("mapcode"));
+            });
+
+            karoMapList.render();
+
+
+            //WIKI
+            var WikiMaps = Backbone.Collection.extend({
+                url: "http://wiki.karopapier.de/api.php?action=query&list=search&format=json&srsearch=Karte:*source&srwhat=title&rvprop=content&callback=?",
+                comperator: "name",
+                parse: function(data) {
+                    var parsed = [];
+                    var i = 1;
+                    _.each(data.query.search, function(e) {
+                        parsed.push({
+                            name: e.title
+                        });
+                    });
+                    if (data["query-continue"]) {
+                        var o = data["query-continue"].search.sroffset;
+                        var me = this;
+                        setTimeout(function() {
+                            me.fetch({
+                                remove: false,
+                                data: {
+                                    sroffset: o
+                                }
+                            });
+                        });
+                    }
+
+                    return parsed;
+                }
+            });
+            var wikiMaps = new WikiMaps();
+            wikiMaps.fetch();
+
+            var wikiMapList = new MapListView({
+                collection: wikiMaps,
+                el: "#wikiMapList"
+            })
+            wikiMapList.render();
+
+
+            //DRAG
+            editorMapView.mapRenderView.el.addEventListener("dragover", function(evt) {
+                evt.preventDefault();
+            }, false);
+
+            editorMapView.mapRenderView.el.addEventListener("drop", function(evt) {
+                var files = evt.dataTransfer.files;
+                if (files.length > 0) {
+                    var file = files[0];
+                    if (typeof FileReader !== "undefined" && file.type.indexOf("image") != -1) {
+                        var reader = new FileReader();
+                        // Note: addEventListener doesn't work in Google Chrome for this event
+                        reader.onload = function(evt) {
+                            document.getElementById("dragfile").src = evt.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+                evt.preventDefault();
+            }, false);
+
+            var img = document.getElementById("dragfile");
+            var canvas = editorMapView.mapRenderView.el;
+            var ctx = canvas.getContext("2d");
+            img.addEventListener("load", function() {
+                ctx.drawImage(img, 0, 0);
+            }, false);
+
+
+            var $el = $('#mapRenderView').css({
+                border: "10px solid black",
+            });
+
+            var Fieldsize = 28;
+            interact('canvas.mapRenderView')
+                    .resizable({
+                        preserveAspectRatio: false,
+                        edges: {left: false, right: true, bottom: true, top: false}
+                    })
+                    .on('resizemove', function(e) {
+                        var target = e.target;
+                        var x = (parseFloat(target.getAttribute('data-x')) || 0);
+                        var y = (parseFloat(target.getAttribute('data-y')) || 0);
+                        var plusX = Math.floor(((e.rect.width - target.width) - 20) / Fieldsize);
+                        var minusX = Math.ceil(((e.rect.width - target.width) - 20) / Fieldsize);
+                        var plusY = Math.floor((e.rect.height - target.height) / Fieldsize);
+                        var minusY = Math.ceil((e.rect.height - target.height) / Fieldsize);
+
+                        if (plusX > 0) {
+                            //console.log("Add col");
+                            map.addCol(1);
+                        }
+                        if (plusY > 0) {
+                            //console.log("Add row");
+                            map.addRow(1);
+                        }
+
+                        if (minusX < 0) {
+                            //console.log("Del col");
+                            map.delCol(1);
+                        }
+
+                        if (minusY < 0) {
+                            map.delRow(1);
+                        }
+
+                        //target.style.width = (e.rect.width - 20) + 'px';
+                        //target.style.height = (e.rect.height - 20) + 'px';
+
+                        // translate when resizing from top or left edges
+                        x += e.deltaRect.left;
+                        y += e.deltaRect.top;
+
+                        target.style.webkitTransform = target.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+                    })
+                    .on("resizeend", function(e) {
+                        //remove all translations so it snaps back to original position but with new size
+                        e.target.style.transform = "";
+                        e.target.removeAttribute("data-x");
+                        e.target.removeAttribute("data-y");
+                        e.target.style.width = "";
+                        e.target.style.height = "";
+                    })
+            ;
+        </script>
+
+        <script type="text/javascript">
+            if (!/karopapier/.test(window.location.hostname)) {
+                document.write('<scr' + 'ipt src="http://localhost:20000/livereload.js?v=1445895669797"></scr' + 'ipt>');
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title>Conway</title>
+        <script type="text/javascript" src="js/libs/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="js/libs/jquery-ui-1.10.4.custom.min.js"></script>
+        <script type="text/javascript" src="js/libs/underscore-min.js"></script>
+        <script type="text/javascript" src="js/libs/backbone-min.js"></script>
+        <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
+        <script type="text/javascript" src="js/libs/backbone-model-factory-min.js"></script>
+        <script type="text/javascript" src="js/libs/moment.min.js"></script>
+        <!--<script type="text/javascript" src="js/libs/hammer.min.js"></script> -->
+        <!--<script type="text/javascript" src="js/libs/Sideslide.js"></script> -->
+        <!--<script type="text/javascript" src="js/libs/touch-emulator.js"></script>
+        <script> TouchEmulator(); </script> -->
+
+        <script type="text/javascript">
+            var Karopapier = new Marionette.Application(); // currently only for Util.js to not throw an error
+        </script>
+
+        <script type="text/javascript" src="../templates/JST.js"></script>
+        <script type="text/javascript" src="../src/KaroBackbone.js"></script>
+
+        <link id="favicon" rel="shortcut icon" href="favicon.ico" />
+
+        <link rel="stylesheet" href="../css/Karopapier.min.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+        <meta charset="utf-8" />
+    </head>
+    <body>
+        <div id="conwayContainer"></div>
+
+        <script>
+            var mvs = new MapViewSettings({
+                size: 11,
+                border: 1
+            });
+            var map = new Map();
+            var mrv = new MapRenderView({
+                model: map,
+                settings: mvs
+            });
+            $('#conwayContainer').append(mrv.el);
+
+            var cway = new Conway({
+                map: map
+            })
+
+            cway.setAllChanged();
+            cway.countLivingNeighbours();
+
+
+            var stepper = function () {
+                if (cway.step()) {
+                    //running
+                } else {
+                    //stop
+                    clearInterval(conwayInterval);
+                }
+
+            }
+            var conwayInterval;
+
+            //$.getJSON("http://www.karopapier.de/api/mapcode/1.json?callback=?", function(data) {
+            //$.getJSON("http://www.karopapier.de/api/mapcode/207.json?callback=?", function(data) {
+            $.getJSON("http://www.karopapier.de/api/mapcode/127.json?callback=?", function(data) {
+            //$.getJSON("http://www.karopapier.de/api/mapcode/107.json?callback=?", function(data) {
+            map.setMapcode(data)
+            mrv.render();
+            cway.setAllChanged();
+            cway.countLivingNeighbours();
+            conwayInterval = setInterval(stepper, 200);
+            })
+            if (!/karopapier/.test(window.location.hostname)) {
+                document.write('<scr' + 'ipt src="http://localhost:35729/livereload.js"></scr' + 'ipt>');
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Karopapier 2.1</title>
+    <!-- <script type="text/javascript" src="js/libs/FEHLER.js?v=1445895669797"></script> -->
+    <script type="text/javascript" src="/public/js/libs/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="/public/js/libs/jquery-ui-1.11.4.custom.min.js?v=1445895669797"></script>
+    <script type="text/javascript" src="/public/js/libs/underscore-min.js?v=1445895669797"></script>
+    <script type="text/javascript" src="/public/js/libs/backbone-min.js?v=1445895669797"></script>
+    <script type="text/javascript" src="/public/js/libs/backbone.marionette-2.4.1.js?v=1445895669797"></script>
+
+</head>
+<body>
+<header>Head</header>
+<section id="navi">
+    <ul>
+        <li><a href="/public/multiapp.html#app1/sub1">App1 sub1</a></li>
+        <li><a href="/public/multiapp.html#app1/sub2">App1 sub2</a></li>
+        <li><a href="/public/multiapp.html#app1/sub3">App1 sub3</a></li>
+        <li><a href="/public/multiapp.html#app2/sub1">App2 sub1</a></li>
+        <li><a href="/public/multiapp.html#app2/sub2">App2 sub2</a></li>
+        <li><a href="/public/multiapp.html#app2/sub3">App2 sub3</a></li>
+    </ul>
+</section>
+<section id="content">-</section>
+<footer>Foot</footer>
+
+<script type="text/javascript">
+
+    var mainApp = new Mn.Application();
+    mainApp.on("start", function () {
+        Backbone.history.start();
+    })
+    mainApp.layout = new Mn.LayoutView({
+        el: 'body',
+        regions: {
+            navi: '#navi',
+            content: '#content'
+            //header: 'header',
+            //footer: 'foooter'
+        }
+    });
+
+    var MainController = Marionette.Object.extend({
+        mainNavi: function (app, sub) {
+            console.info("Main Navi", app, sub);
+        }
+    });
+    var ctrl = new MainController();
+
+    var mainRouter = new Mn.AppRouter({
+        appRoutes: {
+            ":app/:sub": "mainNavi"
+        },
+        controller: ctrl
+    });
+
+    var SubController = Mn.Object.extend({
+        subThing: function (sub) {
+            console.warn("Subthing", sub);
+        }
+    });
+
+    var subCtrl = new SubController();
+
+    $(document).ready(function () {
+        console.log("Doc ready, start app");
+        //var MainApp = Marionette.Application();
+        //mainApp= new MainApp();
+        mainApp.start();
+        console.log("App started");
+    });
+
+</script>
+
+<script type="text/javascript">
+    if (!/karopapier/.test(window.location.hostname)) {
+        document.write('<scr' + 'ipt src="http://localhost:20000/livereload.js?v=1445895669797"></scr' + 'ipt>');
+    }
+</script>
+</body>
+</html>
+

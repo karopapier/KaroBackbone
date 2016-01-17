@@ -10,17 +10,25 @@ module.exports = function(grunt) {
             },
             build: {
                 files: {
-                    'index.html': ['index.template.html'],
-                    'dran.html': ['index.template.html'],
-                    'chat.html': ['index.template.html'],
-                    'editor.html': ['index.template.html']
+                    'public/index.html': ['templates/index.template.html'],
+                    'public/dran.html': ['templates/index.template.html'],
+                    'public/chat.html': ['templates/index.template.html'],
+                    'public/editor.html': ['templates/index.template.html']
+                }
+            }
+        },
+        browserify: {
+            dist: {
+                files: {
+                    "public/js/<%= pkg.name %>.browserified.js": ['src/app/**/*.js', 'src/layout/**/*.js', 'src/model/**/*.js', 'src/collection/**/*.js', 'src/view/**/*.js', 'src/router/**/*.js']
                 }
             }
         },
         uglify: {
             min: {
                 files: {
-                    "js/<%= pkg.name %>.min.js": ['js/app/**/*.js', 'js/layout/**/*.js', 'js/model/**/*.js', 'js/collection/**/*.js', 'js/view/**/*.js', 'js/router/**/*.js']
+                    //"src/<%= pkg.name %>.min.js": ["src/<%= pkg.name %>.browserified.js"]
+                    "public/js/<%= pkg.name %>.min.js": ['src/app/**/*.js', 'src/layout/**/*.js', 'src/model/**/*.js', 'src/collection/**/*.js', 'src/view/**/*.js', 'src/router/**/*.js']
                 },
                 options: {
                     sourceMap: true,
@@ -30,7 +38,7 @@ module.exports = function(grunt) {
             },
             dev: {
                 files: {
-                    "js/<%= pkg.name %>.js": ['js/app/**/*.js', 'js/layout/**/*.js', 'js/model/**/*.js', 'js/collection/**/*.js', 'js/view/**/*.js', 'js/router/**/*.js']
+                    "public/js/<%= pkg.name %>.js": ['src/app/**/*.js', 'src/layout/**/*.js', 'src/model/**/*.js', 'src/collection/**/*.js', 'src/view/**/*.js', 'src/router/**/*.js']
                 },
                 options: {
                     sourceMapIncludeSources: true,
@@ -45,7 +53,7 @@ module.exports = function(grunt) {
                 prettify: true,
                 processName: function(filepath) {
                     var p = filepath;
-                    p = p.replace("js/templates/", "");
+                    p = p.replace("templates/", "");
                     p = p.replace(/\.html$/, "");
                     p = p.replace(/\.tpl$/, "");
                     return p;
@@ -53,7 +61,7 @@ module.exports = function(grunt) {
             },
             compile: {
                 files: {
-                    "js/templates/JST.js": ['js/templates/**/*.html', 'js/templates/**/*.tpl']
+                    "public/js/JST.js": ['templates/**/*.html', 'templates/**/*.tpl']
                 }
             }
 
@@ -64,13 +72,13 @@ module.exports = function(grunt) {
             },
             target: {
                 files: {
-                    "css/Karopapier.min.css": ["css/*.css", "!css/*.min.css"]
+                    "public/css/Karopapier.min.css": ["css/*.css", "!css/*.min.css"]
                 }
             }
         },
         watch: {
             scripts: {
-                files: ['js/**/*.js', '!js/<%= pkg.name %>*.js', 'test/**/*.js'],
+                files: ['src/**/*.js', '!src/<%= pkg.name %>*.js', 'test/**/*.js'],
                 tasks: ['uglify', 'asset_cachebuster'],
                 options: {
                     interrupt: true,
@@ -80,7 +88,7 @@ module.exports = function(grunt) {
                 }
             },
             templates: {
-                files: ['js/templates/**/*.html', 'js/templates/**/*.tpl', 'index.template.html'],
+                files: ['templates/**/*.html', 'templates/**/*.tpl', 'index.template.html'],
                 tasks: ['jst', 'asset_cachebuster'],
                 options: {
                     interrupt: true,
@@ -108,6 +116,15 @@ module.exports = function(grunt) {
                     }
                 }
             },
+            tests: {
+                files: ['public/test/*.js'],
+                options: {
+                    interrupt: true,
+                    livereload: {
+                        port: 20000
+                    }
+                }
+            },
             spielwiese: {
                 files: ['spielwiese/**/*'],
                 options: {
@@ -121,27 +138,20 @@ module.exports = function(grunt) {
         jsdoc: {
             dist: {
                 src: [
-                    'js/app/**/*.js',
-                    'js/collection/**/*.js',
-                    'js/layout/**/*.js',
-                    'js/model/**/*.js',
-                    'js/router/**/*.js',
-                    'js/view/**/*.js',
+                    'src/app/**/*.js',
+                    'src/collection/**/*.js',
+                    'src/layout/**/*.js',
+                    'src/model/**/*.js',
+                    'src/router/**/*.js',
+                    'src/view/**/*.js',
                 ],
                 options: {
-                    destination: 'doc'
+                    destination: 'public/doc'
                 }
             }
         },
-        sprite: {
-            all: {
-                src: "css/mapfields/*.png",
-                dest: "css/images/mapfields.png",
-                destCss: "css/mapfields.css"
-            }
-        },
         qunit: {
-            files: ['test/index.html']
+            files: ['public/test/index.html']
         }
     });
 
@@ -150,15 +160,14 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jst');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-spritesmith');
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-asset-cachebuster');
     grunt.loadNpmTasks('grunt-contrib-qunit');
+    grunt.loadNpmTasks('grunt-browserify');
 
     // Default task(s).
     grunt.registerTask('default', ['build', 'watch']);
-    grunt.registerTask('build', ['uglify', 'jst', 'cssmin', 'asset_cachebuster']);
-    //grunt.registerTask('guck', ['watch']);
+    grunt.registerTask('build', ['browserify', 'uglify', 'jst', 'cssmin', 'asset_cachebuster']);
     grunt.registerTask('spielwiese', ['spielwiese']);
     grunt.registerTask('test', 'qunit');
 

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script>var Karopapier={};</script>
+        <script src="../src/model/Util.js"></script>
+        <script type="text/javascript" src="js/libs/jquery-1.11.0.min.js"></script>
+        <script src="js/libs/underscore-min.js"></script>
+        <script src="js/libs/backbone-min.js"></script>
+        <script src="js/libs/backbone.marionette.min.js"></script>
+        <script type="text/javascript" src="http://www.karopapier.de/js/libs/json2.min.js"></script>
+        <script type="text/javascript" src="http://www.karopapier.de/js/libs/store.min.js"></script>
+        <script type="text/javascript" src="http://www.karopapier.de/js/libs/lz-string.min.js"></script>
+
+        <script src="../templates/JST.js"></script>
+
+
+        <script src="../src/model/map/Map.js"></script>
+        <script src="../src/model/map/MapRenderPalette.js"></script>
+        <script src="../src/model/map/MapPathFinder.js"></script>
+        <script src="../src/model/map/MapPathStore.js"></script>
+        <script src="../src/view/map/MapBaseView.js"></script>
+        <script src="../src/view/map/MapCodeView.js"></script>
+        <script src="../src/view/map/MapRenderView.js"></script>
+        <script src="../src/view/map/MapImageView.js"></script>
+        <script src="../src/view/map/MapSvgView.js"></script>
+    </head>
+    <body>
+        <div id="content"></div>
+        Mapid: <input type="text" id="mapid" value="154" />
+        <button id="getMapcode">Get</button>
+        <br>
+
+        <p>CodeView:<br>
+            <textarea cols="100" rows="50" style="font-size: 8px" id="mapCodeView"></textarea>
+            <button id="setCode">Render this code</button>
+        </p>
+
+        SvgView:<br>
+
+        <div id="svgcontainer"></div>
+        <br />
+
+        <p>RenderView (HTML5 Canvas)<br>
+            <canvas id="mapRenderView"></canvas>
+        </p>
+
+        <p>Image from Server:<br>
+            <img id="mapImageView"></p>
+
+        <p>Copy of SVG as img tag with bas64 src -> for right click, save as... <br>
+            <img id="svgCopy" src="" alt="Map"></p>
+
+		<form id="svgForm"><input type="hidden" id="svgid" name="svgid"><input type="hidden" id="svgcode" name="svgcode"></form>
+        <script type="text/javascript">
+
+            var map = new Map();
+
+            $('#getMapcode').click(getMap);
+
+            function getMap() {
+                var mapid = $('#mapid').val();
+                $.getJSON("http://www.karopapier.de/api/map/" + mapid + ".json?callback=?", function (data) {
+                    map.set(data);
+                })
+            };
+
+            var mapCodeView = new MapCodeView({
+                model: map,
+                el: "#mapCodeView"
+            })
+
+            var mapRenderView = new MapRenderView({
+                model: map,
+                size: 11,
+                el: '#mapRenderView'
+            });
+
+            var mapImageView = new MapImageView({
+                model: map,
+                size: 11,
+                el: $('#mapImageView')
+            });
+
+            var mapSvgView = new MapSvgView({
+                el: '#svgcontainer',
+                model: map,
+                size: 11,
+                forceMapPathFinder: true
+            }).on("rendered", function () {
+                        console.log("Render was triggered");
+                        encode_as_img_and_link();
+                    });
+
+            function encode_as_img_and_link() {
+                var svg = $("#mapSvgView")[0].outerHTML.trim();
+                var b64 = btoa(svg);
+				if (batchMode) {
+                    console.log("Jetzt send");
+					sendToServer(b64);
+				}
+                $("#svgCopy").attr("src", "data:image/svg+xml;base64,\n" + b64);
+
+            }
+            //encode_as_img_and_link();
+
+            var sendToServer = function(b64) {
+				$('#svgid').val(map.get("id"));
+				$('#svgcode').val(b64);
+				var frm = $('#svgForm');
+				var payload = frm.serialize();
+				if (payload !=="") {
+					$.ajax({
+						url: "/svg.php",
+						type: "POST",
+						dataType: "json",
+						data: payload,
+						success: function(data) { nextBatch() },
+						error: function(data) { console.error(data) }
+					});
+				} else {
+					console.log("Payload empty");
+				}
+            };
+
+            $(document).ready(function() {
+                getMap();
+            })
+
+			var allMaps;
+			var batchIndex=0;
+			var batchMode=false;
+
+			function nextBatch() {
+				if (batchMode) {
+					console.info("Batch ",batchIndex);
+					map.set(allMaps[batchIndex]);
+					batchIndex++;
+				}
+			};
+
+			function runAll() {
+				$.getJSON("http://www.karopapier.de/api/map/list.json?callback=?",function(maps) {
+					allMaps=maps;
+					batchMode=true;
+					batchIndex=0;
+					nextBatch();
+				});
+			}
+
+            $('#setCode').click(function () {
+                var mc = mapCodeView.getCode();
+                map.set({id: 0,mapcode:mc});
+            })
+
+            if (!/karopapier/.test(window.location.hostname)) {
+                document.write('<scr' + 'ipt src="http://localhost:35729/livereload.js"></scr' + 'ipt>');
+            }
+        </script>
+    </body>
+</html>

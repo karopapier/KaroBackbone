@@ -1,0 +1,16 @@
+<% if (active) {  %>
+    Skalierung:<!--<br/>
+    Breite: --><input value="<%= scaleWidth %>" type="number" name="scaleWidth"
+                      class="editor-imagetranslator-settings-scaleWidth"><br/>
+    <!--Höhe: <input value="<%= scaleHeight %>" type="number" name="scaleHeight" class="editor-imagetranslator-settings-scaleHeight"><br/> -->
+    <label>Invertiert: <input type="checkbox" name="invert" class="editor-imagetranslator-settings-invert"><br/>
+    <% if (binary) { %>
+        <label>Zweifarbig: <input type="checkbox" name="binary" class="editor-imagetranslator-settings-binary"> Zweifarbenmodus mit <%= buttons[1] %> und <%= buttons[3] %> (Linke und Rechte Mausfarbe)</label><br/>
+    <% } else { %>
+        <label>Zweifarbig: <input type="checkbox" name="binary" class="editor-imagetranslator-settings-binary"> Vollfarbenmodus, voll bunt! (Berechnung kann laenger dauern...)</label><br/>
+    <% } %>
+    <label>Speedmode: <input type="checkbox" name="speedmode" class="editor-imagetranslator-settings-speedmode"> Geht viel schneller, Browser kann aber nicht reagieren. Haken weg macht alternativ entspanntes Zuschauen... </label><br />
+    <button>RECHNE!!!!</button>
+<% } else { %>
+    Zieh hier mal ein Bild hin.
+<% } %>

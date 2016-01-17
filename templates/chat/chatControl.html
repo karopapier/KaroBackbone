@@ -1,0 +1,34 @@
+<% if (settings.history) { %>
+Timewarp-Modus aktiv <img src="/images/timewarp.png" class="toggleTimewarp spinning"><br/>
+<input name="startPicker" id="startPicker" type="range" min="1" max="<%= (settings.lastLineId - settings.limit) %>"
+       value="<%= settings.start %>" style="width: 400px"><br/>
+Zeile <input type="text" name="startLine" id="startLine" value="<%= settings.start %>" style="width: 50px">
+<span class="rewind clickable">-100</span> <span class="forward clickable">+100</span><br>
+<button id="startLineUpdate">Hinspringen</button>
+<% } else { %>
+Funkse:
+<% var limits=[10,20,30,50,75,100] %>
+<% for (var i=0; i<6; i++) { %>
+<span class="messageLimit">
+    <% if (settings.limit == limits[i]) { %><b><% } %>
+    <%= limits[i] %>
+    <% if (settings.limit == limits[i]) { %></b><% } %>
+    </span>
+<% } %>
+<img src="/images/timewarp.png" class="toggleTimewarp"> <img src="/images/settings.png"
+                                                                    onclick="$('.chatOptions').toggle()"/>
+<div class="chatOptions" style="display: none">
+    Lustiger Chat <span class="slidercheckbox"><input name="funnyChat" type="checkbox" id="funnyChat" <% if (settings.funny) { %>checked="checked"<% } %>><label
+        title="Wenn Du es anders haben willst gibt's hier nen Knopf" for="funnyChat"
+        class="slidercheckbox_smile"></label></span><br/>
+    Botrix Spielanfragen anzeigen? <span class="slidercheckbox"><input name="showBotrix" type="checkbox" id="showBotrix" <% if (settings.showBotrix) { %>checked="checked"<% } %>><label
+        title="Wenn Du es anders haben willst gibt's hier nen Knopf" for="showBotrix"
+        class="slidercheckbox_bulb"></label></span><br/>
+    Game-Links zur alten Ansicht? <span class="slidercheckbox"><input name="oldLink" type="checkbox" id="oldLink" <% if (settings.oldLink) { %>checked="checked"<% } %>><label
+        title="Wenn Du es anders haben willst gibt's hier nen Knopf" for="oldLink" class="slidercheckbox_onoff"></label></span><br/>
+
+    <div id="notificationControlView">NotificationControl goes here</div>
+</div>
+
+<% } %>
+<!--<input type="checkbox" id="showBotrixGames"> <label for="showBotrixGames"> Botrix Spielanfragen anzeigen</label> -->
