@@ -67,10 +67,10 @@ div.clearer {
 	.karoborder {
 		/* border-style: solid; */
 		border-width: 26px 30px;
-		-moz-border-image: url("images/borderImage.png") 26 30 repeat;
-		-webkit-border-image: url("images/borderImage.png") 26 30 repeat;
-		-o-border-image: url("images/borderImage.png") 26 30 repeat;
-		border-image: url("images/borderImage.png") 26 30 repeat;
+		-moz-border-image: url("/css/images/borderImage.png") 26 30 repeat;
+		-webkit-border-image: url("/css/images/borderImage.png") 26 30 repeat;
+		-o-border-image: url("/css/images/borderImage.png") 26 30 repeat;
+		border-image: url("/css/images/borderImage.png") 26 30 repeat;
 		behavior: url(/js/libs/PIE-1.0.0/PIE.htc);
 	}
 }
