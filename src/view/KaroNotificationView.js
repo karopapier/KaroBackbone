@@ -1,7 +1,13 @@
-var KaroNotificationView = Backbone.View.extend({
+var _ = require('underscore');
+var Backbone = require('backbone');
+module.exports = Backbone.View.extend(/** @lends KaroNotificationView */ {
     tagName: "li",
     className: "notification",
-    initialize: function () {
+    /**
+     * @constructor KaroNotificationView
+     * @class KaroNotificationView
+     */
+    initialize: function() {
         _.bindAll(this, "render", "done");
         //this.render();
         this.listenTo(this.model, "remove", this.done);
@@ -12,21 +18,21 @@ var KaroNotificationView = Backbone.View.extend({
     remove: function() {
         this.model.destroy();
     },
-    done: function () {
-        var me=this;
+    done: function() {
+        var me = this;
         this.$el.hide({
             effect: "slide",
             direction: "up",
-            complete: function () {
+            complete: function() {
                 me.$el.remove();
             }
         });
     },
-    render: function () {
+    render: function() {
         var text = this.model.get("text");
         var html = "";
         var hasImg = false;
-        this.el.style.position="relative";
+        this.el.style.position = "relative";
         this.$el.addClass(this.model.get("level"));
         if (this.model.get("imgUrl")) {
             this.$el.addClass("withImage");

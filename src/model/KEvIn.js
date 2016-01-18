@@ -1,4 +1,6 @@
-var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
+var _ = require('underscore');
+var Backbone = require('backbone');
+module.exports = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
     defaults: {},
     /**
      * @constructor KEvIn
@@ -13,7 +15,11 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
         if (!options.user) {
             throw Error("KEvIn needs a user");
         }
+        if (!options.vent) {
+            throw Error("KEvIn needs a vent object to trigger events on");
+        }
         this.user = options.user;
+        this.vent = options.vent;
         this.listenTo(this.user, "change:id", this.ident);
         this.turted = new TURTED("//ape.karopapier.de/turted");
         this.ident();

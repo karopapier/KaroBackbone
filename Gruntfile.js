@@ -18,9 +18,14 @@ module.exports = function(grunt) {
             }
         },
         browserify: {
+            options: {
+                browserifyOptions: {
+                    debug: true
+                }
+            },
             dist: {
                 files: {
-                    "public/js/<%= pkg.name %>.browserified.js": ['src/app/**/*.js', 'src/layout/**/*.js', 'src/model/**/*.js', 'src/collection/**/*.js', 'src/view/**/*.js', 'src/router/**/*.js']
+                    "public/js/<%= pkg.name %>.browserified.js": ['src/start.js']
                 }
             }
         },
@@ -79,7 +84,7 @@ module.exports = function(grunt) {
         watch: {
             scripts: {
                 files: ['src/**/*.js', '!src/<%= pkg.name %>*.js', 'test/**/*.js'],
-                tasks: ['uglify', 'asset_cachebuster'],
+                tasks: ['build'],
                 options: {
                     interrupt: true,
                     livereload: {

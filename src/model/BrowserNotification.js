@@ -1,4 +1,5 @@
-var BrowserNotification = Backbone.Model.extend({
+var Backbone = require('backbone');
+module.exports = Backbone.Model.extend({
     defaults: {
         level: "info",
         text: "Notification",

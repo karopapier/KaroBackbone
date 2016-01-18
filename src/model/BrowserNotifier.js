@@ -1,4 +1,6 @@
-var BrowserNotifier = Backbone.Model.extend(/** @lends BrowserNotifier.prototype*/{
+var Backbone = require('backbone');
+var BrowserNotification = require('./BrowserNotification');
+module.exports = Backbone.Model.extend(/** @lends BrowserNotifier.prototype*/{
     defaults: {},
     /**
      * @constructor BrowserNotifier

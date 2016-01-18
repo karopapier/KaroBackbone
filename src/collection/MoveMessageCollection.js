@@ -1,20 +1,27 @@
-var MoveMessageCollection = Backbone.Collection.extend({
+var _ = require('underscore');
+var Backbone = require('backbone');
+var Move = require('../model/Move');
+module.exports = Backbone.Collection.extend(/** @lends MoveMessageCollection.prototype */{
+    /**
+     * @constructor MoveMessageCollection
+     * @class MoveMessageCollection
+     */
     model: Move,
-    initialize: function () {
+    initialize: function() {
         _.bindAll(this, "updateFromPlayers");
     },
 
-    comparator: function (mm) {
+    comparator: function(mm) {
         return mm.get("t");
     },
 
-    updateFromPlayers: function (players) {
+    updateFromPlayers: function(players) {
         var msgs = [];
-        players.each(function (p) {
-            var withMessage = p.moves.filter(function (m) {
-                return m.get("msg")
+        players.each(function(p) {
+            var withMessage = p.moves.filter(function(m) {
+                return m.get("msg");
             });
-            _.each(withMessage, function (m) {
+            _.each(withMessage, function(m) {
                 m.set("player", p);
             });
             msgs = msgs.concat(withMessage);

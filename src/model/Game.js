@@ -1,9 +1,19 @@
-var Game = Backbone.Model.extend({
+var _ = require('underscore');
+var Backbone = require('backbone');
+var MoveMessageCollection = require('../collection/MoveMessageCollection');
+var Map = require('./map/Map');
+
+module.exports = Backbone.Model.extend(/** @lends Game.prototype */ {
     defaults: {
         id: 0,
         completed: false
     },
-    initialize: function (options) {
+    /**
+     * @constructor Game
+     * @class Game
+     * @param options map
+     */
+    initialize: function(options) {
         options = options || {};
         _.bindAll(this, "parse", "load", "updatePossibles");
         if (options.map) {
@@ -17,17 +27,17 @@ var Game = Backbone.Model.extend({
         this.listenTo(this.get("players"), "reset", this.get("moveMessages").updateFromPlayers);
         this.possibles = new MotionCollection();
         this.listenTo(this, "change:completed", this.updatePossibles);
-        this.listenTo(this.get("players"), "movechange", function () {
+        this.listenTo(this.get("players"), "movechange", function() {
             //console.log("movechange");
             this.updatePossibles();
         });
     },
 
-    url: function () {
+    url: function() {
         return "//www.karopapier.de/api/game/" + this.get("id") + "/details.json?callback=?";
     },
 
-    parse: function (data) {
+    parse: function(data) {
         //console.log("PARSE");
         //make sure data is matching current gameId (delayed responses get dropped)
         if (this.get("id") !== 0) {
@@ -51,7 +61,7 @@ var Game = Backbone.Model.extend({
         return data;
     },
 
-    load: function (id) {
+    load: function(id) {
         if (!id) return false;
         //silently set the id, events trigger after data is here
         //this.set({"id": id, completed: false}, {silent: true});
@@ -60,7 +70,7 @@ var Game = Backbone.Model.extend({
         this.fetch();
     },
 
-    updatePossibles: function () {
+    updatePossibles: function() {
         //console.warn("Start Recalc possibles for", this.get("id"));
         if (!(this.get("completed"))) return false;
         if (this.get("moved")) return false;
@@ -81,7 +91,7 @@ var Game = Backbone.Model.extend({
 
         //if no moves but dran and active, return starties
         if ((movesCount === 0) && (currentPlayer.get("status") == "ok")) {
-            theoreticals = this.map.getStartPositions().map(function (e) {
+            theoreticals = this.map.getStartPositions().map(function(e) {
                 var v = new Vector({x: 0, y: 0});
                 var mo = new Motion({
                     position: e,
@@ -100,7 +110,7 @@ var Game = Backbone.Model.extend({
         }
 
         var occupiedPositions = this.get("players").getOccupiedPositions((this.get("id") >= 75000)); //only for GID > 75000 limit to those that already moved
-        var occupiedPositionStrings = occupiedPositions.map(function (e) {
+        var occupiedPositionStrings = occupiedPositions.map(function(e) {
             return e.toString();
         });
 
@@ -117,12 +127,12 @@ var Game = Backbone.Model.extend({
      * Set all nested parameters from other games data, keeping references intact
      * @param othergame
      */
-    setFrom: function (othergame) {
+    setFrom: function(othergame) {
         //console.warn("START SETTING FROM OTHER GAME");
         this.set("completed", false);
         othergame.set("completed", false);
         var attribsToSet = {};
-        _.each(othergame.attributes, function (att, i) {
+        _.each(othergame.attributes, function(att, i) {
             if (typeof att !== "object") {
                 //console.log("Setting ", i, "to", att);
                 attribsToSet[i] = att;

@@ -1,4 +1,7 @@
-var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
+var _ = require('underscore');
+var Backbone = require('backbone');
+var BrowserNotification = require('./BrowserNotification');
+module.exports = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
     defaults: {},
     /**
      * @constructor KaroNotifier
@@ -7,7 +10,7 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
      * Provides custom methods as shortcuts for common notifications
      *
      */
-    initialize: function (options) {
+    initialize: function(options) {
         _.bindAll(this, "add", "addGameMoveNotification", "addUserDranNotification");
         var me = this;
         this.notifications = new Backbone.Collection();
@@ -16,7 +19,7 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
         this.user = options.user;
         this.settings = options.settings;
 
-        this.eventEmitter.on('CHAT:MESSAGE', function (data) {
+        this.eventEmitter.on('CHAT:MESSAGE', function(data) {
             console.warn(data.chatmsg);
             var b = new BrowserNotification({
                 title: data.chatmsg.user + " spricht",
@@ -26,17 +29,17 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
                 tag: "chat",
                 icon: "/favicon.ico",
                 timeout: 2000,
-                notifyClick: function () {
+                notifyClick: function() {
                     alert("Geklickt");
                 }
             });
 
         });
 
-        this.eventEmitter.on('GAME:MOVE', function (data) {
+        this.eventEmitter.on('GAME:MOVE', function(data) {
             //skip unrelated
             if (!data.related) {
-                if (Karopapier.User.get("id") == 1) {
+                if (me.user.get("id") == 1) {
                     console.warn(data.movedLogin, "zog bei", data.gid, data.name);
                     //me.addGameMoveNotification(data);
                 }
@@ -50,21 +53,21 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
             }
         });
     },
-    add: function (n) {
+    add: function(n) {
         this.notifications.add(n);
 
         var t = n.get("timeout");
         if (t !== 0) {
             var me = this;
-            setTimeout(function () {
+            setTimeout(function() {
                 me.remove(n);
             }, t);
         }
     },
-    remove: function (n) {
+    remove: function(n) {
         this.notifications.remove(n);
     },
-    addGameMoveNotification: function (data) {
+    addGameMoveNotification: function(data) {
         if (data.name.length > 30) data.name = data.name.substring(0, 27) + "...";
         var text = 'Bei <a href="/game.html?GID=<%= gid %>"><%= name %></a> hat <%= movedLogin %> gerade gezogen. Jetzt ist <%= nextLogin %> dran';
         var t = _.template(text);
@@ -76,7 +79,7 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
         });
         this.add(n);
     },
-    addUserDranNotification: function (data) {
+    addUserDranNotification: function(data) {
         var text = 'Du bist dran! Bei <a href="/game.html?GID=<%= gid %>"><%= name %></a> hat <%= movedLogin %> gerade gezogen.';
         var t = _.template(text);
         var n = new KaroNotification({

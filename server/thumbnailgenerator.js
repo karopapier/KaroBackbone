@@ -3,9 +3,9 @@
 var Promise = require("es6-promise").Promise;
 var http = require('http');
 
-var MapRenderView = require('../)
+var MapRenderView = require('../src/view/map/MapRenderView');
 
-console.log("Usage: node thumbnailgenerator.js 82345 ../images/82345.png");
+console.log('Usage: node thumbnailgenerator.js 82345 ../images/82345.png');
 var userArgs = process.argv.slice(2);
 
 var gid = userArgs[0];
@@ -41,18 +41,16 @@ function getGameDetails(gid) {
 function getMapcode(details) {
     return new Promise(function(resolve, reject) {
         resolve(details.map.mapcode);
-    })
+    });
 }
 
 function logval(val) {
-    console.log()
+    console.log();
 }
 
 getGameDetails(gid)
     .then(getMapcode)
-    .then(function(mapcode)
-        .then()
-        .{
+    .then(function(mapcode) {
         console.log(mapcode);
         code = mapcode;
     });

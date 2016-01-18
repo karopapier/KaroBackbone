@@ -1,8 +1,15 @@
-var LocalSyncModel = Backbone.Model.extend({
+var $ = require('jquery');
+var _ = require('underscore');
+var Backbone = require('backbone');
+module.exports = Backbone.Model.extend(/** @lends LocalSyncModel */ {
     defaults: {
-        storageId: "ID"+Math.round(Math.random()*10000)
+        storageId: "ID" + Math.round(Math.random() * 10000)
     },
-    initialize: function () {
+    /**
+     * @class LocalSyncModel
+     * @constructor LocalSyncModel
+     */
+    initialize: function() {
         _.bindAll(this, "directSave", "onStorageEvent");
         $(window).bind('storage', this.onStorageEvent);
         var id = this.get("storageId");
@@ -29,7 +36,7 @@ var LocalSyncModel = Backbone.Model.extend({
             this.set(j);
         }
     },
-    directSave: function (e) {
+    directSave: function(e) {
         //console.log("Direct save", e, this.toJSON());
         store.set(this.get("storageId"), this.toJSON());
     }

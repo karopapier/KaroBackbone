@@ -1,9 +1,21 @@
-/**
- * Created by pdietrich on 20.05.14.
- */
+var Marionette = require("backbone.marionette");
+var User = require("../model/User.js");
+var DranGameCollection = require('../collection/DranGameCollection');
+var KEvIn = require('../model/KEvIn');
+var LocalSyncModel = require('../model/LocalSyncModel');
+var KaroNotifier = require('../model/KaroNotifier');
+var KaroNotifierView = require('../view/KaroNotifierView');
+var NotificationControl = require('../model/NotificationControl');
+var BrowserNotifier = require('../model/BrowserNotifier');
+var KaroUtil = require('../model/Util');
 
-var KaropapierApp = Marionette.Application.extend({
+module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
     //global layout with regions for nav, sidebar, header and user info...
+    /**
+     * @constructor KaropapierApp
+     * @class KaropapierApp
+     * @param options
+     */
     initialize: function(options) {
         console.log('APP INIT!!!!!!!!!!!');
         var me = this;
@@ -15,11 +27,14 @@ var KaropapierApp = Marionette.Application.extend({
         };
         this.User.fetch();
 
-        this.UserDranGames = new DranGameCollection();
+        this.UserDranGames = new DranGameCollection({
+            user: this.User
+        });
 
         //init Karo Event Interface KEvIn
         this.KEvIn = new KEvIn({
-            user: this.User
+            user: this.User,
+            vent: this.vent
         });
 
         this.Settings = new LocalSyncModel({
@@ -48,8 +63,9 @@ var KaropapierApp = Marionette.Application.extend({
             control: this.notificationControl
         });
 
+        this.util = KaroUtil;
         //lazy css
-        KaroUtil.lazyCss("//www.karopapier.de/css/slidercheckbox/slidercheckbox.css");
+        this.util.lazyCss("//www.karopapier.de/css/slidercheckbox/slidercheckbox.css");
 
         this.listenTo(this, "start", this.bootstrap.bind(this));
     },
@@ -85,7 +101,7 @@ var KaropapierApp = Marionette.Application.extend({
             if (me.User.get("id") == 0) return false;
             var theme = me.User.get("theme");
             var themeUrl = "//www.karopapier.de/themes/" + theme + "/css/theme.css";
-            KaroUtil.lazyCss(themeUrl);
+            me.util.lazyCss(themeUrl);
         }
 
         loadTheme();
@@ -143,4 +159,3 @@ var KaropapierApp = Marionette.Application.extend({
         });
     }
 });
-
