@@ -1,4 +1,7 @@
-var UserInfoBar = Backbone.View.extend({
+var _ = require('underscore');
+var Backbone = require('backbone');
+var UserView = require('./UserView');
+module.exports = Backbone.View.extend({
     id: "userInfoBar",
     tagName: "div",
     template: window.JST["main/userInfoBar"],
@@ -22,13 +25,19 @@ var UserInfoBar = Backbone.View.extend({
         this.listenTo(this.model, "change", this.render);
     },
     render: function() {
-        if (this.model.get("id") !== 0) {
+        var uid = this.model.get("id");
+        if (uid > 0) {
             this.$el.html(this.userView.$el);
             this.$el.append(" ");
             this.$el.append(this.template());
-        } else {
-            this.$el.html('<a class="login" href="/login">Nicht angemeldet</a>');
+            return this;
         }
+
+        var html = "Moment, kenn ich Dich?";
+        if (uid === 0) {
+            html = '<a class="login" href="/login">Nicht angemeldet</a>';
+        }
+        this.$el.html(html);
         return this;
     }
 });

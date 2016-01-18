@@ -2,6 +2,8 @@ var _ = require('underscore');
 var Backbone = require('backbone');
 var MoveMessageCollection = require('../collection/MoveMessageCollection');
 var Map = require('./map/Map');
+var PlayerCollection = require('../collection/PlayerCollection');
+var MotionCollection = require('../collection/MotionCollection');
 
 module.exports = Backbone.Model.extend(/** @lends Game.prototype */ {
     defaults: {

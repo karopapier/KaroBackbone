@@ -1,4 +1,6 @@
-var TitleView = Backbone.View.extend({
+var _ = require('underscore');
+var Backbone = require('backbone');
+module.exports = Backbone.View.extend(/** @lends TitleView */{
     initialize: function (options) {
         _.bindAll(this, "render")
 
