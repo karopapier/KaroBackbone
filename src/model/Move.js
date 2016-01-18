@@ -1,3 +1,4 @@
+var Backbone = require("backbone");
 var Move = Backbone.Model.extend({
     defaults: {
         x: 0,
@@ -5,7 +6,7 @@ var Move = Backbone.Model.extend({
         xv: 0,
         yv: 0
     },
-    getMotion: function () {
+    getMotion: function() {
         var pos = new Position({x: this.get("x"), y: this.get("y")});
         var vec = new Vector({x: this.get("xv"), y: this.get("yv")});
         return new Motion({
@@ -14,4 +15,3 @@ var Move = Backbone.Model.extend({
         });
     }
 });
-

@@ -1,4 +1,6 @@
-var NotificationControl = Backbone.Model.extend({
+var _ = require('underscore');
+var Backbone = require('backbone');
+module.exports = Backbone.Model.extend(/** @lends NotificationControl.prototype */ {
     defaults: {
         supported: undefined,
         granted: false,
@@ -6,6 +8,10 @@ var NotificationControl = Backbone.Model.extend({
         final: false,
         enabled: false
     },
+    /**
+     * @constructor NotificationControl
+     * @class NotificationControl
+     */
     initialize: function () {
         _.bindAll(this, "granted", "unsupported", "denied", "finaldenied", "check", "request");
         //console.log("INIT WEB NOT");

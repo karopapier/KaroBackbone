@@ -1,5 +1,10 @@
-var NotificationControlView = Backbone.View.extend({
-    initialize: function () {
+var Backbone = require('backbone');
+module.exports = Backbone.View.extend(/** lends NotificationControl */ {
+    /**
+     * @constructor NotificationControl
+     * @class NotificationControl
+     */
+    initialize: function() {
 
         console.log("INIT WEB NOT VIEW");
         this.listenTo(this.model, "change:supported", this.updateSupported);
@@ -10,27 +15,27 @@ var NotificationControlView = Backbone.View.extend({
     events: {
         "change #notificationEnabled": "checkEnabled"
     },
-    updateSupported: function () {
+    updateSupported: function() {
         if (this.model.get("supported")) {
             this.$('#statusinfo').attr("data-quicktip", "Dein Browser kann das!");
             this.$('#statusinfo').removeClass().addClass("quicktip quicktip-box quicktip-ok");
         } else {
             this.$('#notificationEnabled').prop("disabled", true);
-            this.$('#statusinfo').attr("data-quicktip", "Dein Browser unterstützt das leider nicht...");
+            this.$('#statusinfo').attr("data-quicktip", "Dein Browser unterstï¿½tzt das leider nicht...");
             this.$('#statusinfo').removeClass().addClass("quicktip quicktip-box quicktip-error");
         }
     },
-    updateEnabled: function () {
+    updateEnabled: function() {
         this.$('#notificationEnabled').prop("checked", this.model.get("enabled"));
     },
-    updateFinal: function () {
+    updateFinal: function() {
         if (this.model.get("denied") && this.model.get("final")) {
             this.$('#notificationEnabled').prop("disabled", true);
         } else {
             this.$('#notificationEnabled').prop("disabled", false);
         }
     },
-    updateDenied: function () {
+    updateDenied: function() {
         if (this.model.get("denied")) {
             console.log("DENIED");
             this.$('#statusinfo').attr("data-quicktip", "Du hast nicht erlaubt, Benachrichtigungen anzuzeigen.");
@@ -39,11 +44,11 @@ var NotificationControlView = Backbone.View.extend({
             this.$('#statusinfo').removeClass().addClass("quicktip quicktip-box quicktip-warn");
         }
     },
-    checkEnabled: function () {
+    checkEnabled: function() {
         var on = this.$("#notificationEnabled").prop("checked");
         this.model.set("enabled", on);
     },
-    render: function () {
+    render: function() {
         var t = '';
         t += '<label for="notificationEnabled"> Desktop-Benachrichtigung?';
         t += '<span id="statusinfo" class="quicktip quicktip-box quicktip-info" data-quicktip="Mal gucken, ob Dein Browser das kann..."> &nbsp;</span>';

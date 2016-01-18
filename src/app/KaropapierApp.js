@@ -1,9 +1,21 @@
-/**
- * Created by pdietrich on 20.05.14.
- */
+var Marionette = require("backbone.marionette");
+var User = require("../model/User.js");
+var DranGameCollection = require('../collection/DranGameCollection');
+var KEvIn = require('../model/KEvIn');
+var LocalSyncModel = require('../model/LocalSyncModel');
+var KaroNotifier = require('../model/KaroNotifier');
+var KaroNotifierView = require('../view/KaroNotifierView');
+var NotificationControl = require('../model/NotificationControl');
+var BrowserNotifier = require('../model/BrowserNotifier');
+var KaroUtil = require('../model/Util');
 
-var KaropapierApp = Marionette.Application.extend({
+module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
     //global layout with regions for nav, sidebar, header and user info...
+    /**
+     * @constructor KaropapierApp
+     * @class KaropapierApp
+     * @param options
+     */
     initialize: function(options) {
         console.log('APP INIT!!!!!!!!!!!');
         var me = this;
@@ -15,12 +27,15 @@ var KaropapierApp = Marionette.Application.extend({
         };
         this.User.fetch();
 
-        this.UserDranGames = new DranGameCollection();
+        this.UserDranGames = new DranGameCollection({
+            user: this.User
+        });
 
         //init Karo Event Interface KEvIn
         this.KEvIn = new KEvIn({
             user: this.User,
-            host: "//turted.karoworld.de"
+            host: "//turted.karoworld.de",
+            vent: this.vent
         });
 
         this.Settings = new LocalSyncModel({
@@ -49,6 +64,7 @@ var KaropapierApp = Marionette.Application.extend({
             control: this.notificationControl
         });
 
+        this.util = KaroUtil;
         //lazy css
         KaroUtil.lazyCss("/css/slidercheckbox/slidercheckbox.css");
 
@@ -145,4 +161,3 @@ var KaropapierApp = Marionette.Application.extend({
         });
     }
 });
-

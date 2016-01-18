@@ -1,4 +1,8 @@
-var Player = Backbone.Model.extend({
+module.exports = Backbone.Model.extend(/** @lends Player.prototype */{
+    /**
+     * @construcor Player
+     * @class Player
+     */
     defaults: {
         id: 0
     },

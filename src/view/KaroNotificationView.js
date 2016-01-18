@@ -1,6 +1,12 @@
-var KaroNotificationView = Backbone.View.extend({
+var _ = require('underscore');
+var Backbone = require('backbone');
+module.exports = Backbone.View.extend(/** @lends KaroNotificationView */ {
     tagName: "li",
     className: "notification",
+    /**
+     * @constructor KaroNotificationView
+     * @class KaroNotificationView
+     */
     initialize: function() {
         _.bindAll(this, "render", "done");
         //this.render();
