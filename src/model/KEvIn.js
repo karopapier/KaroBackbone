@@ -54,14 +54,14 @@ module.exports = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
         this.turted.on('otherMoved', function (data) {
             data.related = true;
             //console.info("GAME:MOVE aus otherMoved");
-            Karopapier.vent.trigger("GAME:MOVE", data);
+            me.vent.trigger("GAME:MOVE", data);
             if (me.user.get("id") == data.nextId) {
                 //console.info("USER:DRAN aus otherMoved");
-                Karopapier.vent.trigger("USER:DRAN", data);
+                me.vent.trigger("USER:DRAN", data);
             }
             if (me.user.get("id") == data.movedId) {
                 //console.info("USER:MOVED aus otherMoved");
-                Karopapier.vent.trigger("USER:MOVED", data);
+                me.vent.trigger("USER:MOVED", data);
             }
         });
 
@@ -69,11 +69,11 @@ module.exports = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
         this.turted.on('anyOtherMoved', function (data) {
             data.related = false;
             //console.info("GAME:MOVE aus anyOtherMoved");
-            Karopapier.vent.trigger("GAME:MOVE", data);
+            me.vent.trigger("GAME:MOVE", data);
         });
         this.turted.on('newChatMessage', function (data) {
             //console.info("CHAT:MESSAGE");
-            Karopapier.vent.trigger("CHAT:MESSAGE", data);
+            me.vent.trigger("CHAT:MESSAGE", data);
         });
     },
     start: function () {

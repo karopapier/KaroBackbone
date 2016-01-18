@@ -1,5 +1,12 @@
-var FaviconView = Backbone.View.extend({
+var _ = require('underscore');
+var Backbone = require('backbone');
+module.exports = Backbone.View.extend(/** @lends FaviconView */ {
     tagName: "link",
+    /**
+     * @class FaviconView
+     * @constructor FaviconView
+     * @param options
+     */
     initialize: function (options) {
         _.bindAll(this, "update", "reset", "addNum", "render")
         this.baseUrl = this.el.href;

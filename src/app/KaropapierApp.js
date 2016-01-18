@@ -8,6 +8,10 @@ var KaroNotifierView = require('../view/KaroNotifierView');
 var NotificationControl = require('../model/NotificationControl');
 var BrowserNotifier = require('../model/BrowserNotifier');
 var KaroUtil = require('../model/Util');
+var FaviconView = require('../view/FaviconView');
+var TitleView = require('../view/TitleView');
+var KaropapierLayout = require('../layout/KaropapierLayout');
+var UserInfoBar = require('../view/UserInfoBar');
 
 module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
     //global layout with regions for nav, sidebar, header and user info...

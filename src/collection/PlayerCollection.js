@@ -1,13 +1,16 @@
-var PlayerCollection = Backbone.Collection.extend({
+var Backbone = require('backbone');
+var Player = require('../model/Player');
+var Position = require('../model/Position');
+module.exports = Backbone.Collection.extend({
     model: Player,
 
     initialize: function(models, options) {
 
     },
 
-    toJSON: function () {
-        var modelJSON=[];
-        this.each(function(e,i) {
+    toJSON: function() {
+        var modelJSON = [];
+        this.each(function(e, i) {
             modelJSON.push(e.toJSON());
         });
         return modelJSON;
@@ -23,15 +26,15 @@ var PlayerCollection = Backbone.Collection.extend({
             status: "ok"
         };
         if (onlyMoved) {
-            queryParams.moved=true;
+            queryParams.moved = true;
         }
         var blockers = this.where(queryParams);
 
-        var positions=[];
-        for (var i = 0, l=blockers.length;i<l; i++) {
-            var mos =blockers[i].moves;
-            if (mos.length>0) {
-                var mo = mos.at(mos.length-1);
+        var positions = [];
+        for (var i = 0, l = blockers.length; i < l; i++) {
+            var mos = blockers[i].moves;
+            if (mos.length > 0) {
+                var mo = mos.at(mos.length - 1);
                 positions.push(new Position({
                     x: mo.attributes.x,
                     y: mo.attributes.y

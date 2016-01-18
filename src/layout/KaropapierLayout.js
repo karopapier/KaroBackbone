@@ -1,4 +1,5 @@
-var KaropapierLayout = Backbone.Marionette.LayoutView.extend({
+var Marionette = require('backbone.marionette');
+module.exports = Marionette.LayoutView.extend({
     regions: {
         header: "#header",
         navi: "#navi",
