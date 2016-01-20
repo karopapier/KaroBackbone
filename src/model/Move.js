@@ -1,5 +1,8 @@
 var Backbone = require("backbone");
-var Move = Backbone.Model.extend({
+var Position = require('./Position');
+var Vector  = require('./Vector');
+var Motion = require('./Motion');
+module.exports = Backbone.Model.extend({
     defaults: {
         x: 0,
         y: 0,

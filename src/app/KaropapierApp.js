@@ -12,6 +12,7 @@ var FaviconView = require('../view/FaviconView');
 var TitleView = require('../view/TitleView');
 var KaropapierLayout = require('../layout/KaropapierLayout');
 var UserInfoBar = require('../view/UserInfoBar');
+require('../polyfills');
 
 module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
     //global layout with regions for nav, sidebar, header and user info...

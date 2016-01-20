@@ -1,3 +1,5 @@
+var _ = require('underscore');
+var Backbone = require('backbone');
 /*
  var crazyHelperFunction = function (mo, depth) {
  var pos1 = mo.getSourcePosition();
@@ -19,7 +21,7 @@
  };
  */
 
-var KRACHZ = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
+module.exports = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
     /**
      * @constructor KRACHZ
      * @class KRACHZ

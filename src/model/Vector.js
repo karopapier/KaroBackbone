@@ -1,4 +1,5 @@
-var Vector = Backbone.Model.extend({
+var Backbone = require('backbone');
+module.exports = Vector = Backbone.Model.extend({
     defaults: {
         x: 0,
         y: 0

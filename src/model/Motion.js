@@ -1,7 +1,9 @@
+var _ = require('underscore');
 var Backbone = require('backbone');
 var Position = require('./Position');
 var Motion = require('./Motion');
-module.exports = Backbone.Model.extend(/** @lends Motion.prototype*/{
+var Vector = require('./Vector');
+module.exports = Motion = Backbone.Model.extend(/** @lends Motion.prototype*/{
     defaults: {
         position: {x: 0, y: 0},
         vector: {x: 0, y: 0}
