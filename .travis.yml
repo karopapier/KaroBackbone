@@ -1,14 +1,11 @@
 sudo: false
 language: node_js
 node_js:
+  - "stable"
   - "0.12"
   - "iojs"
 before_install:
-  - phantomjs --version
   - npm install -g grunt-cli
 before_script:
-  - grunt uglify
-  - grunt jst
-  - grunt cssmin
-  - grunt asset_cachebuster
-script: grunt test --verbose --force
+  - grunt build
+#script: grunt test --verbose --force
