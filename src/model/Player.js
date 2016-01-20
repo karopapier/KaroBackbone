@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var Backbone = require('backbone');
 var MoveCollection = require('../collection/MoveCollection');
 module.exports = Backbone.Model.extend(/** @lends Player.prototype */{

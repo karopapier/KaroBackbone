@@ -1,5 +1,7 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
+var Position = require('../Position');
+karofill = require('../../polyfills');
 module.exports = Backbone.Model.extend(/** @lends Map.prototype*/{
     defaults: {
         id: 0,
