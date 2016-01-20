@@ -155,8 +155,8 @@ module.exports = function(grunt) {
                 }
             }
         },
-        qunit: {
-            files: ['public/test/index.html']
+        nodeunit: {
+            all: ['test/test.js']
         }
     });
 
@@ -167,13 +167,13 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-asset-cachebuster');
-    grunt.loadNpmTasks('grunt-contrib-qunit');
+    grunt.loadNpmTasks('grunt-contrib-nodeunit');
     grunt.loadNpmTasks('grunt-browserify');
 
     // Default task(s).
     grunt.registerTask('default', ['build', 'watch']);
     grunt.registerTask('build', ['browserify', 'uglify', 'jst', 'cssmin', 'asset_cachebuster']);
     grunt.registerTask('spielwiese', ['spielwiese']);
-    grunt.registerTask('test', 'qunit');
+    grunt.registerTask('test', 'nodeunit');
 
 };

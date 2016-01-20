@@ -10,9 +10,9 @@
     "grunt-contrib-watch": "~0.6.1",
     "grunt-jsdoc": "~1.1.0",
     "grunt-asset-cachebuster": "~0.4.0",
-    "grunt-contrib-qunit": "~0.7.0",
     "browserify": "~13.0.0",
-    "grunt-browserify": "~4.0.1"
+    "grunt-browserify": "~4.0.1",
+    "grunt-contrib-nodeunit": "~0.4.1"
   },
   "description": "Backbone based client for Karopapier.de",
   "main": "index.html",
@@ -20,7 +20,7 @@
     "test": "test"
   },
   "scripts": {
-      "test": "nodeunit test/test.js"
+    "test": "grunt test --verbose --force"
   },
   "repository": {
     "type": "git",
