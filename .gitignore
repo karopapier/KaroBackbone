@@ -6,6 +6,7 @@ public/js/Karopapier.*
 public/js/JST.js
 *.min.css
 doc
+public/js/src
 public/index.html
 public/dran.html
 public/chat.html

@@ -12,7 +12,9 @@
     "grunt-asset-cachebuster": "~0.4.0",
     "browserify": "~13.0.0",
     "grunt-browserify": "~4.0.1",
-    "grunt-contrib-nodeunit": "~0.4.1"
+    "grunt-contrib-nodeunit": "~0.4.1",
+    "time-grunt": "~1.3.0",
+    "grunt-contrib-copy": "~0.8.2"
   },
   "description": "Backbone based client for Karopapier.de",
   "main": "index.html",

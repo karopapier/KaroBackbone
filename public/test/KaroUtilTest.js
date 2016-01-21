@@ -1,5 +1,5 @@
 module("KaroUtil");
-test("linkify", function () {
+QUnit.test("linkify", function (assert) {
     var inputs = [
         "-:K Du wurdest zurückgesetzt K:-",
         "i've been looking for -:FfreedomF:-",
@@ -72,17 +72,17 @@ test("linkify", function () {
         'das geht doch schoener: <a class="" title="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG" target="_blank" rel="nofollow" href="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG"><img src="https://en.wikipedia.org/wiki/File:Admiral_Horatio_Nelson,_Nelson\'s_Column,_Trafalgar_Square,_London.JPG" height="20" /></a>'
     ];
 
-    expect(inputs.length * 2 + 3);
+    assert.expect(inputs.length * 2 + 3);
 
     //funny
     for (var i = 0; i < inputs.length; i++) {
-        equal(KaroUtil.linkify(inputs[i]), expects[i], inputs[i]);
+        assert.equal(KaroUtil.linkify(inputs[i]), expects[i], inputs[i]);
     }
 
     //unfunny
     KaroUtil.set("funny", false);
     for (var i = 0; i < inputs.length; i++) {
-        equal(KaroUtil.linkify(inputs[i]), expectsUnfunny[i], inputs[i]);
+        assert.equal(KaroUtil.linkify(inputs[i]), expectsUnfunny[i], inputs[i]);
     }
 
 
@@ -100,6 +100,6 @@ test("linkify", function () {
     ];
 
     for (var i = 0; i < inputs.length; i++) {
-        equal(KaroUtil.linkify(inputs[i]), expects[i], inputs[i]);
+        assert.equal(KaroUtil.linkify(inputs[i]), expects[i], inputs[i]);
     }
 });

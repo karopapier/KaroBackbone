@@ -1,5 +1,7 @@
 module.exports = function(grunt) {
     // Project configuration.
+    require('time-grunt')(grunt);
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         asset_cachebuster: {
@@ -84,7 +86,7 @@ module.exports = function(grunt) {
         watch: {
             scripts: {
                 files: ['src/**/*.js', '!src/<%= pkg.name %>*.js', 'test/**/*.js'],
-                tasks: ['build'],
+                tasks: ['build', 'publish', 'test'],
                 options: {
                     interrupt: true,
                     livereload: {
@@ -122,7 +124,8 @@ module.exports = function(grunt) {
                 }
             },
             tests: {
-                files: ['public/test/*.js'],
+                files: ['public/test/**/*'],
+                tasks: ['test'],
                 options: {
                     interrupt: true,
                     livereload: {
@@ -157,6 +160,17 @@ module.exports = function(grunt) {
         },
         nodeunit: {
             all: ['test/test.js']
+        },
+        copy: {
+            main: {
+                files: [
+                    {
+                        expand: true,
+                        src: ['src/**'],
+                        dest: 'public/js/'
+                    }
+                ]
+            }
         }
     });
 
@@ -165,6 +179,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jst');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-asset-cachebuster');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
@@ -174,6 +189,7 @@ module.exports = function(grunt) {
     grunt.registerTask('build', ['browserify', 'uglify', 'jst', 'cssmin', 'asset_cachebuster']);
     grunt.registerTask('default', ['build', 'watch']);
     grunt.registerTask('spielwiese', ['spielwiese']);
+    grunt.registerTask('publish', ['copy']);
     grunt.registerTask('test', 'nodeunit');
 
 };
