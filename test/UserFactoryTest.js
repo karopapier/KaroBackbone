@@ -52,3 +52,22 @@ exports.getSelfUser = function(test) {
 
     test.done();
 };
+
+exports.userIdChanged = function(test) {
+    test.expect(3);
+
+    var u = new User();
+    var uf = new UserFactory();
+    uf.setLogin(u);
+
+    var u1 = uf.getUser(1);
+    test.equals(u1.get("self"), false, "self is false while not logged in");
+
+    u.set("id", 1);
+    test.equals(u1.get("self"), true, "self is true after id of login user changed");
+
+    u.set("id", 0);
+    test.equals(u1.get("self"), false, "self is false after logout");
+
+    test.done();
+};
