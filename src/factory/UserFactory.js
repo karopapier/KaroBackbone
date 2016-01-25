@@ -38,11 +38,12 @@ module.exports = Backbone.Model.extend(/** @lends UserFactory.prototype */ {
 
     setLogin: function(user) {
         this.login = user;
-        this.uid = user.get("id");
+        this.listenTo(this.login, "change id", this.updateSelf.bind(this));
         this.updateSelf();
     },
     updateSelf: function() {
         var me = this;
+        this.uid = this.login.get("id");
         this.userCache.each(function(u) {
             u.set("self", (u.get("id") === me.uid));
         });

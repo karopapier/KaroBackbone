@@ -1,5 +1,6 @@
 var Marionette = require("backbone.marionette");
 var User = require("../model/User.js");
+var UserFactory = require('../factory/UserFactory');
 var DranGameCollection = require('../collection/DranGameCollection');
 var KEvIn = require('../model/KEvIn');
 var LocalSyncModel = require('../model/LocalSyncModel');
@@ -31,6 +32,9 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
             return "//www.karopapier.de/api/user/check.json?callback=?";
         };
         this.User.fetch();
+
+        this.userFactroy = new UserFactory();
+        this.userFactroy.setLogin(this.User);
 
         this.UserDranGames = new DranGameCollection({
             user: this.User
