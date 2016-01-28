@@ -138,7 +138,7 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
         this.infoBar = new UserInfoBar({
             model: this.User
         });
-        this.layout.header.show(Karopapier.infoBar);
+        this.layout.header.show(this.infoBar);
         this.layout.navi.show(new NaviView());
 
         //Start the router
