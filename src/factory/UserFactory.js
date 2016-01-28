@@ -23,6 +23,7 @@ module.exports = Backbone.Model.extend(/** @lends UserFactory.prototype */ {
         var user = this.userCache.get(data);
         //console.log("Got user",user);
         if (user) {
+            user.set(data);
             return user;
         }
 
