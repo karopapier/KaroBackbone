@@ -17,11 +17,6 @@ module.exports = Backbone.View.extend({
         }
         this.options = _.defaults(options || {}, this.options);
         _.bindAll(this, "dranChange", "render", "onChange");
-        if (options.hasOwnProperty("self")) {
-            alert("ICH HABS");
-        } else {
-            alert("Ich habs nicht");
-        }
 
         //console.log("Init UserView", this.model.get("login"));
         this.listenTo(this.model, "change", this.onChange);
@@ -56,7 +51,6 @@ module.exports = Backbone.View.extend({
     },
     renderedView: function() {
         var data = this.model.toJSON();
-        data.self = (this.model.get("id") == Karopapier.User.get("id"));
         var view = this.template({
             options: this.options,
             data: data

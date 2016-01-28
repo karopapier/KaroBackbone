@@ -149,9 +149,9 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
         this.vent.on('GAME:MOVE', function(data) {
             //only for unrelated moves, count up or down
             if (data.related) return false;
-            var movedUser = new User({id: data.movedId, login: data.movedLogin})
+            var movedUser = me.userFactory.getUser({id: data.movedId, login: data.movedLogin});
             movedUser.decreaseDran();
-            var nextUser = new User({id: data.nextId, login: data.nextLogin});
+            var nextUser = me.userFactory.getUser({id: data.nextId, login: data.nextLogin});
             nextUser.increaseDran();
         });
 

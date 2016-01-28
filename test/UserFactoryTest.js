@@ -12,11 +12,12 @@ exports.getUser = function(test) {
         id: 1
     });
 
-    test.expect(3);
+    test.expect(4);
 
     test.strictEqual(u1, u2);
     test.notStrictEqual(u1, u_);
     test.strictEqual(u1, ux);
+    test.equal(u1.get("name"), "Dada", "getting a user with data sets the data as well");
 
     test.done();
 };
