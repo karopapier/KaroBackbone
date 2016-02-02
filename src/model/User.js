@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var Backbone = require('backbone-model-factory');
+var Backbone = require('backbone');
 module.exports = Backbone.Model.extend(/** @lends User.prototype */ {
     defaults: {
         id: 0,

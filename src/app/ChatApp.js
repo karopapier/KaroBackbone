@@ -1,5 +1,10 @@
-var ChatApp = Backbone.Marionette.Application.extend({
-    initialize: function (options) {
+var Backbone = require('backbone');
+var Marionette = require('backbone.marionette');
+var ChatLayout = require('../layout/ChatLayout');
+var ChatMessageCache = require('../collection/ChatMessageCache');
+var ChatMessageCollection = require('../collection/ChatMessageCollection');
+module.exports = Marionette.Application.extend({
+    initialize: function(options) {
         _.bindAll(this, "updateView", "start", "scrollCheck");
         this.layout = new ChatLayout({});
         this.view = new ChatAppView({
@@ -42,7 +47,7 @@ var ChatApp = Backbone.Marionette.Application.extend({
 
         this.chatEnterView = new ChatEnterView({});
 
-        this.listenTo(this.configuration, "change:limit", function (conf, limit) {
+        this.listenTo(this.configuration, "change:limit", function(conf, limit) {
             if (this.configuration.get("atEnd")) {
                 var start = this.configuration.get("lastLineId") - this.configuration.get("limit");
                 this.configuration.set("start", start);
