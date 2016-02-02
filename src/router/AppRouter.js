@@ -1,5 +1,15 @@
-var APPS = {};
-var AppRouter = Backbone.Router.extend({
+var Backbone = require('backbone');
+var ChatApp = require('../app/ChatApp');
+module.exports = Backbone.Router.extend({
+    initialize: function(options) {
+        options = options || {};
+        if (!options.app) {
+            console.error("No app for AppRouter");
+            return false;
+        }
+        this.app = options.app;
+        this.app.APPS = {};
+    },
     routes: {
         "": "showChat",
         "index.html": "showChat",
@@ -11,49 +21,49 @@ var AppRouter = Backbone.Router.extend({
         "game.html": "defaultRoute",
         ":path": "showStatic"
     },
-    doDummy: function (info) {
+    doDummy: function(info) {
         var a;
-        if (info in APPS) {
-            a = APPS[info];
+        if (info in this.app.APPS) {
+            a = this.app.APPS[info];
         } else {
             a = new DummyApp({
                 info: info
             });
             a.start();
-            APPS[info] = a;
+            this.app.APPS[info] = a;
         }
-        Karopapier.layout.content.show(a.view, {preventDestroy: true});
+        this.app.layout.content.show(a.view, {preventDestroy: true});
     },
-    showStatic: function (path) {
+    showStatic: function(path) {
         this.doDummy(path);
         return;
 
-        Karopapier.layout.content.show(new StaticView({
+        this.app.layout.content.show(new StaticView({
             path: path
         }));
     },
-    showChat: function () {
-        //if (!Karopapier.chatApp) {
-        //Karopapier.chatContainer = new Backbone.View();
-        Karopapier.chatApp = new ChatApp();
-        Karopapier.layout.content.show(Karopapier.chatApp.view);
+    showChat: function() {
+        //if (!this.app.chatApp) {
+        //this.app.chatContainer = new Backbone.View();
+        this.app.chatApp = new ChatApp();
+        this.app.layout.content.show(this.app.chatApp.view);
     },
     showEditor: function() {
-        Karopapier.editorApp = new EditorApp();
-        Karopapier.layout.content.show(Karopapier.editorApp.layout);
+        this.app.editorApp = new EditorApp();
+        this.app.layout.content.show(this.app.editorApp.layout);
     },
-    showDran: function () {
-        Karopapier.dranApp = new DranApp();
-        Karopapier.layout.content.show(Karopapier.dranApp.view);
+    showDran: function() {
+        this.app.dranApp = new DranApp();
+        this.app.layout.content.show(this.app.dranApp.view);
     },
-    showGame: function (gameId) {
+    showGame: function(gameId) {
         this.doDummy("Game " + gameId);
         return;
         if (gameId) {
             game.load(gameId);
         }
     },
-    defaultRoute: function () {
+    defaultRoute: function() {
         this.doDummy("Game with no ID");
         return;
         this.navigate("game.html", {trigger: true});

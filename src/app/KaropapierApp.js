@@ -1,3 +1,4 @@
+var Backbone = require('backbone');
 var Marionette = require("backbone.marionette");
 var User = require("../model/User.js");
 var UserFactory = require('../factory/UserFactory');
@@ -13,6 +14,8 @@ var FaviconView = require('../view/FaviconView');
 var TitleView = require('../view/TitleView');
 var KaropapierLayout = require('../layout/KaropapierLayout');
 var UserInfoBar = require('../view/UserInfoBar');
+var NaviView = require('../view/NaviView');
+var AppRouter = require('../router/AppRouter')
 require('../polyfills');
 
 module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
@@ -141,7 +144,9 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
         this.layout.navi.show(new NaviView());
 
         //Start the router
-        this.router = new AppRouter();
+        this.router = new AppRouter({
+            app: this
+        });
         Backbone.history.start({
             pushState: true
         });
