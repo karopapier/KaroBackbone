@@ -45,7 +45,10 @@ module.exports = Backbone.Router.extend({
     showChat: function() {
         //if (!this.app.chatApp) {
         //this.app.chatContainer = new Backbone.View();
-        this.app.chatApp = new ChatApp();
+        this.app.chatApp = new ChatApp({
+            app: this.app,
+            settings: this.app.Settings
+        });
         this.app.layout.content.show(this.app.chatApp.view);
     },
     showEditor: function() {

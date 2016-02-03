@@ -1,4 +1,5 @@
-var ChatLayout = Backbone.Marionette.LayoutView.extend({
+var Marionette = require('backbone.marionette');
+module.exports = Marionette.LayoutView.extend({
     className: "chatLayout",
     template: window["JST"]["chat/chatLayout"],
     regions: {

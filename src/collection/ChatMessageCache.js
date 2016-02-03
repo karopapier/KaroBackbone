@@ -1,4 +1,6 @@
-var ChatMessageCache = Backbone.Collection.extend({
+var Backbone = require('backbone');
+var ChatMessage = require('../model/ChatMessage');
+module.exports = Backbone.Collection.extend({
     url: "//www.karopapier.de/api/chat/list.json?limit=100&callback=?",
     baseUrl: "//www.karopapier.de/api/chat/list.json",
     model: ChatMessage,

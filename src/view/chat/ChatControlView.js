@@ -1,4 +1,6 @@
-var ChatControlView = Backbone.View.extend({
+var Backbone = require('backbone');
+var NotificationControlView = require('../NotificationControlView');
+module.exports = Backbone.View.extend({
     tagName: "div",
     template: window["JST"]["chat/chatControl"],
     initialize: function () {

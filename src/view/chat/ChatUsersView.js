@@ -1,4 +1,6 @@
-var ChatUsersView = Marionette.CollectionView.extend({
+var Marionette = require('backbone.marionette');
+var UserView = require('../UserView');
+module.exports = Marionette.CollectionView.extend({
     tagName: "ul",
     className: "chatUsersView",
     childView: UserView,
