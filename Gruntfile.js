@@ -134,7 +134,7 @@ module.exports = function(grunt) {
                 }
             },
             spielwiese: {
-                files: ['spielwiese/**/*'],
+                files: ['public/spielwiese/**/*'],
                 options: {
                     interrupt: true,
                     livereload: {
