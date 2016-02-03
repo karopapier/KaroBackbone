@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 var BrowserNotification = require('./BrowserNotification');
+var KaroNotification = require('./KaroNotification');
 module.exports = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
     defaults: {},
     /**

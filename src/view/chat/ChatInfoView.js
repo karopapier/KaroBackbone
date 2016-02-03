@@ -1,4 +1,8 @@
-var ChatInfoView = Backbone.Marionette.ItemView.extend({
+$ = require('jquery');
+var Backbone = require('backbone');
+var ChatUserCollection = require('../../collection/ChatUserCollection');
+var ChatUsersView = require('./ChatUsersView');
+module.exports = Backbone.Marionette.ItemView.extend({
     tagName: "div",
     className: "chatInfoView",
     template: window["JST"]["chat/chatInfo"],

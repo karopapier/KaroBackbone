@@ -3,9 +3,24 @@ var Marionette = require('backbone.marionette');
 var ChatLayout = require('../layout/ChatLayout');
 var ChatMessageCache = require('../collection/ChatMessageCache');
 var ChatMessageCollection = require('../collection/ChatMessageCollection');
+var ChatAppView = require('../view/chat/ChatAppView');
+var ChatMessagesView = require('../../public/js/src/view/chat/ChatMessagesView');
+var ChatInfoView = require('../view/chat/ChatInfoView');
+var ChatControlView = require('../view/chat/ChatControlView');
 module.exports = Marionette.Application.extend({
     initialize: function(options) {
+        options = options || {};
+        if (!options.app) {
+            console.error("No app passed to ChatApp");
+            return false;
+        }
+        if (!options.settings) {
+            console.error("No settings passed to ChatApp");
+            return false;
+        }
         _.bindAll(this, "updateView", "start", "scrollCheck");
+        this.app = options.app;
+        this.settings = options.settings;
         this.layout = new ChatLayout({});
         this.view = new ChatAppView({
             model: this
@@ -14,17 +29,17 @@ module.exports = Marionette.Application.extend({
 
         //console.log("Im ChatApp.init ist funny", Karopapier.Settings.get("chat_funny"));
         this.configuration = new Backbone.Model({
-            limit: Karopapier.Settings.get("chat_limit"),
+            limit: this.settings.get("chat_limit"),
             lastLineId: 0,
             atEnd: true,
             start: 0,
             history: false,
-            funny: Karopapier.Settings.get("chat_funny"),
-            showBotrix: Karopapier.Settings.get("chat_showBotrix"),
-            oldLink: Karopapier.Settings.get("chat_oldLink")
+            funny: this.settings.get("chat_funny"),
+            showBotrix: this.settings.get("chat_showBotrix"),
+            oldLink: this.settings.get("chat_oldLink")
         });
-        KaroUtil.set("funny", this.configuration.get("funny"));
-        KaroUtil.set("oldLink", this.configuration.get("oldLink"));
+        this.app.util.set("funny", this.configuration.get("funny"));
+        this.app.util.set("oldLink", this.configuration.get("oldLink"));
 
         this.chatMessageCache = new ChatMessageCache({});
         this.chatMessageCache.cache(0, 20); //initial short load
@@ -33,12 +48,13 @@ module.exports = Marionette.Application.extend({
 
         this.chatMessagesView = new ChatMessagesView({
             model: this.configuration,
-            collection: this.chatMessageCollection
+            collection: this.chatMessageCollection,
+            util: this.app.util
         });
         //this.chatMessagesView.render();
 
         this.chatInfoView = new ChatInfoView({
-            model: Karopapier.User
+            model: this.app.User
         });
 
         this.chatControlView = new ChatControlView({
@@ -55,61 +71,61 @@ module.exports = Marionette.Application.extend({
             Karopapier.Settings.set("chat_limit", limit);
         });
 
-        this.listenTo(this.configuration, "change:start", function (conf, start) {
+        this.listenTo(this.configuration, "change:start", function(conf, start) {
             console.log("Start changed, was ", conf.previous("start"), "now", start);
             this.chatMessageCache.cache(start);
         });
 
-        this.listenTo(this.configuration, "change:showBotrix", function (conf, showBotrix) {
+        this.listenTo(this.configuration, "change:showBotrix", function(conf, showBotrix) {
             Karopapier.Settings.set("chat_showBotrix", showBotrix);
         });
 
-        this.listenTo(this.configuration, "change:funny", function (conf, funny) {
+        this.listenTo(this.configuration, "change:funny", function(conf, funny) {
             Karopapier.Settings.set("chat_funny", funny);
         });
 
-        this.listenTo(this.configuration, "change:oldLink", function (conf, oldLink) {
+        this.listenTo(this.configuration, "change:oldLink", function(conf, oldLink) {
             Karopapier.Settings.set("chat_oldLink", oldLink);
         });
 
-        this.listenTo(Karopapier.Settings, "change:chat_limit", function (conf, limit) {
+        this.listenTo(Karopapier.Settings, "change:chat_limit", function(conf, limit) {
             this.configuration.set("limit", limit);
         });
 
-        this.listenTo(Karopapier.Settings, "change:chat_funny", function (conf, funny) {
+        this.listenTo(Karopapier.Settings, "change:chat_funny", function(conf, funny) {
             //console.log("ChatApp bekommt mit, dass sich Karo.Settings -> funny ge�ndert hat",funny);
             this.configuration.set("funny", funny);
-            KaroUtil.set("funny", funny);
-            this.chatMessageCache.each(function (m) {
+            this.app.util.set("funny", funny);
+            this.chatMessageCache.each(function(m) {
                 //dummy trigger change event to force re-render
                 m.set("funny", funny);
             });
         });
 
-        this.listenTo(Karopapier.Settings, "change:chat_oldLink", function (conf, oldLink) {
+        this.listenTo(Karopapier.Settings, "change:chat_oldLink", function(conf, oldLink) {
             //console.log("ChatApp bekommt mit, dass sich Karo.Settings -> oldLink ge�ndert hat", oldLink);
             this.configuration.set("oldLink", oldLink);
-            KaroUtil.set("oldLink", oldLink);
-            this.chatMessageCache.each(function (m) {
+            this.app.util.set("oldLink", oldLink);
+            this.chatMessageCache.each(function(m) {
                 //dummy trigger change event to force re-render
                 m.set("oldLink", oldLink);
             });
         });
 
-        this.listenTo(Karopapier.Settings, "change:chat_showBotrix", function (conf, showBotrix) {
+        this.listenTo(Karopapier.Settings, "change:chat_showBotrix", function(conf, showBotrix) {
             //console.log("ChatApp bekommt mit, dass sich Karo.Settings -> showBotrix ge�ndert hat",showBotrix);
             this.configuration.set("showBotrix", showBotrix);
-            this.chatMessageCache.each(function (m) {
+            this.chatMessageCache.each(function(m) {
                 //dummy trigger change event to force re-render
                 m.set("showBotrix", showBotrix);
             });
         });
 
-        this.listenTo(this.chatMessageCache, "CHAT:CACHE:UPDATED", function () {
+        this.listenTo(this.chatMessageCache, "CHAT:CACHE:UPDATED", function() {
             //chat cache was updated - filter what to view
             var start = this.configuration.get("start");
             var end = parseInt(start) + parseInt(this.configuration.get("limit"));
-            var toShow = this.chatMessageCache.filter(function (cm) {
+            var toShow = this.chatMessageCache.filter(function(cm) {
                 var lineId = cm.get("lineId");
                 //console.log("Check",lineId,"to be between",start,end);
                 return ((lineId >= start) && (lineId <= end));
@@ -118,7 +134,7 @@ module.exports = Marionette.Application.extend({
             this.chatMessageCollection.set(toShow);
         });
 
-        this.listenTo(this.chatMessagesView, "CHAT:MESSAGES:TOP", function () {
+        this.listenTo(this.chatMessagesView, "CHAT:MESSAGES:TOP", function() {
             if (!this.configuration.get("history")) {
                 console.info("Not in history mode");
                 return false;
@@ -138,12 +154,12 @@ module.exports = Marionette.Application.extend({
 
         //wire message cache and view collection together
         var me = this;
-        this.listenTo(this.chatMessageCache.info, "change:lastLineId", function (ll) {
+        this.listenTo(this.chatMessageCache.info, "change:lastLineId", function(ll) {
             console.warn("Update conf ll to ", ll.get("lastLineId"));
             this.configuration.set("lastLineId", ll.get("lastLineId"));
         });
 
-        this.listenTo(this.configuration, "change:lastLineId", function () {
+        this.listenTo(this.configuration, "change:lastLineId", function() {
             //a change here only matters if we are "at the end"
             var ll = this.configuration.get("lastLineId");
             if (this.configuration.get("atEnd")) {
@@ -161,14 +177,14 @@ module.exports = Marionette.Application.extend({
         //this.listenTo(this.configuration, "change:limit", this.updateView);
 
         //dirty first poor man's refresh and backup
-        this.refreshMessages = setInterval(function () {
+        this.refreshMessages = setInterval(function() {
             //this.chatMessageCollection.fetch();
             this.chatInfoView.updateTopBlocker();
             //keepalive
             $.getJSON("/api/chat/list.json?limit=2&callback=?");
         }.bind(this), 59000);
 
-        Karopapier.vent.on('CHAT:MESSAGE', function (data) {
+        Karopapier.vent.on('CHAT:MESSAGE', function(data) {
             //console.log("vent CHAT:MESSAGE triggered inside ChatApp");
             //disable due to XSS danger
             //console.log(data);
@@ -178,7 +194,7 @@ module.exports = Marionette.Application.extend({
             me.chatMessageCache.cache(me.configuration.get("lastLineId"));
         });
     },
-    updateView: function () {
+    updateView: function() {
         //console.log("updateView");
         if (this.configuration.get("atEnd")) {
             console.log("We are at the end");
@@ -187,19 +203,19 @@ module.exports = Marionette.Application.extend({
             this.chatMessageCollection.set(this.chatMessageCache.slice(l - lim));
         }
     },
-    scrollCheck: function (e) {
+    scrollCheck: function(e) {
         //console.log("Check already", this.already);
         var cmv = this.chatMessagesView;
         var me = this;
         if (this.already) {
             cmv.scrollCheck();
             this.already = false;
-            setTimeout(function () {
+            setTimeout(function() {
                 me.already = true
             }, 50);
         }
     },
-    start: function () {
+    start: function() {
         //Karopapier.chatApp.layout); //, {preventDestroy: true});
         //console.log(Karopapier.chatApp.layout);
         //Karopapier.ca = new ChatLayout();

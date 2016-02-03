@@ -1,4 +1,6 @@
-var ChatMessageCache = Backbone.Collection.extend({
+var Backbone = require('backbone');
+var ChatMessage = require('../model/ChatMessage');
+module.exports = Backbone.Collection.extend({
     url: "/api/chat?limit=100&callback=?",
     baseUrl: "/api/chat",
     model: ChatMessage,
