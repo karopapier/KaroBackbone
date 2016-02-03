@@ -186,6 +186,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-browserify');
 
     // Default task(s).
+    grunt.registerTask('build', ['copy', 'browserify', 'uglify', 'jst', 'cssmin', 'asset_cachebuster']);
     grunt.registerTask('default', ['build', 'watch']);
     grunt.registerTask('build', ['browserify', 'uglify', 'jst', 'cssmin', 'asset_cachebuster']);
     grunt.registerTask('spielwiese', ['spielwiese']);
