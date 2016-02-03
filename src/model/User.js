@@ -18,7 +18,6 @@ module.exports = Backbone.ModelFactory(/** @lends User.prototype */ {
         this.set("dran", this.get("dran") + 1);
     },
     decreaseDran: function() {
-        console.log("Es decreeasete dran", this.get("id"), this.get("login"), this.cid);
         this.set("dran", this.get("dran") - 1);
     }
 });

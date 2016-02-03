@@ -3,13 +3,24 @@
 var Promise = require("es6-promise").Promise;
 var http = require('http');
 
+var rendr = require('rendr');
+
 var MapRenderView = require('../src/view/map/MapRenderView');
 
-console.log('Usage: node thumbnailgenerator.js 82345 ../images/82345.png');
 var userArgs = process.argv.slice(2);
 
 var gid = userArgs[0];
 var outputfilepath = userArgs[1];
+
+function exitWithUsage() {
+    console.log('Usage: node thumbnailgenerator.js 82345 ../images/82345.png');
+    return false;
+}
+
+if (!gid || !outputfilepath) {
+    exitWithUsage();
+    return false;
+}
 
 console.log("Create Thumbnail for GID", gid, "to", outputfilepath);
 
@@ -17,7 +28,7 @@ function getGameDetails(gid) {
     return new Promise(function(resolve, reject) {
         var options = {
             host: 'www.karopapier.de',
-            path: 'http://www.karopapier.de/api/game/44773/details.json'
+            path: 'http://www.karopapier.de/api/game/' + gid + '/details.json'
         };
 
         callback = function(response) {
@@ -35,24 +46,29 @@ function getGameDetails(gid) {
         }
 
         http.request(options, callback).end();
-    })
+    });
 };
 
-function getMapcode(details) {
+function getMapcodeFromDetails(details) {
     return new Promise(function(resolve, reject) {
         resolve(details.map.mapcode);
     });
 }
 
 function logval(val) {
-    console.log();
+    console.log(val);
 }
 
 getGameDetails(gid)
-    .then(getMapcode)
+    .then(getMapcodeFromDetails)
     .then(function(mapcode) {
-        console.log(mapcode);
-        code = mapcode;
+        var code = mapcode;
+        logval(code);
+        var mrv = new MapRenderView();
+        //mrv.setMapcode(mapcode);
+        //logval(mrv.ctx);
+    })
+    .catch(function(err) {
+        console.error(err);
     });
-
 

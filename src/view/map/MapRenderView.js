@@ -1,13 +1,6 @@
-/**
- * Created with JetBrains PhpStorm.
- * User: pdietrich
- * Date: 10.08.12
- * Time: 12:07
- * To change this template use File | Settings | File Templates.
- */
-
-
-var MapRenderView = MapBaseView.extend({
+var MapBaseView = require('./MapBaseView');
+var MapRenderPalette = require('../../model/map/MapRenderPalette');
+module.exports = MapBaseView.extend({
     className: "mapRenderView",
     tagName: "canvas",
     initialize: function(options) {

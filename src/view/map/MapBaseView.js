@@ -14,7 +14,8 @@
  * @property {number} y y coordinate
  */
 
-var MapBaseView = Marionette.View.extend(/** @lends MapBaseView.prototype */
+var Marionette = require('backbone.marionette');
+module.exports = Marionette.View.extend(/** @lends MapBaseView.prototype */
     {
         optionDefaults: {
             size: 12,
