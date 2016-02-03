@@ -6,7 +6,7 @@ var tests = [
     "MotionTest",
     "PositionTest",
     "VectorTest",
-    "UserFactoryTest",
+    //"UserFactoryTest",
 ];
 
 //tests = ["VectorTest"];
