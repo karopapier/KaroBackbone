@@ -1,5 +1,6 @@
 //container for rendered map and players
-var GameListItemView = Marionette.ItemView.extend({
+var Marionette = require('backbone.marionette');
+module.exports = Marionette.ItemView.extend({
     tagName: "tr",
     template: window["JST"]["game/gameListItem"]
 });

@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
 var ChatApp = require('../app/ChatApp');
+var DranApp = require('../app/DranApp');
 module.exports = Backbone.Router.extend({
     initialize: function(options) {
         options = options || {};

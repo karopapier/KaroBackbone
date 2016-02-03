@@ -18,4 +18,4 @@
 <% } %>
 </span>
 
-<% if (options.withGames) { %> <small><% if (options.withGamesLink && data.self) { %>(<a href="/dran.html"><%= data.dran %></a>/<% } else { %>(<%= data.dran %>/<% } %><% if (options.withGamesLink) { %><a href="http://www.karopapier.de/showgames.php?spielevon=<%= data.id %>"><%= data.activeGames %></a>)<% } else { %><%= data.activeGames %>)<% } %></small><% } %>
+<% if (options.withGames) { %> <small><% if (options.withGamesLink) { %>(<a href="/dran.html?uid=<%= data.id %>"><%= data.dran %></a>/<% } else { %>(<%= data.dran %>/<% } %><% if (options.withGamesLink) { %><a href="http://www.karopapier.de/showgames.php?spielevon=<%= data.id %>"><%= data.activeGames %></a>)<% } else { %><%= data.activeGames %>)<% } %></small><% } %>

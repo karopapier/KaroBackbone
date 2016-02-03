@@ -35,10 +35,11 @@ module.exports = Backbone.View.extend({
         this.render();
     },
     dranChange: function(user) {
+        console.log("Dran changed ");
         var prevDran = this.model.previous("dran");
         var newDran = this.model.get("dran");
         if (prevDran >= 0) {
-            //console.log("Dran changed from", prevDran, " to ", newVal);
+            console.log("Dran changed from", prevDran, " to ", newDran);
             var col = (prevDran > newDran) ? "#00ff00" : "#ff0000";
 
             //gets nihilated by immediately following render
@@ -58,6 +59,7 @@ module.exports = Backbone.View.extend({
         return view;
     },
     render: function() {
+        //console.log("User view für", this.model.cid, this.model.attributes.login);
         this.$el.html(this.renderedView());
     }
 });

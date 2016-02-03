@@ -2,7 +2,7 @@ var $ = require('jquery');
 var KaropapierApp = require('./app/KaropapierApp');
 var Karopapier = new KaropapierApp();
 
-//need to get rid of that
+//TODO: need to get rid of that
 Karopapier.vent.on("logout", function() {
     console.log("Logging out");
     Karopapier.User.set("id", 0);
