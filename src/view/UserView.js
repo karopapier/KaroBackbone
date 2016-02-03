@@ -35,11 +35,11 @@ module.exports = Backbone.View.extend({
         this.render();
     },
     dranChange: function(user) {
-        console.log("Dran changed ");
+        //console.log("Dran changed ");
         var prevDran = this.model.previous("dran");
         var newDran = this.model.get("dran");
         if (prevDran >= 0) {
-            console.log("Dran changed from", prevDran, " to ", newDran);
+            //console.log("Dran changed from", prevDran, " to ", newDran);
             var col = (prevDran > newDran) ? "#00ff00" : "#ff0000";
 
             //gets nihilated by immediately following render

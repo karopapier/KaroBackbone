@@ -1,4 +1,5 @@
-var MapRenderPalette = Backbone.Model.extend({
+var Backbone = require('backbone');
+module.exports = Backbone.Model.extend({
     defaults: {
         "road": "128,128,128",
         "road_2": "100,100,100",
