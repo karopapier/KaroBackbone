@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Eier in die Pfanne</title>
+    </head>
+    <body>
+        <script src="../js/libs/jquery-1.11.3.min.js"></script>
+        <script src="../js/libs/underscore-min.js"></script>
+        <script type="text/javascript">
+
+            var ME = 1;
+
+            /**
+             * Returns a random integer between min (inclusive) and max (inclusive)
+             * Using Math.round() will give you a non-uniform distribution!
+             */
+            function getRandomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            function myTextGet(url, cb, errcb) {
+                var request = new XMLHttpRequest();
+                //request.withCredentials = true;
+                request.open('GET', url, true);
+                request.onload = function() {
+                    if (request.status >= 200 && request.status < 400) {
+                        // Success!
+                        //console.log(request.responseText);
+                        cb(request.responseText);
+                        //console.log("Success: ",request.responseText.indexOf("Danke.") >=0);
+                    } else {
+                        // We reached our target server, but it returned an error
+                        cb(request.responseText);
+                        //console.log("doof",request);
+                    }
+                };
+
+                request.onerror = function() {
+                    // There was a connection error of some sort
+                };
+
+                request.send();
+            }
+
+            var promiseRecipe = function() {
+                return new Promise(function(resolve) {
+                    var url = "https://www.karopapier.de/chefkoch.php";
+                    url += "?callback";
+                    $.getJSON(url, function(data) {
+                        resolve(data);
+                    }, function(err) {
+                        throw "No Recipe";
+                    })
+                });
+            };
+
+            var promiseChatDesperates = function() {
+                return new Promise(function(resolve) {
+                    var url = "http://www.karopapier.de/api/chat/users.json";
+                    url += "?callback=?";
+                    $.getJSON(url, function(data) {
+                        resolve(data.filter(function(e) {
+                            return e.desperate
+                        }));
+                    })
+                });
+            };
+
+            var promiseMapForXPlayers = function(x) {
+                var url = "http://www.karopapier.de/api/map/list.json?players=" + x + "&nocode=true";
+                url += "&callback=?";
+                return new Promise(function(resolve) {
+                    $.getJSON(url, function(data) {
+                        resolve(data);
+                    })
+
+                });
+            };
+
+            var promisePlayersAndMap = function() {
+                return new Promise(function(resolve, reject) {
+                    promiseChatDesperates()
+                            .then(function(players) {
+                                var playerIds = players.map(function(e) {
+                                    return e.id;
+                                });
+
+                                //if I'm in the list, remove me
+                                var meIdx = playerIds.indexOf(ME);
+                                if (meIdx > -1) {
+                                    playerIds.slice(meIdx, 1);
+                                }
+
+                                if (playerIds.length < 1) {
+                                    reject("Not enough players");
+                                    return false;
+                                }
+
+                                //random sort
+                                _.shuffle(playerIds)
+                                console.log(playerIds);
+
+                                console.log("Now pick how many should play with me...");
+                                var len = playerIds.length;
+                                var num = getRandomInt(1, playerIds.length);
+                                console.log("I want to have ", num, "joining me");
+                                var selectedPlayers = playerIds.slice(0, num);
+                                selectedPlayers.unshift(ME);
+                                console.log("Final list", selectedPlayers);
+
+                                promiseMapForXPlayers(playerIds.length).then(function(maps) {
+                                    var idx = Math.floor(Math.random() * maps.length)
+                                    console.log("Pick one", idx);
+                                    resolve([selectedPlayers, maps[idx].id]);
+                                })
+                            })
+                            .catch(function(err) {
+                                throw err;
+                            });
+                });
+            };
+
+
+            Promise.all([
+                        promiseRecipe(),
+                        promisePlayersAndMap(),
+                    ])
+                    .then(function(val) {
+                        var recipe = val[0];
+                        var playersAndMap = val[1];
+                        var players = playersAndMap[0];
+                        var map = playersAndMap[1];
+
+                        var title = "Pfannenei mit " + recipe
+                        console.log("Title", title);
+                        console.log("Players", players);
+                        console.log("Map", map);
+                    })
+                    .catch(function(err) {
+                        console.error("Nix ging, weil", err);
+                    });
+
+        </script>
+
+        <script type="text/javascript">
+            if (!/karopapier/.test(window.location.hostname)) {
+                document.write('<scr' + 'ipt src="http://localhost:20000/livereload.js?v=1454408370541"></scr' + 'ipt>');
+            }
+        </script>
+    </body>
+</html>
