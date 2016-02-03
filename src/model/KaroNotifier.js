@@ -21,7 +21,7 @@ module.exports = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
         this.settings = options.settings;
 
         this.eventEmitter.on('CHAT:MESSAGE', function(data) {
-            console.warn(data.chatmsg);
+            //console.warn(data.chatmsg);
             var b = new BrowserNotification({
                 title: data.user + " spricht",
                 body: data.text,

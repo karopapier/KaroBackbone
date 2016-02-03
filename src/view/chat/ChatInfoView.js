@@ -6,7 +6,13 @@ module.exports = Backbone.Marionette.ItemView.extend({
     tagName: "div",
     className: "chatInfoView",
     template: window["JST"]["chat/chatInfo"],
-    initialize: function () {
+    initialize: function (options) {
+        options=options||{};
+        if (!options.app) {
+            console.error("No app in ChatInfoView");
+            return false;
+        }
+        this.app = options.app;
         _.bindAll(this, "updateInfos", "updateTopBlocker", "updateHabdich", "updateDranInfo", "updateChatUser", "render");
         this.$el.html(this.template);
         //console.log("Init civ");
@@ -55,7 +61,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
                 html = '<a href="/dran.html" target="ibndran">Bei <strong>' + dran + '</strong> Spielen dran</a> <a href=""">';
             }
             if (dran > 0) {
-                var nextGame = Karopapier.UserDranGames.at(0);
+                var nextGame = this.app.UserDranGames.at(0);
                 if (nextGame) {
                     html += '<br><a title="ZIEH!" href="/game.html?GID=' + nextGame.get("id") + '"><b>Zieh!</b><img src="/images/arrow_right.png" style="vertical-align: center"></a>';
                 }

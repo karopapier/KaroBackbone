@@ -7,6 +7,8 @@ var ChatAppView = require('../view/chat/ChatAppView');
 var ChatMessagesView = require('../../public/js/src/view/chat/ChatMessagesView');
 var ChatInfoView = require('../view/chat/ChatInfoView');
 var ChatControlView = require('../view/chat/ChatControlView');
+var ChatEnterView = require('../view/chat/ChatEnterView');
+var KaropapierApp = require('./KaropapierApp');
 module.exports = Marionette.Application.extend({
     initialize: function(options) {
         options = options || {};
@@ -44,7 +46,9 @@ module.exports = Marionette.Application.extend({
         this.chatMessageCache = new ChatMessageCache({});
         this.chatMessageCache.cache(0, 20); //initial short load
 
-        this.chatMessageCollection = new ChatMessageCollection();
+        this.chatMessageCollection = new ChatMessageCollection({
+            app: this.app
+        });
 
         this.chatMessagesView = new ChatMessagesView({
             model: this.configuration,
@@ -54,21 +58,25 @@ module.exports = Marionette.Application.extend({
         //this.chatMessagesView.render();
 
         this.chatInfoView = new ChatInfoView({
-            model: this.app.User
+            model: this.app.User,
+            app: this.app
         });
 
         this.chatControlView = new ChatControlView({
+            app: this.app,
             model: this.configuration
         });
 
-        this.chatEnterView = new ChatEnterView({});
+        this.chatEnterView = new ChatEnterView({
+            model: this.app.User
+        });
 
         this.listenTo(this.configuration, "change:limit", function(conf, limit) {
             if (this.configuration.get("atEnd")) {
                 var start = this.configuration.get("lastLineId") - this.configuration.get("limit");
                 this.configuration.set("start", start);
             }
-            Karopapier.Settings.set("chat_limit", limit);
+            this.app.Settings.set("chat_limit", limit);
         });
 
         this.listenTo(this.configuration, "change:start", function(conf, start) {
@@ -77,22 +85,22 @@ module.exports = Marionette.Application.extend({
         });
 
         this.listenTo(this.configuration, "change:showBotrix", function(conf, showBotrix) {
-            Karopapier.Settings.set("chat_showBotrix", showBotrix);
+            this.app.Settings.set("chat_showBotrix", showBotrix);
         });
 
         this.listenTo(this.configuration, "change:funny", function(conf, funny) {
-            Karopapier.Settings.set("chat_funny", funny);
+            this.app.Settings.set("chat_funny", funny);
         });
 
         this.listenTo(this.configuration, "change:oldLink", function(conf, oldLink) {
-            Karopapier.Settings.set("chat_oldLink", oldLink);
+            this.app.Settings.set("chat_oldLink", oldLink);
         });
 
-        this.listenTo(Karopapier.Settings, "change:chat_limit", function(conf, limit) {
+        this.listenTo(this.app.Settings, "change:chat_limit", function(conf, limit) {
             this.configuration.set("limit", limit);
         });
 
-        this.listenTo(Karopapier.Settings, "change:chat_funny", function(conf, funny) {
+        this.listenTo(this.app.Settings, "change:chat_funny", function(conf, funny) {
             //console.log("ChatApp bekommt mit, dass sich Karo.Settings -> funny ge�ndert hat",funny);
             this.configuration.set("funny", funny);
             this.app.util.set("funny", funny);
@@ -102,7 +110,7 @@ module.exports = Marionette.Application.extend({
             });
         });
 
-        this.listenTo(Karopapier.Settings, "change:chat_oldLink", function(conf, oldLink) {
+        this.listenTo(this.app.Settings, "change:chat_oldLink", function(conf, oldLink) {
             //console.log("ChatApp bekommt mit, dass sich Karo.Settings -> oldLink ge�ndert hat", oldLink);
             this.configuration.set("oldLink", oldLink);
             this.app.util.set("oldLink", oldLink);
@@ -112,7 +120,7 @@ module.exports = Marionette.Application.extend({
             });
         });
 
-        this.listenTo(Karopapier.Settings, "change:chat_showBotrix", function(conf, showBotrix) {
+        this.listenTo(this.app.Settings, "change:chat_showBotrix", function(conf, showBotrix) {
             //console.log("ChatApp bekommt mit, dass sich Karo.Settings -> showBotrix ge�ndert hat",showBotrix);
             this.configuration.set("showBotrix", showBotrix);
             this.chatMessageCache.each(function(m) {
@@ -184,7 +192,7 @@ module.exports = Marionette.Application.extend({
             $.getJSON("/api/chat/list.json?limit=2&callback=?");
         }.bind(this), 59000);
 
-        Karopapier.vent.on('CHAT:MESSAGE', function(data) {
+        this.app.vent.on('CHAT:MESSAGE', function(data) {
             //console.log("vent CHAT:MESSAGE triggered inside ChatApp");
             //disable due to XSS danger
             //console.log(data);

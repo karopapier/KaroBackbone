@@ -1,3 +1,4 @@
+console.warn("THOU SHALST NOT USE ME ANYMORE");
 require("../polyfills.js");
 var Backbone = require('backbone');
 var User = require('../model/User');
@@ -23,6 +24,7 @@ module.exports = Backbone.Model.extend(/** @lends UserFactory.prototype */ {
         var user = this.userCache.get(data);
         //console.log("Got user",user);
         if (user) {
+            console.info("UserFactory HIT", user.get("id"));
             user.set(data);
             return user;
         }
@@ -32,12 +34,14 @@ module.exports = Backbone.Model.extend(/** @lends UserFactory.prototype */ {
             data = {id: data};
         }
         user = new User(data);
+        console.warn("Userfactory NEW", user.get("id"));
         user.set("self", (user.get("id") === this.uid));
         this.userCache.add(user);
         return user;
     },
 
     setLogin: function(user) {
+        this.stopListening(this.login);
         this.login = user;
         this.listenTo(this.login, "change id", this.updateSelf.bind(this));
         this.updateSelf();

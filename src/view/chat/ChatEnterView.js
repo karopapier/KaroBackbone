@@ -1,15 +1,15 @@
-var ChatEnterView = Backbone.View.extend({
+var Backbone = require('backbone');
+module.exports = Backbone.View.extend({
     tagName: "div",
     template: window["JST"]["chat/chatEnter"],
-    initialize: function () {
-        _.bindAll(this, "render");
-        this.listenTo(Karopapier.User, "change:id", this.render);
+    initialize: function(options) {
+        this.listenTo(this.model, "change:id", this.render);
         return this;
     },
     events: {
         "submit": "sendMessage"
     },
-    sendMessage: function (e) {
+    sendMessage: function(e) {
         e.preventDefault();
         var msg = $('#newchatmessage').val();
         if (msg != "") {
@@ -28,7 +28,7 @@ var ChatEnterView = Backbone.View.extend({
                     $('#newchatmessage').val("");
                     $('#newchatmessagesubmit').prop("disabled", false).stop().animate({opacity: 1});
                 },
-                error: function (xhr, status) {
+                error: function(xhr, status) {
                     console.error(status, xhr);
                     $('#newchatmessagesubmit').prop("disabled", false).stop().animate({opacity: 1});
                 }
@@ -36,12 +36,17 @@ var ChatEnterView = Backbone.View.extend({
             $('#newchatmessagesubmit').prop("disabled", true).stop().animate({opacity: 0});
         }
     },
-    render: function () {
-        if (Karopapier.User.get("id") != 0) {
-            this.$el.html(this.template({user: Karopapier.User.toJSON()}));
+    render: function() {
+        var uid = this.model.get("id");
+        var html = "";
+        if (uid < 0) {
+            html = "Wart mal, kenn ich Dich?";
+        } else if (uid == 0) {
+            html = "Du bist nicht angemeldet...";
         } else {
-            this.$el.html("Nicht angemeldet");
+            html = this.template({user: this.model.toJSON()});
         }
+        this.$el.html(html);
         return this;
     }
-})
+});

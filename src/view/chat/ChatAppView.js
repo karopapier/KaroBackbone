@@ -2,7 +2,6 @@ var Marionette = require('backbone.marionette');
 module.exports = Marionette.ItemView.extend({
     className: "chatAppView",
     render: function() {
-        console.log(this.model, " is an app");
         this.model.layout.render();
 
         //insert views

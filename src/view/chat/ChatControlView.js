@@ -1,11 +1,14 @@
 var Backbone = require('backbone');
 var NotificationControlView = require('../NotificationControlView');
+var KaropapierApp = require('../../app/KaropapierApp');
+
 module.exports = Backbone.View.extend({
     tagName: "div",
     template: window["JST"]["chat/chatControl"],
-    initialize: function () {
+    initialize: function(options) {
+        this.app = options.app;
         _.bindAll(this, "render");
-        this.listenTo(Karopapier.User, "change:id", this.render);
+        this.listenTo(this.app.User, "change:id", this.render);
         this.listenTo(this.model, "change:limit", this.render);
         this.listenTo(this.model, "change:start", this.render);
         this.listenTo(this.model, "change:lastLineId", this.render);
@@ -15,7 +18,7 @@ module.exports = Backbone.View.extend({
         this.listenTo(this.model, "change:showBotrix", this.updateBotrix);
 
         this.notificationControlView = new NotificationControlView({
-            model: Karopapier.notificationControl
+            model: this.app.notificationControl
         });
         return this;
     },
@@ -39,20 +42,20 @@ module.exports = Backbone.View.extend({
         var v = parseInt(e.currentTarget.value);
         $('#startLine').val(v);
     },
-    setLimit: function (e) {
+    setLimit: function(e) {
         var limit = parseInt($(e.currentTarget).text());
         this.model.set("limit", limit);
     },
     rewind: function(e) {
         var start = this.model.get("start");
-        if (start>100) start-=100;
+        if (start > 100) start -= 100;
         this.model.set("start", start);
     },
     forward: function(e) {
         var start = this.model.get("start");
         var limit = this.model.get("limit");
-        start+=100;
-        limit+=100;
+        start += 100;
+        limit += 100;
         this.model.set({
             start: start
             //limit: limit
@@ -88,18 +91,18 @@ module.exports = Backbone.View.extend({
         this.model.set("oldLink", oldLink);
     },
     updateFunny: function(e) {
-        this.$el.find("#funnyChat").prop("checked",this.model.get("funny"));
+        this.$el.find("#funnyChat").prop("checked", this.model.get("funny"));
     },
     updateOldLink: function(e) {
-        this.$el.find("#oldLink").prop("checked",this.model.get("oldLink"));
+        this.$el.find("#oldLink").prop("checked", this.model.get("oldLink"));
     },
     updateBotrix: function(e) {
-        this.$el.find("#showBotrix").prop("checked",this.model.get("showBotrix"));
+        this.$el.find("#showBotrix").prop("checked", this.model.get("showBotrix"));
     },
-    render: function () {
+    render: function() {
         console.log("Render control view", this.model.get("start"), this.model.get("lastLineId"));
-        if (Karopapier.User.get("id") != 0) {
-            this.$el.html(this.template({user: Karopapier.User.toJSON(), settings: this.model.toJSON()}));
+        if (this.app.User.get("id") != 0) {
+            this.$el.html(this.template({user: this.app.User.toJSON(), settings: this.model.toJSON()}));
 
             this.notificationControlView.setElement(this.$('#notificationControlView')).render();
         } else {

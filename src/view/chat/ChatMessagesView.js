@@ -1,13 +1,21 @@
-var ChatMessagesView = Backbone.View.extend({
+var Backbone = require('backbone');
+var ChatMessageView = require('./ChatMessageView');
+module.exports = Backbone.View.extend({
     tagName: "div",
     id: "chatMessagesContainer",
-    initialize: function () {
+    initialize: function(options) {
+        options = options || {};
+        if (!options.util) {
+            console.error("No util in ChatMessagesView");
+            return false;
+        }
+        this.util = options.util;
         _.bindAll(this, "addItem", "scrollCheck");
         this.collection.on("add", this.addItem);
         this.currentStart = 0;
         this.currentEnd = 0;
     },
-    scrollcheck: function () {
+    scrollcheck: function() {
         console.log("I scroll");
         var $parent = this.$el.parent();
         var toScrollDown = $parent.prop("scrollHeight") - $parent.prop("clientHeight") - $parent.prop("scrollTop");
@@ -16,8 +24,11 @@ var ChatMessagesView = Backbone.View.extend({
         var hoch = $c.prop("scrollHeight");
         console.log(topf, hoch);
     },
-    addItem: function (chatMessage, animated) {
-        var chatMessageView = new ChatMessageView({model: chatMessage});
+    addItem: function(chatMessage, animated) {
+        var chatMessageView = new ChatMessageView({
+            model: chatMessage,
+            util: this.util
+        });
         var lineId = parseInt(chatMessage.get("lineId"));
 
         //find out where to insert the template
@@ -41,10 +52,10 @@ var ChatMessagesView = Backbone.View.extend({
         //find how much the height changed and scroll to original position
         $parent.scrollTop(st + newSh - sh);
     },
-    removeItem: function (cm) {
+    removeItem: function(cm) {
         console.log(cm.get("lineId"), "removed");
     },
-    scrollDown: function (options) {
+    scrollDown: function(options) {
         var $parent = this.$el.parent();
         options = _.defaults(options || {}, {forced: false, animated: true})
         //console.log(options);
@@ -69,11 +80,11 @@ var ChatMessagesView = Backbone.View.extend({
          }
          //},100);
          */
-        setTimeout(function () {
+        setTimeout(function() {
             $parent.stop().animate({scrollTop: $parent.prop("scrollHeight")}, 100);
         }, 10);
     },
-    scrollCheck: function () {
+    scrollCheck: function() {
         var $parent = this.$el.parent();
         var contentHeight = $parent.prop("scrollHeight");
         var top = $parent.prop("scrollTop"); //how much space until you reach the top

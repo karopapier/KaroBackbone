@@ -1,6 +1,6 @@
 var _ = require('underscore');
-var Backbone = require('backbone');
-module.exports = Backbone.Model.extend(/** @lends User.prototype */ {
+var Backbone = require('backbone-model-factory');
+module.exports = Backbone.ModelFactory(/** @lends User.prototype */ {
     defaults: {
         id: 0,
         login: "Gast",
@@ -19,6 +19,7 @@ module.exports = Backbone.Model.extend(/** @lends User.prototype */ {
         this.set("dran", this.get("dran") + 1);
     },
     decreaseDran: function() {
+        console.log("Es decreeasete dran", this.get("id"), this.get("login"), this.cid);
         this.set("dran", this.get("dran") - 1);
     }
 });

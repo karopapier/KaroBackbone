@@ -1,7 +1,8 @@
+$ = window.jQuery = require("jquery");
+require("jquery-ui");
 var Backbone = require('backbone');
 var Marionette = require("backbone.marionette");
 var User = require("../model/User.js");
-var UserFactory = require('../factory/UserFactory');
 var DranGameCollection = require('../collection/DranGameCollection');
 var KEvIn = require('../model/KEvIn');
 var LocalSyncModel = require('../model/LocalSyncModel');
@@ -35,9 +36,6 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
             return "/api/user/check.json?callback=?";
         };
         this.User.fetch();
-
-        this.userFactroy = new UserFactory();
-        this.userFactroy.setLogin(this.User);
 
         this.UserDranGames = new DranGameCollection({
             user: this.User
@@ -92,7 +90,7 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
         //hook to events to update dran queue
         //refresh function considering logout
         function dranRefresh() {
-            if (me.User.get("id") == 0) return false;
+            if (me.User.get("id") <= 0) return false;
             me.UserDranGames.fetch();
         }
 
@@ -156,9 +154,9 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
         this.vent.on('GAME:MOVE', function(data) {
             //only for unrelated moves, count up or down
             if (data.related) return false;
-            var movedUser = me.userFactory.getUser({id: data.movedId, login: data.movedLogin});
+            var movedUser = new User({id: data.movedId, login: data.movedLogin});
             movedUser.decreaseDran();
-            var nextUser = me.userFactory.getUser({id: data.nextId, login: data.nextLogin});
+            var nextUser = new User({id: data.nextId, login: data.nextLogin});
             nextUser.increaseDran();
         });
 

@@ -1,6 +1,12 @@
-var DranApp = Backbone.Marionette.Application.extend({
+var Marionette = require('backbone.marionette');
+var ChatLayout = require('../layout/ChatLayout');
+var DranLayout = require('../layout/DranLayout');
+var DranAppView = require('../view/DranAppView');
+var GameCollectionView = require('../view/GameCollectionView');
+var GameListItemView = require('../view/GameListItemView');
+module.exports = Marionette.Application.extend({
     className: "dranApp",
-    initialize: function () {
+    initialize: function() {
         this.layout = new ChatLayout({});
         this.layout = new DranLayout({});
         this.view = new DranAppView({
@@ -9,16 +15,6 @@ var DranApp = Backbone.Marionette.Application.extend({
         this.gamesView = new GameCollectionView({
             childView: GameListItemView,
             collection: Karopapier.UserDranGames
-        })
-    }
-});
-
-var DranAppView = Marionette.ItemView.extend({
-    className: "dranAppView",
-    render: function () {
-        this.model.layout.render();
-        //insert views
-        this.model.layout.dranGames.show(this.model.gamesView);
-        this.$el.html(this.model.layout.$el);
+        });
     }
 });

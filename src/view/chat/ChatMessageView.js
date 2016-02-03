@@ -1,12 +1,19 @@
-var ChatMessageView = Backbone.View.extend({
+var Backbone = require('backbone');
+module.exports = Backbone.View.extend({
     tagName: "div",
     className: "chatMessage",
     template: window["JST"]["chat/chatMessage"],
     id: function() {
         return "cm" + this.model.get("lineId");
     },
-    initialize: function() {
+    initialize: function(options) {
         _.bindAll(this, "render");
+        options = options || {};
+        if (!options.util) {
+            console.error("No util in ChatMessageView");
+            return false;
+        }
+        this.util = options.util;
 
         //check if it is a botrix game message
         var bgreq = /Botrix, spiel mit/g;
@@ -28,13 +35,13 @@ var ChatMessageView = Backbone.View.extend({
     updateText: function() {
 
         var me = this;
-        //first parse html
         var $dummy = $("<span>");
         $dummy.html(this.model.get("text"));
         var text = $dummy.text();
 
         text = KaroUtil.linkify(text);
         text = emojione.unicodeToImage(text);
+        text = this.util.linkify(text);
         var $textSpan = this.$el.find(".chatText").first();
         $textSpan.html(text);
         var imgs = this.$el.find("img").load(function(e) {
