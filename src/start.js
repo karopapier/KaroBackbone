@@ -1,6 +1,9 @@
 var $ = require('jquery');
 var KaropapierApp = require('./app/KaropapierApp');
-var Karopapier = new KaropapierApp();
+
+//GLOBAL LEAKAGE IS INTENDED!!!! Sorry...
+//NOPE, don't use: var Karopapier
+Karopapier = new KaropapierApp();
 
 //TODO: need to get rid of that
 Karopapier.vent.on("logout", function() {
