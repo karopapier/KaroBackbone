@@ -15,7 +15,7 @@ module.exports = Backbone.Model.extend(/** @lends BrowserNotifier.prototype*/{
         this.control = options.control;
 
         this.eventEmitter.on('CHAT:MESSAGE', function (data) {
-            console.warn(data.chatmsg);
+            //console.warn(data.chatmsg);
             var b = new BrowserNotification({
                 title: data.chatmsg.user + " spricht",
                 body: data.chatmsg.text,
