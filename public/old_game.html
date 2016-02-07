@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Karopapier 2.1</title>
+        <script type="text/javascript">
+            if (window.location.hash == "#debug") {
+                alert("Debug mode! Wenn jetzt im Javascript ein Fehler auftaucht, siehst Du es hier");
+                window.onerror = function (msg, url, line, col, error) {
+                    // Note that col & error are new to the HTML 5 spec and may not be
+                    // supported in every browser.  It worked for me in Chrome.
+                    var extra = !col ? '' : '\ncolumn: ' + col;
+                    extra += !error ? '' : '\nerror: ' + error;
+
+                    // You can view the information in an alert to see things working like this:
+                    alert("Error: " + msg + "\nurl: " + url + "\nline: " + line + extra);
+
+                    // TODO: Report this error via ajax so you can keep track
+                    //       of what pages have JS issues
+
+                    var suppressErrorAlert = true;
+                    // If you return true, then error alerts (like in older versions of
+                    // Internet Explorer) will be suppressed.
+                    return suppressErrorAlert;
+                };
+            }
+        </script>
+        <script type="text/javascript" src="js/libs/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="js/libs/jquery-ui-1.10.4.custom.min.js"></script>
+        <script type="text/javascript" src="js/libs/underscore-min.js"></script>
+        <script type="text/javascript" src="js/libs/backbone-min.js"></script>
+        <script type="text/javascript" src="js/libs/backbone.marionette.min.js"></script>
+        <script type="text/javascript" src="js/libs/backbone-model-factory-min.js"></script>
+        <script type="text/javascript" src="js/libs/moment.min.js"></script>
+        <!--<script type="text/javascript" src="js/libs/hammer.min.js"></script> -->
+        <!--<script type="text/javascript" src="js/libs/Sideslide.js"></script> -->
+        <!--<script type="text/javascript" src="js/libs/touch-emulator.js"></script>
+        <script> TouchEmulator(); </script> -->
+
+        <script type="text/javascript" src="js/libs/TURTED.js"></script>
+        <script type="text/javascript" src="js/libs/sockjs-0.3.min.js"></script>
+
+        <script type="text/javascript">
+            var Karopapier = new Marionette.Application(); // currently only for Util.js to not throw an error
+        </script>
+
+        <script type="text/javascript" src="../templates/JST.js?v=1"></script>
+        <script type="text/javascript" src="../src/KaroBackbone.js?v=2"></script>
+
+        <link id="favicon" rel="shortcut icon" href="favicon.ico"/>
+
+        <link rel="stylesheet" href="../css/Karopapier.min.css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+        <meta charset="utf-8"/>
+    </head>
+    <BODY BACKGROUND="/public/images/karolight.gif" BGCOLOR=#FFFFFF TEXT=#333399 LINK=#3333FF VLINK=#3333EE ALINK=#0000FF>
+        <script type="text/javascript" src="//www.karopapier.de/js/jquery.tablesorter.min.js"></script>
+        <script type="text/javascript" src="//www.karopapier.de/js/starvote.js"></script>
+        <script type="text/javascript" src="//www.karopapier.de/js/libs/json2.min.js"></script>
+        <script type="text/javascript" src="//www.karopapier.de/js/libs/store.min.js"></script>
+        <script type="text/javascript" src="//www.karopapier.de/js/libs/lz-string.min.js"></script>
+
+        <style type="text/css">
+            th.header {
+                background-image: url(//www.karopapier.de/images/bg.gif);
+                background-repeat: no-repeat;
+                background-position: center right;
+            }
+
+            th.headerSortUp {
+                background-image: url(//www.karopapier.de/images/asc.gif);
+                background-repeat: no-repeat;
+                background-position: center right;
+            }
+
+            th.headerSortDown {
+                background-image: url(//www.karopapier.de/images/desc.gif);
+                background-repeat: no-repeat;
+                background-position: center right;
+            }
+        </style>
+
+
+        <script type="text/javascript">
+            function chatlog() {
+                var chatfenster = window.open("chat.php?GID=" + game.get("id"), "Fenster1", "width=800,height=500,left=100,top=100,scrollbars=yes,resizable=yes");
+            }
+        </script>
+
+
+        <table border=0 width=100%>
+            <tr>
+                <td>
+                    <h1 id="gameTitle" style="text-shadow: 2px 2px 0px rgba(100,100,200,0.5)">Wenn das hier bleibt hast Du nen Fehler im Javascript oder so</h1>
+
+                </td>
+                <td>
+                    <div style="float: left;" id="mapvotecontainer">
+                        <b>Kartenbewertung</b>
+
+                        <div class="mapvote" id="mapvote"></div>
+                    </div>
+                    <div id=gameInfo style="float: left"></div>
+                    <div class="clearer"></div>
+                </td>
+            </tr>
+        </table>
+
+        <div style="position:absolute;right:0;top:0; font-size: 8pt; display: none">Experiment:<br/>
+            <img src="/public/images/loading.gif" id="pinstatus" style="height: 30px"/><br/>
+            Details <a href="//www.karopapier.de/showthread.php?forumid=1&thread=960">hier</a></div>
+
+
+        <div id="lastMoveMessages">
+            Bordfunk seit dem letzten Zug
+        </div>
+
+        <!--<div id="mapImageContainer" style="position: relative; width: 400px; height:400px; overflow: hidden"> -->
+            <div id="mapImage" style="position: relative;">
+                <canvas id="mapRenderView"></canvas>
+                <svg id="mapPlayerMoves" style="position: absolute; top:0; left:0; z-index: 5"></svg>
+            </div>
+        <!--</div> -->
+        <div class="clearer"></div>
+        <script>
+            /*
+            $(document).ready(function () {
+                var $dragging = null;
+                var oX = 0;
+                var oY = 0;
+                var x = 0;
+                var y = 0;
+                var scale = 1;
+                var $target = $('#mapImage')
+                function trans() {
+                    $target.css({
+                        transform: "translate(" + x + "px, " + y + "px) scale(" + scale + ")"
+                    });
+
+                }
+
+                $(document.body).on("mousemove", function (e) {
+                    if ($dragging) {
+                        console.log(e);
+                        console.log(oX, oY);
+                        x = e.pageX - oX;
+                        y = e.pageY - oY;
+                        trans()
+                        e.preventDefault();
+                    }
+                });
+                $(document.body).on("mousewheel", "#mapImageContainer", function (e) {
+                    var dir = e.originalEvent.wheelDelta;
+                    if (dir>0) {
+                        scale *=1.1
+                    } else {
+                        scale /=1.1
+                    }
+                    trans();
+                    e.preventDefault();
+                });
+
+                $(document.body).on("mousedown", "#mapImageContainer", function (e) {
+                    console.log(e);
+                    oX = e.offsetX;
+                    oY = e.offsetY;
+                    $dragging = true;
+                });
+
+                $(document.body).on("mouseup", function (e) {
+                    $dragging = null;
+                });
+            });
+            */
+        </script>
+
+        <!--
+        Mitfahrer-Z&uuml;ge anzeigen: <a href="#" data-limit="0" class="drawLimiter">&nbsp;Alle&nbsp;</a>,
+        <a href="#" data-limit="2" class="drawLimiter">&nbsp;2&nbsp;</a>,
+        <a href="#" data-limit="5" class="drawLimiter">&nbsp;5&nbsp;</a>,
+        <a href="#" data-limit="10" class="drawLimiter">&nbsp;10&nbsp;</a>
+        - Dauerhafte &Auml;nderung <a href="/karte.php">hier</a>
+        -->
+        <label for="testmode">Testmode: </label><input type="checkbox" id="testmode" checked="checked" accesskey="t"/> Züge werden NICHT an den Server geschickt
+        <BR>
+        Zuganzeige:
+        <span class="drawMoveLimit clickable" data-limit="0">Pos</span>
+        <span class="drawMoveLimit clickable" data-limit="1">1</span>
+        <span class="drawMoveLimit clickable" data-limit="2">2</span>
+        <span class="drawMoveLimit clickable" data-limit="5">5</span>
+        <span class="drawMoveLimit clickable" data-limit="10">10</span>
+        <span class="drawMoveLimit clickable" data-limit="-1">Alle</span>
+        <script>
+            $('.drawMoveLimit').click(function(e) {
+                var l = $(e.currentTarget).data("limit");
+                mvs.set("drawLimit",l);
+            });
+        </script>
+        <br />
+        <span id="statusinfo">Status wird völlig überbewertet</span>
+
+        <form id="moveMsgForm">
+            <span id="username">Du</span>:
+            <input type="text" id="movemessage" size="80" maxlenght="255">
+            <span id="movemessageDisplay" style="display: none"></span>
+            <input type="submit" value="Nachricht mitschicken">
+        </form>
+
+        <script type="text/javascript">
+            $('#moveMsgForm').submit(function (e) {
+                var moveMsg = $('#movemessage').val();
+                var w = $('#movemessage').width();
+                if (moveMsg !== "") {
+                    $('#movemessageDisplay').text(moveMsg).css({"display": "inline-block", "width": w});
+                    $('#movemessage').hide();
+                }
+                e.preventDefault();
+            });
+            $('#movemessage').click(function () {
+            });
+        </script>
+
+        <BR>
+
+        <div id="moveMessagesView">
+            <b>Bordfunk</b><br/>
+
+            <div id="moveMessages">
+                <small>KaroMAMA (31.12.2099): &quot;<i>Noch nix geladenIch bin ausgestiegen</i>&quot;</small>
+            </div>
+        </div>
+        <br/>
+
+        <div id="playerTable"></div>
+        Link zur <A HREF=logs/78483.log>Logdatei</A>
+        <BR>
+        <FONT SIZE=+2 COLOR=RED>Support Karopapier!!!!!</FONT>Nein, ich will mit Karopapier nicht Geld verdienen - wenn
+        Ihr trotzdem an mich denken w&uuml;rdet, w&auml;re ich Euch zu tiefst verbunden. Einfach vor jedem Kauf/Besuch
+        bei Amazon &uuml;ber
+        <A HREF=//www.karopapier.de/support.php>Support Karopapier</A> dort hingehen und schon ist Didi fr&ouml;hlicher...
+
+
+        <script type="text/javascript">
+
+            $('#tabspielinfo').tablesorter();
+
+
+            var accesskeys = {
+                '-1-1': 'q',
+                '-10': 'a',
+                '-11': 'y',
+                '0-1': 'w',
+                '00': 's',
+                '01': 'x',
+                '1-1': 'e',
+                '10': 'd',
+                '11': 'c'
+            }
+
+            $('area').each(function (i, e) {
+                var rel = $(e).attr('rel');
+                if (rel) {
+                    //console.log(rel);
+                    if (accesskeys[rel]) {
+                        //console.log(accesskeys[rel]);
+                        var title = $(e).attr('title');
+                        $(e).attr('title', title + '   [' + accesskeys[rel] + ']');
+                        $(e).attr('accesskey', accesskeys[rel]);
+                    }
+                }
+            });
+
+            //? RUNDENERSTER ?
+            if (($('h1').text().indexOf('§') >= 0) || ($('h1').text().indexOf('$') >= 0)) {
+                var wars = $('#tabspielinfo td:contains("war schon")');
+                if (wars.length == 0) {
+                    //alert("Es koennte sich hier um ein 'Rundenerster wiederholt'-Spiel handeln - und ich glaube DUUUU bist gerade Rundenerster!!");
+                    $('#mapImage').css('border', '10px solid blue');
+                }
+            }
+
+            var MapId = 96;
+
+            var voteurl = "//www.karopapier.de/api/map/" + MapId + "/vote.json";
+            function initStarvote() {
+                $.getJSON(voteurl + "?callback=?", function (data) {
+                    $('#mapvote').trigger("newdata", data);
+                });
+            }
+            ;
+
+            $(document).ready(function () {
+
+                $('#mapvote').bind("newdata", function (e, data) {
+                    //console.log(data);
+                    var mv = new StarVote($('#mapvote'), {
+                        "picPath": "//www.karopapier.de/images/starvote"
+                    });
+                    mv.setValue(data.myvote);
+                    mv.setGlobalValue(data.avg);
+                });
+
+                $('#mapvote').bind("voted", function (e, vote) {
+                    //console.log(vote);
+                    $.ajax({
+                        url: voteurl,
+                        data: "vote=" + vote,
+                        type: 'POST',
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        success: function (data) {
+                            //console.log("gut",data);
+                            $('#mapvote').trigger("newdata", data);
+                        },
+                        error: function (data) {
+                            //console.log("bad",data);
+                        },
+                        dataType: "json"
+                    });
+                })
+
+                initStarvote();
+            });
+
+        </script>
+
+        <HR WIDTH=75%>
+        <br/>
+        Letzter Satz im <a href="index.html">Chat</a>:<br/>
+        <B>KaroMAMA</B> (25:37): Das ist noch nicht dynamisch - aber das hast Du bestimmt gerade auch gemerkt <BR><br/>
+
+        <script src="/public/js/GameStepUp.js?v=201512161416"></script>
+
+        <script>
+            if (!/karopapier/.test(window.location.hostname)) {
+                document.write('<scr' + 'ipt src="http://localhost:20000/livereload.js"></scr' + 'ipt>');
+            }
+            /*
+             var styleEl = document.createElement("style");
+             styleEl.appendChild(document.createTextNode(""));
+             document.head.appendChild(styleEl);
+             styleSheet = styleEl.sheet;
+             styleSheet.insertRule(".road {fill: rgb(128, 128, 128)}",0);
+             styleSheet.insertRule(".start {fill: url(#startPattern)}",1);
+             //styleSheet.insertRule(".grass {fill: url(#startPattern) !important}",1);
+             */
+
+        </script>
+        <!-- Piwik -->
+          <script type="text/javascript">
+          var pkBaseURL = "http://stats.karopapier.de/";
+          pkBaseURL = "//www.karopapier.de/piwik/";
+          document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+          </script><script type="text/javascript">
+          piwik_action_name = '';
+          piwik_idsite = 1;
+          piwik_url = pkBaseURL + "piwik.php";
+          piwik_log(piwik_action_name, piwik_idsite, piwik_url);
+          </script>
+          <object><noscript><p>Web analytics <img src="//stats.karopapier.de/piwik.php?idsite=1" style="border:0" alt=""/></p></noscript></object></a>
+        <!-- End Piwik Tag -->
+    </BODY>
+</HTML>
