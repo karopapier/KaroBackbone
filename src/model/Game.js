@@ -4,11 +4,13 @@ var MoveMessageCollection = require('../collection/MoveMessageCollection');
 var Map = require('./map/Map');
 var PlayerCollection = require('../collection/PlayerCollection');
 var MotionCollection = require('../collection/MotionCollection');
+var Motion = require('./Motion');
 
 module.exports = Backbone.Model.extend(/** @lends Game.prototype */ {
     defaults: {
         id: 0,
-        completed: false
+        completed: false,
+        loading: false
     },
     /**
      * @constructor Game
@@ -20,6 +22,11 @@ module.exports = Backbone.Model.extend(/** @lends Game.prototype */ {
         _.bindAll(this, "parse", "load", "updatePossibles");
         if (options.map) {
             this.map = options.map;
+            if (typeof this.map === "number") {
+                this.map = new Map({
+                    id: this.map
+                });
+            }
         } else {
             this.map = new Map();
         }
@@ -53,6 +60,7 @@ module.exports = Backbone.Model.extend(/** @lends Game.prototype */ {
                     //console.log("RESET PLAYERS NOW");
                     this.get("players").reset(data.players, {parse: true});
                     data.game.completed = true;
+                    data.game.loading = false;
                     //console.log("RETURN DATA NOW");
                     return data.game;
                 } else {
@@ -64,11 +72,20 @@ module.exports = Backbone.Model.extend(/** @lends Game.prototype */ {
     },
 
     load: function(id) {
-        if (!id) return false;
+        var hasId = this.get("id");
+
+        //if not ID already set or passed, return
+        if (!id && !hasId) return false;
+        if (hasId > 0) id = hasId;
+
+        //if already loading, return
+        //@TODO: consider timeout of "loading"
+        console.log("Game", id, "is loading:", this.get("loading"));
+        if (this.get("loading")) return false;
         //silently set the id, events trigger after data is here
         //this.set({"id": id, completed: false}, {silent: true});
-        this.set({"id": id, completed: false});
-        //console.info("Fetching game details for " + id);
+        this.set({"id": id, completed: false, loading: true});
+        console.info("Fetching game details for " + id);
         this.fetch();
     },
 

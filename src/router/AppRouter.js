@@ -1,6 +1,7 @@
 var Backbone = require('backbone');
 var ChatApp = require('../app/ChatApp');
 var DranApp = require('../app/DranApp');
+var GameApp = require('../app/GameApp');
 module.exports = Backbone.Router.extend({
     initialize: function(options) {
         options = options || {};
@@ -18,6 +19,7 @@ module.exports = Backbone.Router.extend({
         "dran.html": "showDran",
         "editor.html": "showEditor",
         "game.html?GID=:gameId": "showGame",
+        "game.html": "showGame",
         "newshowmap.php?GID=:gameId": "showGame",
         "game.html": "defaultRoute",
         ":path": "showStatic"
@@ -61,18 +63,14 @@ module.exports = Backbone.Router.extend({
         this.app.layout.content.show(this.app.dranApp.view);
     },
     showGame: function(gameId) {
-        this.doDummy("Game " + gameId);
-        return;
-        if (gameId) {
-            game.load(gameId);
-        }
+        this.app.gameApp = new GameApp({
+            app: this.app,
+            settings: this.app.Settings
+        });
+        this.app.layout.content.show(this.app.gameApp.view);
     },
     defaultRoute: function() {
-        this.doDummy("Game with no ID");
-        return;
-        this.navigate("game.html", {trigger: true});
-        //this.navigate("game.html?GID=81161", {trigger: true});
-        //this.navigate("game.html?GID=57655", {trigger: true});
+        this.navigate("index.html", {trigger: true});
     }
 });
 

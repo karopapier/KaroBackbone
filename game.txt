@@ -1,0 +1,88 @@
+GameApp
+
+hat collections und daten
+Hört auf events und triggert events (changes in queues, data loaded...)
+this.app === Karopapier
+
+User hat DranQueue
+
+Wenn geladen und leer, geh zum Chat
+
+
+Wenn nicht leer, hole Infos zum ersten Spiel
+Wenn Queue länger als 1, hole Infos zum zweiten Spiel
+
+GameCache
+
+
+
+Wenn Spiel gerade angezeigt wird und Zug von anderem Spieler kommt rein, direkt in die MoveCOllection einsortieren
+-> Move wird angezeigt
+-> MoveMessages neu sortiert
+-> Bedenkzeit aktualisiert
+->
+
+Auf Game ebene mehrere Collections
+* Moves
+* MoveMessages
+* Players
+* Possibles?
+
+
+GameLayout
+
+Idee: Ich hab ne PlayerCollection.
+Jeder Player hat seine MoveCollection.
+Wenn die sich ändert, änder der Player seinen "lastMove" -> event
+
+
+Views:
+
+Title
+Info
+MoveMessages
+LastMessages
+MapRenderView
+Moves
+StatusView (wer dran)
+
+PlayerTable
+
+
+
+
+WAS LÄSST SICH VORBERECHNEN UND DIREKT ANZEIGEN?
+* MapRenderView (canvas)
+Neue mapRenderView unterjubeln -> an welcher Map hängt die?
+
+* Possibles & KRACHZ
+* Bedenkzeit (außer move kommt rein)
+Spricht für neue Collections für jedes Spiel, gesammelt in einem Container
+
+Also komplexes Game-Object.
+WIE WIRD EIN NEUES, KOMPLEXES GAME-OBJEKT ANGEZEIGT, das eventuell schon seinen canvas mitbring?
+Gar als neues, objekt INKLUSIVE VIEW?
+Eigentlich kann alles direkt gerender werden bis auf Canvas.
+D.h. Nur daten verschieben, keine View -> Ausnahme Canvasgsu
+
+
+
+Komplexe GameCacheView mit game-object, map object (mapview), bdeenkzeit und possible skommt anund wird entsprechend in die Seite injiziert
+
+Beim Spielwechsel wird geschaut, ob das SPiel im Cache ist -dann wird es angezeigt
+Ansonsten on demand geladen
+
+
+Events?
+
+Game completed
+Game moved
+
+Testmode: Move als Test-Move markieren und ggf nachher löschen
+
+Sortierung der Reihenfolge der Spieler beeinflusst Reihenfolge im Rendering
+
+
+Grid:
+Jeder Spieler, jeder Move registriert sich im "Grid" auf eine Koordinate
+- Wenn mehrere Dinge im Grid an einer Stelle angezeigt werden müssen, wird BLACKMAGIC
