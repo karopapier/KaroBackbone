@@ -41,7 +41,7 @@ module.exports = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
             //skip unrelated
             if (!data.related) {
                 if (me.user.get("id") == 1) {
-                    console.warn(data.movedLogin, "zog bei", data.gid, data.name);
+                    //console.warn(data.movedLogin, "zog bei", data.gid, data.name);
                     //me.addGameMoveNotification(data);
                 }
                 return false;

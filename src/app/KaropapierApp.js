@@ -27,7 +27,7 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
      * @param options
      */
     initialize: function(options) {
-        console.log('APP INIT!!!!!!!!!!!');
+        console.log('KAROPAPIER APP INIT');
         var me = this;
 
         this.User = new User({});
@@ -81,7 +81,7 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
     },
     bootstrap: function() {
         var me = this;
-        console.log("Jetzt bootstrap app");
+        //console.log("Jetzt bootstrap app");
 
         //container for KaroNotifier
         this.notifierView.render();
@@ -94,8 +94,7 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
         }
 
         dranRefresh();
-        this.listenTo(this.User, "change:id", dranRefresh)
-
+        this.listenTo(this.User, "change:id", dranRefresh);
 
         this.vent.on("USER:DRAN", function(data) {
             me.UserDranGames.addId(data.gid, data.name);

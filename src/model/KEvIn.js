@@ -10,7 +10,7 @@ module.exports = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
      */
     initialize: function (options) {
         options = options || {};
-        console.log("Run init on KEvIn");
+        //console.log("Run init on KEvIn");
         _.bindAll(this, "ident", "hook", "start", "stop");
         if (!options.user) {
             throw Error("KEvIn needs a user");

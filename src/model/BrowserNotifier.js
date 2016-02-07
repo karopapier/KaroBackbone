@@ -8,13 +8,13 @@ module.exports = Backbone.Model.extend(/** @lends BrowserNotifier.prototype*/{
      * BrowserNotifier manages all notifications to be shown in the browser
      *
      */
-    initialize: function (options) {
+    initialize: function(options) {
         this.eventEmitter = options.eventEmitter;
         this.user = options.user;
         this.settings = options.settings;
         this.control = options.control;
 
-        this.eventEmitter.on('CHAT:MESSAGE', function (data) {
+        this.eventEmitter.on('CHAT:MESSAGE', function(data) {
             //console.warn(data.chatmsg);
             var b = new BrowserNotification({
                 title: data.chatmsg.user + " spricht",
@@ -24,16 +24,15 @@ module.exports = Backbone.Model.extend(/** @lends BrowserNotifier.prototype*/{
                 tag: "chat",
                 icon: "/favicon.ico",
                 timeout: 10000,
-                onClick: function () {
+                onClick: function() {
                     window.open("/index.html");
                 }
             });
-
         });
 
         this.listenTo(this.user, "change:dran", this.updateDran);
     },
-    updateDran: function (data) {
+    updateDran: function(data) {
         var dran = this.user.get("dran");
         var title = "Du bist ein bisschen dran (" + dran + ")";
         if (dran == 0) title = "Du bist gar nich dran!";
@@ -51,7 +50,7 @@ module.exports = Backbone.Model.extend(/** @lends BrowserNotifier.prototype*/{
             icon: "/favicon.ico",
             timeout: dran > 0 ? 0 : 2000,
             //permissionDenied: permissionDenied,
-            onClick: function () {
+            onClick: function() {
                 //window.open("http://www.karopapier.de/showmap.php?GID="+data.gid);
                 window.open("/dran.html");
             }
