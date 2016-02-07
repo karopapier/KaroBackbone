@@ -58,6 +58,7 @@ module.exports = Backbone.Model.extend(/** @lends NotificationControl.prototype 
         }
     },
     status: function () {
+        return true;
         console.log("-------------------------------");
         for (var k in this.attributes) {
             console.log(k, this.attributes[k]);

@@ -29,7 +29,7 @@ module.exports = Backbone.Model.extend({
         var timeout = this.get("timeout");
         if (timeout && !isNaN(timeout)) {
             setTimeout(this.close.bind(this), timeout);
-            console.log("Set to close after",timeout);
+            //console.log("Set to close after",timeout);
         }
 
         //this.myNotify.addEventListener('show', this, false);

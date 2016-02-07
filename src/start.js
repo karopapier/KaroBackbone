@@ -25,7 +25,7 @@ Karopapier.vent.on("login", function() {
 });
 
 $(document).ready(function() {
-    console.log("Doc ready, start Karopapier app");
+    //console.log("Doc ready, start Karopapier app");
     Karopapier.start();
     console.log("App started");
 });

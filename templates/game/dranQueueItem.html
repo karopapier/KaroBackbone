@@ -1,0 +1,16 @@
+<td><a href="/game.html?GID=<%= id %>"><img src="//www.karopapier.de/pre/<%= id %>.png" class="thumb50"></a></td>
+<td><a href="/game.html?GID=<%= id %>" title="<%= name %>">
+    <% if (name.length > 50) { %>
+    <%= name.substring(0, 47) %>...
+    <% } else { %>
+    <%= name %>
+    <% } %>
+</a></td>
+<td>
+    <% if (typeof blocked !== "undefined") { %>
+    <%= blocked %>
+    <% } else { %>
+    <% d = new Date() %>
+    <%= d.getHours() %>:<%= ((d.getMinutes() <10) ? "0" : "") + d.getMinutes() %>
+    <% } %>
+</td>
