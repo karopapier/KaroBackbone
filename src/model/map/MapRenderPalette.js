@@ -1,4 +1,5 @@
 var Backbone = require('backbone');
+var Map = require('./Map');
 module.exports = Backbone.Model.extend({
     defaults: {
         "road": "128,128,128",

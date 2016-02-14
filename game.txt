@@ -12,7 +12,10 @@ Wenn geladen und leer, geh zum Chat
 Wenn nicht leer, hole Infos zum ersten Spiel
 Wenn Queue länger als 1, hole Infos zum zweiten Spiel
 
-GameCache
+GameCache?
+
+Wenn angezeigt, Game aus der Queue "rausnehmen"
+Sonst wird es "real-time" unter den Füßen weggezogen, wenn in einem anderen Fenster gezogen wird -> es verschwindet aus der Queue.
 
 
 

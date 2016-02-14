@@ -9,6 +9,17 @@ var MapPlayerMoves = Backbone.View.extend({
         options = options || {};
         if (!options.settings) {
             console.error("No settings for MapPlayerMoves");
+            return false;
+        }
+
+        if (!options.util) {
+            console.error("No utils for MapPlayerMoves");
+            return false;
+        }
+
+        if (!options.model) {
+            console.error("No model player for MapPlayerMoves");
+            return false;
         }
 
         this.settings = options.settings;
@@ -48,7 +59,7 @@ var MapPlayerMoves = Backbone.View.extend({
 
     addPosition: function () {
         //if no move, nothing to draw, stop
-        if (this.model.moves.length < 1) return false;
+        if (this.collection.length < 1) return false;
 
         var m = this.model.getLastMove();
         var currentPosition = KaroUtil.createSvg("circle", {
@@ -65,17 +76,17 @@ var MapPlayerMoves = Backbone.View.extend({
 
     addMoves: function () {
         //if only one move, stop here
-        if (this.model.moves.length <= 1) return false;
+        if (this.collection.length <= 1) return false;
 
         var limit = this.model.get("drawLimit");
         //console.log("Limit:", limit);
         var color = this.color;
         var movesFragment = document.createDocumentFragment();
 
-        var moves = this.model.moves.toArray();
+        var moves = this.collection.toArray();
         if (limit >= 0) {
             //reduce moves to limited amount
-            moves = this.model.moves.last(limit + 1);
+            moves = this.collection.last(limit + 1);
         }
 
         if (this.model.get("position") > 0) {
@@ -156,9 +167,5 @@ var MapPlayerMoves = Backbone.View.extend({
     hidePlayerInfo: function (e) {
         this.model.set("highlight", false);
         //this.activePi.remove();
-    },
-    old_render: function () {
-        this.el.appendChild(movesFragment);
-        this.el.appendChild(posFragment);
     }
 });

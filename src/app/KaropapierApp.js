@@ -17,6 +17,8 @@ var KaropapierLayout = require('../layout/KaropapierLayout');
 var UserInfoBar = require('../view/UserInfoBar');
 var NaviView = require('../view/NaviView');
 var AppRouter = require('../router/AppRouter')
+var ChatMessage = require('../model/ChatMessage');
+var ChatMessageView = require('../view/chat/ChatMessageView');
 require('../polyfills');
 
 module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
@@ -125,8 +127,25 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
         this.titler = new TitleView({
             model: this.User,
             title: "Karopapier - Autofahren wie in der Vorlesung"
-        })
+        });
         this.titler.render();
+
+        $.getJSON("//www.karopapier.de/api/chat/list.json?limit=1&callback=?", function(data) {
+            me.lastChatMessage = new ChatMessage(data[0]);
+            me.layout.lastChatMessage.show(new ChatMessageView({
+                model: me.lastChatMessage,
+                util: me.util
+            }));
+        });
+
+        this.vent.on('CHAT:MESSAGE', function(data) {
+            console.log(data);
+            me.lastChatMessage = new ChatMessage(data.chatmsg);
+            me.layout.lastChatMessage.show(new ChatMessageView({
+                model: me.lastChatMessage,
+                util: me.util
+            }));
+        });
 
         //genereal page setup
         this.layout = new KaropapierLayout({

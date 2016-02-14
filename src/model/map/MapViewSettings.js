@@ -1,4 +1,5 @@
-var MapViewSettings = Backbone.Model.extend({
+var Backbone = require('backbone');
+module.exports = Backbone.Model.extend({
     defaults: {
         size: 11,
         border: 1,

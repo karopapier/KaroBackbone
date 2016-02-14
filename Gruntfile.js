@@ -185,6 +185,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-asset-cachebuster');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
     grunt.loadNpmTasks('grunt-browserify');
+    grunt.loadNpmTasks('grunt-notify');
 
     // Default task(s).
     grunt.registerTask('build', ['copy', 'browserify', 'uglify', 'jst', 'cssmin', 'asset_cachebuster']);

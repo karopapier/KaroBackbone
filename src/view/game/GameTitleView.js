@@ -1,13 +1,12 @@
-var GameTitleView = Backbone.View.extend({
-    template: window.JST["game/gameTitle"],
-    initialize:function() {
-        this.listenTo(this.model,"change:name",this.render)
+var Backbone = require('backbone');
+module.exports = Backbone.View.extend({
+    tagName: "h1",
+    id: "gameTitle",
+    initialize: function() {
+        this.listenTo(this.model, "change:name", this.render);
     },
     render: function() {
-        var $old=this.$el;
-        var $new = $(this.template(this.model.toJSON()));
-        this.setElement($new);
-        $old.replaceWith($new);
+        this.$el.text(this.model.get("name"));
         return this;
     }
-})
+});

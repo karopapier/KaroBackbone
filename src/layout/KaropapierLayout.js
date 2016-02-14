@@ -4,6 +4,7 @@ module.exports = Marionette.LayoutView.extend({
         header: "#header",
         navi: "#navi",
         content: "#content",
-        footer: "#footer"
+        footer: "#footer",
+        lastChatMessage: '.lastChatMessage'
     }
 });

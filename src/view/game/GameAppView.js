@@ -10,11 +10,10 @@ module.exports = Backbone.View.extend({
 
         //insert views
         this.model.layout.gameQueue.show(this.model.gameDranQueueView, {preventDestroy: true});
-        //this.model.layout.chatMessages.show(this.model.chatMessagesView, {preventDestroy: true});
-        //this.model.layout.chatInfo.show(this.model.chatInfoView, {preventDestroy: true});
-        //this.model.layout.chatControl.show(this.model.chatControlView, {preventDestroy: true});
-        //this.model.layout.chatEnter.show(this.model.chatEnterView, {preventDestroy: true});
-
+        this.model.layout.mapViewContainer.show(this.model.mapRenderView, {preventDestroy: true});
+        this.model.layout.gameTitleContainer.show(this.model.gameTitleView);
+        this.model.layout.playerTableView.show(this.model.playerTableView);
+        this.model.layout.gameInfo.show(this.model.gameInfoView);
         this.$el.html(this.model.layout.$el);
     }
 });

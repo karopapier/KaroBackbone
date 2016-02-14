@@ -1,13 +1,16 @@
-var PlayerTableRowView = Backbone.View.extend({
+var Backbone = require('backbone');
+module.exports = Backbone.View.extend({
     tagName: "tr",
     className: "playerTableRow",
     template: window["JST"]["game/playerTableRow"],
-    initialize: function () {
+    initialize: function() {
         _.bindAll(this, "render");
         //this.listenTo(this.collection, "change", this.render);
         //this.listenTo(this.collection, "reset", this.render);
         this.listenTo(this.model, "change:visible", this.updateVisibility);
         this.listenTo(this.model, "change:highlight", this.updateHighlight);
+        this.listenTo(this.model, "change:blocktime", this.render);
+        this.listenTo(this.model, "change:moveCount change:crashCount", this.render);
     },
 
     events: {
@@ -16,16 +19,16 @@ var PlayerTableRowView = Backbone.View.extend({
         "mouseleave": "unhighlight"
     },
 
-    setVisibility: function (e) {
+    setVisibility: function(e) {
         $e = $(e.currentTarget);
         this.model.set("visible", $e.prop("checked"));
     },
 
-    updateVisibility: function () {
+    updateVisibility: function() {
         this.$('input').prop("checked", this.model.get("visible"));
     },
 
-    updateHighlight: function () {
+    updateHighlight: function() {
         if (this.model.get("highlight")) {
             this.$el.addClass("highlight");
         } else {
@@ -33,15 +36,15 @@ var PlayerTableRowView = Backbone.View.extend({
         }
     },
 
-    highlight: function () {
+    highlight: function() {
         this.model.set("highlight", true);
     },
 
-    unhighlight: function () {
+    unhighlight: function() {
         this.model.set("highlight", false);
     },
 
-    render: function () {
+    render: function() {
         var data = this.model.toJSON();
         var statusClass = "";
         var displayStatus = "";
@@ -75,6 +78,7 @@ var PlayerTableRowView = Backbone.View.extend({
         data.displayStatus = displayStatus;
         data.statusClass = statusClass;
         this.$el.html(this.template(data));
+        this.updateHighlight();
         return this;
     }
 });
