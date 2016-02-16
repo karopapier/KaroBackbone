@@ -43,7 +43,7 @@ module.exports = Backbone.View.extend({
         data.createdTime = moment(this.model.get("created"), "YYYY-MM-DD HH:mm").format("HH:mm");
 
         var cpStatus = "aktiviert";
-        if (this.model.map.get("cps").length == 0) {
+        if (this.map.get("cps").length === 0) {
             cpStatus = "deaktiviert, die Karte hat keine";
         } else {
             if (!this.model.get("withCheckpoints")) {
@@ -56,7 +56,7 @@ module.exports = Backbone.View.extend({
 
         this.$el.html(this.template(data));
         /*{
-         mapId: this.model.map.get("id"),
+         mapId: this.map.get("id"),
          gameCreator: this.model.get("creator"),
          gameCreated: this.model.get("created"),
          gameDir: this.model.get("dir"),

@@ -10,10 +10,14 @@ module.exports = Backbone.View.extend({
 
         //insert views
         this.model.layout.gameQueue.show(this.model.gameDranQueueView, {preventDestroy: true});
-        this.model.layout.mapViewContainer.show(this.model.mapRenderView, {preventDestroy: true});
         this.model.layout.gameTitleContainer.show(this.model.gameTitleView);
-        this.model.layout.playerTableView.show(this.model.playerTableView);
         this.model.layout.gameInfo.show(this.model.gameInfoView);
+        this.model.layout.mapView.show(this.model.mapRenderView);
+        this.model.layout.playersMovesView.show(this.model.playersMovesView);
+        this.model.layout.statusView.show(this.model.statusView);
+        this.model.layout.moveMessagesView.show(this.model.moveMessagesView);
+        this.model.layout.playerTableView.show(this.model.playerTableView);
+        this.model.layout.logLinkView.show(this.model.logLinkView);
         this.$el.html(this.model.layout.$el);
     }
 });

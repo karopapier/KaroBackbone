@@ -87,9 +87,14 @@ module.exports = Backbone.Model.extend(/** @lends Game.prototype */ {
                 //console.log("Transform", moves.length, "moves for", uid);
                 me.playersMoves[uid] = new MoveCollection(moves);
                 me.moves.add(moves);
-                me.moveMessages.add(moves.filter(function(e) {
+                var movesWithMsg  = moves.filter(function(e) {
                     return e.hasOwnProperty("msg");
-                }));
+                });
+                _.each(movesWithMsg, function(m) {
+                    //console.log(e);
+                    m.player = e.name;
+                });
+                me.moveMessages.add(movesWithMsg);
             });
             //console.log("Moves:", me.moves.length);
             //console.log("MoveMessages:", me.moveMessages.length);
@@ -120,7 +125,7 @@ module.exports = Backbone.Model.extend(/** @lends Game.prototype */ {
 
         //if already loading, return
         //@TODO: consider timeout of "loading"
-        console.log("Game", id, "is loading:", this.get("loading"));
+        //console.log("Game", id, "is loading:", this.get("loading"));
         if (this.get("loading")) return false;
         //silently set the id, events trigger after data is here
         //this.set({"id": id, completed: false}, {silent: true});

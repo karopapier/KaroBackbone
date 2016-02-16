@@ -6,7 +6,11 @@ module.exports = Marionette.LayoutView.extend({
         gameInfo: "#gameInfo",
         gameTitleContainer: "#gameTitleContainer",
         gameStatus: "#gameStatus",
-        mapViewContainer: "#mapViewContainer",
-        playerTableView: "#playerTableView"
+        mapView: "#mapView",
+        playersMovesView: "#playersMovesView",
+        playerTableView: "#playerTableView",
+        statusView: "#statusView",
+        moveMessagesView: "#moveMessagesView",
+        logLinkView: "#logLinkView"
     }
 });

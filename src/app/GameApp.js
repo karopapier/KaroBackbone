@@ -4,7 +4,6 @@ var GameLayout = require('../layout/GameLayout');
 var GameAppView = require('../view/game/GameAppView');
 var GameDranQueueView = require('../view/game/DranQueueView');
 var Game = require('../model/Game');
-var GameTitleView = require('../view/game/GameTitleView');
 var MapViewSettings = require('../model/map/MapViewSettings');
 var MapRenderView = require('../view/map/MapRenderView');
 var Map = require('../model/map/Map');
@@ -13,6 +12,9 @@ var MoveCollection = require('../collection/MoveCollection');
 var MoveMessageCollection = require('../collection/MoveMessageCollection');
 var PlayerTableView = require('../view/game/PlayerTableView');
 var GameInfoView = require('../view/game/GameInfoView');
+var PlayersMovesView = require('../view/map/PlayersMovesView');
+var StatusView = require('../view/StatusView');
+var MoveMessagesView = require('../view/game/MoveMessagesView');
 
 module.exports = Marionette.Application.extend({
     className: "gameApp",
@@ -31,13 +33,16 @@ module.exports = Marionette.Application.extend({
          DATA
          */
         this.viewSettings = new MapViewSettings();
-        this.game = new Game();
+        this.game = new Game({
+            name: "Lade dade... Du?"
+        });
         this.map = new Map({
             mapcode: "X"
         });
         this.players = new PlayerCollection();
         this.moves = new MoveCollection;
         this.moveMessages = new MoveMessageCollection();
+        this.playersMoves = {};
         //this.map.setMapcode("XXXXXXXXX\nXNXNXNXNX\nXXXXXXXXX");
 
         /*
@@ -47,8 +52,14 @@ module.exports = Marionette.Application.extend({
             collection: this.app.UserDranGames
         });
 
-        this.gameTitleView = new GameTitleView({
-            model: this.game
+        this.gameTitleView = new Marionette.ItemView({
+            model: this.game,
+            tagName: "h1",
+            id: "gameTitle",
+            template: _.template("<%= name %>"),
+            modelEvents: {
+               "change:name": "render"
+             }
         });
 
         this.mapRenderView = new MapRenderView({
@@ -63,6 +74,34 @@ module.exports = Marionette.Application.extend({
         this.gameInfoView = new GameInfoView({
             model: this.game,
             map: this.map
+        });
+
+        this.playersMovesView = new PlayersMovesView({
+            model: this.game,
+            user: this.app.User,
+            map: this.map,
+            collection: this.players,
+            playersMoves: this.playersMoves,
+            settings: this.viewSettings
+        });
+
+        this.statusView = new StatusView({
+            model: this.game,
+            user: this.app.User
+        });
+
+        this.moveMessagesView = new MoveMessagesView({
+            collection: this.moveMessages,
+            user: this.app.User,
+            util: this.app.util
+        });
+
+        this.logLinkView = new Marionette.ItemView({
+            model: this.game,
+            template: _.template('<a href="logs/<%= id %>.log">Link zur Logdatei</a>'),
+            modelEvents: {
+                "change:name": "render"
+            }
         });
 
         /*
@@ -89,6 +128,7 @@ module.exports = Marionette.Application.extend({
 
     },
     displayGame: function(cachedGame) {
+        var me = this;
         console.info("NOW APPLY DATA TO VIEW");
         //console.log("cached game", cachedGame);
 
@@ -96,10 +136,32 @@ module.exports = Marionette.Application.extend({
         this.map.set(cachedGame.map.attributes);
 
         //console.log("cached game players", cachedGame.players);
+        var uidsBefore = Object.keys(this.playersMoves);
+
+        //reset and clean out obsolete playersMoves
+        for (var pid in this.playersMoves) {
+            if (!cachedGame.players.get(pid)) {
+                this.playersMoves[pid].reset();
+                delete this.playersMoves[pid];
+            }
+        }
+
+        //add new playersMoves
+        cachedGame.players.each(function(p, i) {
+            var uid = p.get("id");
+            if (!(uid in me.playersMoves)) {
+                me.playersMoves[uid] = new MoveCollection();
+            }
+            var mc = me.playersMoves[uid];
+            mc.set(cachedGame.playersMoves[uid].toJSON());
+        });
+
+        //console.log("Now setting players!");
         this.players.set(cachedGame.players.toJSON());
-        //this.playersMoves =
+        //console.log("DONE setting players!");
+
         //this.moves =
-        //this.moveMessages
+        this.moveMessages.reset(cachedGame.moveMessages.toJSON());
 
         //game attributes
         this.game.set(cachedGame.attributes);
@@ -127,6 +189,9 @@ module.exports = Marionette.Application.extend({
         if (cachedGame.get("completed")) {
             me.displayGame(cachedGame);
         } else {
+            if (!cachedGame.get("loading")) {
+                cachedGame.load();
+            }
             cachedGame.listenTo(cachedGame, "change completed", function(g) {
                 //set from game once loaded
                 me.displayGame(g);
