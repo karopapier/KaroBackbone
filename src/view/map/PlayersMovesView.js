@@ -24,6 +24,13 @@ module.exports = Marionette.CollectionView.extend({
             util: Karopapier.util
         };
     },
+    viewComparator: function(a, b) {
+        //for the view, make "myself" and highlighted always last to be svg-rendered on top
+        if (a.get("highlight")) return 1;
+        if (a.get("id") === this.user.get("id")) return 1;
+        //console.log("View Compa", a.get("id"), b.get("id"), "vs", this.user.get("id"));
+        //console.log("View Compa", a.get("highlight"), b.get("highlight"), "highlight");
+    },
     initialize: function(options) {
         options = options || {};
 
@@ -62,8 +69,8 @@ module.exports = Marionette.CollectionView.extend({
         this.listenTo(this.user, "change:id", this.check);
         this.listenTo(this.map, "change:cols chang:rows", this.resize);
         this.listenTo(this.settings, "change:drawLimit", this.drawLimit);
-
         this.listenTo(this.collection, "update", this.check);
+        this.listenTo(this.collection, "change:highlight", this.reorder);
         this.resize();
     },
     check: function() {
@@ -117,4 +124,5 @@ module.exports = Marionette.CollectionView.extend({
         var h = this.map.get("rows") * this.fieldSize;
         this.$el.css({width: w, height: h}).attr({width: w, height: h});
     }
-});
+})
+;

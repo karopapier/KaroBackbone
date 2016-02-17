@@ -62,7 +62,7 @@ module.exports = Backbone.View.extend(/** @lends GridView.prototype */{
     },
 
     drawPositions: function() {
-        console.log("DRAW POSITIONS");
+        //console.log("DRAW POSITIONS");
         this.fieldsize = this.settings.get("size") + this.settings.get("border");
         this.players.each(function(p) {
             var x = p.get("lastmove").x;
