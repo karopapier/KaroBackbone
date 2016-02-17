@@ -13,6 +13,7 @@ var MoveMessageCollection = require('../collection/MoveMessageCollection');
 var PlayerTableView = require('../view/game/PlayerTableView');
 var GameInfoView = require('../view/game/GameInfoView');
 var PlayersMovesView = require('../view/map/PlayersMovesView');
+var GridView = require('../view/map/GridView');
 var StatusView = require('../view/StatusView');
 var MoveMessagesView = require('../view/game/MoveMessagesView');
 
@@ -58,12 +59,29 @@ module.exports = Marionette.Application.extend({
             id: "gameTitle",
             template: _.template("<%= name %>"),
             modelEvents: {
-               "change:name": "render"
-             }
+                "change:name": "render"
+            }
         });
 
         this.mapRenderView = new MapRenderView({
             model: this.map,
+            settings: this.viewSettings
+        });
+
+        this.playersMovesView = new PlayersMovesView({
+            model: this.game,
+            user: this.app.User,
+            map: this.map,
+            collection: this.players,
+            playersMoves: this.playersMoves,
+            settings: this.viewSettings
+        });
+
+        this.gridView = new GridView({
+            model: this.game,
+            players: this.players,
+            user: this.app.User,
+            map: this.map,
             settings: this.viewSettings
         });
 
@@ -74,15 +92,6 @@ module.exports = Marionette.Application.extend({
         this.gameInfoView = new GameInfoView({
             model: this.game,
             map: this.map
-        });
-
-        this.playersMovesView = new PlayersMovesView({
-            model: this.game,
-            user: this.app.User,
-            map: this.map,
-            collection: this.players,
-            playersMoves: this.playersMoves,
-            settings: this.viewSettings
         });
 
         this.statusView = new StatusView({

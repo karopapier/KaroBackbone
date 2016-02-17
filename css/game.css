@@ -29,6 +29,12 @@
     left: 0;
 }
 
+#gridView {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 #playerTable {
     /* float: left; */
 }

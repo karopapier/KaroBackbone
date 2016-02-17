@@ -16,6 +16,7 @@ module.exports = Backbone.View.extend({
         this.model.layout.playersMovesView.show(this.model.playersMovesView);
         this.model.layout.statusView.show(this.model.statusView);
         this.model.layout.moveMessagesView.show(this.model.moveMessagesView);
+        this.model.layout.gridView.show(this.model.gridView);
         this.model.layout.playerTableView.show(this.model.playerTableView);
         this.model.layout.logLinkView.show(this.model.logLinkView);
         this.$el.html(this.model.layout.$el);

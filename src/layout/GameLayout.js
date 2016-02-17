@@ -8,6 +8,7 @@ module.exports = Marionette.LayoutView.extend({
         gameStatus: "#gameStatus",
         mapView: "#mapView",
         playersMovesView: "#playersMovesView",
+        gridView: "#gridView",
         playerTableView: "#playerTableView",
         statusView: "#statusView",
         moveMessagesView: "#moveMessagesView",

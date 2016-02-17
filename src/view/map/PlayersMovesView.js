@@ -56,12 +56,11 @@ module.exports = Marionette.CollectionView.extend({
         }
         this.map = options.map;
 
-        this.listenTo(this.map, "change:rows change:cols", this.adjustSize);
 
         _.bindAll(this, "check", "resize");
         this.listenTo(this.settings, "change:size change:border", this.resize);
         this.listenTo(this.user, "change:id", this.check);
-        this.listenTo(this.map, "change:cols change:rows", this.resize);
+        this.listenTo(this.map, "change:cols chang:rows", this.resize);
         this.listenTo(this.settings, "change:drawLimit", this.drawLimit);
 
         this.listenTo(this.collection, "update", this.check);
@@ -69,7 +68,7 @@ module.exports = Marionette.CollectionView.extend({
     },
     check: function() {
         var me = this;
-        console.info("CHECK");
+        //console.info("CHECK");
         this.resize();
 
         //initialise visibility & drawLimits
