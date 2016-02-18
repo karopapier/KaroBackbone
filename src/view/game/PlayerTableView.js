@@ -7,9 +7,19 @@ module.exports = Marionette.CompositeView.extend({
     template: window["JST"]["game/playerTable"],
     childView: PlayerTableRowView,
     childViewContainer: "tbody",
+    childViewOptions: function() {
+        return {
+            minimize: this.minimize
+        };
+    },
 
-    initialize: function() {
+    initialize: function(options) {
         _.bindAll(this, "render");
+        //overwrite template for minimize mode
+        if (options.minimize) {
+            this.template = window["JST"]["game/playerTable_mini"];
+            this.minimize = true;
+        }
     },
 
     events: {

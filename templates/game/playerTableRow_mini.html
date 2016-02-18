@@ -1,0 +1,10 @@
+<td style="background-color: #<%= color %>; border-radius: 4px; box-shadow: 1px 2px rgba(0,0,0,.4); vertical-align: middle; text-align: center">
+    &nbsp;<input type="checkbox" checked="checked"> &nbsp;
+</td>';
+<td><%= name %></td>
+<td><span class="<%= statusClass %>"><%= displayStatus %></span></td>
+<td>
+    <% for (var i in checkedCps) { %>
+    <img src="/images/mapfields/<%= checkedCps[i] %>.png" style="border: 0px; height: 12px"/>
+    <% } %>
+</td>";

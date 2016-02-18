@@ -53,12 +53,17 @@ module.exports = Backbone.View.extend(/** @lends GridView.prototype */{
         this.resize();
     },
     events: {
-        "contextmenu": "contextmenu"
+        "contextmenu": "contextmenu",
+        "click": "leftclick"
     },
 
     contextmenu: function(e) {
-        console.info("RIGHTCLICK");
+        this.trigger("contextmenu", e);
         e.preventDefault();
+    },
+
+    leftclick: function(e) {
+        this.trigger("default");
     },
 
     drawPositions: function() {

@@ -17,26 +17,24 @@
     /*float: left; */
 }
 
-#mapView {
+.mapView {
     /* mapview gives us the size
      all others will be layered on top of it
      */
 }
 
-#playersMovesView {
+.map-overlay {
     position: absolute;
     top: 0;
     left: 0;
 }
 
-#gridView {
+.map-quickSettings {
     position: absolute;
-    top: 0;
-    left: 0;
-}
-
-#playerTable {
-    /* float: left; */
+    width: 200px;
+    height: 200px;
+    border: 2px solid black;
+    background-color: rgba(200, 200, 255, .5);
 }
 
 .possibleMove {

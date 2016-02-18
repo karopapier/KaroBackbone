@@ -3,10 +3,13 @@ module.exports = Backbone.View.extend({
     tagName: "tr",
     className: "playerTableRow",
     template: window["JST"]["game/playerTableRow"],
-    initialize: function() {
+    initialize: function(options) {
         _.bindAll(this, "render");
         //this.listenTo(this.collection, "change", this.render);
         //this.listenTo(this.collection, "reset", this.render);
+        if (options.minimize) {
+            this.template = window["JST"]["game/playerTableRow_mini"];
+        }
         this.listenTo(this.model, "change:visible", this.updateVisibility);
         this.listenTo(this.model, "change:highlight", this.updateHighlight);
         this.listenTo(this.model, "change:blocktime", this.render);

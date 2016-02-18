@@ -139,7 +139,7 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
         });
 
         this.vent.on('CHAT:MESSAGE', function(data) {
-            console.log(data);
+            //console.log(data);
             me.lastChatMessage = new ChatMessage(data.chatmsg);
             me.layout.lastChatMessage.show(new ChatMessageView({
                 model: me.lastChatMessage,

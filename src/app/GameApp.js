@@ -16,6 +16,7 @@ var PlayersMovesView = require('../view/map/PlayersMovesView');
 var GridView = require('../view/map/GridView');
 var StatusView = require('../view/StatusView');
 var MoveMessagesView = require('../view/game/MoveMessagesView');
+var QuickSettingsView = require('../view/map/QuickSettingsView');
 
 module.exports = Marionette.Application.extend({
     className: "gameApp",
@@ -84,6 +85,8 @@ module.exports = Marionette.Application.extend({
             map: this.map,
             settings: this.viewSettings
         });
+        this.listenTo(this.gridView, "contextmenu", this.showQuickSettings)
+        this.listenTo(this.gridView, "default", this.hideQuickSettings)
 
         this.playerTableView = new PlayerTableView({
             collection: this.players
@@ -136,6 +139,31 @@ module.exports = Marionette.Application.extend({
 
 
     },
+
+    showQuickSettings: function(e) {
+        console.log("Contextmenu in GameApp");
+        var settingsView = new QuickSettingsView({
+            text: "Hallo",
+            className: "map-quickSettings"
+        });
+
+        settingsView = new PlayerTableView({
+            collection: this.players,
+            minimize: true
+        });
+
+        this.layout.quickSettingsView.show(settingsView);
+        this.layout.quickSettingsView.$el.css({
+            left: e.offsetX + "px",
+            top: e.offsetY + "px"
+        });
+    },
+
+    hideQuickSettings: function() {
+        this.layout.quickSettingsView.reset();
+        return true;
+    },
+
     displayGame: function(cachedGame) {
         var me = this;
         console.info("NOW APPLY DATA TO VIEW");
@@ -175,6 +203,7 @@ module.exports = Marionette.Application.extend({
         //game attributes
         this.game.set(cachedGame.attributes);
     },
+
     display: function(gameId) {
         var me = this;
         if (!gameId) {
@@ -210,4 +239,5 @@ module.exports = Marionette.Application.extend({
         this.map.setMapcode();
         //Now display the game in full detail!
     }
-});
+})
+;
