@@ -1,4 +1,6 @@
-var EditorToolsMaploadView = Marionette.ItemView.extend({
+var Marionette = require('backbone.marionette');
+var MapListView = require('../map/MapListView');
+module.exports = Marionette.ItemView.extend({
     template: window.JST["editor/mapload"],
     initialize: function(options) {
         if (!options.editorApp) {

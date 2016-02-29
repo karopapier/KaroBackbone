@@ -1,4 +1,5 @@
-var EditorToolsButtonsView = Marionette.ItemView.extend({
+var Marionette = require('backbone.marionette');
+module.exports = Marionette.ItemView.extend({
     initialize: function(options) {
         options = options || {};
         if (!options.editorsettings) {

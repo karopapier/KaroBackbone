@@ -1,4 +1,5 @@
-var EditorImageTranslatorSettings = Backbone.Model.extend({
+var Backbone = require('backbone');
+module.exports = Backbone.Model.extend({
     defaults: {
         active: false,
         binary: true, //X or O

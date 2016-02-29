@@ -1,4 +1,6 @@
-var EditorMapView = Backbone.View.extend({
+var Backbone = require('backbone');
+var MapRenderView = require('../map/MapRenderView');
+module.exports = Backbone.View.extend({
     initialize: function(options) {
         options = options || {};
         if (!options.viewsettings) {

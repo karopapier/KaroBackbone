@@ -1,4 +1,5 @@
-var EditorToolsSettingsView = Marionette.ItemView.extend({
+var Marionette = require('backbone.marionette');
+module.exports = Marionette.ItemView.extend({
     template: window.JST["editor/viewsettings"],
     initialize: function(options) {
         options = options || {};

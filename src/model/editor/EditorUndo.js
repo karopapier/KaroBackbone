@@ -1,4 +1,5 @@
-var EditorUndo = Backbone.Model.extend({
+var Backbone = require('backbone');
+module.exports = Backbone.Model.extend({
     initialize: function(options) {
         _.bindAll(this, "undo");
         options = options || {};

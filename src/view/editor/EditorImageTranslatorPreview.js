@@ -1,4 +1,5 @@
-var EditorImageTranslatorPreview = Marionette.ItemView.extend({
+var Marionette = require('backbone.marionette');
+module.exports = Marionette.ItemView.extend({
     tagName: "canvas",
     initialize: function(options) {
         _.bindAll(this, "drop");
@@ -26,7 +27,7 @@ var EditorImageTranslatorPreview = Marionette.ItemView.extend({
         };
         this.img.src = "/images/dragdropcat.png";
 
-        this.imageTranslator.settings.set("active",false);
+        this.imageTranslator.settings.set("active", false);
         this.listenTo(this.imageTranslator.settings, "change", this.render);
     },
 

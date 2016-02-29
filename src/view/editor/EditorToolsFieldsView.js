@@ -1,4 +1,6 @@
-var EditorToolsFieldsView = Marionette.ItemView.extend({
+var Marionette = require('backbone.marionette');
+var Map = require('../../model/map/Map');
+module.exports = Marionette.ItemView.extend({
     initialize: function(options) {
         options = options || {};
         if (!options.editorsettings) {

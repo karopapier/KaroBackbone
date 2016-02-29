@@ -1,4 +1,5 @@
-var MapListItemView = Backbone.View.extend({
+var Backbone = require('backbone');
+module.exports = Backbone.View.extend({
     tagName: "option",
     render: function() {
         this.$el.attr("value", this.model.get("id"));
