@@ -1,4 +1,6 @@
-var EditorCodeView = Backbone.View.extend({
+var Backbone = require('backbone');
+var MapCodeView = require('../map/MapCodeView');
+module.exports = Backbone.View.extend({
     initialize: function(options) {
         options = options || {};
         if (!options.model) {

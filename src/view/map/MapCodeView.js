@@ -1,6 +1,7 @@
-var MapCodeView = Backbone.View.extend({
+var Backbone = require('backbone');
+module.exports = Backbone.View.extend({
     tagName: "textarea",
-    initialize: function (options) {
+    initialize: function(options) {
         _.defaults(options, {readonly: true});
         this.readonly = options.readonly;
         _.bindAll(this, "render", "setBounds", "setCode", "getCode", "updateModel");
@@ -15,16 +16,16 @@ var MapCodeView = Backbone.View.extend({
             this.makeEditable();
         }
     },
-    makeReadonly: function () {
+    makeReadonly: function() {
         this.$el.attr("disabled", "disabled");
         this.undelegateEvents();
     },
-    makeEditable: function () {
+    makeEditable: function() {
         this.delegateEvents({
             "keyup": "updateModel"
         });
     },
-    setBounds: function () {
+    setBounds: function() {
         //console.log("Bounds");
         this.$el.attr({
             "rows": this.model.get("rows") + 1,
@@ -32,17 +33,17 @@ var MapCodeView = Backbone.View.extend({
         })
         ;
     },
-    setCode: function () {
+    setCode: function() {
         //console.info("I need to change");
         this.$el.val(this.model.get("mapcode"));
     },
-    getCode: function () {
+    getCode: function() {
         return this.$el.val();
     },
-    updateModel: function () {
+    updateModel: function() {
         this.model.set("mapcode", this.getCode());
     },
-    render: function () {
+    render: function() {
         this.setBounds();
         this.setCode();
     }

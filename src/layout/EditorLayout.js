@@ -1,4 +1,9 @@
-var EditorLayout = Marionette.LayoutView.extend({
+var Marionette = require('backbone.marionette');
+var EditorToolsLayout = require('./EditorToolsLayout');
+var EditorMapView = require('../view/editor/EditorMapView');
+var EditorCodeView = require('../view/editor/EditorCodeView');
+var EditorImageTranslatorLayout = require('./EditorImageTranslatorLayout');
+module.exports = Marionette.LayoutView.extend({
     initialize: function(options) {
         options = options || {};
         if (!options.editorApp) {

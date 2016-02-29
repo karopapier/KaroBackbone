@@ -2,6 +2,7 @@ var Backbone = require('backbone');
 var ChatApp = require('../app/ChatApp');
 var DranApp = require('../app/DranApp');
 var GameApp = require('../app/GameApp');
+var EditorApp = require('../app/EditorApp');
 module.exports = Backbone.Router.extend({
     initialize: function(options) {
         options = options || {};
@@ -54,7 +55,9 @@ module.exports = Backbone.Router.extend({
         this.app.layout.content.show(this.app.chatApp.view);
     },
     showEditor: function() {
-        this.app.editorApp = new EditorApp();
+        this.app.editorApp = new EditorApp({
+            app: this.app
+        });
         this.app.layout.content.show(this.app.editorApp.layout);
     },
     showDran: function() {

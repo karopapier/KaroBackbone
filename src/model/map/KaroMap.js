@@ -1,15 +1,12 @@
-/**
- * Created by p.dietrich on 30.11.2015.
- */
-
-var KaroMap = Backbone.Model.extend({
+var Backbone = require('backbone');
+module.exports = Backbone.Model.extend({
     defaults: {
         id: 0,
         name: "o(-.-)o",
         mapcode: "1",
         loaded: false
     },
-    initialize: function (options) {
+    initialize: function(options) {
         //init Maps model
         this.constructor.__super__.initialize.apply(this, arguments);
     },

@@ -1,4 +1,8 @@
-var EditorImageTranslatorLayout = Marionette.LayoutView.extend({
+var Marionette = require('backbone.marionette');
+var EditorImageTranslatorPreview = require('../view/editor/EditorImageTranslatorPreview');
+var EditorImageTranslatorInfoView = require('../view/editor/EditorImageTranslatorInfoView');
+var EditorImageTranslatorSettingsView = require('../view/editor/EditorImageTranslatorSettingsView');
+module.exports = Marionette.LayoutView.extend({
     className: "editorImageTranslator",
     template: window.JST["editor/imagetranslatorlayout"],
     initialize: function(options) {

@@ -1,4 +1,6 @@
-var EditorToolsMaploadView = Marionette.ItemView.extend({
+var Marionette = require('backbone.marionette');
+var MapListView = require('../map/MapListView');
+module.exports = Marionette.ItemView.extend({
     template: window.JST["editor/mapload"],
     initialize: function(options) {
         if (!options.editorApp) {
@@ -18,7 +20,7 @@ var EditorToolsMaploadView = Marionette.ItemView.extend({
         var mapcode = map.get("mapcode");
         this.editorApp.map.setMapcode(mapcode);
     },
-    render: function()  {
+    render: function() {
         this.$el.empty();
         this.$el.html(this.template());
         this.karoMapListView = new MapListView({
