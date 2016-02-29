@@ -1,22 +1,31 @@
-var EditorApp = Backbone.Marionette.Application.extend({
-    initialize: function() {
+var Marionette = require('backbone.marionette');
+var EditorLayout = require('../layout/EditorLayout');
+var MapViewSettings = require('../model/map/MapViewSettings');
+var EditorSettings = require('../model/editor/EditorSettings');
+var EditorImageTranslator = require('../model/editor/EditorImageTranslator');
+var EditorUndo = require('../model/editor/EditorUndo');
+var KaroMapCollection = require('../collection/KaroMapCollection');
+var Map = require('../model/map/Map');
+module.exports = Marionette.Application.extend({
+    initialize: function(options) {
         this.layout = new EditorLayout({
             editorApp: this
         });
         this.viewsettings = new MapViewSettings();
         this.editorsettings = new EditorSettings();
+        this.app = options.app;
         this.map = new Map();
         this.map.setMapcode("XXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXGGGGGGGGGGGGGGGGGGGGGGGGGXX\nXGVGGVGGGGGGVGGGVGVVVGVGGGTX\nXGVGVGGGGGGGVVGVVGVGGGVGGGTX\nXGVVGGGVVVGGVGVGVGVVGGVGGGTX\nXGVGVGGVGVGGVGGGVGVGGGVGGGTX\nXGVGGVGVVVVGVGGGVGVVVGVVVGTX\nXGGGGGGGGGGGGGGGGGGGGGGGGGTX\nXXTTTTTTTTTTTTTTTTTTTTTTTTTX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         //this.map.setMapcode("F123456789\nWXYZLNOXPS");
         /*
-        this.viewsettings.set({
-            size: 20,
-            border: 10,
-            specles: true
-        });
-        */
+         this.viewsettings.set({
+         size: 20,
+         border: 10,
+         specles: true
+         });
+         */
 
-        this.listenTo(Karopapier.vent, "HOTKEY", _.bind(this.hotkey, this));
+        this.listenTo(this.app.vent, "HOTKEY", _.bind(this.hotkey, this));
 
         this.karoMaps = new KaroMapCollection();
         //CustomMapCollection()
