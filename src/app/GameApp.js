@@ -142,17 +142,17 @@ module.exports = Marionette.Application.extend({
 
     showQuickSettings: function(e) {
         console.log("Contextmenu in GameApp");
-        var settingsView = new QuickSettingsView({
+
+        var helloView = new QuickSettingsView({
             text: "Hallo",
-            className: "map-quickSettings"
         });
 
-        settingsView = new PlayerTableView({
+        var ptv = new PlayerTableView({
             collection: this.players,
             minimize: true
         });
 
-        this.layout.quickSettingsView.show(settingsView);
+        this.layout.quickSettingsView.show(ptv);
         this.layout.quickSettingsView.$el.css({
             left: e.offsetX + "px",
             top: e.offsetY + "px"

@@ -34,7 +34,7 @@ module.exports = Marionette.LayoutView.extend({
         }));
 
         this.codeview.show(new EditorCodeView({
-            model: this.editorApp.map,
+            model: this.editorApp.map
         }));
 
         this.imageTranslator.show(new EditorImageTranslatorLayout({

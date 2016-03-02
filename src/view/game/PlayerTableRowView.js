@@ -82,6 +82,7 @@ module.exports = Backbone.View.extend({
         data.statusClass = statusClass;
         this.$el.html(this.template(data));
         this.updateHighlight();
+        this.updateVisibility();
         return this;
     }
 });

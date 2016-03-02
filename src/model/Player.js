@@ -9,7 +9,8 @@ module.exports = Backbone.Model.extend(/** @lends Player.prototype */{
         id: 0,
         moveCount: -1,
         crashCount: -1,
-        blocktime: 1
+        blocktime: 1,
+        visible: false
     },
     parse: function (data) {
         if (data.moves) {

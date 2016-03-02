@@ -1,5 +1,5 @@
 var Backbone = require('backbone');
-var EditorImageTranslatorSettings =require('./EditorImageTranslatorSettings');
+var EditorImageTranslatorSettings = require('./EditorImageTranslatorSettings');
 var MapRenderPalette = require('../map/MapRenderPalette');
 module.exports = Backbone.Model.extend({
     initialize: function(options) {
