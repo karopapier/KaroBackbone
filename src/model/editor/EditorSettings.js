@@ -1,7 +1,7 @@
 var Backbone = require('backbone');
 module.exports = Backbone.Model.extend({
     defaults: {
-        buttons: [null, "O", "1", "X"],
+        buttons: [null, "A", "G", "X"],
         rightclick: true,
         drawmode: "draw"
     },

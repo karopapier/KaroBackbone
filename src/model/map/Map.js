@@ -23,29 +23,30 @@ module.exports = Backbone.Model.extend(/** @lends Map.prototype*/{
         this.bind("change:mapcode", this.updateMapcode);
     },
     FIELDS: {
-        "F": "finish",
-        "O": "road",
-        "P": "parc",
-        "S": "start",
-        "G": "gold",
-        "L": "lava",
-        "N": "snow",
-        "T": "tar",
-        "V": "mountain",
-        "W": "water",
-        "X": "grass",
-        "Y": "sand",
-        "Z": "mud",
-        ".": "night",
-        "1": "cp1",
-        "2": "cp2",
-        "3": "cp3",
-        "4": "cp4",
-        "5": "cp5",
-        "6": "cp6",
-        "7": "cp7",
-        "8": "cp8",
-        "9": "cp9"
+        "A": "A",
+        "B": "B",
+        "C": "C",
+        "D": "D",
+        "E": "E",
+        "F": "F",
+        "G": "G",
+        "H": "H",
+        "I": "I",
+        "J": "J",
+        "K": "K",
+        "L": "L",
+        "M": "M",
+        "N": "N",
+        "O": "O",
+        "P": "P",
+        "Q": "Q",
+        "R": "R",
+        "S": "S",
+        "T": "T",
+        "U": "U",
+        "V": "V",
+        "W": "W",
+        "X": "X",
     },
     isValidField: function(c) {
         return this.validFields.indexOf(c.toUpperCase()) >= 0;
@@ -252,7 +253,6 @@ module.exports = Backbone.Model.extend(/** @lends Map.prototype*/{
         //console.log("sanitize and set correct code");
 
         var dirtyCode = this.get("mapcode").toUpperCase().trim();
-        var starties = (dirtyCode.match(/S/g) || []).length;
 
         //find longest line
         var rows = dirtyCode.split("\n");
@@ -284,11 +284,6 @@ module.exports = Backbone.Model.extend(/** @lends Map.prototype*/{
                 }
             }
 
-            //set as many parcs as we have starties
-            if (parcs < starties) {
-                cleanRow = "P" + cleanRow.substr(1);
-                parcs++;
-            }
             cleanRows.push(cleanRow);
         });
 

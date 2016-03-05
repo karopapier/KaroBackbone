@@ -115,12 +115,12 @@ module.exports = Backbone.Model.extend({
     },
 
     initColorMode: function(map, palette) {
-        var whitelist = /(O|P|G|L|N|T|V|W|X|Y|Z)/;
+        var whitelist = /[A-X]/;
         this.hsls = {};
         for (var f in map.FIELDS) {
             if (f.match(whitelist)) {
                 var mainRGB = palette.get(f).split(",").map(function(e) {
-                    return parseInt(e)
+                    return parseInt(e);
                 });
                 var hsl = this.rgb2hsl(mainRGB);
                 this.hsls[f] = hsl;

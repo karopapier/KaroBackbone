@@ -48,15 +48,15 @@ module.exports = Backbone.Model.extend({
         //console.log("Calc from source");
         // assume default target cols of 60
         //calc scale to match that
-        var TARGETCOLS = 60;
+        var TARGETCOLS = 50;
 
         var srcW = this.get("sourceWidth");
         var srcH = this.get("sourceHeight");
         var sc = 10;
-        if ((srcW < 60) || (srcH < 40)) {
+        if ((srcW < 50) || (srcH < 40)) {
             sc = 1;
         } else {
-            sc = Math.floor(this.get("sourceWidth") / 60);
+            sc = Math.floor(this.get("sourceWidth") / 50);
         }
 
         //console.log("Set scale and target");

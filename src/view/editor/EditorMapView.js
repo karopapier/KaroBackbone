@@ -1,5 +1,5 @@
 var Backbone = require('backbone');
-var MapRenderView = require('../map/MapRenderView');
+var MapRenderView = require('../map/DottyRenderView');
 module.exports = Backbone.View.extend({
     initialize: function(options) {
         options = options || {};

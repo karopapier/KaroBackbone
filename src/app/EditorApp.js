@@ -15,7 +15,7 @@ module.exports = Marionette.Application.extend({
         this.editorsettings = new EditorSettings();
         this.app = options.app;
         this.map = new Map();
-        this.map.setMapcode("XXXXXXXXXXXXXXXXXXXXXXXXXXXX\nXGGGGGGGGGGGGGGGGGGGGGGGGGXX\nXGVGGVGGGGGGVGGGVGVVVGVGGGTX\nXGVGVGGGGGGGVVGVVGVGGGVGGGTX\nXGVVGGGVVVGGVGVGVGVVGGVGGGTX\nXGVGVGGVGVGGVGGGVGVGGGVGGGTX\nXGVGGVGVVVVGVGGGVGVVVGVVVGTX\nXGGGGGGGGGGGGGGGGGGGGGGGGGTX\nXXTTTTTTTTTTTTTTTTTTTTTTTTTX\nXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        this.map.setMapcode("ABCDEFGHIJKLMNOPQRSTUVWX");
         //this.map.setMapcode("F123456789\nWXYZLNOXPS");
         /*
          this.viewsettings.set({

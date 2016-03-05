@@ -1,8 +1,8 @@
 var Backbone = require('backbone');
 module.exports = Backbone.Model.extend({
     defaults: {
-        size: 11,
-        border: 1,
+        size: 12,
+        border: 0,
         fillBorder: true,
         specles: true,
         drawLimit: 2,
