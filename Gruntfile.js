@@ -87,7 +87,7 @@ module.exports = function(grunt) {
         watch: {
             scripts: {
                 files: ['src/**/*.js', '!src/<%= pkg.name %>*.js', 'test/**/*.js'],
-                tasks: ['build', 'publish', 'test'],
+                tasks: ['build', 'publish'],
                 options: {
                     interrupt: true,
                     livereload: {
