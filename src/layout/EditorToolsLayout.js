@@ -4,7 +4,7 @@ var EditorToolsToolboxView = require('../view/editor/EditorToolsToolboxView');
 var EditorToolsButtonsView = require('../view/editor/EditorToolsButtonsView');
 var EditorToolsSettingsView = require('../view/editor/EditorToolsSettingsView');
 var EditorToolsMapLoadView = require('../view/editor/EditorToolsMapLoadView');
-var EditorToolsMaploadView = require('../view/editor/EditorToolsMaploadView');
+var EditorToolsMapLoadView = require('../view/editor/EditorToolsMapLoadView');
 module.exports = Marionette.LayoutView.extend({
     template: window.JST["editor/tools"],
     initialize: function(options) {
@@ -38,7 +38,7 @@ module.exports = Marionette.LayoutView.extend({
         this.settings.show(new EditorToolsSettingsView({
             viewsettings: this.viewsettings
         }));
-        this.mapload.show(new EditorToolsMaploadView({
+        this.mapload.show(new EditorToolsMapLoadView({
             editorApp: this.editorApp
         }));
     }

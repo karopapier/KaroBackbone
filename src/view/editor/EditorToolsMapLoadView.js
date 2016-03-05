@@ -4,7 +4,7 @@ module.exports = Marionette.ItemView.extend({
     template: window.JST["editor/mapload"],
     initialize: function(options) {
         if (!options.editorApp) {
-            console.error("No editorApp passed to EditorToolsMaploadView");
+            console.error("No editorApp passed to EditorToolsMapLoadView");
             return;
         }
         this.editorApp = options.editorApp;
