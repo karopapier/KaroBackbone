@@ -61,7 +61,7 @@ module.exports = Marionette.ItemView.extend({
     render: function() {
         this.$el.empty();
         var map = new Map();
-        var fieldlists = ["AVWX", "BCDEFGHI", "JKLM","NOPQ","RSTUW"];
+        var fieldlists = ["ABCDEFG","HIJK","LMNOP","QRSTU","VWXYZ12","3456"];
         var html = "";
         for (var r = 0; r < fieldlists.length; r++) {
             var fieldlist = fieldlists[r];

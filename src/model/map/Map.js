@@ -47,6 +47,14 @@ module.exports = Backbone.Model.extend(/** @lends Map.prototype*/{
         "V": "V",
         "W": "W",
         "X": "X",
+        "Y":"Y",
+        "Z":"Z",
+        "1":"1",
+        "2":"2",
+        "3":"3",
+        "4":"4",
+        "5":"5",
+        "6":"6"
     },
     isValidField: function(c) {
         return this.validFields.indexOf(c.toUpperCase()) >= 0;
