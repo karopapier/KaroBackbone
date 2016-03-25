@@ -42,6 +42,19 @@ var KaroUtil = {};
             });
 
             if (karoUtil.funny) {
+                //Eier
+                karoUtil.replacements.push({
+                    r: "ei",
+                    f: function() {
+                        var i=Math.round(Math.random()*4)+1;
+                        var ei = "ei" + i;
+                        return ' <img src="//2.karopapier.de/images/eier/' + ei + '.png" alt="Ei" title="Ei" />';
+                    },
+                    sw: "i"
+                });
+
+                /**
+                 * EIERPAUSE
                 //nen
                 karoUtil.replacements.push({
                     r: "(^|\\s)nen(^|\\s|$)",
@@ -57,6 +70,7 @@ var KaroUtil = {};
                         return RegExp.$1 + "Einen" + RegExp.$2;
                     }
                 });
+                */
 
                 //Thomas Anders
                 karoUtil.replacements.push({
