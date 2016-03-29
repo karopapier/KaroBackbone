@@ -43,6 +43,7 @@ var KaroUtil = {};
 
             if (karoUtil.funny) {
                 //Eier
+                /* Ostern vorbEI
                 karoUtil.replacements.push({
                     r: "ei",
                     f: function() {
@@ -52,9 +53,8 @@ var KaroUtil = {};
                     },
                     sw: "i"
                 });
+                */
 
-                /**
-                 * EIERPAUSE
                 //nen
                 karoUtil.replacements.push({
                     r: "(^|\\s)nen(^|\\s|$)",
@@ -70,7 +70,6 @@ var KaroUtil = {};
                         return RegExp.$1 + "Einen" + RegExp.$2;
                     }
                 });
-                */
 
                 //Thomas Anders
                 karoUtil.replacements.push({
