@@ -1,5 +1,5 @@
-var Marionette = require('backbone.marionette');
-module.exports = Marionette.ItemView.extend({
+var Backbone = require('backbone');
+module.exports = Backbone.View.extend({
     tagName: "canvas",
     initialize: function(options) {
         _.bindAll(this, "drop");
@@ -28,6 +28,7 @@ module.exports = Marionette.ItemView.extend({
         this.img.src = "/images/dragdropcat.png";
 
         this.imageTranslator.settings.set("active", false);
+        this.imageTranslator.settings.set("done", false);
         this.listenTo(this.imageTranslator.settings, "change", this.render);
     },
 
@@ -69,12 +70,12 @@ module.exports = Marionette.ItemView.extend({
             //console.info("not active");
             return true;
         }
-        this.canvas.width = this.imageTranslator.settings.get("sourceWidth");
-        this.canvas.height = this.imageTranslator.settings.get("sourceHeight");
+        this.canvas.width = (this.imageTranslator.settings.get("targetCols")*10);
+        this.canvas.height = (this.imageTranslator.settings.get("targetRows")*10);
+        console.log(this.imageTranslator.settings.attributes);
         var imgdat = this.imageTranslator.getImageData();
-        //console.log(imgdat);
+        console.log("Imgdata I got", imgdat);
+        console.log(imgdat);
         this.ctx.putImageData(imgdat, 0, 0);
-
-        console.info("Now add grid");
     }
 });

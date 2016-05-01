@@ -39,7 +39,7 @@ var TURTED = function (sockjs_url) {
         }
         sockjs.onclose = function () {
             this.isConnected = false;
-            setTimeout(this.reconnect.bind(this), 1000);
+            setTimeout(this.reconnect.bind(this), 10000000);
         }.bind(this);
         ;
 

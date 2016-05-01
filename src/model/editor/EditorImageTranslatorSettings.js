@@ -2,7 +2,8 @@ var Backbone = require('backbone');
 module.exports = Backbone.Model.extend({
     defaults: {
         active: false,
-        binary: true, //X or O
+        done: false,
+        binary: false, //X or O
         speedmode: true,
         inverted: false,
         scaleWidth: 10,

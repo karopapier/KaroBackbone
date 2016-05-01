@@ -17,12 +17,21 @@ module.exports = Backbone.Model.extend({
 
         _.bindAll(this, "loadImage", "loadUrl", "getImageData", "getFieldForRgbaArray", "initColorMode");
         //internal offscreen img and canvas
-        this.image = new Image();
-        this.canvas = document.createElement('canvas');
-        this.ctx = this.canvas.getContext('2d');
+        this.origImage = new Image();
+        this.avgImage = new Image();
+
+        this.origCanvas = document.createElement('canvas');
+        this.avgCanvas = document.createElement('canvas');
+        this.previewCanvas = document.createElement('canvas');
+
+        this.origCtx = this.origCanvas.getContext('2d');
+        this.avgCtx = this.avgCanvas.getContext('2d');
+        this.previewCtx = this.previewCanvas.getContext('2d');
+
         this.settings = new EditorImageTranslatorSettings();
 
         this.listenTo(this.settings, "change", this.mapcodeResize);
+        this.listenTo(this.settings, "change:scaleWidth", this.recalcPreview);
         this.findOptions = {
             binary: true,
             invert: false,
@@ -109,6 +118,41 @@ module.exports = Backbone.Model.extend({
         return [CIE_L, CIE_a, CIE_b];
     },
 
+    recalcPreview: function() {
+        var scale = this.settings.get("scaleWidth");
+        var w = this.origCanvas.width;
+        var h = this.origCanvas.height;
+        var tr = this.settings.get("targetRows");
+        var tc = this.settings.get("targetCols");
+        this.avgCanvas.width = tc;
+        this.avgCanvas.height = tr;
+        var me = this;
+        var avgimgdata = [];
+        var x = 0;
+        var y = 0;
+        for (var col = 0; col < tc; col++) {
+            for (var row = 0; row < tr; row++) {
+                var imgdata = me.origCtx.getImageData(x, y, scale, scale);
+                //console.log(imgdata.data, x, y, scale);
+                var pixelRgba = me.averageRgba(imgdata.data);
+                avgimgdata.push(pixelRgba[0]);
+                avgimgdata.push(pixelRgba[1]);
+                avgimgdata.push(pixelRgba[2]);
+                avgimgdata.push(255);
+                x++;
+            }
+            x = 0;
+            y++;
+        }
+        var pid = new Uint8ClampedArray(avgimgdata);
+        console.log(pid)
+        var imgdata = this.avgCtx.createImageData(tc, tr);
+        console.log("Jetzt setz ich");
+        imgdata.data.set(pid);
+        console.log(imgdata);
+        this.avgCtx.putImageData(imgdata, 0, 0);
+    },
+
     getFieldForRgbaArray: function(rgba, colormode) {
         if (!colormode) {
             var avg = (rgba[0] + rgba[1] + rgba[2]) / 3;
@@ -145,7 +189,7 @@ module.exports = Backbone.Model.extend({
         //console.log("Processing", row, col, x, y, w, h, scW, scH);
         //console.log("processing ",x,"/",w,"and",y,"/",h);
         var me = this;
-        var imgdata = me.ctx.getImageData(x, y, scW, scH);
+        var imgdata = me.origCtx.getImageData(x, y, scW, scH);
 
         var pixelRgba = me.averageRgba(imgdata.data);
         var field = me.getFieldForRgbaArray(pixelRgba, !this.findOptions.binary);
@@ -209,48 +253,34 @@ module.exports = Backbone.Model.extend({
         var field = "";
         var scW = this.settings.get("scaleWidth");
         var scH = this.settings.get("scaleHeight");
-        var w = this.canvas.width;
-        var h = this.canvas.height;
+        var w = this.origCanvas.width;
+        var h = this.origCanvas.height;
         var t = this.settings.get("fieldtime");
-        var tr = this.settings.get("targetRows");
-        var tc = this.settings.get("targetCols");
         if (t == 0) {
             t = 20;
         }
 
-        this.findOptions = {
-            binary: this.settings.get("binary"),
-            invert: this.settings.get("invert"),
-            colors: [
-                this.editorsettings.get("buttons")[1],
-                this.editorsettings.get("buttons")[3]
-            ]
-        };
-
-        //console.log("Run translation of " + w + "x" + h + " at", scW, scH, "with fieldtime", t);
+        var tr = this.settings.get("targetRows");
+        var tc = this.settings.get("targetCols");
+        this.avgCanvas.width = tc;
+        this.avgCanvas.height = tr;
         var me = this;
-        var row = 0;
-        var col = 0;
-
-        //Speedmode -> Blocking the browser, run in blocking thread
-        if (this.settings.get("speedmode")) {
-            for (var y = 0; y < h; y += scH) {
-                for (var x = 0; x < w; x += scW) {
-                    me.processField(row, col, tr, tc, x, y, w, h, scW, scH, false);
-                    col++;
-                }
-                col = 0;
-                row++;
+        var avgimgdata = [];
+        var x = 0;
+        var y = 0;
+        for (var col = 0; col < tc; col++) {
+            for (var row = 0; row < tr; row++) {
+                var imgdata = me.avgCtx.getImageData(x, y, 1, 1);
+                console.log(imgdata.data);
+                var pixelRgba = imgdata.data;
+                var field = me.getFieldForRgbaArray(pixelRgba, true);
+                console.log(pixelRgba, field);
+                me.map.setFieldAtRowCol(row, col, field);
+                x++;
             }
-            this.editorsettings.set("undo", false);
-        } else {
-            me.processField(0, 0, tr, tc, 0, 0, w, h, scW, scH, t);
+            x = 0;
+            y++;
         }
-
-        //mapcode = codeRows.join('\n');
-        //console.log(mapcode);
-        //this.set("mapcode", mapcode);
-        return true;
     },
 
     mapcodeResize: function() {
@@ -268,8 +298,8 @@ module.exports = Backbone.Model.extend({
 
     getSourceInfo: function() {
         return {
-            width: this.image.width,
-            height: this.image.height
+            width: this.origImage.width,
+            height: this.origImage.height
         };
     },
 
@@ -279,9 +309,9 @@ module.exports = Backbone.Model.extend({
         //console.log("Loaded img", w, h);
 
         //adjust internal canvas
-        this.canvas.width = w;
-        this.canvas.height = h;
-        this.ctx.drawImage(img, 0, 0);
+        this.origCanvas.width = w;
+        this.origCanvas.height = h;
+        this.origCtx.drawImage(img, 0, 0);
         //console.log(this.canvas);
         //console.log(this.ctx);
         //console.log("Set new wh", w, h);
@@ -300,7 +330,11 @@ module.exports = Backbone.Model.extend({
 
     getImageData: function() {
         //console.log("get data of ctx", this.canvas.width, this.canvas.height);
-        return this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        var tr = this.settings.get("targetRows");
+        var tc = this.settings.get("targetCols");
+        var pid = this.avgCtx.getImageData(0, 0, tc, tr);
+        console.log("Ich gebe raus", pid);
+        return pid;
     },
 
     loadUrl: function(url, callback) {
@@ -313,9 +347,9 @@ module.exports = Backbone.Model.extend({
                 sourceHeight: h
             });
 
-            me.canvas.width = w;
-            me.canvas.height = h;
-            me.ctx.drawImage(me.image, 0, 0);
+            me.origCanvas.width = w;
+            me.origCanvas.height = h;
+            me.origCtx.drawImage(me.image, 0, 0);
             callback();
         };
         this.image.src = url;
@@ -323,18 +357,20 @@ module.exports = Backbone.Model.extend({
 
     averageRgba: function(imageData) {
         if (imageData.length % 4 != 0) {
-            console.error("Imagedate has a length of", imageData.length);
+            console.error("Imagedata has a length of", imageData.length);
             return false;
         }
 
-        var sum = [0, 0, 0];
+        var sum0 = 0;
+        var sum1 = 0;
+        var sum2 = 0;
         for (var p = 0, l = imageData.length; p < l; p += 4) {
-            sum[0] += imageData[p];
-            sum[1] += imageData[p + 1];
-            sum[2] += imageData[p + 2];
+            sum0 += imageData[p];
+            sum1 += imageData[p + 1];
+            sum2 += imageData[p + 2];
         }
         var pixels = l / 4;
-        avg = [sum[0] / pixels, sum[1] / pixels, sum[2] / pixels, 255];
+        avg = [sum0 / pixels, sum1 / pixels, sum2 / pixels, 255];
         //console.log(avg);
         return avg;
     },
