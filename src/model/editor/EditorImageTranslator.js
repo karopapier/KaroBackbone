@@ -17,15 +17,14 @@ module.exports = Backbone.Model.extend({
 
         _.bindAll(this, "loadImage", "loadUrl", "getImageData", "getFieldForRgbaArray", "initColorMode");
         //internal offscreen img and canvas
-        this.origImage = new Image();
-        this.avgImage = new Image();
+        this.origImage = document.createElement("img");
 
         this.origCanvas = document.createElement('canvas');
-        this.avgCanvas = document.createElement('canvas');
+        this.resizedCanvas = document.createElement('canvas');
         this.previewCanvas = document.createElement('canvas');
 
         this.origCtx = this.origCanvas.getContext('2d');
-        this.avgCtx = this.avgCanvas.getContext('2d');
+        this.resizedCtx = this.resizedCanvas.getContext('2d');
         this.previewCtx = this.previewCanvas.getContext('2d');
 
         this.settings = new EditorImageTranslatorSettings();
@@ -124,33 +123,13 @@ module.exports = Backbone.Model.extend({
         var h = this.origCanvas.height;
         var tr = this.settings.get("targetRows");
         var tc = this.settings.get("targetCols");
-        this.avgCanvas.width = tc;
-        this.avgCanvas.height = tr;
-        var me = this;
-        var avgimgdata = [];
-        var x = 0;
-        var y = 0;
-        for (var col = 0; col < tc; col++) {
-            for (var row = 0; row < tr; row++) {
-                var imgdata = me.origCtx.getImageData(x, y, scale, scale);
-                //console.log(imgdata.data, x, y, scale);
-                var pixelRgba = me.averageRgba(imgdata.data);
-                avgimgdata.push(pixelRgba[0]);
-                avgimgdata.push(pixelRgba[1]);
-                avgimgdata.push(pixelRgba[2]);
-                avgimgdata.push(255);
-                x++;
-            }
-            x = 0;
-            y++;
-        }
-        var pid = new Uint8ClampedArray(avgimgdata);
-        console.log(pid)
-        var imgdata = this.avgCtx.createImageData(tc, tr);
-        console.log("Jetzt setz ich");
-        imgdata.data.set(pid);
-        console.log(imgdata);
-        this.avgCtx.putImageData(imgdata, 0, 0);
+        console.log(w, h, tc, tr);
+        this.resizedCanvas.width = tc;
+        this.resizedCanvas.height = tr;
+        //console.log("Orig", this.origImage);
+        this.resizedCtx.drawImage(this.origImage, 0, 0, tc, tr);
+        //$("body").append(this.resizedCanvas);
+        //this.run();
     },
 
     getFieldForRgbaArray: function(rgba, colormode) {
@@ -185,54 +164,6 @@ module.exports = Backbone.Model.extend({
 
     },
 
-    processField: function(row, col, tr, tc, x, y, w, h, scW, scH, withTimeout) {
-        //console.log("Processing", row, col, x, y, w, h, scW, scH);
-        //console.log("processing ",x,"/",w,"and",y,"/",h);
-        var me = this;
-        var imgdata = me.origCtx.getImageData(x, y, scW, scH);
-
-        var pixelRgba = me.averageRgba(imgdata.data);
-        var field = me.getFieldForRgbaArray(pixelRgba, !this.findOptions.binary);
-        me.map.setFieldAtRowCol(row, col, field);
-
-        if (!withTimeout) return false;
-
-        //So we need to call the process for the next field ourselves...
-
-        //next column
-        x += scW;
-        col += 1;
-        if (col >= tc) {
-            //col 0, but next row
-            x = 0;
-            col = 0;
-            y += scH;
-            row++;
-        }
-
-        if (row >= tr) {
-            //console.log("DONE");
-            this.editorsettings.set("undo", true);
-            return true;
-        }
-
-        window.setTimeout(function() {
-            me.processField(row, col, tr, tc, x, y, w, h, scW, scH, true);
-        }, 0);
-    },
-
-    timecheck: function() {
-        var start0 = new Date().getTime();
-        var scW = this.settings.get("scaleWidth");
-        var scH = this.settings.get("scaleHeight");
-
-        this.processField(0, 0, 1, 1, 0, 0, scW, scH, scW, scH, false);
-        var end0 = new Date().getTime();
-        var t = Math.round(end0 - start0);
-        //console.log(t);
-        return t;
-    },
-
     initColorMode: function(map, palette) {
         this.hsls = {};
         for (var f in map.FIELDS) {
@@ -251,35 +182,23 @@ module.exports = Backbone.Model.extend({
         this.mapcodeResize();
         var mapcode = "";
         var field = "";
-        var scW = this.settings.get("scaleWidth");
-        var scH = this.settings.get("scaleHeight");
-        var w = this.origCanvas.width;
-        var h = this.origCanvas.height;
-        var t = this.settings.get("fieldtime");
-        if (t == 0) {
-            t = 20;
-        }
 
         var tr = this.settings.get("targetRows");
         var tc = this.settings.get("targetCols");
-        this.avgCanvas.width = tc;
-        this.avgCanvas.height = tr;
         var me = this;
-        var avgimgdata = [];
         var x = 0;
         var y = 0;
+        var i = 0;
         for (var col = 0; col < tc; col++) {
             for (var row = 0; row < tr; row++) {
-                var imgdata = me.avgCtx.getImageData(x, y, 1, 1);
-                console.log(imgdata.data);
+                i++;
+                var imgdata = me.resizedCtx.getImageData(col, row, 1, 1);
+                //console.log(i, imgdata.data);
                 var pixelRgba = imgdata.data;
                 var field = me.getFieldForRgbaArray(pixelRgba, true);
-                console.log(pixelRgba, field);
+                //console.log(pixelRgba, field);
                 me.map.setFieldAtRowCol(row, col, field);
-                x++;
             }
-            x = 0;
-            y++;
         }
     },
 
@@ -304,35 +223,32 @@ module.exports = Backbone.Model.extend({
     },
 
     loadImage: function(img) {
+        this.origImage = img;
         var w = img.width;
         var h = img.height;
-        //console.log("Loaded img", w, h);
+        console.log("Loaded img", w, h);
 
         //adjust internal canvas
         this.origCanvas.width = w;
         this.origCanvas.height = h;
         this.origCtx.drawImage(img, 0, 0);
-        //console.log(this.canvas);
-        //console.log(this.ctx);
+        console.log(this.origCanvas);
+        console.log(this.origCtx);
         //console.log("Set new wh", w, h);
         this.settings.set({
             sourceWidth: w,
             sourceHeight: h
         });
-        //console.log("Set new wh done");
-        //console.log("Loaded, set active true");
+        console.log("Loaded, set active true");
         this.settings.set("active", true);
-        //console.log("Active is true");
-        this.editorsettings.set("undo", false);
-        this.settings.set("fieldtime", this.timecheck());
-        this.editorsettings.set("undo", true);
+        console.log("Active is true");
     },
 
     getImageData: function() {
-        //console.log("get data of ctx", this.canvas.width, this.canvas.height);
+        console.log("get data of ctx", this.resizedCanvas.width, this.resizedCanvas.height);
         var tr = this.settings.get("targetRows");
         var tc = this.settings.get("targetCols");
-        var pid = this.avgCtx.getImageData(0, 0, tc, tr);
+        var pid = this.resizedCtx.getImageData(0, 0, tc, tr);
         console.log("Ich gebe raus", pid);
         return pid;
     },

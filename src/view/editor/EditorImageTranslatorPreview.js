@@ -70,12 +70,20 @@ module.exports = Backbone.View.extend({
             //console.info("not active");
             return true;
         }
-        this.canvas.width = (this.imageTranslator.settings.get("targetCols")*10);
-        this.canvas.height = (this.imageTranslator.settings.get("targetRows")*10);
+        var w = this.imageTranslator.settings.get("targetCols");
+        var h = this.imageTranslator.settings.get("targetRows");
+        console.log("Render preview", w, h);
+
+        //resize resets canvas
+        this.canvas.width = w;
+        this.canvas.height = h;
+
         console.log(this.imageTranslator.settings.attributes);
         var imgdat = this.imageTranslator.getImageData();
         console.log("Imgdata I got", imgdat);
         console.log(imgdat);
         this.ctx.putImageData(imgdat, 0, 0);
+        //this.canvas.style.width = (w * 10) + "px";
+        //this.canvas.style.height = (h * 10) + "px";
     }
 });
