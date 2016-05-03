@@ -15,7 +15,7 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
         }
         this.user = options.user;
         this.listenTo(this.user, "change:id", this.ident);
-        this.turted = new TURTED("//ape.karopapier.de/turted");
+        this.turted = new TURTED("//turted.karopapier.de/");
         this.ident();
         this.hook();
     },
@@ -25,7 +25,7 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
         if (user.get("id") === 0) {
             this.stop();
         } else {
-            this.turted.ident(this.user.get("id"), this.user.get("login"), "KEvInLogsMeIn");
+            this.turted.ident({"username": this.user.get("login")});
             this.start();
         }
     },
