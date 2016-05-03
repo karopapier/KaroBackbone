@@ -54,15 +54,22 @@ module.exports = Backbone.Model.extend(/** @lends Map.prototype*/{
         "3":"3",
         "4":"4",
         "5":"5",
-        "6":"6"
+        "6":"6",
+        "7":"7",
+        "8":"8",
+        "9":"9",
+        "a":"a",
+        "b":"b",
+        "c":"c",
+        "d":"d",
     },
     isValidField: function(c) {
-        return this.validFields.indexOf(c.toUpperCase()) >= 0;
+        return this.validFields.indexOf(c) >= 0;
     },
     setMapcode: function(mapcode) {
         if (typeof mapcode === "undefined") return false;
         //make sure we don't have CR in there and make it all UPPERCASE
-        var trimcode = mapcode.toUpperCase();
+        var trimcode = mapcode; //.toUpperCase();
         trimcode = trimcode.replace(/\r/g, "");
 
         //nb of start positions ("S")
@@ -260,7 +267,7 @@ module.exports = Backbone.Model.extend(/** @lends Map.prototype*/{
     sanitize: function() {
         //console.log("sanitize and set correct code");
 
-        var dirtyCode = this.get("mapcode").toUpperCase().trim();
+        var dirtyCode = this.get("mapcode").trim();
 
         //find longest line
         var rows = dirtyCode.split("\n");
