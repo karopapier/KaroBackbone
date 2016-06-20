@@ -34,6 +34,7 @@ var ChatMessageView = Backbone.View.extend({
         var text = $dummy.text();
 
         text = KaroUtil.linkify(text);
+        text = emojione.unicodeToImage(text);
         var $textSpan = this.$el.find(".chatText").first();
         $textSpan.html(text);
         var imgs = this.$el.find("img").load(function (e) {
