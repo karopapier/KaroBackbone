@@ -10,7 +10,7 @@ var TURTED = function(url) {
     this.connect = function(isReconnect) {
         console.log("native triggered connect");
         console.log("I connect");
-        var native = io(url);
+        var native = io(url, { transports: ['websocket']});
         native.on("connect", function() {
             console.log("I am connected now and will fire queued events here");
             me.isConnected = true;
