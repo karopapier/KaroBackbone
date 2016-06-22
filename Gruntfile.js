@@ -156,8 +156,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
 
     // Default task(s).
-    grunt.registerTask('default', ['uglify', 'jst', 'cssmin', 'asset_cachebuster', 'watch']);
-    grunt.registerTask('once', ['uglify', 'jst', 'cssmin', 'asset_cachebuster']);
+    grunt.registerTask('default', ['build', 'watch']);
+    grunt.registerTask('build', ['uglify', 'jst', 'cssmin', 'asset_cachebuster']);
     //grunt.registerTask('guck', ['watch']);
     grunt.registerTask('spielwiese', ['spielwiese']);
     grunt.registerTask('test', 'qunit');
