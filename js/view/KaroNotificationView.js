@@ -23,7 +23,7 @@ var KaroNotificationView = Backbone.View.extend({
         });
     },
     render: function () {
-        var text = this.model.get("text");
+        var text = this.model.escape("text");
         var html = "";
         var hasImg = false;
         this.el.style.position="relative";
