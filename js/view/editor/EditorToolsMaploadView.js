@@ -18,7 +18,7 @@ var EditorToolsMaploadView = Marionette.ItemView.extend({
         var mapcode = map.get("mapcode");
         this.editorApp.map.setMapcode(mapcode);
     },
-    render: function()  {
+    render: function() {
         this.$el.empty();
         this.$el.html(this.template());
         this.karoMapListView = new MapListView({

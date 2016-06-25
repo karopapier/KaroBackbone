@@ -2,20 +2,20 @@ var ChatMessageView = Backbone.View.extend({
     tagName: "div",
     className: "chatMessage",
     template: window["JST"]["chat/chatMessage"],
-    id: function () {
+    id: function() {
         return "cm" + this.model.get("lineId");
     },
-    initialize: function () {
+    initialize: function() {
         _.bindAll(this, "render");
 
         //check if it is a botrix game message
-        var bgreq=/Botrix, spiel mit/g;
-        var bgack=/.*fahr ich jetzt in Grund und Boden!/g;
-        var bgack2=/.*mach ich jetzt Ruehrei/g;
-        var bgack3=/.*Direktlink/g;
+        var bgreq = /Botrix, spiel mit/g;
+        var bgack = /.*fahr ich jetzt in Grund und Boden!/g;
+        var bgack2 = /.*mach ich jetzt Ruehrei/g;
+        var bgack3 = /.*Direktlink/g;
         var line = this.model.get("text");
         if (line.match(bgreq) || line.match(bgack) || line.match(bgack2) || line.match(bgack3)) {
-            this.model.set("isBotrixGameMessage",true);
+            this.model.set("isBotrixGameMessage", true);
             this.$el.addClass("botrixGame");
         }
         this.render();
@@ -37,7 +37,7 @@ var ChatMessageView = Backbone.View.extend({
         text = emojione.unicodeToImage(text);
         var $textSpan = this.$el.find(".chatText").first();
         $textSpan.html(text);
-        var imgs = this.$el.find("img").load(function (e) {
+        var imgs = this.$el.find("img").load(function(e) {
             var $parparent = me.$el.parent().parent();
             var newHeight = me.$el.height();
             //console.log("Message height changed from", messageHeight, "to", newHeight);
@@ -47,7 +47,7 @@ var ChatMessageView = Backbone.View.extend({
             //console.log("nachher", $parparent.scrollTop());
         });
         var messageHeight = -1;
-        setTimeout(function () {
+        setTimeout(function() {
             messageHeight = me.$el.height();
         }, 5);
     },
@@ -60,7 +60,7 @@ var ChatMessageView = Backbone.View.extend({
             this.$el.show();
         }
     },
-    render: function () {
+    render: function() {
         //var text = this.model.get("text");
         var me = this;
         var data = this.model.toJSON();

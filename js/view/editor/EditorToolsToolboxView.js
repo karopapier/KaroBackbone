@@ -22,7 +22,7 @@ var EditorToolsToolboxView = Marionette.ItemView.extend({
 
     },
 
-    undo:function() {
+    undo: function() {
         this.editorUndo.undo();
     },
 
