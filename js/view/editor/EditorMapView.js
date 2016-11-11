@@ -14,7 +14,7 @@ var EditorMapView = Backbone.View.extend({
         this.viewsettings = options.viewsettings;
         this.editorsettings = options.editorsettings;
         this.resizeHandleWidth = 15;
-        this.listenTo (this.model, "change:mapcode", this.recalcDimensions);
+        this.listenTo(this.model, "change:mapcode", this.recalcDimensions);
 
         //this.$el.css({"display": "inline-block"});
         /**
