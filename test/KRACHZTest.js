@@ -1,7 +1,7 @@
 var Motion = require('../src/model/Motion');
 var Map = require('../src/model/map/Map');
 var KRACHZ = require('../src/model/KRACHZ');
-exports.willCrash = function (test) {
+exports.willCrash = function(test) {
     test.expect(8);
     //willCrash
     var mo = new Motion();
@@ -28,4 +28,35 @@ exports.willCrash = function (test) {
     test.equal(k.willCrash(mo, 1), true, mo.toString() + " will crash in 1");
     test.equal(k.willCrash(mo, 2), true, mo.toString() + " will crash in 2");
     test.done();
+};
+
+exports.cornerCourse = function(test) {
+    test.expect(4);
+    var map = new Map();
+    map.setMapcode("XXXXXXXX\nXOOOOOOO\nXXOOXXXX\nXXXOOXXX\nXXXXOOXX\nXXXXXOOX\nXXXXXXOO");
+
+    var k = new KRACHZ({
+        map: map
+    });
+
+    var mo;
+    mo = new Motion();
+    mo.setXY1toXY2(4, 1, 3, 1);
+    test.equal(k.willCrash(mo, 5), false, mo.toString() + " will not crash in 5");
+
+    mo = new Motion();
+    mo.setXY1toXY2(4, 1, 3, 2);
+    test.equal(k.willCrash(mo, 5), false, mo.toString() + " will not crash in 5");
+
+    mo = new Motion();
+    mo.setXY1toXY2(4, 1, 2, 1);
+    test.equal(k.willCrash(mo, 5), true, mo.toString() + " will crash in 5");
+
+    mo = new Motion();
+    mo.setXY1toXY2(4, 1, 2, 2);
+    test.equal(k.willCrash(mo, 5), true, mo.toString() + " will crash in 5");
+
+
+    test.done();
+
 };
