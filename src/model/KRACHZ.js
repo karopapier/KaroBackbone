@@ -89,12 +89,14 @@ module.exports = Backbone.Model.extend(/** @lends KRACHZ.prototype*/{
             var moString = possible.toString();
             //console.log(moString, "Depth:", depth, p + "/" + crashes);
             if (depth >= 1) {
+                var wc;
                 if (moString in this.cache) {
                     //console.info("Cached",moString);
-                    return this.cache[moString];
+                    wc = this.cache[moString];
+                } else {
+                   wc = this.willCrash(possible, depth - 1);
+                    this.cache[moString] = wc;
                 }
-                var wc = this.willCrash(possible, depth - 1);
-                this.cache[moString] = wc;
                 if (wc) {
                     crashes++;
                 } else {
