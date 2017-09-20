@@ -55,6 +55,15 @@ var KaroUtil = {};
                 });
                 */
 
+                //-:Pic
+                karoUtil.replacements.push({
+                    r: "-:Pic src=(.*?) Pic:-",
+                    f: function(text) {
+                        return '<img src="http://daumennagel.de/' + RegExp.$1 + '" />';
+                        //return '<img src="' + RegExp.$1 + '" />';
+                    },
+                });
+
                 //nen
                 karoUtil.replacements.push({
                     r: "(^|\\s)nen(^|\\s|$)",
