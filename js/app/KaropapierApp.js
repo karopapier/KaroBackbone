@@ -11,7 +11,7 @@ var KaropapierApp = Marionette.Application.extend({
         this.User = new User({});
         //make this user refer to "check" for loging in
         this.User.url = function() {
-            return "//www.karopapier.de/api/user/check.json?callback=?";
+            return "/api/user/check.json?callback=?";
         };
         this.User.fetch();
 
@@ -19,7 +19,8 @@ var KaropapierApp = Marionette.Application.extend({
 
         //init Karo Event Interface KEvIn
         this.KEvIn = new KEvIn({
-            user: this.User
+            user: this.User,
+            host: "//turted.karoworld.de"
         });
 
         this.Settings = new LocalSyncModel({
@@ -49,7 +50,7 @@ var KaropapierApp = Marionette.Application.extend({
         });
 
         //lazy css
-        KaroUtil.lazyCss("//www.karopapier.de/css/slidercheckbox/slidercheckbox.css");
+        KaroUtil.lazyCss("/css/slidercheckbox/slidercheckbox.css");
 
         this.listenTo(this, "start", this.bootstrap.bind(this));
     },
@@ -84,7 +85,7 @@ var KaropapierApp = Marionette.Application.extend({
         function loadTheme() {
             if (me.User.get("id") == 0) return false;
             var theme = me.User.get("theme");
-            var themeUrl = "//www.karopapier.de/themes/" + theme + "/css/theme.css";
+            var themeUrl = "/themes/" + theme + "/css/theme.css";
             KaroUtil.lazyCss(themeUrl);
         }
 
@@ -118,7 +119,8 @@ var KaropapierApp = Marionette.Application.extend({
         //Start the router
         this.router = new AppRouter();
         Backbone.history.start({
-            pushState: true
+            pushState: true,
+            root: '/i/'
         });
 
         this.vent.on('GAME:MOVE', function(data) {

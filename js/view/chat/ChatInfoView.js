@@ -38,11 +38,11 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
         var myId = this.model.get("id");
         if (myId == 0) return;
         var html;
-        $.getJSON('//www.karopapier.de/api/user/blockerlist.json?callback=?', function (bl) {
+        $.getJSON('/api/user/blockerlist.json?callback=?', function (bl) {
             blockerlist = bl;
             var dran = this.model.get("dran");
             if (dran == 0) {
-                html = 'Du bist ein <a href="//www.karopapier.de/karowiki/index.php/Nixblocker">Nixblocker</a>';
+                html = 'Du bist ein <a href="/karowiki/index.php/Nixblocker">Nixblocker</a>';
             }
             if (dran == 1) {
                 html = 'Bei einem Spiel dran';
@@ -76,7 +76,7 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
                 } else if (pos == 2) {
                     html += "DU BIST DER <b>VIZE-VOLLBLOCKER</b>";
                 } else {
-                    html += 'Platz ' + pos + ' der <a href="//www.karopapier.de/blocker">Blockerliste</a>';
+                    html += 'Platz ' + pos + ' der <a href="/blocker">Blockerliste</a>';
                 }
             }
 
@@ -93,7 +93,7 @@ var ChatInfoView = Backbone.Marionette.ItemView.extend({
     updateTopBlocker: function () {
         if (this.model.get("id") == 0) return;
         var html;
-        $.getJSON('//www.karopapier.de/api/user/' + this.model.get("id") + '/blocker.json?callback=?', function (data) {
+        $.getJSON('/api/user/' + this.model.get("id") + '/blocker.json?callback=?', function (data) {
             if (data.length > 0) {
                 var blocker = data[0];
                 html = 'Dein Top-Blocker: ' + blocker.login + ' (' + blocker.blocked + ')';

@@ -43,7 +43,7 @@ var MapPathStore = Backbone.Model.extend({
                 path = false;
                 amifinished();
             });
-            $.getJSON("//www.karopapier.de/api/map/" + mapid + ".json?callback=?", function (data) {
+            $.getJSON("/api/map/" + mapid + ".json?callback=?", function (data) {
                 //console.log(data);
                 rows = data.rows;
                 cols = data.cols;

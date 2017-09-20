@@ -24,13 +24,13 @@ var MapPlayerLayer = Backbone.View.extend({
             //console.info("Getting image");
             this.$el.show();
             //console.log(this.$el);
-            this.$el.attr("src", "//www.karopapier.de/images/loading.gif");
+            this.$el.attr("src", "/images/loading.gif");
             //http://www.karopapier.de/imgenerateFG.php?GID=78483&pixel=11&karoborder=1&limit=2
             var limit = 2;
             if (this.model.get("finished")) {
                 limit=0;
             }
-            this.$el.attr("src", "//www.karopapier.de/imgenerateFG.php?GID=" + gameId + "&pixel=" + this.settings.get("size") + '&karoborder=' + this.settings.get("border") + '&limit=' + limit);
+            this.$el.attr("src", "/imgenerateFG.php?GID=" + gameId + "&pixel=" + this.settings.get("size") + '&karoborder=' + this.settings.get("border") + '&limit=' + limit);
         }
     }
 });

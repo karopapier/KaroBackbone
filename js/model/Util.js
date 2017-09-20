@@ -75,7 +75,7 @@ var KaroUtil = {};
                 karoUtil.replacements.push({
                     r: "\\banders\\b",
                     f: function() {
-                        return ' <img style="opacity: .3" src="//www.karopapier.de/images/anders.jpg" alt="anders" title="anders" />';
+                        return ' <img style="opacity: .3" src="/images/anders.jpg" alt="anders" title="anders" />';
                     },
                     sw: "i"
                 });
@@ -84,7 +84,7 @@ var KaroUtil = {};
                 karoUtil.replacements.push({
                     r: "\\bhoff\\b",
                     f: function() {
-                        return ' <img style="opacity: .3" src="//www.karopapier.de/images/hoff.jpg"     alt="hoff" title="hoff" />';
+                        return ' <img style="opacity: .3" src="/images/hoff.jpg"     alt="hoff" title="hoff" />';
                     },
                     sw: "i"
                 });
@@ -96,7 +96,7 @@ var KaroUtil = {};
                 f: function(all, gid) {
                     //console.log("All", all);
                     //console.log("GID", gid);
-                    $.getJSON('//www.karopapier.de/api/game/' + gid + '/info.json?callback=?', function(gameInfo) {
+                    $.getJSON('/api/game/' + gid + '/info.json?callback=?', function(gameInfo) {
                         $('a.GidLink' + gid).text(gid + ' - ' + gameInfo.game.name);
                     });
                     if (karoUtil.oldLink) {

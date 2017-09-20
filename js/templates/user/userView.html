@@ -1,16 +1,16 @@
 <%  if (options.withAnniversary && data.birthdayToday) { %>
-<img src="//www.karopapier.de/images/smilies/birthday.gif" alt="Wird immer älter" title="Wird immer älter">
+<img src="/images/smilies/birthday.gif" alt="Wird immer älter" title="Wird immer älter">
 <% } %>
 <% if (options.withAnniversary && data.karodayToday) { %>
-<img src="//www.karopapier.de/images/smilies/bouncy.gif" alt="Hat heute Karotag" title="Hat heute Karotag">
+<img src="/images/smilies/bouncy.gif" alt="Hat heute Karotag" title="Hat heute Karotag">
 <% } %>
 <% if (options.withDesperation && data.desperate) { %>
-<img src="//www.karopapier.de/images/spielegeil.png" alt="Spielegeil" title="Spielegeil">
+<img src="/images/spielegeil.png" alt="Spielegeil" title="Spielegeil">
 <% } %>
 
 <span class="userLabel">
 <% if (options.withInfoLink) { %>
-<a href="//www.karopapier.de/userinfo.php?about=<%= data.id %>">
+<a href="/userinfo.php?about=<%= data.id %>">
     <% } %>
     <%= data.login %>
     <% if (options.withInfoLink) { %>
@@ -18,4 +18,4 @@
 <% } %>
 </span>
 
-<% if (options.withGames) { %> <small><% if (options.withGamesLink && data.self) { %>(<a href="/dran.html"><%= data.dran %></a>/<% } else { %>(<%= data.dran %>/<% } %><% if (options.withGamesLink) { %><a href="http://www.karopapier.de/showgames.php?spielevon=<%= data.id %>"><%= data.activeGames %></a>)<% } else { %><%= data.activeGames %>)<% } %></small><% } %>
+<% if (options.withGames) { %> <small><% if (options.withGamesLink && data.self) { %>(<a href="/dran.html"><%= data.dran %></a>/<% } else { %>(<%= data.dran %>/<% } %><% if (options.withGamesLink) { %><a href="/showgames.php?spielevon=<%= data.id %>"><%= data.activeGames %></a>)<% } else { %><%= data.activeGames %>)<% } %></small><% } %>

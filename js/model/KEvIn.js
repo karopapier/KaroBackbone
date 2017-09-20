@@ -13,9 +13,13 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
         if (!options.user) {
             throw Error("KEvIn needs a user");
         }
+        var host ="//turted.karopapier.de";
+        if (options.host) {
+            host = options.host;
+        }
         this.user = options.user;
         this.listenTo(this.user, "change:id", this.ident);
-        this.turted = new TURTED("//turted.karopapier.de/");
+        this.turted = new TURTED(host);
         this.ident();
         this.hook();
     },
@@ -65,7 +69,7 @@ var KEvIn = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
             //console.info("GAME:MOVE aus anyOtherMoved");
             Karopapier.vent.trigger("GAME:MOVE", data);
         });
-        this.turted.on('newChatMessage', function (data) {
+        this.turted.on('CHAT:MESSAGE', function (data) {
             //console.info("CHAT:MESSAGE");
             Karopapier.vent.trigger("CHAT:MESSAGE", data);
         });

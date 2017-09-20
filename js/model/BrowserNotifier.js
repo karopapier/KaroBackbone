@@ -15,8 +15,8 @@ var BrowserNotifier = Backbone.Model.extend(/** @lends BrowserNotifier.prototype
         this.eventEmitter.on('CHAT:MESSAGE', function (data) {
             console.warn(data.chatmsg);
             var b = new BrowserNotification({
-                title: data.chatmsg.user + " spricht",
-                body: data.chatmsg.text,
+                title: data.user + " spricht",
+                body: data.text,
                 level: "info",
                 group: "global",
                 tag: "chat",

@@ -20,7 +20,7 @@ var KaroMap = Backbone.Model.extend({
     retrieve: function() {
         //standard map
         var me = this;
-        $.getJSON("//www.karopapier.de/api/map/" + this.get("id") + ".json?callback=?", function(data) {
+        $.getJSON("/api/map/" + this.get("id") + ".json?callback=?", function(data) {
             data.loaded = true;
             me.set(data);
         });

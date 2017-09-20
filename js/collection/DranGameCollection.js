@@ -1,7 +1,7 @@
 var DranGameCollection = Backbone.Collection.extend({
     model: Game,
     url: function () {
-        return "//www.karopapier.de/api/user/" + Karopapier.User.get("id") + "/dran.json?callback=?";
+        return "/api/user/" + Karopapier.User.get("id") + "/dran.json?callback=?";
     },
     initialize: function () {
         _.bindAll(this, "addId");

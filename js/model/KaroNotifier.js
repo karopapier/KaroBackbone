@@ -19,8 +19,8 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
         this.eventEmitter.on('CHAT:MESSAGE', function (data) {
             console.warn(data.chatmsg);
             var b = new BrowserNotification({
-                title: data.chatmsg.user + " spricht",
-                body: data.chatmsg.text,
+                title: data.user + " spricht",
+                body: data.text,
                 level: "info",
                 group: "global",
                 tag: "chat",
@@ -72,7 +72,7 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
             text: t(data),
             level: "info",
             group: "global",
-            imgUrl: "//www.karopapier.de/pre/" + data.gid + ".png"
+            imgUrl: "/pre/" + data.gid + ".png"
         });
         this.add(n);
     },
@@ -83,7 +83,7 @@ var KaroNotifier = Backbone.Model.extend(/** @lends KaroNotifier.prototype*/{
             text: t(data),
             level: "ok",
             group: "dran",
-            imgUrl: "//www.karopapier.de/pre/" + data.gid + ".png"
+            imgUrl: "/pre/" + data.gid + ".png"
         });
         this.add(n);
     }

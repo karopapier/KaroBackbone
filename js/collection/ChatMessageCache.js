@@ -1,6 +1,6 @@
 var ChatMessageCache = Backbone.Collection.extend({
-    url: "//www.karopapier.de/api/chat/list.json?limit=100&callback=?",
-    baseUrl: "//www.karopapier.de/api/chat/list.json",
+    url: "/api/chat?limit=100&callback=?",
+    baseUrl: "/api/chat",
     model: ChatMessage,
     comparator: "lineId",
     lastLineId: 0,

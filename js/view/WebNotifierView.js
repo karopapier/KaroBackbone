@@ -63,7 +63,7 @@ var WebNotifierView = Backbone.View.extend({
             permissionDenied: permissionDenied,
             notifyClick: function () {
                 //window.open("http://www.karopapier.de/showmap.php?GID="+data.gid);
-                window.open("//www.karopapier.de/dran");
+                window.open("/dran");
             }
         }).show();
     },

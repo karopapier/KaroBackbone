@@ -4,5 +4,5 @@
 
 var KaroMapCollection = Backbone.Collection.extend({
     model: KaroMap,
-    url: "//www.karopapier.de/api/map/list.json?callback=?",
+    url: "/api/map/list.json?callback=?",
 });
