@@ -1,3 +1,4 @@
+var Backbone = require('backbone');
 var MapViewSettings = Backbone.Model.extend({
     defaults: {
         size: 11,

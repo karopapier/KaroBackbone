@@ -13,7 +13,7 @@ module.exports = function(grunt) {
             build: {
                 files: {
                     'public/index.html': ['templates/index.template.html'],
-                    'public/game.html': ['templates/index.template.html'],
+                    'public/newgame.html': ['templates/index.template.html'],
                     'public/dran.html': ['templates/index.template.html'],
                     'public/chat.html': ['templates/index.template.html'],
                     'public/editor.html': ['templates/index.template.html']

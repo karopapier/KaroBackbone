@@ -75,6 +75,7 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
         });
 
         this.util = KaroUtil;
+        window.KaroUtil = KaroUtil;
         //lazy css
         KaroUtil.lazyCss("/css/slidercheckbox/slidercheckbox.css");
 
