@@ -219,7 +219,13 @@ var KaroUtil = {};
                 var sw = rpl.sw || "";
                 //console.log(r, sw);
 
-                var rx = new RegExp("^(.*?)(" + r + ")(.*?)$", sw);
+                var rx;
+                if ("rx" in rpl) {
+                    rx = rpl.rx;
+                }else {
+                    rx = new RegExp("^(.*?)(" + r + ")(.*?)$", sw);
+                    rpl.rx = rx;
+                }
                 //console.log(rx);
                 var parts = rx.exec(text);
                 if (parts) {
