@@ -2,6 +2,12 @@ module.exports = function(grunt) {
     // Project configuration.
     require('time-grunt')(grunt);
 
+    var livereloadConfig = {
+        port: 20000,
+        key: grunt.file.read("/etc/ssl/panamapapier/privkey.pem"),
+        cert: grunt.file.read("/etc/ssl/panamapapier/cert.pem"),
+    };
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         asset_cachebuster: {
@@ -90,9 +96,7 @@ module.exports = function(grunt) {
                 tasks: ['build', 'publish', 'test'],
                 options: {
                     interrupt: true,
-                    livereload: {
-                        port: 20000
-                    }
+                    livereload: livereloadConfig
                 }
             },
             templates: {
@@ -100,18 +104,14 @@ module.exports = function(grunt) {
                 tasks: ['jst', 'asset_cachebuster'],
                 options: {
                     interrupt: true,
-                    livereload: {
-                        port: 20000
-                    }
+                    livereload: livereloadConfig
                 }
             },
             statics: {
                 files: ['images/**/*', '!docs'],
                 options: {
                     interrupt: true,
-                    livereload: {
-                        port: 20000
-                    }
+                    livereload: livereloadConfig
                 }
             },
             css: {
@@ -119,9 +119,7 @@ module.exports = function(grunt) {
                 tasks: ["cssmin", 'asset_cachebuster'],
                 options: {
                     interrupt: true,
-                    livereload: {
-                        port: 20000
-                    }
+                    livereload: livereloadConfig
                 }
             },
             tests: {
@@ -129,18 +127,14 @@ module.exports = function(grunt) {
                 tasks: ['test'],
                 options: {
                     interrupt: true,
-                    livereload: {
-                        port: 20000
-                    }
+                    livereload: livereloadConfig
                 }
             },
             spielwiese: {
                 files: ['public/spielwiese/**/*'],
                 options: {
                     interrupt: true,
-                    livereload: {
-                        port: 20000
-                    }
+                    livereload: livereloadConfig
                 }
             }
         },
