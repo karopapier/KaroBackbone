@@ -16,7 +16,7 @@ module.exports = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
             throw Error("KEvIn needs a user");
         }
 
-        var host ="//turted.karopapier.de";
+        var host ="//ws01.karopapier.de";
         if (options.host) {
             host = options.host;
         }

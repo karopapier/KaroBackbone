@@ -19,7 +19,8 @@ module.exports = Backbone.View.extend({
                 method: "POST",
                 crossDomain: true,
                 //better than data: "msg=" + msg as it works with ???? as well
-                data: {msg: msg},
+                contentType: "application/json",
+                data: JSON.stringify({msg: msg}),
                 dataType: "json",
                 xhrFields: {
                     withCredentials: true

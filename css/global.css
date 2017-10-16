@@ -61,11 +61,13 @@ div.clearer {
 
 .karoborder {
     margin: 0;
+    border: 10px solid transparent;
 }
 
-@media all and (min-width: 300px) {
+@media all and (min-width: 250px) {
 	.karoborder {
-		/* border-style: solid; */
+        border-color: transparent;
+		border-style: solid;
 		border-width: 26px 30px;
 		-moz-border-image: url("/css/images/borderImage.png") 26 30 repeat;
 		-webkit-border-image: url("/css/images/borderImage.png") 26 30 repeat;

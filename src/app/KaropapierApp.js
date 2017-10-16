@@ -30,6 +30,10 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
         console.log('KAROPAPIER APP INIT');
         var me = this;
 
+        if (!"realtimeHost" in options) {
+            console.error ("Need realtimeHost in options");
+        }
+
         this.User = new User({});
         //make this user refer to "check" for loging in
         this.User.url = function() {
@@ -44,7 +48,7 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
         //init Karo Event Interface KEvIn
         this.KEvIn = new KEvIn({
             user: this.User,
-            host: "//turted.karoworld.de",
+            host: options.realtimeHost,
             vent: this.vent
         });
 

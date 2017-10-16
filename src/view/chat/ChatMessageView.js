@@ -6,6 +6,7 @@ module.exports = Backbone.View.extend({
     id: function() {
         return "cm" + this.model.get("lineId");
     },
+
     initialize: function(options) {
         _.bindAll(this, "render");
         options = options || {};
@@ -32,6 +33,7 @@ module.exports = Backbone.View.extend({
         this.listenTo(this.model, "change:funny change:oldLink", this.updateText);
         this.listenTo(this.model, "change:showBotrix", this.checkVisible);
     },
+
     updateText: function() {
 
         var me = this;
@@ -39,9 +41,9 @@ module.exports = Backbone.View.extend({
         $dummy.html(this.model.get("text"));
         var text = $dummy.text();
 
-        text = KaroUtil.linkify(text);
         text = emojione.unicodeToImage(text);
         text = this.util.linkify(text);
+
         var $textSpan = this.$el.find(".chatText").first();
         $textSpan.html(text);
         var imgs = this.$el.find("img").load(function(e) {
@@ -58,6 +60,7 @@ module.exports = Backbone.View.extend({
             messageHeight = me.$el.height();
         }, 5);
     },
+
     checkVisible: function() {
         var s = this.model.get("showBotrix");
         var is = this.model.get("isBotrixGameMessage");
@@ -67,6 +70,7 @@ module.exports = Backbone.View.extend({
             this.$el.show();
         }
     },
+
     render: function() {
         //var text = this.model.get("text");
         var me = this;
