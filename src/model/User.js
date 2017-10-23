@@ -4,7 +4,8 @@ module.exports = Backbone.ModelFactory(/** @lends User.prototype */ {
     defaults: {
         id: 0,
         login: "Gast",
-        dran: -1
+        dran: -1,
+        uc: 0
     },
     /**
      * @class User

@@ -37,7 +37,7 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
         this.User = new User({});
         //make this user refer to "check" for loging in
         this.User.url = function() {
-            return "/api/user/check.json?callback=?";
+            return APIHOST + "/api/user/check.json?callback=?";
         };
         this.User.fetch();
 
@@ -108,6 +108,12 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
 
         this.vent.on("USER:MOVED", function(data) {
             me.UserDranGames.remove(data.gid);
+        });
+
+        this.vent.on("message:new", function(msg) {
+            var uc = me.User.get("uc");
+            uc++;
+            me.User.set("uc", uc);
         });
 
         //hook to events to update dran queue
