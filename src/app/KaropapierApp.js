@@ -152,7 +152,7 @@ module.exports = Marionette.Application.extend(/** @lends KaropapierApp */ {
         });
         Backbone.history.start({
             pushState: true,
-            root: '/i/'
+            //root: '/i/'  // not on live branch wegen 2.server/
         });
 
         this.vent.on('GAME:MOVE', function(data) {

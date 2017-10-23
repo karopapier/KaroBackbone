@@ -14,7 +14,7 @@ module.exports = Backbone.View.extend({
         var msg = $('#newchatmessage').val();
         if (msg != "") {
             $.ajax({
-                url: "/api/chat",
+                url: APIHOST + "/api/chat",
                 type: "POST",
                 method: "POST",
                 crossDomain: true,

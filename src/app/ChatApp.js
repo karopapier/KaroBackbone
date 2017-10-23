@@ -189,7 +189,7 @@ module.exports = Marionette.Application.extend({
             //this.chatMessageCollection.fetch();
             this.chatInfoView.updateTopBlocker();
             //keepalive
-            $.getJSON("/api/chat/list.json?limit=2&callback=?");
+            $.getJSON(APIHOST + "/api/chat/list.json?limit=2&callback=?");
         }.bind(this), 59000);
 
         this.app.vent.on('CHAT:MESSAGE', function(data) {

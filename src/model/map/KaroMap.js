@@ -17,7 +17,7 @@ module.exports = Backbone.Model.extend({
     retrieve: function() {
         //standard map
         var me = this;
-        $.getJSON("/api/map/" + this.get("id") + ".json?callback=?", function(data) {
+        $.getJSON(APIHOST + "/api/map/" + this.get("id") + ".json?callback=?", function(data) {
             data.loaded = true;
             me.set(data);
         });

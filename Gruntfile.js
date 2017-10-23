@@ -3,7 +3,7 @@ module.exports = function(grunt) {
     require('time-grunt')(grunt);
 
     var livereloadConfig = {
-        port: 20000,
+        port: 20012,
         key: grunt.file.read("/etc/ssl/panamapapier/privkey.pem"),
         cert: grunt.file.read("/etc/ssl/panamapapier/cert.pem"),
     };

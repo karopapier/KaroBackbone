@@ -105,7 +105,7 @@ var KaroUtil = {};
                 f: function(all, gid) {
                     //console.log("All", all);
                     //console.log("GID", gid);
-                    $.getJSON('/api/game/' + gid + '/info.json?callback=?', function(gameInfo) {
+                    $.getJSON(APIHOST + '/api/game/' + gid + '/info.json?callback=?', function(gameInfo) {
                         $('a.GidLink' + gid).text(gid + ' - ' + gameInfo.game.name);
                     });
                     if (karoUtil.oldLink) {

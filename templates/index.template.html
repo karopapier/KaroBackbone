@@ -3,6 +3,8 @@
 <head>
     <title>Karopapier 2.1</title>
     <script type="text/javascript">
+
+        window.APIHOST = "//" + window.location.host.replace("2","www");
         if (window.location.hash == "#debug") {
             alert("Debug mode! Wenn jetzt im Javascript ein Fehler auftaucht, siehst Du es hier");
             window.onerror = function (msg, url, line, col, error) {

@@ -1,7 +1,7 @@
 Karopapier.User = new User({});
 //make this user refer to "check" for loging in
 Karopapier.User.url = function() {
-    return "/api/user/check.json?callback=?";
+    return APIHOST + "/api/user/check.json?callback=?";
 };
 Karopapier.User.fetch();
 
@@ -85,7 +85,7 @@ Karopapier.listenTo(possView, "game:player:move", function(playerId, mo) {
         mpm.render();
     } else {
         //build move url
-        var moveUrl = "/move.php?GID=" + game.get("id");
+        var moveUrl = window.APIHOST + "/move.php?GID=" + game.get("id");
         var m = mo.toMove();
         if (mo.get("vector").getLength() === 0) {
             //http://www.karopapier.de/move.php?GID=84078&startx=8&starty=29
@@ -159,7 +159,7 @@ function parseMoveResponse(text, movedGID) {
 
         //if, after parsing, still no games in queue... Nixblocker, goto chat
         if (dranQueueEmpty) {
-            window.location.href = "/public/chat.html";
+            window.location.href = "/chat.html";
         }
     }
     else {
