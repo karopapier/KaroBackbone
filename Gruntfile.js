@@ -2,11 +2,16 @@ module.exports = function(grunt) {
     // Project configuration.
     require('time-grunt')(grunt);
 
+    var keypath = "/etc/ssl/panamapapier/privkey.pem";
+    var certpath = "/etc/ssl/panamapapier/cert.pem";
     var livereloadConfig = {
         port: 20012,
-        key: grunt.file.read("/etc/ssl/panamapapier/privkey.pem"),
-        cert: grunt.file.read("/etc/ssl/panamapapier/cert.pem"),
     };
+
+    if (grunt.file.exists(keypath, certpath)) {
+        livereloadConfig["key"] = grunt.file.read(keypath);
+        livereloadConfig["cert"] = grunt.file.read(certpath);
+    }
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
