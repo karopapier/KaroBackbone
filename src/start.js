@@ -3,7 +3,7 @@ var KaropapierApp = require('./app/KaropapierApp');
 
 //GLOBAL LEAKAGE IS INTENDED!!!! Sorry...
 window.Karopapier = new KaropapierApp({
-    realtimeHost: "ws01.panamapapier.de"
+    realtimeHost: "turted.karopapier.de"
 });
 
 //TODO: need to get rid of that
