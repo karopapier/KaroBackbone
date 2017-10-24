@@ -79,7 +79,7 @@ module.exports = Backbone.Model.extend(/** @lends KEvIn.prototype*/{
         });
         this.turted.on('CHAT:MESSAGE', function (data) {
             //console.info("CHAT:MESSAGE");
-            me.vent.trigger("CHAT:MESSAGE", data);
+            me.vent.trigger("CHAT:MESSAGE", data.chatmsg);
         });
 
         this.turted.on('msg', function(data) {
