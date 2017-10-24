@@ -63,7 +63,7 @@ module.exports = Backbone.Marionette.ItemView.extend({
             if (dran > 0) {
                 var nextGame = this.app.UserDranGames.at(0);
                 if (nextGame) {
-                    html += '<br><a title="ZIEH!" href="/i/game.html?GID=' + nextGame.get("id") + '"><b>Zieh!</b><img src="/images/arrow_right.png" style="vertical-align: center"></a>';
+                    html += '<br><a title="ZIEH!" href="/game.html?GID=' + nextGame.get("id") + '"><b>Zieh!</b><img src="/images/arrow_right.png" style="vertical-align: center"></a>';
                 }
             }
             $('#chatInfoDran').html(html);
